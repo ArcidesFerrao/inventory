@@ -2,31 +2,46 @@ import { db } from "@/lib/db";
 import { verifyToken } from "@/lib/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
-  const product = await db.product.findUnique({ where: { id: params.id } });
-  return product
-    ? NextResponse.json(product)
-    : NextResponse.json({ error: "Not found" }, { status: 404 });
-}
+type Params = Promise<{id: string}>
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, props:{ params: Params}) {
   try {
     verifyToken(req);
-    const body = await req.json();
-    await db.product.update({
-      where: { id: params.id },
-      data: body,
-    });
-    return NextResponse.json({ message: "Product updated successfully." });
-  } catch {
-    return NextResponse.json({ error: "Update failed" }, { status: 500 });
+    const {id} = await props.params;
+    const product = await db.product.findUnique({ where: { id } });
+    if (!product) NextResponse.json({ error: "Product not found" }, { status: 404})
+      return NextResponse.json(product)
+
+  } catch (error) {
+    return NextResponse.json(
+      {error: (error as Error).message}, { status: 401}
+    );
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest,  props:{ params: Params}) {
   try {
     verifyToken(req);
-    await db.product.delete({ where: { id: params.id } });
+
+    const { id } = await props.params;
+    const body = await req.json();
+
+    await db.product.update({
+      where: { id },
+      data: body,
+    });
+    return NextResponse.json({ message: "Product updated successfully." });
+  } catch (error) {
+    return NextResponse.json({ error: `Update failed: ${error}` }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest,  props:{ params: Params}) {
+  try {
+    verifyToken(req);
+    const { id } = await props.params;
+
+    await db.product.delete({ where: { id} });
     return NextResponse.json({ message: "Product deleted successfully." });
   } catch {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });

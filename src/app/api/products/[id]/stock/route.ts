@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     verifyToken(req);
+    
     const body = await req.json();
     const operation = body.operation;
     const quantity = body.quantity;
