@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { signIn } from "next-auth/react";
 
 
 export async function POST(req: Request) {
@@ -9,7 +10,7 @@ export async function POST(req: Request) {
         const { email, name, password } = body;
 
         if (!email || !name || !password ) {
-            return new NextResponse("Missing fields", { status: 400 });
+            return NextResponse.json({ message:"Missing fields"}, { status: 400 });
         }
 
         const existingUser = await db.user.findUnique({

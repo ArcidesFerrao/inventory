@@ -11,6 +11,7 @@ export async function middleware(req: NextRequest) {
     const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
     if (isProtected && !token) {
+        console.log("User testing mode")
         return NextResponse.redirect(new URL("/login", req.url));
     }
     
