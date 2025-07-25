@@ -3,6 +3,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
 
+
+
 const handler = NextAuth({
   adapter: PrismaAdapter(db),
   providers: [

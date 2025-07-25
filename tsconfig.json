@@ -11,6 +11,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "types": ["next-auth"],
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
