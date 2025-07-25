@@ -4,17 +4,17 @@ import React from "react";
 export const Navigator = () => {
   return (
     <nav>
-      <ul>
-        <li>
+      <ul className="flex flex-col">
+        <li className="py-4 px-8">
           <Link href="/dashboard">Overview</Link>
         </li>
-        <li>
+        <li className="py-4 px-8">
           <Link href="/dashboard/products">Products</Link>
         </li>
-        <li>
+        <li className="py-4 px-8">
           <Link href="/dashboard/stock">Stock</Link>
         </li>
-        <li>
+        <li className="py-4 px-8">
           <Link href="/dashboard/logs">Active Logs</Link>
         </li>
       </ul>

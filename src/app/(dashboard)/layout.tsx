@@ -7,9 +7,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main>
+    <main className="dashboard-main flex gap-5">
       <Navigator />
-      {children}
+      <section className="dash-section flex w-full min-h-screen rounded p-4">
+        {children}
+      </section>
     </main>
   );
 }
