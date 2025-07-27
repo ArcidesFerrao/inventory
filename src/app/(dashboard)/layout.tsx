@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <main className="dashboard-main flex gap-5">
       <Navigator />
-      <section className="dash-section flex w-full min-h-screen rounded p-4">
+      <section className="dash-section flex w-full min-h-screen rounded p-8">
         {children}
       </section>
     </main>

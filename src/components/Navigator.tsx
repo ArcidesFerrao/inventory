@@ -1,26 +1,30 @@
-import Link from "next/link";
 import React from "react";
+import { NavLink } from "./NavLink";
 
 export const Navigator = () => {
   return (
-    <nav>
+    <nav className="navigator">
       <ul className="flex flex-col">
-        <li className="py-4 px-8 flex items-center gap-2">
-          <span className="mage--dashboard-fill"></span>
-          <Link href="/dashboard">Overview</Link>
-        </li>
-        <li className="py-4 px-8 flex items-center gap-2">
-          <span className="ant-design--product-filled"></span>
-          <Link href="/dashboard/products">Products</Link>
-        </li>
-        <li className="py-4 px-8 flex items-center gap-2">
-          <span className="lsicon--management-stockout-filled"></span>
-          <Link href="/dashboard/stock">Stock</Link>
-        </li>
-        <li className="py-4 px-8 flex items-center gap-2">
-          <span className="lucide--logs"></span>
-          <Link href="/dashboard/logs">Active Logs</Link>
-        </li>
+        <NavLink
+          href="/dashboard"
+          label="Overview"
+          icon={<span className="mage--dashboard-fill"></span>}
+        />
+        <NavLink
+          href="/dashboard/products"
+          label="Products"
+          icon={<span className="ant-design--product-filled"></span>}
+        />
+        <NavLink
+          href="/dashboard/stock"
+          label="Stock"
+          icon={<span className="lsicon--management-stockout-filled"></span>}
+        />
+        <NavLink
+          href="/dashboard/logs"
+          label="Active Logs"
+          icon={<span className="lucide--logs"></span>}
+        />
       </ul>
     </nav>
   );

@@ -5,8 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest) {
-    console.log("✅ GET /products triggered");
-    
     try {
         const {searchParams } = new URL(req.url);
         const page = parseInt(searchParams.get("page") || "1");

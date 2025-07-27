@@ -9,7 +9,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
   return (
-    <section className="flex flex-col w-full p-4">
+    <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
         <h1 className="text-4xl font-medium">Dashboard</h1>
         <button className="add-product flex gap-1">

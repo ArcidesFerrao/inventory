@@ -10,12 +10,11 @@
   --dash-bg: #2f2f2f;
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sansation-sans);
-  /* --font-mono: var(--font-geist-mono); */
-}
+} */
 /* 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -48,11 +47,19 @@ header {
 a,
 button {
   cursor: pointer;
+  transition: all 250ms ease-in;
 }
 
 button:active {
   background-color: var(--divider);
   color: var(--dash-bg);
+}
+
+.navigator a:hover {
+  background-color: var(--dash-bg);
+}
+.navigator a {
+  border-radius: 0.2rem;
 }
 
 .add-product {
