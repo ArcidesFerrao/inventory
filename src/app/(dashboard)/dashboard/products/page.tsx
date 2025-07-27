@@ -32,12 +32,12 @@ export default function ProductsPage() {
   }, []);
 
   return (
-    <section>
+    <section className="flex justify-center">
       {loading ? (
-        <p>Loading...</p>
+        <span className="eos-icons--three-dots-loading"></span>
       ) : (
-        <div className="products-list">
-          <h2>Products List</h2>
+        <div className="products-list flex flex-col gap-4">
+          <h2 className="text-2xl font-medium">Products List</h2>
           <ul>
             {products.map((item) => (
               <ListItem

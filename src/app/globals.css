@@ -75,6 +75,12 @@ li a {
   white-space: nowrap;
 }
 
+.products-list li {
+  background-color: var(--background);
+  width: 380px;
+  border-radius: 0.4rem;
+}
+
 /* 
 nav {
   border-radius: 0.2rem;
@@ -95,4 +101,9 @@ nav {
   width: 0.1rem;
   height: 100%;
   background-color: var(--divider);
+}
+
+.edit-button {
+  background-color: var(--dash-bg);
+  border-radius: 0.4rem;
 }

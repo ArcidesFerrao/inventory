@@ -1,4 +1,5 @@
 import authCheck from "@/lib/authCheck";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -12,10 +13,10 @@ export default async function DashboardPage() {
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
         <h1 className="text-4xl font-medium">Dashboard</h1>
-        <button className="add-product flex gap-1">
+        <Link href="/dashboard/products/new" className="add-product flex gap-1">
           <span>+</span>
           <span className="text-md">Product</span>
-        </button>
+        </Link>
       </div>
       <div className="dash-stats gap-4 flex py-8 w-full">
         <div className="balance flex flex-col p-4">
