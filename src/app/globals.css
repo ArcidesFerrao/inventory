@@ -3,7 +3,9 @@
 :root {
   --background: #45474f;
   --foreground: #f4f5fa;
-  --accent: #303b2b4b;
+  --divider: #f4f5fa80;
+  --accent: #303b2b;
+  --accent-fade: #303b2b4b;
   --border: rgba(45, 45, 46, 0.4);
   --dash-bg: #2f2f2f;
 }
@@ -43,6 +45,25 @@ header {
   margin: 1rem 0;
 }
 
+a,
+button {
+  cursor: pointer;
+}
+
+button:active {
+  background-color: var(--divider);
+  color: var(--dash-bg);
+}
+
+.add-product {
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  background-color: var(--background);
+}
+.add-product:hover {
+  background-color: var(--accent);
+}
+
 li a {
   white-space: nowrap;
 }
@@ -55,4 +76,16 @@ nav {
 
 .dash-section {
   background-color: var(--dash-bg);
+}
+
+.balance,
+.stats {
+  background-color: var(--background);
+  border-radius: 0.4rem;
+}
+
+.divider {
+  width: 0.1rem;
+  height: 100%;
+  background-color: var(--divider);
 }
