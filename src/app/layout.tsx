@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sansation } from "next/font/google";
 import "./globals.css";
+import "./icons.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ProviderWrapper from "@/components/ProviderWrapper";
