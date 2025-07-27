@@ -1,19 +1,13 @@
 import { db } from "@/lib/db";
-import { verifyToken } from "@/lib/verifyToken";
 import { productSchema } from "@/schemas/productSchema";
 import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { cookies } from "next/headers";
 
-export async function createProdutct(prevState: unknown, formData: FormData) {
+export async function createProduct(prevState: unknown, formData: FormData) {
     const submission = parseWithZod(formData, { schema: productSchema });
     if (submission.status !== "success") return submission.reply();
     
     try {
-
-        const cookieStore = cookies();
-        verifyToken({ cookies: cookieStore });
-
         const values = submission.value;
 
 
