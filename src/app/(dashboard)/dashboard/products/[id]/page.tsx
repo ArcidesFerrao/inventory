@@ -3,11 +3,11 @@
 import { useParams } from "next/navigation";
 import React from "react";
 
-export default function EditProductPage() {
+export default function ProductPage() {
   const { id } = useParams();
   return (
     <div>
-      <h1>Edit Product: {id}</h1>
+      <h1>Product: {id}</h1>
     </div>
   );
 }

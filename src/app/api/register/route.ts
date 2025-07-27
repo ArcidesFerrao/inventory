@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { signIn } from "next-auth/react";
 
 
 export async function POST(req: Request) {

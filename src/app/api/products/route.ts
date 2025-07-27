@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         const category = searchParams.get("category");
         
         const where = category ? { category } : {};
-        console.log("🔍 Running db.product.findMany with:", { where, skip: (page - 1) * limit, take: limit });
+        // console.log("🔍 Running db.product.findMany with:", { where, skip: (page - 1) * limit, take: limit });
 
         const [data, total] = await Promise.all([
             db.product.findMany({
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
             db.product.count({where})
         ]);
         
-        console.log("✅ GET /products got promise complete");
+        // console.log("✅ GET /products got promise complete");
         return NextResponse.json({
             data,
             pagination: { page, limit, total },
