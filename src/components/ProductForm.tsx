@@ -26,42 +26,61 @@ export const ProductForm = () => {
       id={form.id}
       onSubmit={form.onSubmit}
       action={action}
-      className="flex flex-col"
+      className="flex flex-col py-4 gap-2 "
     >
-      <h2>Add Product</h2>
-      <section>
-        <div>
+      <h2 className="text-center">Fill the form to create a new Product</h2>
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
           <input type="text" name="name" placeholder="Product Name" />
-          {fields.name.errors && <p>{fields.name.errors}</p>}
+          {fields.name.errors && (
+            <p className="text-xs font-light">{fields.name.errors}</p>
+          )}
         </div>
-        <div>
-          <input type="number" name="price" id="price" />
-          {fields.price.errors && <p>{fields.price.errors}</p>}
+        <div className="flex gap-2">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="price">Price</label>
+            <input type="number" name="price" id="price" />
+            {fields.price.errors && (
+              <p className="text-xs font-light">{fields.price.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="stock">Stock</label>
+            <input type="number" name="stock" id="stock" />
+            {fields.stock.errors && (
+              <p className="text-xs font-light">{fields.stock.errors}</p>
+            )}
+          </div>
         </div>
-        <div>
-          <input type="number" name="stock" id="stock" />
-          {fields.stock.errors && <p>{fields.stock.errors}</p>}
-        </div>
-        <div>
+        <div className="flex flex-col  gap-1">
           <input type="text" name="category" placeholder="Category" />
-          {fields.category.errors && <p>{fields.category.errors}</p>}
+          {fields.category.errors && (
+            <p className="text-xs font-light">{fields.category.errors}</p>
+          )}
         </div>
-        <div>
+        <div className="flex flex-col gap-1">
           <textarea
             name="description"
             id="description"
             placeholder="Description"
+            className="min-w-80 min-h-40"
           />
-          {fields.description.errors && <p>{fields.description.errors}</p>}
+          {fields.description.errors && (
+            <p className="text-xs font-light">{fields.description.errors}</p>
+          )}
         </div>
       </section>
       <section className="errors">
-        {state?.status === "error" && <p>{state.error?.general?.[0]}</p>}
+        {state?.status === "error" && (
+          <p className="text-xs font-light">{state.error?.general?.[0]}</p>
+        )}
       </section>
+
       <input
         type="submit"
         disabled={isPending}
         value={isPending ? "..." : "Add Product"}
+        className="submit-button"
       />
     </form>
   );

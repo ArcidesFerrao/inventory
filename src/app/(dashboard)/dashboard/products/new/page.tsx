@@ -3,8 +3,8 @@ import React from "react";
 
 export default function NewProductPage() {
   return (
-    <div>
-      <h1>Add New Product</h1>
+    <div className="flex flex-col gap-2 items-center w-full">
+      <h1 className="text-xl font-semibold">Add New Product</h1>
       <ProductForm />
     </div>
   );

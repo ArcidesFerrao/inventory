@@ -1,6 +1,7 @@
 "use client";
 
 import { ListItem } from "@/components/List";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 type Product = {
@@ -37,7 +38,16 @@ export default function ProductsPage() {
         <span className="eos-icons--three-dots-loading"></span>
       ) : (
         <div className="products-list flex flex-col gap-4">
-          <h2 className="text-2xl font-medium">Products List</h2>
+          <div className="list-header flex items-center justify-between">
+            <h2 className="text-2xl font-medium">Products List</h2>
+            <Link
+              href="/dashboard/products/new"
+              className="add-product flex gap-1"
+            >
+              <span>+</span>
+              <span className="text-md">Product</span>
+            </Link>
+          </div>
           <ul>
             {products.map((item) => (
               <ListItem

@@ -8,6 +8,7 @@
   --accent-fade: #303b2b4b;
   --border: rgba(45, 45, 46, 0.4);
   --dash-bg: #2f2f2f;
+  --input-bg: rgba(32, 32, 32, 0.5);
 }
 
 /* @theme inline {
@@ -44,15 +45,28 @@ header {
   margin: 1rem 0;
 }
 
+textarea,
+input {
+  background-color: var(--input-bg);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.2rem;
+}
+
+input[type="submit"],
 a,
 button {
   cursor: pointer;
   transition: all 250ms ease-in;
 }
 
+input[type="submit"]:active,
 button:active {
   background-color: var(--divider);
   color: var(--dash-bg);
+}
+
+form {
+  /* background-color: var(--divider); */
 }
 
 .navigator a:hover {
@@ -67,6 +81,9 @@ button:active {
   border-radius: 0.4rem;
   background-color: var(--background);
 }
+
+.edit-button:hover,
+.submit-button:hover,
 .add-product:hover {
   background-color: var(--accent);
 }
