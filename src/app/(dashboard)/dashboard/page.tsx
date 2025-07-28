@@ -1,4 +1,5 @@
 import authCheck from "@/lib/authCheck";
+import { db } from "@/lib/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -9,6 +10,13 @@ export default async function DashboardPage() {
   if (!session) {
     redirect("/login");
   }
+
+  const productCount = await db.product.count({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
   return (
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
@@ -40,7 +48,7 @@ export default async function DashboardPage() {
             <span className="divider"></span>
             <div className="products">
               <h3 className="text-lg">Number of Products</h3>
-              <h2 className="text-xl py-2  font-medium">197 128</h2>
+              <h2 className="text-xl py-2  font-medium">{productCount}</h2>
             </div>
           </div>
         </div>
