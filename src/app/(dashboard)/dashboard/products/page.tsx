@@ -48,7 +48,7 @@ export default function ProductsPage() {
               <span className="text-md">Product</span>
             </Link>
           </div>
-          <ul>
+          <ul className="flex flex-col gap-4">
             {products.map((item) => (
               <ListItem
                 stock={item.stock}

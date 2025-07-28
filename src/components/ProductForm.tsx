@@ -40,6 +40,7 @@ export const ProductForm = () => {
           <div className="flex flex-col gap-1">
             <label htmlFor="price">Price</label>
             <input type="number" name="price" id="price" />
+
             {fields.price.errors && (
               <p className="text-xs font-light">{fields.price.errors}</p>
             )}
