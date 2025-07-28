@@ -18,7 +18,7 @@ export default function DeleteButton({ productId }: { productId: string }) {
       });
 
       if (res.ok) {
-        alert("Product delete");
+        alert("Product deleted");
         window.location.reload();
       } else {
         const { error } = await res.json();

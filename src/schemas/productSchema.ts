@@ -6,6 +6,7 @@ export const productSchema = z.object({
     price: z.coerce.number().positive("Price must be positive"),
     stock: z.coerce.number().int().nonnegative("Stock must be 0 or more"),
     category: z.string().min(3, "Category is required"),
-    // userId: z.string().nonempty("User Id is required"),
 })
 
+
+// userId: z.string().nonempty("User Id is required"),

@@ -4,17 +4,10 @@ import { createProduct } from "@/app/actions/createProduct";
 import { productSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useActionState } from "react";
 
-// const initialState = {
-//   success: false,
-//   message: "",
-// };
-
 export const ProductForm = () => {
-  const { data: session } = useSession();
   const [state, action, isPending] = useActionState(createProduct, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -28,10 +21,6 @@ export const ProductForm = () => {
     redirect("/dashboard/products");
   }
 
-  if (!session?.user) {
-    redirect("/login");
-  }
-
   return (
     <form
       id={form.id}
@@ -41,17 +30,6 @@ export const ProductForm = () => {
     >
       <h2 className="text-center">Fill the form to create a new Product</h2>
       <section className="flex flex-col gap-4">
-        {/* <div>
-          <input
-            type="hidden"
-            name="userId"
-            id="userId"
-            value={session.user.id}
-          />
-          {fields.userId.errors && (
-            <p className="text-xs font-light">{fields.userId.errors}</p>
-          )}
-        </div> */}
         <div className="flex flex-col gap-1">
           <input type="text" name="name" id="name" placeholder="Product Name" />
           {fields.name.errors && (
