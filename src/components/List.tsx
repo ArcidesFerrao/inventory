@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import DeleteButton from "./DeleteButton";
 
 type ProductsProps = {
   id: string;
@@ -19,12 +20,15 @@ export const ListItem = ({ id, name, price, stock }: ProductsProps) => {
       </div>
       <div className="flex flex-col items-end gap-2">
         <h2 className="text-xl font-bold ">MZN {price},00</h2>
-        <Link
-          className="edit-button p-2 flex "
-          href={`/dashboard/products/${id}/edit`}
-        >
-          <span className="mdi--edit"></span>
-        </Link>
+        <div className="flex gap-2">
+          <DeleteButton productId={id} />
+          <Link
+            className="edit-button p-2 flex "
+            href={`/dashboard/products/${id}/edit`}
+          >
+            <span className="mdi--edit"></span>
+          </Link>
+        </div>
       </div>
     </li>
   );

@@ -52,6 +52,9 @@ input {
   border-radius: 0.2rem;
 }
 
+input[type="submit"]:disabled {
+  background-color: var(--foreground);
+}
 input[type="submit"],
 a,
 button {
@@ -82,6 +85,7 @@ form {
   background-color: var(--background);
 }
 
+.delete-button:hover,
 .edit-button:hover,
 .submit-button:hover,
 .add-product:hover {
@@ -120,6 +124,7 @@ nav {
   background-color: var(--divider);
 }
 
+.delete-button,
 .edit-button {
   background-color: var(--dash-bg);
   border-radius: 0.4rem;

@@ -41,7 +41,7 @@ export async function DELETE(req: NextRequest,  props:{ params: Params}) {
     verifyToken(req);
     const { id } = await props.params;
 
-    await db.product.delete({ where: { id} });
+    await db.product.delete({ where: { id } });
     return NextResponse.json({ message: "Product deleted successfully." });
   } catch {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
