@@ -1,4 +1,5 @@
 import React, { useTransition } from "react";
+import toast from "react-hot-toast";
 
 export default function DeleteButton({ productId }: { productId: string }) {
   const [isPending, startTransition] = useTransition();
@@ -18,11 +19,12 @@ export default function DeleteButton({ productId }: { productId: string }) {
       });
 
       if (res.ok) {
-        alert("Product deleted");
+        toast.success("Product deleted successfully");
         window.location.reload();
       } else {
         const { error } = await res.json();
-        alert(error || "Delete failed");
+        toast.error("something went wrong!");
+        console.log("Error deleting product: ", error);
       }
     });
   };

@@ -5,6 +5,7 @@ import "./icons.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ProviderWrapper from "@/components/ProviderWrapper";
+import { Toaster } from "react-hot-toast";
 
 const sansationSans = Sansation({
   variable: "--font-sansation-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${sansationSans.variable}  antialiased`}>
         <ProviderWrapper>
           <Header />
+          <Toaster position="top-right" />
           {children}
           <Footer />
         </ProviderWrapper>

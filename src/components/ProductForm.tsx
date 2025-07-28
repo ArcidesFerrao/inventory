@@ -6,6 +6,7 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import React, { useActionState } from "react";
+import toast from "react-hot-toast";
 
 export const ProductForm = () => {
   const [state, action, isPending] = useActionState(createProduct, undefined);
@@ -18,6 +19,7 @@ export const ProductForm = () => {
   });
 
   if (state?.status === "success") {
+    toast.success("Product created successfully!");
     redirect("/dashboard/products");
   }
 
