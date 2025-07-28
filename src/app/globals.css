@@ -73,10 +73,6 @@ button:active {
   color: var(--dash-bg);
 }
 
-form {
-  /* background-color: var(--divider); */
-}
-
 .navigator a:hover {
   background-color: var(--dash-bg);
 }

@@ -1,14 +1,11 @@
-import React, { useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import toast from "react-hot-toast";
+import ConfirmDialog from "./ConfirmDialog";
 
 export default function DeleteButton({ productId }: { productId: string }) {
   const [isPending, startTransition] = useTransition();
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleDelete = () => {
-    const confirmed = confirm("Are you sure you want to delete this product?");
-
-    if (!confirmed) return;
-
     startTransition(async () => {
       const res = await fetch(`/api/products/${productId}`, {
         method: "DELETE",
@@ -30,12 +27,21 @@ export default function DeleteButton({ productId }: { productId: string }) {
   };
 
   return (
-    <button
-      onClick={handleDelete}
-      disabled={isPending}
-      className="delete-button p-2 flex"
-    >
-      <span className="mdi--delete"></span>
-    </button>
+    <>
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        onConfirm={handleDelete}
+        onCancel={() => setIsDialogOpen(false)}
+        title="Delete this product?"
+        description="This cannot be undone."
+      />
+      <button
+        onClick={() => setIsDialogOpen(true)}
+        disabled={isPending}
+        className="delete-button p-2 flex"
+      >
+        <span className="mdi--delete"></span>
+      </button>
+    </>
   );
 }
