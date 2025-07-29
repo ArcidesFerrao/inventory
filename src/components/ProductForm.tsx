@@ -1,27 +1,45 @@
 "use client";
 
-import { createProduct } from "@/app/actions/createProduct";
+import { createProduct } from "@/app/actions/product";
+import { editProduct } from "@/app/actions/product";
 import { productSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-export const ProductForm = ({ id }: { id?: string }) => {
-  const [state, action, isPending] = useActionState(createProduct, undefined);
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  category: string;
+  description: string | null;
+};
+
+export const ProductForm = ({ product }: { product?: Product }) => {
+  const actionFn = product ? editProduct : createProduct;
+  const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: productSchema });
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onSubmit",
+    defaultValue: product,
   });
 
-  if (state?.status === "success") {
-    toast.success("Product created successfully!");
-    redirect("/dashboard/products");
-  }
+  useEffect(() => {
+    if (state?.status === "success") {
+      toast.success(
+        product
+          ? "Product edited successfully!"
+          : "Product created successfully!"
+      );
+      redirect("/dashboard/products");
+    }
+  }, [state, product]);
 
   return (
     <form
@@ -31,11 +49,20 @@ export const ProductForm = ({ id }: { id?: string }) => {
       className="flex flex-col py-4 gap-2 "
     >
       <h2 className="text-center">
-        Fill the form to {id ? "edit" : "create"} a new Product
+        Fill the form to {product ? "edit the" : "create a new"} Product
       </h2>
       <section className="flex flex-col gap-4">
+        {product && (
+          <input type="hidden" name="id" id="id" value={product.id} />
+        )}
         <div className="flex flex-col gap-1">
-          <input type="text" name="name" id="name" placeholder="Product Name" />
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Product Name"
+            defaultValue={product?.name}
+          />
           {fields.name.errors && (
             <p className="text-xs font-light">{fields.name.errors}</p>
           )}
@@ -43,7 +70,12 @@ export const ProductForm = ({ id }: { id?: string }) => {
         <div className="flex gap-2">
           <div className="flex flex-col gap-1">
             <label htmlFor="price">Price</label>
-            <input type="number" name="price" id="price" />
+            <input
+              type="number"
+              name="price"
+              id="price"
+              defaultValue={product?.price}
+            />
 
             {fields.price.errors && (
               <p className="text-xs font-light">{fields.price.errors}</p>
@@ -51,7 +83,12 @@ export const ProductForm = ({ id }: { id?: string }) => {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="stock">Stock</label>
-            <input type="number" name="stock" id="stock" />
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              defaultValue={product?.stock}
+            />
             {fields.stock.errors && (
               <p className="text-xs font-light">{fields.stock.errors}</p>
             )}
@@ -63,6 +100,7 @@ export const ProductForm = ({ id }: { id?: string }) => {
             name="category"
             id="category"
             placeholder="Category"
+            defaultValue={product?.category}
           />
           {fields.category.errors && (
             <p className="text-xs font-light">{fields.category.errors}</p>
@@ -73,6 +111,7 @@ export const ProductForm = ({ id }: { id?: string }) => {
             name="description"
             id="description"
             placeholder="Description"
+            defaultValue={product?.description || ""}
             className="min-w-80 min-h-40"
           />
           {fields.description.errors && (
@@ -89,7 +128,7 @@ export const ProductForm = ({ id }: { id?: string }) => {
       <input
         type="submit"
         disabled={isPending}
-        value={isPending ? "..." : "Add Product"}
+        value={isPending ? "..." : product ? "Edit Product" : "Add Product"}
         className="submit-button"
       />
     </form>

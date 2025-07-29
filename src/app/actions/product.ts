@@ -11,9 +11,7 @@ import { redirect } from "next/navigation";
 export async function createProduct(prevState: unknown, formData: FormData) {
     const session = await getServerSession(authOptions);
     if (!session?.user) redirect("/login");
-    console.log("trying to create product")
     const submission = parseWithZod(formData, { schema: productSchema });
-    console.log("submission in")
     if (submission.status !== "success") return submission.reply();
 
     console.log(session);
@@ -35,6 +33,38 @@ export async function createProduct(prevState: unknown, formData: FormData) {
         return {
             status: "error",
             error: { general: ["Failed to create Product"]}
+        } satisfies SubmissionResult<string[]>
+    }
+}
+
+export async function editProduct(prevState: unknown, formData: FormData) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) redirect("/login");
+    const submission = parseWithZod(formData, { schema: productSchema });
+    if (submission.status !== "success") return submission.reply();
+
+    console.log(session);
+    try {
+        const values = submission.value;
+
+
+        await db.product.update({
+            where: {
+                id: submission.value.id,
+            },
+            data: {
+                ...values,
+                status: "ACTIVE",
+                userId: session.user.id
+            }
+        });
+
+        return {status: "success"} satisfies SubmissionResult<string[]>
+    } catch (error) {
+        console.error("Failed to update Product", error);
+        return {
+            status: "error",
+            error: { general: ["Failed to update Product"]}
         } satisfies SubmissionResult<string[]>
     }
 }
