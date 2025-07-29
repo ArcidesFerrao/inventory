@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import React, { useActionState } from "react";
 import toast from "react-hot-toast";
 
-export const ProductForm = () => {
+export const ProductForm = ({ id }: { id?: string }) => {
   const [state, action, isPending] = useActionState(createProduct, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -30,7 +30,9 @@ export const ProductForm = () => {
       onSubmit={form.onSubmit}
       className="flex flex-col py-4 gap-2 "
     >
-      <h2 className="text-center">Fill the form to create a new Product</h2>
+      <h2 className="text-center">
+        Fill the form to {id ? "edit" : "create"} a new Product
+      </h2>
       <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <input type="text" name="name" id="name" placeholder="Product Name" />
