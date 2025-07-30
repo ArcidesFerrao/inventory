@@ -4,7 +4,7 @@ import { NavLink } from "./NavLink";
 export const Navigator = () => {
   return (
     <nav className="navigator">
-      <ul className="flex flex-col">
+      <ul className="flex flex-col gap-2">
         <NavLink
           href="/dashboard"
           label="Overview"
