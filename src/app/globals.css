@@ -50,6 +50,7 @@ header {
   margin: 1rem 0;
 }
 
+.user-page button,
 textarea,
 input {
   background-color: var(--input-bg);
@@ -129,4 +130,12 @@ nav {
 .edit-button {
   background-color: var(--dash-bg);
   border-radius: 0.4rem;
+}
+
+.header-welcome a:hover {
+  text-decoration: underline;
+}
+
+.user-page button:hover {
+  background-color: rgba(220, 20, 60, 0.7);
 }

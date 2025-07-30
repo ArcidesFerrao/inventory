@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export const Header = () => {
@@ -16,9 +17,12 @@ export const Header = () => {
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
         ) : (
-          <span>
-            <p>Welcome, {session?.user.name}</p>
-          </span>
+          <p className="header-welcome">
+            Welcome,{" "}
+            <Link href={`/dashboard/${session?.user.id}`}>
+              {session?.user.name}
+            </Link>
+          </p>
         )}
       </div>
     </header>
