@@ -41,11 +41,11 @@ export default async function StockPage() {
               <td>{item.stock}</td>
               <td>
                 {item.stock > 5 ? (
-                  <span className="w-4 h-4 bg-green-600"></span>
+                  <span className="inline-block w-4 h-4 bg-green-600 rounded-full"></span>
                 ) : item.stock > 0 ? (
-                  <span className="w-4 h-4 bg-amber-400"></span>
+                  <span className="inline-block w-4 h-4 bg-amber-400  rounded-full"></span>
                 ) : (
-                  <span className="w-4 h-4 bg-red-400"></span>
+                  <span className="inline-block w-4 h-4 bg-red-400  rounded-full"></span>
                 )}
               </td>
             </tr>

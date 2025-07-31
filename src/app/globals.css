@@ -50,6 +50,19 @@ header {
   margin: 1rem 0;
 }
 
+th,
+td {
+  padding: 0.4rem 0.8rem;
+}
+
+thead th {
+  background-color: var(--background);
+}
+
+table {
+  border: solid 1px var(--background);
+}
+
 .user-page button,
 textarea,
 input {
