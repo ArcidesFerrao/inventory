@@ -38,8 +38,10 @@ export default async function StockPage() {
           {products.map((item) => (
             <tr key={item.id}>
               <td>{item.name}</td>
-              <td>{item.stock}</td>
               <td>
+                <p>{item.stock}</p>
+              </td>
+              <td className="flex justify-center">
                 {item.stock > 5 ? (
                   <span className="inline-block w-4 h-4 bg-green-600 rounded-full"></span>
                 ) : item.stock > 0 ? (

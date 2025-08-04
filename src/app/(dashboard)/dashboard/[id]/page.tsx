@@ -1,3 +1,4 @@
+import { LogOutButton } from "@/components/LogOutButton";
 import { db } from "@/lib/db";
 
 type Params = Promise<{ id: string }>;
@@ -27,7 +28,7 @@ export default async function UserPage(props: { params: Params }) {
             <p></p>
           </div>
         </div>
-        <button>Log Out</button>
+        <LogOutButton />
       </div>
     </section>
   );
