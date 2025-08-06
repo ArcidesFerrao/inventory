@@ -1,24 +1,26 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import DashMenu from "@/components/DashMenu";
+import authCheck from "@/lib/authCheck";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
+  const session = await authCheck();
 
   if (session?.user) {
-    redirect("/dashboard");
   }
 
   return (
     <main className="flex flex-col items-center gap-4 py-10">
-      <div className="text-center py-10">
-        <h1 className="text-2xl font-semibold">Welcome to Innovante</h1>
-        <p className="py-5">Please login to continue!</p>
-      </div>
-      <Link className="login-button" href="/api/auth/signin">
-        Login
-      </Link>
+      <h1 className="text-2xl font-semibold">Welcome to Innovante</h1>
+      {session?.user ? (
+        <DashMenu />
+      ) : (
+        <div className=" flex flex-col text-center gap-4  py-2">
+          <p>Please login to continue!</p>
+          <Link className="login-button" href="/api/auth/signin">
+            Login
+          </Link>
+        </div>
+      )}
     </main>
   );
 }

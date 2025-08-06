@@ -7,7 +7,7 @@
   --accent: #303b2b;
   --accent-fade: #303b2b4b;
   --border: rgba(45, 45, 46, 0.4);
-  --dash-bg: #2f2f2f;
+  --dash-bg: #1f1f1f;
   --input-bg: rgba(32, 32, 32, 0.5);
 }
 
@@ -62,7 +62,7 @@ thead th {
 table {
   border: solid 1px var(--background);
 }
-
+.dash-menu button,
 .login-button,
 .user-page button,
 textarea,
@@ -72,9 +72,14 @@ input {
   border-radius: 0.2rem;
 }
 
+.dash-menu button {
+  padding: 2rem;
+  max-width: 12rem;
+}
 input[type="submit"]:disabled {
   background-color: var(--foreground);
 }
+
 input[type="submit"],
 a,
 button {
@@ -92,6 +97,7 @@ form p a:hover {
   text-decoration: underline;
 }
 
+.dash-menu button:hover,
 .login-button:hover,
 .navigator a:hover {
   background-color: var(--dash-bg);
