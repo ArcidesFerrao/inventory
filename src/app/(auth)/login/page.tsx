@@ -29,9 +29,9 @@ export default function LoginPage() {
     }
   };
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
+      <h1 className="text-2xl text-center">Login</h1>
+      <div className="flex flex-col gap-2">
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -40,6 +40,8 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+      </div>
+      <div className="flex flex-col gap-2">
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -48,12 +50,12 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <input type="submit" value="Sign In" />
-      </form>
+      </div>
+      <input type="submit" value="Sign In" />
       {error && <p>{error}</p>}
       <p>
         Dont have an account? <Link href="/signup">Create an account</Link>
       </p>
-    </div>
+    </form>
   );
 }

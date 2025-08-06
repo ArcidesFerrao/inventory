@@ -16,6 +16,8 @@ export const Header = () => {
       <div>
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
+        ) : !session?.user ? (
+          ""
         ) : (
           <p className="header-welcome">
             Welcome,{" "}

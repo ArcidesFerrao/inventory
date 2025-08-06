@@ -37,8 +37,8 @@ export default function SignUpPage() {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Create Account</h2>
+    <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
+      <h1 className="text-2xl text-center">Create Account</h1>
       {error && <p>{error}</p>}
       <input
         type="text"
