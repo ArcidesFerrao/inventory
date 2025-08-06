@@ -26,34 +26,36 @@ export default async function StockPage() {
         <h3>Number of Products:</h3>
         <p>{products.length}</p>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((item) => (
-            <tr key={item.id}>
-              <td>{item.name}</td>
-              <td>
-                <p>{item.stock}</p>
-              </td>
-              <td className="flex justify-center">
-                {item.stock > 5 ? (
-                  <span className="inline-block w-4 h-4 bg-green-600 rounded-full"></span>
-                ) : item.stock > 0 ? (
-                  <span className="inline-block w-4 h-4 bg-amber-400  rounded-full"></span>
-                ) : (
-                  <span className="inline-block w-4 h-4 bg-red-400  rounded-full"></span>
-                )}
-              </td>
+      {products.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((item) => (
+              <tr key={item.id}>
+                <td>{item.name}</td>
+                <td>
+                  <p>{item.stock}</p>
+                </td>
+                <td className="flex justify-center">
+                  {item.stock > 5 ? (
+                    <span className="inline-block w-4 h-4 bg-green-600 rounded-full"></span>
+                  ) : item.stock > 0 ? (
+                    <span className="inline-block w-4 h-4 bg-amber-400  rounded-full"></span>
+                  ) : (
+                    <span className="inline-block w-4 h-4 bg-red-400  rounded-full"></span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </section>
   );
 }

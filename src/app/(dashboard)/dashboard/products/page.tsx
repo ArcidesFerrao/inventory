@@ -14,22 +14,24 @@ export default async function ProductsPage() {
     where: { userId: session.user.id },
   });
 
+  if (products.length === 0) {
+    <section>
+      <p>No products found...</p>
+    </section>;
+  }
+
   return (
-    <section className="flex justify-center">
-      {/* {loading ? (
-        <span className="eos-icons--three-dots-loading"></span>
-      ) : ( */}
-      <div className="products-list flex flex-col gap-4">
-        <div className="list-header flex items-center justify-between">
-          <h2 className="text-2xl font-medium">Products List</h2>
-          <Link
-            href="/dashboard/products/new"
-            className="add-product flex gap-1"
-          >
-            <span>+</span>
-            <span className="text-md">Product</span>
-          </Link>
-        </div>
+    <div className="products-list flex flex-col gap-4 w-full">
+      <div className="list-header flex items-center justify-between w-full">
+        <h2 className="text-2xl font-medium">Products List</h2>
+        <Link href="/dashboard/products/new" className="add-product flex gap-1">
+          <span>+</span>
+          <span className="text-md">Product</span>
+        </Link>
+      </div>
+      {products.length === 0 ? (
+        <p>No products found...</p>
+      ) : (
         <ul className="flex flex-col gap-4">
           {products.map((item) => (
             <ListItem
@@ -41,8 +43,7 @@ export default async function ProductsPage() {
             />
           ))}
         </ul>
-      </div>
-      {/* )} */}
-    </section>
+      )}
+    </div>
   );
 }
