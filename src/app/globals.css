@@ -7,7 +7,7 @@
   --accent: #303b2b;
   --accent-fade: #303b2b4b;
   --border: rgba(45, 45, 46, 0.4);
-  --dash-bg: #1f1f1f;
+  --dash-bg: #2f2f2f;
   --input-bg: rgba(32, 32, 32, 0.5);
 }
 
@@ -157,6 +157,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.logout-button a:hover,
 .header-welcome a:hover {
   text-decoration: underline;
 }
