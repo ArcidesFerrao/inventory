@@ -10,7 +10,10 @@ export default async function Home() {
 
   return (
     <main className="flex flex-col items-center gap-4 py-10">
-      <h1 className="text-2xl font-semibold">Welcome to Innovante</h1>
+      <h1 className="text-2xl font-semibold">
+        Welcome to Inventory Management
+      </h1>
+      <p className="font-extralight text-sm">Pick a dashboard</p>
       {session?.user ? (
         <DashMenu />
       ) : (
