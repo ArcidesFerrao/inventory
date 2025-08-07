@@ -10,7 +10,7 @@ export default function DashMenu() {
         <span className="carbon--dashboard"></span>
         <p>Stock Management</p>
       </button>
-      <button className="p-4" onClick={() => redirect("/takeaway")}>
+      <button className="p-4" onClick={() => redirect("/service")}>
         <span className="fa7-solid--store"></span>
         <p>Take Away Management</p>
       </button>

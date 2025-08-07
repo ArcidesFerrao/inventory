@@ -29,3 +29,41 @@ export const Navigator = () => {
     </nav>
   );
 };
+export const ServiceNav = () => {
+  return (
+    <nav className="navigator">
+      <ul className="flex flex-col gap-2">
+        <NavLink
+          href="/service"
+          label="Dashboard"
+          icon={<span className="mage--dashboard-fill"></span>}
+        />
+        <NavLink
+          href="/service/products"
+          label="Products"
+          icon={<span className="ant-design--product-filled"></span>}
+        />
+        <NavLink
+          href="/service/stock"
+          label="Stock"
+          icon={<span className="lsicon--management-stockout-filled"></span>}
+        />
+        <NavLink
+          href="/service/purchases"
+          label="Purchases"
+          icon={<span className="lucide--logs"></span>}
+        />
+        <NavLink
+          href="/service/sales"
+          label="Sales"
+          icon={<span className="lucide--logs"></span>}
+        />
+        <NavLink
+          href="/service/logs"
+          label="Active Logs"
+          icon={<span className="lucide--logs"></span>}
+        />
+      </ul>
+    </nav>
+  );
+};

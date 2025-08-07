@@ -1,4 +1,4 @@
-import { Navigator } from "@/components/Navigator";
+import { ServiceNav } from "@/components/Navigator";
 import React from "react";
 
 export default function DashboardLayout({
@@ -8,7 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <main className="dashboard-main flex gap-5">
-      <Navigator />
+      <ServiceNav />
       <section className="dash-section flex w-full min-h-screen rounded p-8">
         {children}
       </section>
