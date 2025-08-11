@@ -9,7 +9,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center gap-4 py-10">
+    <main className="home-dash flex flex-col items-center gap-4 py-10">
       <h1 className="text-2xl font-semibold">
         Welcome to Inventory Management
       </h1>

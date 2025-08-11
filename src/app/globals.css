@@ -165,3 +165,12 @@ nav {
 .user-page button:hover {
   background-color: rgba(220, 20, 60, 0.7);
 }
+
+.user-page {
+  padding: 1rem;
+  min-height: 80vh;
+}
+
+.home-dash {
+  min-height: 80vh;
+}
