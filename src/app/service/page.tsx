@@ -6,7 +6,7 @@ export default function ServicePage() {
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
         <h1 className="text-4xl font-medium">Dashboard</h1>
-        <Link href="/dashboard/products/new" className="add-product flex gap-1">
+        <Link href="/service/products/new" className="add-product flex gap-1">
           <span>+</span>
           <span className="text-md">Product</span>
         </Link>

@@ -1,0 +1,49 @@
+import { ListItem } from "@/components/List";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { getServerSession } from "next-auth";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+export default async function ProductsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) redirect("/login");
+
+  const products = await db.product.findMany({
+    where: { userId: session.user.id },
+  });
+
+  if (products.length === 0) {
+    <section>
+      <p>No products found...</p>
+    </section>;
+  }
+
+  return (
+    <div className="products-list flex flex-col gap-4 w-full">
+      <div className="list-header flex items-center justify-between w-full">
+        <h2 className="text-2xl font-medium">Products List</h2>
+        <Link href="/service/products/new" className="add-product flex gap-1">
+          <span>+</span>
+          <span className="text-md">Product</span>
+        </Link>
+      </div>
+      {products.length === 0 ? (
+        <p>No products found...</p>
+      ) : (
+        <ul className="flex flex-col gap-4">
+          {products.map((item) => (
+            <ListItem
+              stock={item.stock}
+              id={item.id}
+              name={item.name}
+              price={item.price}
+              key={item.id}
+            />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

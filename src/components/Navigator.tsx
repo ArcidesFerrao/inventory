@@ -51,12 +51,12 @@ export const ServiceNav = () => {
         <NavLink
           href="/service/purchases"
           label="Purchases"
-          icon={<span className="lucide--logs"></span>}
+          icon={<span className="f7--purchased"></span>}
         />
         <NavLink
           href="/service/sales"
           label="Sales"
-          icon={<span className="lucide--logs"></span>}
+          icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
           href="/service/logs"
