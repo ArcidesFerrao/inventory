@@ -17,7 +17,7 @@ export default async function SalesPage() {
   return (
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-medium">Sales List</h2>
+        <h2 className="text-2xl font-medium">Recent Sales</h2>
         <div className="flex">
           <h2 className="text-lg font-bold">Total Sales:</h2>
           <p className="text-lg font-bold px-2">
