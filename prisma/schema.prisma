@@ -44,7 +44,7 @@ model Product {
   PurchaseItem  PurchaseItem[]
   stockMovement StockMovement[]
   Category      Category?       @relation(fields: [categoryId], references: [id])
-  categoryId    String
+  categoryId    String?
   Unit          Unit?           @relation(fields: [unitId], references: [id])
   unitId        String?
 
