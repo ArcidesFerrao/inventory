@@ -63,6 +63,11 @@ export const ServiceNav = () => {
           label="Active Logs"
           icon={<span className="lucide--logs"></span>}
         />
+        <NavLink
+          href="/service/settings"
+          label="Settings"
+          icon={<span className="icon-park-outline--setting-one"></span>}
+        />
       </ul>
     </nav>
   );

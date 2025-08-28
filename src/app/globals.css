@@ -75,6 +75,7 @@ input {
 .dash-menu button {
   padding: 2rem;
   max-width: 12rem;
+  border: 1px solid var(--input-bg);
 }
 input[type="submit"]:disabled {
   background-color: var(--foreground);
@@ -97,6 +98,9 @@ form p a:hover {
   text-decoration: underline;
 }
 
+.dash-menu button:hover {
+  border: var(--foreground) 1px solid;
+}
 .dash-menu button:hover,
 .login-button:hover,
 .navigator a:hover {

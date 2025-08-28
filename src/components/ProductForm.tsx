@@ -1,12 +1,13 @@
 "use client";
 
+import { getCategories } from "@/app/actions/categories";
 import { createProduct } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { productSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
-import React, { useActionState, useEffect } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 type Product = {
@@ -30,6 +31,10 @@ export const ProductForm = ({ product }: { product?: Product }) => {
     defaultValue: product,
   });
 
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
+    []
+  );
+
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
@@ -37,8 +42,14 @@ export const ProductForm = ({ product }: { product?: Product }) => {
           ? "Product edited successfully!"
           : "Product created successfully!"
       );
-      redirect("/dashboard/products");
+      redirect("/service/products");
     }
+
+    const fetchCategories = async () => {
+      setCategories(await getCategories());
+    };
+
+    fetchCategories();
   }, [state, product]);
 
   return (
@@ -95,13 +106,18 @@ export const ProductForm = ({ product }: { product?: Product }) => {
           </div>
         </div>
         <div className="flex flex-col  gap-1">
-          <input
-            type="text"
-            name="category"
-            id="category"
-            placeholder="Category"
-            defaultValue={product?.category}
-          />
+          <label htmlFor="categoryId">Category</label>
+          <select name="categoryId" id="categoryId">
+            <option value="" disabled>
+              Select a category
+            </option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+
           {fields.category.errors && (
             <p className="text-xs font-light">{fields.category.errors}</p>
           )}

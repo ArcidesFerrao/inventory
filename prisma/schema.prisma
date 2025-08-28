@@ -14,33 +14,114 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(cuid())
+  id             String        @id @default(cuid())
   name           String?
-  email          String?   @unique
+  email          String?       @unique
   emailVerified  DateTime?
   image          String?
   hashedPassword String?
   products       Product[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  ActivityLog    ActivityLog[]
+  sales          Sale[]
+  purchases      Purchase[]
 }
 
 model Product {
-  id          String        @id @default(cuid())
-  name        String
-  description String?
-  stock       Int
-  price       Float
-  category    String
-  status      ProductStatus @default(ACTIVE)
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  stock         Int
+  price         Float
+  status        ProductStatus   @default(ACTIVE)
+  userId        String
+  user          User            @relation(fields: [userId], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  SaleItem      SaleItem[]
+  PurchaseItem  PurchaseItem[]
+  stockMovement StockMovement[]
+  Category      Category?       @relation(fields: [categoryId], references: [id])
+  categoryId    String?
+  Unit          Unit?           @relation(fields: [unitId], references: [id])
+  unitId        String?
 }
 
 enum ProductStatus {
   ACTIVE
   DRAFT
   OUT_OF_STOCK
+}
+
+model Sale {
+  id          String     @id @default(uuid())
+  date        DateTime   @default(now())
+  total       Float
+  paymentType String
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  SaleItem    SaleItem[]
+}
+
+model SaleItem {
+  id        String  @id @default(uuid())
+  saleId    String
+  productId String
+  quantity  Int
+  price     Float
+  sale      Sale    @relation(fields: [saleId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Purchase {
+  id           String         @id @default(uuid())
+  date         DateTime       @default(now())
+  total        Float
+  supplier     String?
+  paymentType  String
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  PurchaseItem PurchaseItem[]
+}
+
+model PurchaseItem {
+  id         String   @id @default(uuid())
+  purchaseId String
+  productId  String
+  quantity   Int
+  price      Float
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String
+  actionType  String
+  description String
+  timestamp   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model StockMovement {
+  id          String   @id @default(cuid())
+  productId   String
+  changeType  String
+  quantity    Int
+  description String?
+  timestamp   DateTime @default(now())
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  products Product[]
+}
+
+model Unit {
+  id       String    @id @default(cuid())
+  name     String    @unique // ex: "kg", "L", "pcs", "Unit"
+  products Product[]
 }
