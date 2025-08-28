@@ -178,3 +178,15 @@ nav {
 .home-dash {
   min-height: 80vh;
 }
+
+.amount-btn span {
+  border-left: solid 1px var(--input-bg);
+  border-right: solid 1px var(--input-bg);
+  padding: 0 0.6rem;
+}
+.amount-btn {
+  /* background-color: var(--input-bg); */
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: solid 1px var(--input-bg);
+}
