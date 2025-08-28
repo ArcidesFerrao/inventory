@@ -16,7 +16,13 @@ export default async function StockPage() {
     );
 
   const products = await db.product.findMany({
-    where: { userId: session.user.id },
+    where: {
+      userId: session.user.id,
+      Category: {
+        name: "stock",
+      },
+    },
+    include: { Category: true },
   });
 
   return (
