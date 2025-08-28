@@ -94,6 +94,17 @@ button:active {
   color: var(--dash-bg);
 }
 
+select {
+  padding: 0.4rem;
+  background-color: var(--input-bg);
+}
+option {
+  background-color: var(--background);
+}
+option:disabled {
+  color: var(--foreground);
+}
+
 form p a:hover {
   text-decoration: underline;
 }

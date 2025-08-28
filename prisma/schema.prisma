@@ -35,6 +35,7 @@ model Product {
   stock         Int
   price         Float
   status        ProductStatus   @default(ACTIVE)
+  type          ProductType     @default(STOCK)
   userId        String
   user          User            @relation(fields: [userId], references: [id])
   createdAt     DateTime        @default(now())
@@ -43,15 +44,35 @@ model Product {
   PurchaseItem  PurchaseItem[]
   stockMovement StockMovement[]
   Category      Category?       @relation(fields: [categoryId], references: [id])
-  categoryId    String?
+  categoryId    String
   Unit          Unit?           @relation(fields: [unitId], references: [id])
   unitId        String?
+
+  RecipeItem RecipeItem[]
+  MenuItems  RecipeItem[] @relation("MenuItems")
+  StockItems RecipeItem[] @relation("StockItems")
 }
 
 enum ProductStatus {
   ACTIVE
   DRAFT
   OUT_OF_STOCK
+}
+
+enum ProductType {
+  SERVICE
+  STOCK
+}
+
+model RecipeItem {
+  id        String   @id @default(cuid())
+  menuId    String
+  stockId   String
+  quantity  Int
+  menu      Product  @relation("MenuItems", fields: [menuId], references: [id])
+  stock     Product  @relation("StockItems", fields: [stockId], references: [id])
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }
 
 model Sale {
@@ -121,7 +142,8 @@ model Category {
 }
 
 model Unit {
-  id       String    @id @default(cuid())
-  name     String    @unique // ex: "kg", "L", "pcs", "Unit"
-  products Product[]
+  id          String    @id @default(cuid())
+  name        String    @unique // ex: "kg", "L", "pcs", "Unit"
+  description String?
+  products    Product[]
 }

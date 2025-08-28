@@ -105,22 +105,38 @@ export const ProductForm = ({ product }: { product?: Product }) => {
             )}
           </div>
         </div>
-        <div className="flex flex-col  gap-1">
-          <label htmlFor="categoryId">Category</label>
-          <select name="categoryId" id="categoryId">
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
+        <div className="flex gap-2">
+          <div className="flex flex-col gap-1 w-1/2">
+            <label htmlFor="categoryId">Category</label>
+            <select name="categoryId" id="categoryId">
+              <option value="" disabled>
+                Select a category
               </option>
-            ))}
-          </select>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
 
-          {fields.category.errors && (
-            <p className="text-xs font-light">{fields.category.errors}</p>
-          )}
+            {fields.category.errors && (
+              <p className="text-xs font-light">{fields.category.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col w-1/2 gap-1">
+            <label htmlFor="unit">Unit</label>
+            <select name="unit" id="unit">
+              <option value="" disabled>
+                Select a unit
+              </option>
+              <option value="kg">Kg</option>
+              <option value="liters">Liters</option>
+            </select>
+
+            {fields.category.errors && (
+              <p className="text-xs font-light">{fields.category.errors}</p>
+            )}
+          </div>
         </div>
         <div className="flex flex-col gap-1">
           <textarea
