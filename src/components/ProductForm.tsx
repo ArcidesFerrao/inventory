@@ -15,6 +15,8 @@ type Product = {
   name: string;
   price: number;
   stock: number;
+  quantity: number;
+  unit: string;
   category: string;
   type: string;
   description: string | null;
@@ -67,17 +69,62 @@ export const ProductForm = ({ product }: { product?: Product }) => {
         {product && (
           <input type="hidden" name="id" id="id" value={product.id} />
         )}
-        <div className="flex flex-col gap-1">
-          <input
-            type="text"
-            name="name"
-            id="name"
-            placeholder="Product Name"
-            defaultValue={product?.name}
-          />
-          {fields.name.errors && (
-            <p className="text-xs font-light">{fields.name.errors}</p>
-          )}
+        <div className="flex gap-2 items-end">
+          <div className="flex w-full flex-col gap-1">
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Product Name"
+              defaultValue={product?.name}
+            />
+            {fields.name.errors && (
+              <p className="text-xs font-light">{fields.name.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="type">Type</label>
+            <select name="type" id="type">
+              <option value="" disabled>
+                Select a type
+              </option>
+              <option value="STOCK" defaultChecked>
+                Stock
+              </option>
+              <option value="SERVICE">Menu</option>
+            </select>
+            {fields.type.errors && (
+              <p className="text-xs font-light">{fields.type.errors}</p>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="stock">Quantidade Unit.</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              defaultValue={product?.quantity}
+            />
+            {fields.stock.errors && (
+              <p className="text-xs font-light">{fields.quantity.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col w-1/2 gap-1">
+            <label htmlFor="unit">Unit</label>
+            <select name="unit" id="unit">
+              <option value="" disabled>
+                Select a unit
+              </option>
+              <option value="kg">Kg</option>
+              <option value="liters">Liters</option>
+            </select>
+
+            {fields.unit.errors && (
+              <p className="text-xs font-light">{fields.unit.errors}</p>
+            )}
+          </div>
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col gap-1">
@@ -122,35 +169,6 @@ export const ProductForm = ({ product }: { product?: Product }) => {
 
             {fields.category.errors && (
               <p className="text-xs font-light">{fields.category.errors}</p>
-            )}
-          </div>
-          <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="unit">Unit</label>
-            <select name="unit" id="unit">
-              <option value="" disabled>
-                Select a unit
-              </option>
-              <option value="kg">Kg</option>
-              <option value="liters">Liters</option>
-            </select>
-
-            {fields.category.errors && (
-              <p className="text-xs font-light">{fields.category.errors}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="type">Type</label>
-            <select name="type" id="type">
-              <option value="" disabled>
-                Select a type
-              </option>
-              <option value="STOCK" defaultChecked>
-                Stock
-              </option>
-              <option value="SERVICE">Menu</option>
-            </select>
-            {fields.type.errors && (
-              <p className="text-xs font-light">{fields.type.errors}</p>
             )}
           </div>
         </div>

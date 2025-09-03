@@ -29,17 +29,19 @@ model User {
 }
 
 model Product {
-  id            String          @id @default(cuid())
-  name          String
-  description   String?
-  stock         Int
-  price         Float
-  status        ProductStatus   @default(ACTIVE)
-  type          ProductType     @default(STOCK)
-  userId        String
-  user          User            @relation(fields: [userId], references: [id])
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  stock       Int
+  price       Float?
+  quantity    Int
+  status      ProductStatus @default(ACTIVE)
+  type        ProductType   @default(STOCK)
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
   SaleItem      SaleItem[]
   PurchaseItem  PurchaseItem[]
   stockMovement StockMovement[]
