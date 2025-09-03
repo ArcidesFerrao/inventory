@@ -16,6 +16,7 @@ type Product = {
   price: number;
   stock: number;
   category: string;
+  type: string;
   description: string | null;
 };
 
@@ -135,6 +136,21 @@ export const ProductForm = ({ product }: { product?: Product }) => {
 
             {fields.category.errors && (
               <p className="text-xs font-light">{fields.category.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="type">Type</label>
+            <select name="type" id="type">
+              <option value="" disabled>
+                Select a type
+              </option>
+              <option value="STOCK" defaultChecked>
+                Stock
+              </option>
+              <option value="SERVICE">Menu</option>
+            </select>
+            {fields.type.errors && (
+              <p className="text-xs font-light">{fields.type.errors}</p>
             )}
           </div>
         </div>
