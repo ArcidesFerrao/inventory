@@ -21,6 +21,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
   );
 
   const handleCompleteSale = async () => {
+    console.log("creating sale");
     const saleItems = products.filter((product) => product.quantity > 0);
     if (saleItems.length === 0) return;
 

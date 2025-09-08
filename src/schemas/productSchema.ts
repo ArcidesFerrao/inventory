@@ -5,9 +5,9 @@ export const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
     description: z.string().optional(),
     price: z.coerce.number().positive("Price must be positive"),
-    quantity: z.coerce.number().positive("Quanitity must be greater than 0"),
-    stock: z.coerce.number().int().nonnegative("Stock must be 0 or more"),
-    unit: z.string().optional(),
+    quantity: z.number().positive("Quanitity must be greater than 0"),
+    stock: z.coerce.number().int(),
+    unitId: z.string().optional(),
     categoryId: z.string().optional(),
     type: z.enum(["STOCK", "SERVICE"]).default("STOCK"),
     recipe: z.array(

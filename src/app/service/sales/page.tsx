@@ -21,7 +21,7 @@ export default async function SalesPage() {
         <div className="flex">
           <h2 className="text-lg font-bold">Total Sales:</h2>
           <p className="text-lg font-bold px-2">
-            {sales.reduce((acc, sale) => acc + sale.total, 0)}
+            MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
           </p>
         </div>
         <Link href="/service/sales/new" className="add-product flex gap-1">
@@ -34,16 +34,16 @@ export default async function SalesPage() {
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Total</th>
-              <th>Payment Type</th>
+              <th className="text-start">Date</th>
+              <th className="text-start">Total (MZN)</th>
+              <th className="text-start">Payment Type</th>
             </tr>
           </thead>
           <tbody>
             {sales.map((sale) => (
               <tr key={sale.id}>
                 <td>{new Date(sale.date).toLocaleDateString()}</td>
-                <td>{sale.total}</td>
+                <td>{sale.total}.00</td>
                 <td>{sale.paymentType}</td>
               </tr>
             ))}

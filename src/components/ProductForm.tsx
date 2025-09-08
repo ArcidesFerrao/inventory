@@ -3,6 +3,7 @@
 import { getCategories } from "@/app/actions/categories";
 import { createProduct } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
+import { getUnits } from "@/app/actions/units";
 import { productSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
@@ -34,9 +35,12 @@ export const ProductForm = ({ product }: { product?: Product }) => {
     defaultValue: product,
   });
 
+  const [type, setType] = useState("STOCK");
+
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
   );
+  const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -51,8 +55,12 @@ export const ProductForm = ({ product }: { product?: Product }) => {
     const fetchCategories = async () => {
       setCategories(await getCategories());
     };
+    const fetchUnits = async () => {
+      setUnits(await getUnits());
+    };
 
     fetchCategories();
+    fetchUnits();
   }, [state, product]);
 
   return (
@@ -84,7 +92,12 @@ export const ProductForm = ({ product }: { product?: Product }) => {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="type">Type</label>
-            <select name="type" id="type">
+            <select
+              name="type"
+              id="type"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
               <option value="" disabled>
                 Select a type
               </option>
@@ -100,25 +113,28 @@ export const ProductForm = ({ product }: { product?: Product }) => {
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col gap-1">
-            <label htmlFor="stock">Quantidade Unit.</label>
+            <label htmlFor="quantity">Quantidade Unit.</label>
             <input
               type="number"
-              name="stock"
-              id="stock"
+              name="quantity"
+              id="quantity"
               defaultValue={product?.quantity}
             />
-            {fields.stock.errors && (
+            {fields.quantity.errors && (
               <p className="text-xs font-light">{fields.quantity.errors}</p>
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
             <label htmlFor="unit">Unit</label>
-            <select name="unit" id="unit">
+            <select name="unit" id="unitId">
               <option value="" disabled>
                 Select a unit
               </option>
-              <option value="kg">Kg</option>
-              <option value="liters">Liters</option>
+              {units.map((unit) => (
+                <option key={unit.id} value={unit.id}>
+                  {unit.name}
+                </option>
+              ))}
             </select>
 
             {fields.unit.errors && (
@@ -153,25 +169,27 @@ export const ProductForm = ({ product }: { product?: Product }) => {
             )}
           </div>
         </div>
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-1 w-1/2">
-            <label htmlFor="categoryId">Category</label>
-            <select name="categoryId" id="categoryId">
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+        {type === "SERVICE" && (
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-1 w-1/2">
+              <label htmlFor="categoryId">Category</label>
+              <select name="categoryId" id="categoryId">
+                <option value="" disabled>
+                  Select a category
                 </option>
-              ))}
-            </select>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
 
-            {fields.category.errors && (
-              <p className="text-xs font-light">{fields.category.errors}</p>
-            )}
+              {fields.category.errors && (
+                <p className="text-xs font-light">{fields.category.errors}</p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="flex flex-col gap-1">
           <textarea
             name="description"

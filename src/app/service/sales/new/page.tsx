@@ -12,7 +12,10 @@ export default async function NewSale() {
   if (!session?.user) redirect("/login");
 
   const products = await db.product.findMany({
-    where: { userId: session.user.id },
+    where: {
+      userId: session.user.id,
+      type: "SERVICE",
+    },
   });
 
   return (
@@ -27,7 +30,13 @@ export default async function NewSale() {
         {products.length === 0 ? (
           <p>No products found...</p>
         ) : (
-          <SalesList initialProducts={products} userId={session.user.id} />
+          <SalesList
+            initialProducts={products.map((product) => ({
+              ...product,
+              price: product.price ?? 0,
+            }))}
+            userId={session.user.id}
+          />
         )}
       </div>
     </div>
