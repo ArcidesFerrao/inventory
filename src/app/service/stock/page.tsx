@@ -23,14 +23,14 @@ export default async function StockPage() {
   });
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 ">
       <h2 className="text-2xl font-semibold">Stock</h2>
       <div className="flex gap-2">
         <h3>Number of Products:</h3>
         <p>{products.length}</p>
       </div>
       {products.length > 0 && (
-        <table>
+        <table className="min-w-lg">
           <thead>
             <tr>
               <th>Product</th>
