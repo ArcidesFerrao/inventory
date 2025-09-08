@@ -1,7 +1,11 @@
 import Link from "next/link";
 import React from "react";
+import { getServiceDashBoardStats } from "../actions/dashboardStats";
 
-export default function ServicePage() {
+export default async function ServicePage() {
+  const stats = await getServiceDashBoardStats();
+
+  if (!stats) return <p>Please login to see the dashboard</p>;
   return (
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
@@ -15,7 +19,7 @@ export default function ServicePage() {
         <div className="balance flex flex-col p-4">
           <h2 className="text-xl">Total Balance</h2>
           <h1 className="text-2xl py-2 whitespace-nowrap font-bold">
-            MZN 24 650,00
+            MZN {stats.totalBalance},00
           </h1>
         </div>
         <div className="stats flex flex-col gap-4 w-full p-4">
@@ -23,17 +27,21 @@ export default function ServicePage() {
           <div className="stats-container flex justify-between">
             <div className="earnings ">
               <h3 className="text-lg">Total Earnings</h3>
-              <h2 className="text-xl py-2 font-medium">MZN 12 523,00</h2>
+              <h2 className="text-xl py-2 font-medium">
+                MZN {stats.totalEarnings},00
+              </h2>
             </div>
             <span className="divider"></span>
             <div className="sales">
               <h3 className="text-lg">Number of Sales</h3>
-              <h2 className="text-xl py-2  font-medium">5 431</h2>
+              <h2 className="text-xl py-2  font-medium">{stats.salesCount}</h2>
             </div>
             <span className="divider"></span>
             <div className="products">
               <h3 className="text-lg">Number of Products</h3>
-              <h2 className="text-xl py-2  font-medium">15</h2>
+              <h2 className="text-xl py-2  font-medium">
+                {stats.productCount}
+              </h2>
             </div>
           </div>
         </div>

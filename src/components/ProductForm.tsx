@@ -36,6 +36,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
   });
 
   const [type, setType] = useState("STOCK");
+  const [category, setCategory] = useState("Lanche");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
@@ -156,24 +157,31 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               <p className="text-xs font-light">{fields.price.errors}</p>
             )}
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="stock">Stock</label>
-            <input
-              type="number"
-              name="stock"
-              id="stock"
-              defaultValue={product?.stock}
-            />
-            {fields.stock.errors && (
-              <p className="text-xs font-light">{fields.stock.errors}</p>
-            )}
-          </div>
+          {category === "Bebida" && (
+            <div className="flex flex-col gap-1">
+              <label htmlFor="stock">Stock</label>
+              <input
+                type="number"
+                name="stock"
+                id="stock"
+                defaultValue={product?.stock}
+              />
+              {fields.stock.errors && (
+                <p className="text-xs font-light">{fields.stock.errors}</p>
+              )}
+            </div>
+          )}
         </div>
         {type === "SERVICE" && (
           <div className="flex gap-2">
             <div className="flex flex-col gap-1 w-1/2">
               <label htmlFor="categoryId">Category</label>
-              <select name="categoryId" id="categoryId">
+              <select
+                name="categoryId"
+                id="categoryId"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
                 <option value="" disabled>
                   Select a category
                 </option>
