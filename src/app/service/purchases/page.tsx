@@ -20,10 +20,10 @@ export default async function PurchasesPage() {
         <div className="flex">
           <h2 className="text-lg font-bold">Total Purchases:</h2>
           <p className="text-lg font-bold px-2">
-            {purchases.reduce((acc, sale) => acc + sale.total, 0)}
+            MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
           </p>
         </div>
-        <Link href="/service/purchase/new" className="add-product flex gap-1">
+        <Link href="/service/purchases/new" className="add-product flex gap-1">
           <span className="text-md px-2">Purchase</span>
         </Link>
       </div>
@@ -33,16 +33,16 @@ export default async function PurchasesPage() {
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Total</th>
-              <th>Payment Type</th>
+              <th className="text-start">Date</th>
+              <th className="text-start">Total (MZN)</th>
+              <th className="text-start">Payment Type</th>
             </tr>
           </thead>
           <tbody>
             {purchases.map((purchase) => (
               <tr key={purchase.id}>
                 <td>{new Date(purchase.date).toLocaleDateString()}</td>
-                <td>{purchase.total}</td>
+                <td>{purchase.total}.00</td>
                 <td>{purchase.paymentType}</td>
               </tr>
             ))}

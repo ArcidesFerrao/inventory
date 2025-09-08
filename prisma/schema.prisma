@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,51 +13,38 @@ model User {
   email          String?       @unique
   emailVerified  DateTime?
   image          String?
-  hashedPassword String?
-  products       Product[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+  hashedPassword String?
   ActivityLog    ActivityLog[]
-  sales          Sale[]
+  products       Product[]
   purchases      Purchase[]
+  sales          Sale[]
 }
 
 model Product {
-  id          String        @id @default(cuid())
-  name        String
-  description String?
-  stock       Int
-  price       Float?
-  quantity    Int
-  status      ProductStatus @default(ACTIVE)
-  type        ProductType   @default(STOCK)
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  SaleItem      SaleItem[]
-  PurchaseItem  PurchaseItem[]
-  stockMovement StockMovement[]
-  Category      Category?       @relation(fields: [categoryId], references: [id])
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  stock         Int
+  price         Float?
+  status        ProductStatus   @default(ACTIVE)
+  userId        String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   categoryId    String?
-  Unit          Unit?           @relation(fields: [unitId], references: [id])
   unitId        String?
-
-  RecipeItem RecipeItem[]
-  MenuItems  RecipeItem[] @relation("MenuItems")
-  StockItems RecipeItem[] @relation("StockItems")
-}
-
-enum ProductStatus {
-  ACTIVE
-  DRAFT
-  OUT_OF_STOCK
-}
-
-enum ProductType {
-  SERVICE
-  STOCK
+  quantity      Int
+  type          ProductType     @default(STOCK)
+  Category      Category?       @relation(fields: [categoryId], references: [id])
+  Unit          Unit?           @relation(fields: [unitId], references: [id])
+  user          User            @relation(fields: [userId], references: [id])
+  PurchaseItem  PurchaseItem[]
+  MenuItems     RecipeItem[]    @relation("MenuItems")
+  RecipeItem    RecipeItem[]
+  StockItems    RecipeItem[]    @relation("StockItems")
+  SaleItem      SaleItem[]
+  stockMovement StockMovement[]
 }
 
 model RecipeItem {
@@ -71,10 +52,10 @@ model RecipeItem {
   menuId    String
   stockId   String
   quantity  Int
-  menu      Product  @relation("MenuItems", fields: [menuId], references: [id])
-  stock     Product  @relation("StockItems", fields: [stockId], references: [id])
-  Product   Product? @relation(fields: [productId], references: [id])
   productId String?
+  menu      Product  @relation("MenuItems", fields: [menuId], references: [id])
+  Product   Product? @relation(fields: [productId], references: [id])
+  stock     Product  @relation("StockItems", fields: [stockId], references: [id])
 }
 
 model Sale {
@@ -93,8 +74,8 @@ model SaleItem {
   productId String
   quantity  Int
   price     Float
-  sale      Sale    @relation(fields: [saleId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
+  sale      Sale    @relation(fields: [saleId], references: [id])
 }
 
 model Purchase {
@@ -112,10 +93,10 @@ model PurchaseItem {
   id         String   @id @default(uuid())
   purchaseId String
   productId  String
-  quantity   Int
+  stock      Int
   price      Float
-  purchase   Purchase @relation(fields: [purchaseId], references: [id])
   product    Product  @relation(fields: [productId], references: [id])
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
 }
 
 model ActivityLog {
@@ -145,7 +126,18 @@ model Category {
 
 model Unit {
   id          String    @id @default(cuid())
-  name        String    @unique // ex: "kg", "L", "pcs", "Unit"
+  name        String    @unique
   description String?
   products    Product[]
+}
+
+enum ProductStatus {
+  ACTIVE
+  DRAFT
+  OUT_OF_STOCK
+}
+
+enum ProductType {
+  SERVICE
+  STOCK
 }
