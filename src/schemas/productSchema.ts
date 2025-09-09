@@ -6,7 +6,7 @@ export const productSchema = z.object({
     description: z.string().optional(),
     price: z.coerce.number().positive("Price must be positive"),
     quantity: z.number().positive("Quanitity must be greater than 0"),
-    stock: z.coerce.number().int(),
+    stock: z.coerce.number().int().optional(),
     unitId: z.string().optional(),
     categoryId: z.string().optional(),
     type: z.enum(["STOCK", "SERVICE"]).default("STOCK"),

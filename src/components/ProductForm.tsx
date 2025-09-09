@@ -15,7 +15,7 @@ type Product = {
   id: string;
   name: string;
   price: number | null;
-  stock?: number;
+  stock?: number | null;
   quantity: number;
   type: "STOCK" | "SERVICE";
   description: string | null;
@@ -191,7 +191,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
                   type="number"
                   name="stock"
                   id="stock"
-                  defaultValue={product?.stock}
+                  defaultValue={product?.stock || 0}
                 />
                 {fields.stock.errors && (
                   <p className="text-xs font-light">{fields.stock.errors}</p>
@@ -228,14 +228,14 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               <div className="flex flex-col gap-2">
                 {recipeItems.map((item, index) => (
                   <div key={item.productId} className="flex justify-between">
-                    <label htmlFor={`recipeItems[${index}].quantity`}>
+                    <label htmlFor={`recipe[${index}].quantity`}>
                       {item.name}
                     </label>
                     <input
                       type="number"
                       className="max-w-1/3"
                       min={0}
-                      name={`recipeItems[${index}].quantity`}
+                      name={`recipe[${index}].quantity`}
                       value={item.quantity}
                       onChange={(e) => {
                         const newQuantity = Number(e.target.value);
@@ -253,7 +253,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
                     />
                     <input
                       type="hidden"
-                      name={`recipeItems[${index}].productId`}
+                      name={`recipe[${index}].stockId`}
                       value={item.productId}
                     />
                   </div>
