@@ -26,7 +26,7 @@ model Product {
   id            String          @id @default(cuid())
   name          String
   description   String?
-  stock         Int
+  stock         Int?
   price         Float?
   status        ProductStatus   @default(ACTIVE)
   userId        String

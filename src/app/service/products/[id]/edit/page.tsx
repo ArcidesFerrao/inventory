@@ -10,13 +10,9 @@ export default async function EditProductPage(props: { params: Params }) {
     where: {
       id,
     },
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      stock: true,
-      category: true,
-      description: true,
+    include: {
+      Category: true,
+      Unit: true,
     },
   });
   if (!product) return <div>Product not found</div>;
@@ -24,7 +20,15 @@ export default async function EditProductPage(props: { params: Params }) {
   return (
     <div className="flex flex-col gap-2 items-center w-full">
       <h1 className="text-xl font-semibold">Edit Product: {id}</h1>
-      <ProductForm product={product} />
+      <ProductForm
+        product={{
+          ...product,
+          Category: product.Category ?? undefined,
+          Unit: product.Unit
+            ? { id: product.Unit.id, name: product.Unit.name }
+            : undefined,
+        }}
+      />
     </div>
   );
 }

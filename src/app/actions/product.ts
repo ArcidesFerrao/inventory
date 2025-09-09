@@ -18,7 +18,6 @@ export async function createProduct(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
 
-
         await db.product.create({
             data: {
                 ...values,
@@ -67,4 +66,19 @@ export async function editProduct(prevState: unknown, formData: FormData) {
             error: { general: ["Failed to update Product"]}
         } satisfies SubmissionResult<string[]>
     }
+}
+
+
+export async function getProducts() {
+  try {
+    const products = await db.product.findMany(
+        {where: {
+            type: "STOCK",
+        }}
+    );
+    return products;
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    return [];
+  }
 }

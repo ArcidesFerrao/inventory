@@ -1,7 +1,7 @@
 "use client";
 
 import { getCategories } from "@/app/actions/categories";
-import { createProduct } from "@/app/actions/product";
+import { createProduct, getProducts } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
 import { productSchema } from "@/schemas/productSchema";
@@ -14,13 +14,19 @@ import toast from "react-hot-toast";
 type Product = {
   id: string;
   name: string;
-  price: number;
-  stock: number;
+  price: number | null;
+  stock?: number;
   quantity: number;
-  unit: string;
-  category: string;
-  type: string;
+  type: "STOCK" | "SERVICE";
   description: string | null;
+  Unit?: {
+    id: string;
+    name: string;
+  };
+  Category?: {
+    id: string;
+    name: string;
+  };
 };
 
 export const ProductForm = ({ product }: { product?: Product }) => {
@@ -42,6 +48,26 @@ export const ProductForm = ({ product }: { product?: Product }) => {
     []
   );
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
+
+  const [recipeItems, setRecipeItems] = useState<
+    { productId: string; name: string; quantity: number }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await getProducts();
+
+      setRecipeItems(
+        products.map((p) => ({
+          productId: p.id,
+          name: p.name,
+          quantity: 0,
+        }))
+      );
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -69,7 +95,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col py-4 gap-2 "
+      className="flex flex-col py-4 gap-2 min-w-md"
     >
       <h2 className="text-center">
         Fill the form to {product ? "edit the" : "create a new"} Product
@@ -138,8 +164,8 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               ))}
             </select>
 
-            {fields.unit.errors && (
-              <p className="text-xs font-light">{fields.unit.errors}</p>
+            {fields.Unit.errors && (
+              <p className="text-xs font-light">{fields.Unit.errors}</p>
             )}
           </div>
         </div>
@@ -150,31 +176,32 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               type="number"
               name="price"
               id="price"
-              defaultValue={product?.price}
+              defaultValue={product?.price || 0}
             />
 
             {fields.price.errors && (
               <p className="text-xs font-light">{fields.price.errors}</p>
             )}
           </div>
-          {category === "Bebida" && (
-            <div className="flex flex-col gap-1">
-              <label htmlFor="stock">Stock</label>
-              <input
-                type="number"
-                name="stock"
-                id="stock"
-                defaultValue={product?.stock}
-              />
-              {fields.stock.errors && (
-                <p className="text-xs font-light">{fields.stock.errors}</p>
-              )}
-            </div>
-          )}
+          {category === "Bebida" ||
+            (type === "STOCK" && (
+              <div className="flex flex-col gap-1">
+                <label htmlFor="stock">Stock</label>
+                <input
+                  type="number"
+                  name="stock"
+                  id="stock"
+                  defaultValue={product?.stock}
+                />
+                {fields.stock.errors && (
+                  <p className="text-xs font-light">{fields.stock.errors}</p>
+                )}
+              </div>
+            ))}
         </div>
         {type === "SERVICE" && (
-          <div className="flex gap-2">
-            <div className="flex flex-col gap-1 w-1/2">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <label htmlFor="categoryId">Category</label>
               <select
                 name="categoryId"
@@ -192,10 +219,47 @@ export const ProductForm = ({ product }: { product?: Product }) => {
                 ))}
               </select>
 
-              {fields.category.errors && (
-                <p className="text-xs font-light">{fields.category.errors}</p>
+              {fields.Category.errors && (
+                <p className="text-xs font-light">{fields.Category.errors}</p>
               )}
             </div>
+            <fieldset className="flex flex-col gap-4">
+              <legend>Recipe</legend>
+              <div className="flex flex-col gap-2">
+                {recipeItems.map((item, index) => (
+                  <div key={item.productId} className="flex justify-between">
+                    <label htmlFor={`recipeItems[${index}].quantity`}>
+                      {item.name}
+                    </label>
+                    <input
+                      type="number"
+                      className="max-w-1/3"
+                      min={0}
+                      name={`recipeItems[${index}].quantity`}
+                      value={item.quantity}
+                      onChange={(e) => {
+                        const newQuantity = Number(e.target.value);
+                        setRecipeItems((prev) =>
+                          prev.map((ri) =>
+                            ri.productId === item.productId
+                              ? {
+                                  ...ri,
+                                  quantity: newQuantity,
+                                }
+                              : ri
+                          )
+                        );
+                      }}
+                    />
+                    <input
+                      type="hidden"
+                      name={`recipeItems[${index}].productId`}
+                      value={item.productId}
+                    />
+                  </div>
+                ))}
+              </div>
+            </fieldset>
           </div>
         )}
         <div className="flex flex-col gap-1">
