@@ -22,7 +22,9 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
   const handleCompleteSale = async () => {
     console.log("creating sale");
-    const saleItems = products.filter((product) => product.quantity > 0);
+
+    const saleItems = products.filter((product) => product.stock > 0);
+
     if (saleItems.length === 0) return;
 
     const result = await createSale(saleItems, userId);

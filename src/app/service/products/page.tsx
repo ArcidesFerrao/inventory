@@ -48,7 +48,6 @@ export default async function ProductsPage() {
             <ul className="flex flex-col gap-4">
               {lanche.map((item) => (
                 <ListItem
-                  stock={item.stock}
                   id={item.id}
                   name={item.name}
                   price={item.price || 0}
@@ -62,7 +61,6 @@ export default async function ProductsPage() {
             <ul className="flex flex-col gap-4">
               {bebidas.map((item) => (
                 <ListItem
-                  stock={item.stock}
                   id={item.id}
                   name={item.name}
                   price={item.price || 0}
@@ -76,7 +74,6 @@ export default async function ProductsPage() {
             <ul className="flex flex-col gap-4">
               {refeicao.map((item) => (
                 <ListItem
-                  stock={item.stock}
                   id={item.id}
                   name={item.name}
                   price={item.price || 0}
