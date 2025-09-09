@@ -20,9 +20,21 @@ export async function createProduct(prevState: unknown, formData: FormData) {
 
         await db.product.create({
             data: {
-                ...values,
+                name: values.name,
+                description: values.description,
+                price: values.price,
+                quantity: values.quantity,
+                unitId: values.unitId,
+                categoryId: values.categoryId,
+                type: values.type,
                 status: "ACTIVE",
-                userId: session.user.id
+                userId: session.user.id,
+                MenuItems: {
+                    create: values.recipe?.map((r) => ({
+                        stockId: r.stockId,
+                        quantity: r.quantity
+                    })) || [],
+                }
             }
         });
 

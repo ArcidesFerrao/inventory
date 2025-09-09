@@ -7,7 +7,7 @@ import { getUnits } from "@/app/actions/units";
 import { productSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -40,7 +40,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
     shouldRevalidate: "onSubmit",
     defaultValue: product,
   });
-
+  const router = useRouter();
   const [type, setType] = useState("STOCK");
   const [category, setCategory] = useState("Lanche");
 
@@ -76,7 +76,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
           ? "Product edited successfully!"
           : "Product created successfully!"
       );
-      redirect("/service/products");
+      router.push("/service/products");
     }
 
     const fetchCategories = async () => {
@@ -88,7 +88,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
 
     fetchCategories();
     fetchUnits();
-  }, [state, product]);
+  }, [state, product, router]);
 
   return (
     <form
@@ -145,7 +145,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               type="number"
               name="quantity"
               id="quantity"
-              defaultValue={product?.quantity}
+              defaultValue={product?.quantity ?? 1}
             />
             {fields.quantity.errors && (
               <p className="text-xs font-light">{fields.quantity.errors}</p>
@@ -153,7 +153,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
           </div>
           <div className="flex flex-col w-1/2 gap-1">
             <label htmlFor="unit">Unit</label>
-            <select name="unit" id="unitId">
+            <select name="unitId" id="unitId">
               <option value="" disabled>
                 Select a unit
               </option>

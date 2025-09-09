@@ -13,7 +13,7 @@ export const productSchema = z.object({
     recipe: z.array(
         z.object({
             stockId: z.string().min(1, "Stock item is required"),
-            quantity: z.coerce.number().positive("Quantity must be greater than 0"),
+            quantity: z.coerce.number(),
         })
     ).optional(),
 })
