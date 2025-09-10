@@ -2,9 +2,13 @@
 
 import { createSale } from "@/app/actions/sales";
 import { ProductsProps } from "@/types/types";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
+  const router = useRouter();
+
   const [products, setProducts] = useState(
     initialProducts.map((p) => ({ ...p, quantity: 0 }))
   );
@@ -17,6 +21,13 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     if (saleItems.length === 0) return;
 
     const result = await createSale(saleItems, userId);
+
+    if (result.success) {
+      toast.success("Sale Completed");
+      setTimeout(() => {
+        router.push("/service/products");
+      }, 500);
+    }
 
     console.log("Sale completed:", result);
   };

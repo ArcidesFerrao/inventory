@@ -36,26 +36,29 @@ export async function createSale(
             for (const saleItem of saleItems) {
                 console.log("Processing saleItem:", saleItem.name);
                 const productRecipes = saleItem.MenuItems || [];
-
+                
                 for (const recipeItem of productRecipes) {
-
+                    
+                    console.log("Looping recipeItem:", saleItem.name);
                     if (recipeItem.quantity > 0) {
-
+                        
                         const qtyUsed = saleItem.quantity * recipeItem.quantity;
                         
                         const stockProduct = await tx.product.findUnique({
-
+                            
                             where: {
                                 id: recipeItem.stockId
                             },
                             select: {
+                                name: true,
                                 price: true,
                                 stock: true,
                             }
                         })
-
+                        
                         if (!stockProduct) continue;
-
+                        console.log("Updating stockProduct:", stockProduct.name);
+                        
                         await tx.product.update({
                             where: { id: recipeItem.stockId },
                                 data: {

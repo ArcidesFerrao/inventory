@@ -12,7 +12,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
   return (
     <li key={id} className="flex p-4 justify-between">
       <div className="flex flex-col gap-4 justify-between ">
-        <Link href={`/dashboard/products/${id}`}>
+        <Link href={`/service/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
       </div>
@@ -22,7 +22,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
           <DeleteButton productId={id} />
           <Link
             className="edit-button p-2 flex "
-            href={`/dashboard/products/${id}/edit`}
+            href={`/service/products/${id}/edit`}
           >
             <span className="mdi--edit"></span>
           </Link>
