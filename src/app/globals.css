@@ -50,6 +50,9 @@ header {
   margin: 1rem 0;
 }
 
+th {
+  text-align: start;
+}
 th,
 td {
   padding: 0.4rem 0.8rem;
@@ -154,6 +157,7 @@ nav {
   background-color: var(--dash-bg);
 }
 
+.items-list,
 .balance,
 .stats {
   background-color: var(--background);
