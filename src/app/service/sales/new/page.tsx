@@ -29,14 +29,6 @@ export default async function NewSale() {
     stock: product.stock ?? 0,
   }));
 
-  const lanche = mappedProducts.filter((p) => p.Category?.name === "Lanche");
-  const bebidas = mappedProducts.filter((p) => p.Category?.name === "Bebida");
-  const refeicao = mappedProducts.filter(
-    (p) => p.Category?.name === "Refeicao"
-  );
-
-  const filteredProducts = { lanche, bebidas, refeicao };
-
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
@@ -50,7 +42,7 @@ export default async function NewSale() {
           <p>No products found...</p>
         ) : (
           <SalesList
-            initialProducts={filteredProducts}
+            initialProducts={mappedProducts}
             userId={session.user.id}
           />
         )}
