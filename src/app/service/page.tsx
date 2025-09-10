@@ -6,9 +6,9 @@ import { getProducts } from "../actions/product";
 export default async function ServicePage() {
   const stats = await getServiceDashBoardStats();
   const stockProducts = await getProducts();
-  // const filteredProducts = stockProducts.filter(
-  //   (product) => product.stock < 10
-  // );
+  const filteredProducts = stockProducts.filter(
+    (product) => product.stock && product.stock < 10
+  );
 
   if (!stats) return <p>Please login to see the dashboard</p>;
   return (
@@ -59,28 +59,27 @@ export default async function ServicePage() {
           </div>
         </div>
       </div>
-      <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-        <h2 className="text-2xl font-bold">Critic Items</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stockProducts.map((item) => {
-              if (item.stock && item.stock < 15)
-                return (
-                  <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.stock}</td>
-                  </tr>
-                );
-            })}
-          </tbody>
-        </table>
-      </div>
+      {filteredProducts.length > 0 && (
+        <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
+          <h2 className="text-2xl font-bold">Critic Items</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProducts.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.name}</td>
+                  <td>{item.stock}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   );
 }
