@@ -80,8 +80,11 @@ input {
   max-width: 12rem;
   border: 1px solid var(--input-bg);
 }
+
+input:read-only,
 input[type="submit"]:disabled {
-  background-color: var(--foreground);
+  background-color: var(--border);
+  border: solid 1px var(--foreground);
 }
 
 input[type="submit"],

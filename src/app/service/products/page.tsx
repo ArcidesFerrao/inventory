@@ -28,7 +28,7 @@ export default async function ProductsPage() {
 
   const lanche = products.filter((p) => p.Category?.name === "Lanche");
   const bebidas = products.filter((p) => p.Category?.name === "Bebida");
-  const refeicao = products.filter((p) => p.Category?.name === "Refeição");
+  const refeicao = products.filter((p) => p.Category?.name === "Refeicao");
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">

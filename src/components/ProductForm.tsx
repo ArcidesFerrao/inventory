@@ -41,7 +41,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
     defaultValue: product,
   });
   const router = useRouter();
-  const [type, setType] = useState("STOCK");
+  const [type, setType] = useState(product ? product.type : "STOCK");
   const [category, setCategory] = useState("Lanche");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
@@ -106,6 +106,8 @@ export const ProductForm = ({ product }: { product?: Product }) => {
         )}
         <div className="flex gap-2 items-end">
           <div className="flex w-full flex-col gap-1">
+            <label htmlFor="name">Product Name</label>
+
             <input
               type="text"
               name="name"
@@ -123,14 +125,12 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               name="type"
               id="type"
               value={type}
-              onChange={(e) => setType(e.target.value)}
+              onChange={(e) => setType(e.target.value as "STOCK" | "SERVICE")}
             >
               <option value="" disabled>
                 Select a type
               </option>
-              <option value="STOCK" defaultChecked>
-                Stock
-              </option>
+              <option value="STOCK">Stock</option>
               <option value="SERVICE">Menu</option>
             </select>
             {fields.type.errors && (
@@ -141,28 +141,57 @@ export const ProductForm = ({ product }: { product?: Product }) => {
         <div className="flex gap-2">
           <div className="flex flex-col gap-1">
             <label htmlFor="quantity">Quantidade Unit.</label>
-            <input
-              type="number"
-              name="quantity"
-              id="quantity"
-              defaultValue={product?.quantity ?? 1}
-            />
+            {type === "SERVICE" ? (
+              <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                min={1}
+                defaultValue={1}
+                readOnly
+              />
+            ) : (
+              <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                defaultValue={product?.quantity ?? 1}
+              />
+            )}
             {fields.quantity.errors && (
               <p className="text-xs font-light">{fields.quantity.errors}</p>
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
             <label htmlFor="unit">Unit</label>
-            <select name="unitId" id="unitId">
-              <option value="" disabled>
-                Select a unit
-              </option>
-              {units.map((unit) => (
-                <option key={unit.id} value={unit.id}>
-                  {unit.name}
+            {type === "SERVICE" ? (
+              <select
+                name="unitId"
+                id="unitId"
+                value={units.find((u) => u.name === "pcs")?.id}
+                disabled
+              >
+                <option value="" disabled>
+                  Select a unit
                 </option>
-              ))}
-            </select>
+                {units.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select name="unitId" id="unitId">
+                <option value="" disabled>
+                  Select a unit
+                </option>
+                {units.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
+            )}
 
             {fields.Unit.errors && (
               <p className="text-xs font-light">{fields.Unit.errors}</p>
@@ -183,21 +212,21 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               <p className="text-xs font-light">{fields.price.errors}</p>
             )}
           </div>
-          {category === "Bebida" ||
-            (type === "STOCK" && (
-              <div className="flex flex-col gap-1">
-                <label htmlFor="stock">Stock</label>
-                <input
-                  type="number"
-                  name="stock"
-                  id="stock"
-                  defaultValue={product?.stock || 0}
-                />
-                {fields.stock.errors && (
-                  <p className="text-xs font-light">{fields.stock.errors}</p>
-                )}
-              </div>
-            ))}
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="stock">Stock</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              min={1}
+              defaultValue={product?.stock || 1}
+              readOnly={type === "SERVICE"}
+            />
+            {fields.stock.errors && (
+              <p className="text-xs font-light">{fields.stock.errors}</p>
+            )}
+          </div>
         </div>
         {type === "SERVICE" && (
           <div className="flex flex-col gap-2">

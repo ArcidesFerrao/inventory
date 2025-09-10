@@ -65,9 +65,23 @@ export async function editProduct(prevState: unknown, formData: FormData) {
                 id: submission.value.id,
             },
             data: {
-                ...values,
+                name: values.name,
+                description: values.description,
+                price: values.price,
+                quantity: values.quantity,
+                unitId: values.unitId,
+                categoryId: values.categoryId,
+                type: values.type,
                 status: "ACTIVE",
-                userId: session.user.id
+                userId: session.user.id,
+                MenuItems: {
+                    deleteMany: {},
+                    create: values.recipe?.map((r) => ({
+                        quantity: r.quantity,
+                        stockId: r.stockId,
+                        productId: r.stockId,
+                    })) || [],
+                }
             }
         });
 
