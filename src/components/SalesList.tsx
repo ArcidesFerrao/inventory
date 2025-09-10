@@ -61,11 +61,9 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
   return (
     <>
-      <div className="products-selection flex flex-col gap-4 w-full">
-        <h2 className="text-xl font-medium">Products</h2>
-
+      <div className="products-selection flex flex-col gap-4 w-full p-4">
         <div className="flex flex-col">
-          <h3>Refeicao</h3>
+          <h3 className="text-md font-medium underline">Refeicao</h3>
           <ul>
             {products.map((product) => {
               if (product.Category?.name === "Refeicao")
@@ -76,7 +74,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                   >
                     <h3>{product.name}</h3>
 
-                    <div className="flex gap-2 items-center w-6/12">
+                    <div className="flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
                         <button onClick={() => handleDecrement(product.id)}>
                           -
@@ -88,7 +86,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                           +
                         </button>
                       </div>
-                      <span>
+                      <span className="min-w-28">
                         <p>
                           {(product.price * product.quantity).toFixed(2)} MZN
                         </p>
@@ -100,7 +98,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
           </ul>
         </div>
         <div className="flex flex-col">
-          <h3>Lanches</h3>
+          <h3 className="text-md font-medium underline">Lanches</h3>
           <ul>
             {products.map((product) => {
               if (product.Category?.name === "Lanche")
@@ -111,7 +109,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                   >
                     <h3>{product.name}</h3>
 
-                    <div className="flex gap-2 items-center w-6/12">
+                    <div className="flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
                         <button onClick={() => handleDecrement(product.id)}>
                           -
@@ -123,7 +121,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                           +
                         </button>
                       </div>
-                      <span>
+                      <span className="min-w-28">
                         <p>
                           {(product.price * product.quantity).toFixed(2)} MZN
                         </p>
@@ -135,7 +133,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
           </ul>
         </div>
         <div className="flex flex-col">
-          <h3>Bebidas</h3>
+          <h3 className="text-md font-medium underline">Bebidas</h3>
           <ul>
             {products.map((product) => {
               if (product.Category?.name === "Bebida")
@@ -146,7 +144,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                   >
                     <h3>{product.name}</h3>
 
-                    <div className="flex gap-2 items-center w-6/12">
+                    <div className="flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
                         <button onClick={() => handleDecrement(product.id)}>
                           -
@@ -158,7 +156,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                           +
                         </button>
                       </div>
-                      <span>
+                      <span className="min-w-28">
                         <p>
                           {(product.price * product.quantity).toFixed(2)} MZN
                         </p>

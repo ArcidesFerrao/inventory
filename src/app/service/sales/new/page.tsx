@@ -32,7 +32,7 @@ export default async function NewSale() {
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-medium">New Sale</h2>
+        <h2 className="text-2xl font-bold">Menu Products</h2>
         <Link href="/service/sales" className="add-product flex gap-1">
           <span className="text-md px-2">Cancel</span>
         </Link>
