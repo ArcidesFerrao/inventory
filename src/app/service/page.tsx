@@ -15,32 +15,39 @@ export default async function ServicePage() {
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
         <h1 className="text-4xl font-medium">Dashboard</h1>
-        <Link href="/service/products/new" className="add-product flex gap-1">
-          <span>+</span>
-          <span className="text-md">Product</span>
-        </Link>
+        <div className="flex gap-4">
+          <Link href="/service/products/new" className="add-product flex gap-2">
+            <span>+</span>
+            <span className="text-md">Product</span>
+          </Link>
+          <Link href="/service/sales/new" className="add-product flex gap-2">
+            <span>+</span>
+            <span className="text-md">Sale</span>
+          </Link>
+        </div>
       </div>
       <div className="dash-stats gap-4 flex py-8 w-full">
         <div className="balance flex flex-col p-4">
-          <div className=" flex flex-col p-2">
-            <h2 className="text-xl">Balance</h2>
-            <h1 className="text-2xl py-2 whitespace-nowrap font-bold">
+          <div className=" flex flex-col">
+            <h2 className="text-2xl font-bold">Balance</h2>
+            <h1 className="text-xl py-2 whitespace-nowrap font-medium">
               MZN {stats.totalBalance},00
             </h1>
           </div>
-          <div className=" flex flex-col p-2">
-            <h2 className="text-xl">Profit</h2>
-            <h1 className="text-2xl py-2 whitespace-nowrap font-bold">
-              MZN {stats.totalBalance},00
+          <div className=" flex flex-col">
+            <h2 className="text-2xl font-bold">Profit</h2>
+            <h1 className="text-xl py-2 whitespace-nowrap font-medium">
+              MZN {stats.profit},00
             </h1>
           </div>
         </div>
-        <div className="stats flex flex-col gap-4 w-full p-4">
-          <h2 className="text-2xl font-bold">Statistics</h2>
+        <div className="stats flex flex-col justify-between w-full p-4">
+          <h2 className="text-2xl font-bold underline">Statistics</h2>
+          <p className="font-thin">stats of products, sales and earnings</p>
           <div className="stats-container flex justify-between">
             <div className="earnings ">
               <h3 className="text-lg">Earnings</h3>
-              <h2 className="text-xl py-2 font-medium">
+              <h2 className="text-lg py-2 font-medium">
                 MZN {stats.totalEarnings},00
               </h2>
             </div>

@@ -29,5 +29,39 @@ export async function getServiceDashBoardStats() {
         }
     })
 
-    return { productCount, salesCount, totalBalance: totalBalance._sum.total || 0 , totalEarnings: totalEarnings._sum.total || 0}
+    const sales = await db.saleItem.findMany({
+        where: {
+            sale: {
+                userId
+            }
+        },
+        include: {
+            product: {
+                include: {
+                    MenuItems: {
+                        include:{
+                            stock: true,
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    let totalCogs = 0
+
+    for (const item of sales) {
+        
+
+        let cogsForItem = 0
+        for (const recipe of item.product.MenuItems) {
+            cogsForItem += recipe.quantity * (recipe.stock.price || 0);
+        }
+        cogsForItem *= item.quantity;
+        totalCogs += cogsForItem;
+    }
+
+    const profit = (totalEarnings._sum.total || 0) - totalCogs
+
+    return { productCount, salesCount, totalBalance: totalBalance._sum.total || 0 , totalEarnings: totalEarnings._sum.total || 0, profit}
 }

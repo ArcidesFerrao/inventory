@@ -125,7 +125,7 @@ form p a:hover {
 }
 
 .add-product {
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 1rem;
   border-radius: 0.4rem;
   background-color: var(--background);
 }
