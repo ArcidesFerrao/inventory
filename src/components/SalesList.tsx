@@ -1,19 +1,8 @@
 "use client";
 
 import { createSale } from "@/app/actions/sales";
+import { ProductsProps } from "@/types/types";
 import React, { useState } from "react";
-
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-};
-
-type ProductsProps = {
-  initialProducts: Product[];
-  userId: string;
-};
 
 export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
   const [products, setProducts] = useState(
@@ -23,7 +12,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
   const handleCompleteSale = async () => {
     console.log("creating sale");
 
-    const saleItems = products.filter((product) => product.stock > 0);
+    const saleItems = products.filter((product) => product.quantity > 0);
 
     if (saleItems.length === 0) return;
 

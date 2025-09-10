@@ -1,6 +1,7 @@
 import { SalesList } from "@/components/SalesList";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { ProductWithMenuItems } from "@/types/types";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -16,7 +17,16 @@ export default async function NewSale() {
       userId: session.user.id,
       type: "SERVICE",
     },
+    include: {
+      MenuItems: true,
+    },
   });
+
+  const mappedProducts: ProductWithMenuItems[] = products.map((product) => ({
+    ...product,
+    price: product.price ?? 0,
+    stock: product.stock ?? 0,
+  }));
 
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
@@ -31,11 +41,7 @@ export default async function NewSale() {
           <p>No products found...</p>
         ) : (
           <SalesList
-            initialProducts={products.map((product) => ({
-              ...product,
-              price: product.price ?? 0,
-              stock: product.stock ?? 0,
-            }))}
+            initialProducts={mappedProducts}
             userId={session.user.id}
           />
         )}

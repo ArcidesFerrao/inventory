@@ -27,7 +27,7 @@ model Product {
   name          String
   description   String?
   stock         Int?
-  price         Float?
+  price         Float
   status        ProductStatus   @default(ACTIVE)
   userId        String
   createdAt     DateTime        @default(now())
@@ -52,7 +52,7 @@ model RecipeItem {
   menuId    String
   stockId   String
   quantity  Int
-  productId String?
+  productId String
   menu      Product  @relation("MenuItems", fields: [menuId], references: [id])
   Product   Product? @relation(fields: [productId], references: [id])
   stock     Product  @relation("StockItems", fields: [stockId], references: [id])
