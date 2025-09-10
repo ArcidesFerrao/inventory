@@ -19,6 +19,7 @@ export default async function NewSale() {
     },
     include: {
       MenuItems: true,
+      Category: true,
     },
   });
 
@@ -27,6 +28,14 @@ export default async function NewSale() {
     price: product.price ?? 0,
     stock: product.stock ?? 0,
   }));
+
+  const lanche = mappedProducts.filter((p) => p.Category?.name === "Lanche");
+  const bebidas = mappedProducts.filter((p) => p.Category?.name === "Bebida");
+  const refeicao = mappedProducts.filter(
+    (p) => p.Category?.name === "Refeicao"
+  );
+
+  const filteredProducts = { lanche, bebidas, refeicao };
 
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
@@ -41,7 +50,7 @@ export default async function NewSale() {
           <p>No products found...</p>
         ) : (
           <SalesList
-            initialProducts={mappedProducts}
+            initialProducts={filteredProducts}
             userId={session.user.id}
           />
         )}

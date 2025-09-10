@@ -1,12 +1,15 @@
 "use client";
 
 import { createSale } from "@/app/actions/sales";
-import { ProductsProps } from "@/types/types";
+import { FilteredProductsProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
+export const SalesList = ({
+  initialProducts,
+  userId,
+}: FilteredProductsProps) => {
   const router = useRouter();
 
   const [products, setProducts] = useState(
@@ -63,6 +66,92 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     <>
       <div className="products-selection flex flex-col gap-4 w-full">
         <h2 className="text-xl font-medium">Products</h2>
+
+        <div className="flex flex-col">
+          <h3>Refeicao</h3>
+          <ul>
+            {products.map((product) => (
+              <li
+                key={product.id}
+                className="flex justify-between items-center py-2"
+              >
+                <h3>{product.name}</h3>
+
+                <div className="flex gap-2 items-center w-6/12">
+                  <div className="amount-btn flex gap-2 items-center px-2 py-1">
+                    <button onClick={() => handleDecrement(product.id)}>
+                      -
+                    </button>
+                    <span className="w-12 text-center">{product.quantity}</span>
+                    <button onClick={() => handleIncrement(product.id)}>
+                      +
+                    </button>
+                  </div>
+                  <span>
+                    <p>{(product.price * product.quantity).toFixed(2)} MZN</p>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-col">
+          <h3>Lanches</h3>
+          <ul>
+            {products.map((product) => (
+              <li
+                key={product.id}
+                className="flex justify-between items-center py-2"
+              >
+                <h3>{product.name}</h3>
+
+                <div className="flex gap-2 items-center w-6/12">
+                  <div className="amount-btn flex gap-2 items-center px-2 py-1">
+                    <button onClick={() => handleDecrement(product.id)}>
+                      -
+                    </button>
+                    <span className="w-12 text-center">{product.quantity}</span>
+                    <button onClick={() => handleIncrement(product.id)}>
+                      +
+                    </button>
+                  </div>
+                  <span>
+                    <p>{(product.price * product.quantity).toFixed(2)} MZN</p>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-col">
+          <h3>Bebidas</h3>
+          <ul>
+            {products.map((product) => (
+              <li
+                key={product.id}
+                className="flex justify-between items-center py-2"
+              >
+                <h3>{product.name}</h3>
+
+                <div className="flex gap-2 items-center w-6/12">
+                  <div className="amount-btn flex gap-2 items-center px-2 py-1">
+                    <button onClick={() => handleDecrement(product.id)}>
+                      -
+                    </button>
+                    <span className="w-12 text-center">{product.quantity}</span>
+                    <button onClick={() => handleIncrement(product.id)}>
+                      +
+                    </button>
+                  </div>
+                  <span>
+                    <p>{(product.price * product.quantity).toFixed(2)} MZN</p>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <ul className="">
           {products.map((product) => (
             <li
