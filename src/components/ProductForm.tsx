@@ -15,6 +15,7 @@ type Product = {
   id: string;
   name: string;
   price: number | null;
+  cost: number | null;
   stock?: number | null;
   quantity: number;
   type: "STOCK" | "SERVICE";
@@ -199,19 +200,35 @@ export const ProductForm = ({ product }: { product?: Product }) => {
           </div>
         </div>
         <div className="flex gap-2">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              name="price"
-              id="price"
-              defaultValue={product?.price || 0}
-            />
+          {type === "STOCK" ? (
+            <div className="flex flex-col gap-1">
+              <label htmlFor="price">Cost</label>
+              <input
+                type="number"
+                name="cost"
+                id="cost"
+                defaultValue={product?.cost || 0}
+              />
 
-            {fields.price.errors && (
-              <p className="text-xs font-light">{fields.price.errors}</p>
-            )}
-          </div>
+              {fields.cost.errors && (
+                <p className="text-xs font-light">{fields.cost.errors}</p>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1">
+              <label htmlFor="price">Price</label>
+              <input
+                type="number"
+                name="price"
+                id="price"
+                defaultValue={product?.price || 0}
+              />
+
+              {fields.price.errors && (
+                <p className="text-xs font-light">{fields.price.errors}</p>
+              )}
+            </div>
+          )}
 
           <div className="flex flex-col gap-1">
             <label htmlFor="stock">Stock</label>
@@ -219,8 +236,8 @@ export const ProductForm = ({ product }: { product?: Product }) => {
               type="number"
               name="stock"
               id="stock"
-              min={1}
-              defaultValue={product?.stock || 1}
+              min={0}
+              defaultValue={product?.stock || 0}
               readOnly={type === "SERVICE"}
             />
             {fields.stock.errors && (
