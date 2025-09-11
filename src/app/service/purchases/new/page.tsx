@@ -34,6 +34,8 @@ export default async function NewPurchase() {
             initialProducts={products.map((product) => ({
               ...product,
               price: product.price ?? 0,
+              stock: product.stock ?? 0,
+              quantity: 0,
             }))}
             userId={session.user.id}
           />

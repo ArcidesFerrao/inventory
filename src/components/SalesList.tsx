@@ -25,7 +25,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     if (result.success) {
       toast.success("Sale Completed");
       setTimeout(() => {
-        router.push("/service/products");
+        router.push("/service/sales");
       }, 500);
     }
 

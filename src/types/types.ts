@@ -18,3 +18,13 @@ export interface FilteredProductsProps {
   userId: string;
 };
 
+export type StockProduct = Product & {
+  quantity: number;
+  stock: number;
+}
+
+export interface PurchasesProps {
+  initialProducts: StockProduct[];
+  userId: string;
+}
+
