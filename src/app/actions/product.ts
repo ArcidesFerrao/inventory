@@ -27,6 +27,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
                 unitId: values.unitId,
                 categoryId: values.categoryId,
                 type: values.type,
+                stock: values.stock,
                 status: "ACTIVE",
                 userId: session.user.id,
                 MenuItems: {
@@ -72,6 +73,7 @@ export async function editProduct(prevState: unknown, formData: FormData) {
                 unitId: values.unitId,
                 categoryId: values.categoryId,
                 type: values.type,
+                stock: values.stock,
                 status: "ACTIVE",
                 userId: session.user.id,
                 MenuItems: {
