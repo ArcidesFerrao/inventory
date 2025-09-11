@@ -7,7 +7,7 @@ export default async function ServicePage() {
   const stats = await getServiceDashBoardStats();
   const stockProducts = await getProducts();
   const filteredProducts = stockProducts.filter(
-    (product) => product.stock && product.stock < 10
+    (product) => (product.stock || product.stock == 0) && product.stock < 10
   );
 
   if (!stats) return <p>Please login to see the dashboard</p>;

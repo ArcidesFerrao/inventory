@@ -39,7 +39,7 @@ model Product {
   type          ProductType     @default(STOCK)
   Category      Category?       @relation(fields: [categoryId], references: [id])
   Unit          Unit?           @relation(fields: [unitId], references: [id])
-  user          User            @relation(fields: [userId], references: [id])
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   PurchaseItem  PurchaseItem[]
   MenuItems     RecipeItem[]    @relation("MenuItems")
   RecipeItem    RecipeItem[]
@@ -56,7 +56,7 @@ model RecipeItem {
   productId String
   menu      Product  @relation("MenuItems", fields: [menuId], references: [id])
   Product   Product? @relation(fields: [productId], references: [id])
-  stock     Product  @relation("StockItems", fields: [stockId], references: [id])
+  stock     Product  @relation("StockItems", fields: [stockId], references: [id], onDelete: Cascade)
 }
 
 model Sale {
@@ -65,7 +65,7 @@ model Sale {
   total       Float
   paymentType String
   userId      String
-  user        User       @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   SaleItem    SaleItem[]
 }
 
@@ -76,7 +76,7 @@ model SaleItem {
   quantity  Int
   price     Float
   product   Product @relation(fields: [productId], references: [id])
-  sale      Sale    @relation(fields: [saleId], references: [id])
+  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
 }
 
 model Purchase {
@@ -86,7 +86,7 @@ model Purchase {
   supplier     String?
   paymentType  String
   userId       String
-  user         User           @relation(fields: [userId], references: [id])
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   PurchaseItem PurchaseItem[]
 }
 
@@ -100,7 +100,7 @@ model PurchaseItem {
   unitCost   Float    @default(0)
   totalCost  Float    @default(0)
   product    Product  @relation(fields: [productId], references: [id])
-  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
 }
 
 model ActivityLog {
@@ -109,7 +109,7 @@ model ActivityLog {
   actionType  String
   description String
   timestamp   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model StockMovement {
