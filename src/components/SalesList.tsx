@@ -1,6 +1,6 @@
 "use client";
 
-import { createSale } from "@/app/actions/sales";
+import { createNewSale } from "@/app/actions/sales";
 import { ProductsProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -20,7 +20,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
     if (saleItems.length === 0) return;
 
-    const result = await createSale(saleItems, userId);
+    const result = await createNewSale(saleItems, userId);
 
     if (result.success) {
       toast.success("Sale Completed");
