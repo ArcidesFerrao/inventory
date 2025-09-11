@@ -22,7 +22,7 @@ export async function getServiceDashBoardStats() {
         _sum: { total: true}
     })
 
-    const totalBalance = await db.purchase.aggregate({
+    const totalPurchases = await db.purchase.aggregate({
         where: {userId},
         _sum: {
             total: true
@@ -51,8 +51,6 @@ export async function getServiceDashBoardStats() {
     let totalCogs = 0
 
     for (const item of sales) {
-        
-
         let cogsForItem = 0
         for (const recipe of item.product.MenuItems) {
             cogsForItem += recipe.quantity * (recipe.stock.price || 0);
@@ -61,7 +59,10 @@ export async function getServiceDashBoardStats() {
         totalCogs += cogsForItem;
     }
 
-    const profit = (totalEarnings._sum.total || 0) - totalCogs
-
-    return { productCount, salesCount, totalBalance: totalBalance._sum.total || 0 , totalEarnings: totalEarnings._sum.total || 0, profit}
+    const earnings = totalEarnings._sum.total || 0;
+    const purchases = totalPurchases._sum.total || 0;
+    const profit = (totalEarnings._sum.total || 0) - totalCogs;
+    const balance = earnings - purchases;
+    
+    return { productCount, salesCount, balance , earnings, profit};
 }

@@ -31,7 +31,7 @@ export default async function ServicePage() {
           <div className=" flex flex-col">
             <h2 className="text-2xl font-bold">Balance</h2>
             <h1 className="text-xl py-2 whitespace-nowrap font-medium">
-              MZN {stats.totalBalance},00
+              MZN {stats.balance},00
             </h1>
           </div>
           <div className=" flex flex-col">
@@ -48,7 +48,7 @@ export default async function ServicePage() {
             <div className="earnings ">
               <h3 className="text-lg">Earnings</h3>
               <h2 className="text-lg py-2 font-medium">
-                MZN {stats.totalEarnings},00
+                MZN {stats.earnings},00
               </h2>
             </div>
             <span className="divider"></span>

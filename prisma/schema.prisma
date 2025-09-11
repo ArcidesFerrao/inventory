@@ -27,7 +27,8 @@ model Product {
   name          String
   description   String?
   stock         Int?
-  price         Float
+  price         Float?
+  cost          Float?
   status        ProductStatus   @default(ACTIVE)
   userId        String
   createdAt     DateTime        @default(now())
@@ -95,6 +96,9 @@ model PurchaseItem {
   productId  String
   stock      Int
   price      Float
+  quantity   Int
+  unitCost   Float
+  totalCost  Float
   product    Product  @relation(fields: [productId], references: [id])
   purchase   Purchase @relation(fields: [purchaseId], references: [id])
 }
@@ -113,6 +117,7 @@ model StockMovement {
   productId   String
   changeType  String
   quantity    Int
+  relatedIt   String?
   description String?
   timestamp   DateTime @default(now())
   product     Product  @relation(fields: [productId], references: [id])
