@@ -63,7 +63,9 @@ thead th {
 }
 
 table {
-  border: solid 1px var(--background);
+  border: solid 1px var(--input-bg);
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 .dash-menu button,
 .login-button,

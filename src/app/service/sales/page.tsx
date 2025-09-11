@@ -34,17 +34,19 @@ export default async function SalesPage() {
         <table>
           <thead>
             <tr>
-              <th className="text-start">Date</th>
-              <th className="text-start">Total (MZN)</th>
               <th className="text-start">Payment Type</th>
+              <th className="text-start">Total (MZN)</th>
+              <th className="text-start">Date</th>
+              <th className="text-start">Time</th>
             </tr>
           </thead>
           <tbody>
             {sales.map((sale) => (
               <tr key={sale.id}>
-                <td>{new Date(sale.date).toLocaleDateString()}</td>
-                <td>{sale.total}.00</td>
                 <td>{sale.paymentType}</td>
+                <td>{sale.total}.00</td>
+                <td>{sale.date.toLocaleDateString()}</td>
+                <td>{sale.date.toLocaleTimeString()}</td>
               </tr>
             ))}
           </tbody>

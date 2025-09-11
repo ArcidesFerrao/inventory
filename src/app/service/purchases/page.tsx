@@ -30,20 +30,22 @@ export default async function PurchasesPage() {
       {purchases.length === 0 ? (
         <p>No purchases found...</p>
       ) : (
-        <table>
+        <table className="rounded">
           <thead>
             <tr>
-              <th className="text-start">Date</th>
-              <th className="text-start">Total (MZN)</th>
               <th className="text-start">Payment Type</th>
+              <th className="text-start">Total (MZN)</th>
+              <th className="text-start">Date</th>
+              <th className="text-start">Time</th>
             </tr>
           </thead>
           <tbody>
             {purchases.map((purchase) => (
               <tr key={purchase.id}>
-                <td>{new Date(purchase.date).toLocaleDateString()}</td>
-                <td>{purchase.total}.00</td>
                 <td>{purchase.paymentType}</td>
+                <td>{purchase.total}.00</td>
+                <td>{purchase.date.toLocaleDateString()}</td>
+                <td>{purchase.date.toLocaleTimeString()}</td>
               </tr>
             ))}
           </tbody>

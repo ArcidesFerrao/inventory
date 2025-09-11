@@ -8,10 +8,9 @@ export async function createSale(
     userId:string
 ) {    
     const totalPrice = saleItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    try {
 
+    try {
         const result = await db.$transaction(async (tx) => {
-            
             const newSale = await tx.sale.create({
                 data: {
                     userId,
@@ -27,7 +26,6 @@ export async function createSale(
                 },
                 include: {
                     SaleItem: true,
-                    
                 },
             });
                
