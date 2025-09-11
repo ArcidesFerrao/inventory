@@ -11,8 +11,10 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
   const [products, setProducts] = useState(
     initialProducts.map((p) => ({ ...p, quantity: 0 }))
   );
+  const [loading, setLoading] = useState(false);
 
   const handleCompleteSale = async () => {
+    setLoading(true);
     console.log("creating purchase");
     const purchaseItems = products.filter((product) => product.quantity > 0);
     if (purchaseItems.length === 0) return;
@@ -52,7 +54,7 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
     return sum + product.quantity;
   }, 0);
   const totalPrice = products.reduce((sum, product) => {
-    return sum + product.price * product.quantity;
+    return sum + (product.cost ?? 0) * product.quantity;
   }, 0);
 
   return (
@@ -73,7 +75,9 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
                   <button onClick={() => handleIncrement(product.id)}>+</button>
                 </div>
                 <span className="min-w-32">
-                  <p>{(product.price * product.quantity).toFixed(2)} MZN</p>
+                  <p>
+                    {((product.cost ?? 0) * product.quantity).toFixed(2)} MZN
+                  </p>
                 </span>
               </div>
             </li>
@@ -92,9 +96,10 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
         </div>
         <button
           onClick={() => handleCompleteSale()}
+          disabled={loading}
           className="border px-4 py-2 rounded mt-4"
         >
-          Complete
+          {loading ? "..." : "Complete"}
         </button>
       </div>
     </>

@@ -2,10 +2,10 @@
 
 import { db } from "@/lib/db";
 
-export async function createPurchase(purchaseItems: { id: string; name: string; price: number; stock: number; quantity: number }[], userId: string) {
+export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null; stock: number; quantity: number, cost: number | null }[], userId: string) {
 
     
-    const totalPrice = purchaseItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalPrice = purchaseItems.reduce((sum, item) => sum + ((item.cost || 0) * item.quantity), 0);
     try {
         const result  = await db.$transaction(async (tx) => {
             const purchase = await tx.purchase.create({
@@ -18,7 +18,9 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
                         productId: item.id,
                         stock: item.quantity,
                         price: item.price ?? 0,
-                        
+                        quantity: item.quantity,
+                        unitCost: item.cost ?? 0,
+                        totalCost: (item.cost ?? 0) * item.quantity,
                         })),
                     },
                 },
