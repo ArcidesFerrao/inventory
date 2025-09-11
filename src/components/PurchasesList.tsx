@@ -31,7 +31,9 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
   const handleIncrement = (id: string) => {
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
-        product.id === id ? { ...product, stock: product.stock + 1 } : product
+        product.id === id
+          ? { ...product, quantity: product.quantity + 1 }
+          : product
       )
     );
   };
@@ -39,18 +41,18 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
   const handleDecrement = (id: string) => {
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
-        product.id === id && product.stock > 0
-          ? { ...product, stock: product.stock - 1 }
+        product.id === id && product.quantity > 0
+          ? { ...product, quantity: product.quantity - 1 }
           : product
       )
     );
   };
 
   const totalItems = products.reduce((sum, product) => {
-    return sum + product.stock;
+    return sum + product.quantity;
   }, 0);
   const totalPrice = products.reduce((sum, product) => {
-    return sum + product.price * product.stock;
+    return sum + product.price * product.quantity;
   }, 0);
 
   return (
@@ -67,11 +69,11 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
               <div className="flex gap-2 items-center max-w-6/12">
                 <div className="amount-btn flex gap-2 items-center px-2 py-1">
                   <button onClick={() => handleDecrement(product.id)}>-</button>
-                  <span className="w-12 text-center">{product.stock}</span>
+                  <span className="w-12 text-center">{product.quantity}</span>
                   <button onClick={() => handleIncrement(product.id)}>+</button>
                 </div>
                 <span className="min-w-32">
-                  <p>{(product.price * product.stock).toFixed(2)} MZN</p>
+                  <p>{(product.price * product.quantity).toFixed(2)} MZN</p>
                 </span>
               </div>
             </li>
