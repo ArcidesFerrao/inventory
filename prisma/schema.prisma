@@ -63,6 +63,7 @@ model Sale {
   id          String     @id @default(uuid())
   date        DateTime   @default(now())
   total       Float
+  cogs        Float      @default(0)
   paymentType String
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)

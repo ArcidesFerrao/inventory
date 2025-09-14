@@ -52,8 +52,13 @@ export async function getServiceDashBoardStats() {
 
     for (const item of sales) {
         let cogsForItem = 0
-        for (const recipe of item.product.MenuItems) {
-            cogsForItem += recipe.quantity * (recipe.stock.price || 0);
+
+        if (!item.product.MenuItems || item.product.MenuItems.length === 0) {
+            for (const recipe of item.product.MenuItems) {
+                cogsForItem += recipe.quantity * (recipe.stock.cost || 0);
+            }
+        } else {
+            cogsForItem += item.product.cost || 0;
         }
         cogsForItem *= item.quantity;
         totalCogs += cogsForItem;
@@ -61,8 +66,11 @@ export async function getServiceDashBoardStats() {
 
     const earnings = totalEarnings._sum.total || 0;
     const purchases = totalPurchases._sum.total || 0;
-    const profit = (totalEarnings._sum.total || 0) - totalCogs;
+
+    const profit = earnings - totalCogs;
     const balance = earnings - purchases;
+
+    const inventoryValue = purchases - totalCogs;
     
-    return { productCount, salesCount, balance , earnings, profit};
+    return { productCount, salesCount, balance , earnings, profit, inventoryValue};
 }

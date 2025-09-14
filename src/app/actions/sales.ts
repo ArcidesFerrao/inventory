@@ -7,7 +7,7 @@ export async function createSale(
     saleItems: ProductWithMenuItems[], 
     userId:string
 ) {    
-    const totalPrice = saleItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
     try {
         const result = await db.$transaction(async (tx) => {
@@ -43,7 +43,6 @@ export async function createSale(
                         const qtyUsed = saleItem.quantity * recipeItem.quantity;
                         
                         const stockProduct = await tx.product.findUnique({
-                            
                             where: {
                                 id: recipeItem.stockId
                             },
@@ -51,6 +50,7 @@ export async function createSale(
                                 name: true,
                                 price: true,
                                 stock: true,
+                                cost: true,
                             }
                         })
                         
@@ -65,15 +65,20 @@ export async function createSale(
                                     },
                                 },
                             });
-                            cogs += qtyUsed * (stockProduct.price ?? 0)
+                            cogs += qtyUsed * (stockProduct.cost ?? 0)
                         }
                     }
             }
 
+            const updatedCogs = await tx.sale.update({
+                where: { id: newSale.id },
+                data: { cogs },
+            });
+
             console.log("COGS:", cogs);
-            return { newSale, cogs}
+            return { updatedCogs, cogs}
         });        
-        return { success: true, saleId: result.newSale.id, cogs: result.cogs};
+        return { success: true, saleId: result.updatedCogs.id, cogs: result.cogs};
 
     } catch (error) {
         console.error("Error creating sale:", error);
@@ -86,7 +91,7 @@ export async function createNewSale(
     saleItems: ProductWithMenuItems[], 
     userId:string
 ) {    
-    const totalPrice = saleItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
     try {
         const result = await db.$transaction(async (tx) => {
@@ -126,6 +131,7 @@ export async function createNewSale(
                             name: true,
                             price: true,
                             stock: true,
+                            cost: true,
                         }
                     })
                     if (!stockProduct) return 0;
@@ -139,7 +145,7 @@ export async function createNewSale(
                                 },
                             },
                         });
-                        return qtyUsed * (stockProduct.price ?? 0)
+                        return qtyUsed * (stockProduct.cost ?? 0)
                     
                     
                 });

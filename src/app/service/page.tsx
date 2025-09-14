@@ -52,16 +52,16 @@ export default async function ServicePage() {
               </h2>
             </div>
             <span className="divider"></span>
+            <div className="products">
+              <h3 className="text-lg">Inventory value</h3>
+              <h2 className="text-xl py-2  font-medium">
+                MZN {stats.inventoryValue}.00
+              </h2>
+            </div>
+            <span className="divider"></span>
             <div className="sales">
               <h3 className="text-lg">Number of Sales</h3>
               <h2 className="text-xl py-2  font-medium">{stats.salesCount}</h2>
-            </div>
-            <span className="divider"></span>
-            <div className="products">
-              <h3 className="text-lg">Number of Products</h3>
-              <h2 className="text-xl py-2  font-medium">
-                {stats.productCount}
-              </h2>
             </div>
           </div>
         </div>
