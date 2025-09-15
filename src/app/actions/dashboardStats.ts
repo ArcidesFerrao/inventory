@@ -49,7 +49,7 @@ export async function getServiceDashBoardStats() {
     })
 
     let totalCogs = 0
-
+    // calculate cogs
     for (const item of sales) {
         let cogsForItem = 0
 
@@ -66,11 +66,16 @@ export async function getServiceDashBoardStats() {
 
     const earnings = totalEarnings._sum.total || 0;
     const purchases = totalPurchases._sum.total || 0;
-
+    
+    // Core financial metrics
     const profit = earnings - totalCogs;
     const balance = earnings - purchases;
-
     const inventoryValue = purchases - totalCogs;
     
-    return { productCount, salesCount, balance , earnings, profit, inventoryValue};
+    // extra metrics
+    const averageSaleValue = salesCount > 0 ? earnings / salesCount : 0;
+    const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
+    const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases) * 100 : 0;
+    
+    return { productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage };
 }

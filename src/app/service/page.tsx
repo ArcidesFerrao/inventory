@@ -87,6 +87,94 @@ export default async function ServicePage() {
           </table>
         </div>
       )}
+      <div className=" flex gap-4 my-8">
+        <div className="stats p-4 h-fit flex flex-col gap-2 min-w-52">
+          <h2 className="text-2xl font-bold">Cash Flow</h2>
+          <div className="flex flex-col stats-container gap-1">
+            <div>
+              <h3 className="text-lg font-normal">Revenue</h3>
+              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                MZN {stats.earnings.toFixed(2)}
+              </h4>
+            </div>
+            <div>
+              <h3 className="text-lg font-normal">Purchases</h3>
+              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                MZN {stats.purchases.toFixed(2)}
+              </h4>
+            </div>
+            <div>
+              <h3 className="text-lg font-normal">Net Position</h3>
+              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                MZN {stats.balance.toFixed(2)}
+              </h4>
+            </div>
+          </div>
+        </div>
+        <div className="stats flex w-full flex-col p-4 justify-between">
+          <div className="stats-header flex flex-col gap-2">
+            <h2 className="text-2xl font-bold underline">Statistics</h2>
+            <p className="font-thin">stats of products, sales and earnings</p>
+          </div>
+          <div className="stats-container flex justify-between">
+            <div className=" flex flex-col gap-2">
+              <h2 className="text-2xl font-bold underline ">Profitability</h2>
+              <div className="stats-container flex flex-col">
+                <div>
+                  <h3 className="text-lg font-normal">Gross Profit</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                    MZN {stats.profit.toFixed(2)}
+                  </h4>
+                </div>
+                <div>
+                  <h3 className="text-lg font-normal">Margin</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                    {stats.grossMargin.toFixed(1)}%
+                  </h4>
+                </div>
+              </div>
+            </div>
+            <span className="divider"></span>
+
+            <div className=" flex flex-col gap-2">
+              <h2 className="text-2xl font-bold underline">Inventory</h2>
+              <div className="stats-container flex flex-col">
+                <div>
+                  <h3 className="text-lg font-normal">Total Value</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                    MZN {stats.inventoryValue.toFixed(2)}
+                  </h4>
+                </div>
+                <div>
+                  <h3 className="text-lg font-normal">Remaining</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                    {stats.inventoryPercentage.toFixed(1)}%
+                  </h4>
+                </div>
+              </div>
+            </div>
+            <span className="divider"></span>
+
+            <div className=" flex flex-col gap-2">
+              <h2 className="text-2xl font-bold underline">Sales</h2>
+              <div>
+                <div className="stats-container flex flex-col">
+                  <h3 className="text-lg font-normal">Total Sales</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                    {stats.salesCount}
+                  </h4>
+                </div>
+                <div>
+                  <h3 className="text-lg font-normal">Avg. Value</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                    MZN {stats.averageSaleValue.toFixed(2)}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
