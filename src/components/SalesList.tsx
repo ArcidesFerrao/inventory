@@ -1,6 +1,6 @@
 "use client";
 
-import { createNewSale } from "@/app/actions/sales";
+import { createSale } from "@/app/actions/sales";
 import { ProductsProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -20,7 +20,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
     if (saleItems.length === 0) return;
 
-    const result = await createNewSale(saleItems, userId);
+    const result = await createSale(saleItems, userId);
 
     if (result.success) {
       toast.success("Sale Completed");
@@ -56,7 +56,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     return sum + product.quantity;
   }, 0);
   const totalPrice = products.reduce((sum, product) => {
-    return sum + product.price * product.quantity;
+    return sum + (product.price ?? 0) * product.quantity;
   }, 0);
 
   return (
@@ -88,7 +88,8 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                       </div>
                       <span className="min-w-28">
                         <p>
-                          {(product.price * product.quantity).toFixed(2)} MZN
+                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
+                          MZN
                         </p>
                       </span>
                     </div>
@@ -123,7 +124,8 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                       </div>
                       <span className="min-w-28">
                         <p>
-                          {(product.price * product.quantity).toFixed(2)} MZN
+                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
+                          MZN
                         </p>
                       </span>
                     </div>
@@ -158,7 +160,8 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
                       </div>
                       <span className="min-w-28">
                         <p>
-                          {(product.price * product.quantity).toFixed(2)} MZN
+                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
+                          MZN
                         </p>
                       </span>
                     </div>

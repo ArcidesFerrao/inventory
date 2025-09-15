@@ -11,11 +11,57 @@ export async function createSale(
 
     try {
         const result = await db.$transaction(async (tx) => {
+               
+            let cogs = 0;
+
+            const stockUsage: Record<string, number> = {};
+
+            const stockIds = saleItems.flatMap(item => 
+                ( item.MenuItems ?? []).map(recipe => recipe.stockId) 
+            );
+            const stocks = await tx.product.findMany({
+                where: {
+                    id: { in: stockIds}
+                },
+                select: { id: true, cost: true, name: true, stock: true, price: true },
+            })
+
+            for (const saleItem of saleItems) {
+                console.log("Processing saleItem:", saleItem.name);
+                const productRecipes = saleItem.MenuItems || [];
+                
+                for (const recipeItem of productRecipes) {
+                    const stockProduct = stocks.find(s => s.id === recipeItem.stockId)
+                    if (!stockProduct) continue;
+
+                    console.log("Found stockProduct:", stockProduct.name);
+                        
+                    const qtyUsed = saleItem.quantity * recipeItem.quantity;
+
+                    stockUsage[recipeItem.stockId] = (stockUsage[recipeItem.stockId] ?? 0) + qtyUsed;
+                    cogs += qtyUsed * (stockProduct.cost ?? 0);
+                    console.log(` - Using ${qtyUsed} of ${stockProduct.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                }
+            }
+
+            for (const [stockId, totalQty] of Object.entries(stockUsage)) {
+                await tx.product.update({
+                    where: { id: stockId },
+                    data: {
+                        stock: {
+                            decrement: totalQty,
+                        }
+                    }
+                });
+            }
+
+
             const newSale = await tx.sale.create({
                 data: {
                     userId,
                     paymentType: "CASH",
                     total: totalPrice,
+                    cogs,
                     SaleItem: {
                         create: saleItems.map((item) => ({
                             productId: item.id,
@@ -28,57 +74,13 @@ export async function createSale(
                     SaleItem: true,
                 },
             });
-               
-            let cogs = 0;
-
-            for (const saleItem of saleItems) {
-                console.log("Processing saleItem:", saleItem.name);
-                const productRecipes = saleItem.MenuItems || [];
-                
-                for (const recipeItem of productRecipes) {
-                    
-                    console.log("Looping recipeItem:", saleItem.name);
-                    if (recipeItem.quantity > 0) {
-                        
-                        const qtyUsed = saleItem.quantity * recipeItem.quantity;
-                        
-                        const stockProduct = await tx.product.findUnique({
-                            where: {
-                                id: recipeItem.stockId
-                            },
-                            select: {
-                                name: true,
-                                price: true,
-                                stock: true,
-                                cost: true,
-                            }
-                        })
-                        
-                        if (!stockProduct) continue;
-                        console.log("Updating stockProduct:", stockProduct.name);
-                        
-                        await tx.product.update({
-                            where: { id: recipeItem.stockId },
-                                data: {
-                                    stock: {
-                                        decrement: qtyUsed,
-                                    },
-                                },
-                            });
-                            cogs += qtyUsed * (stockProduct.cost ?? 0)
-                        }
-                    }
-            }
-
-            const updatedCogs = await tx.sale.update({
-                where: { id: newSale.id },
-                data: { cogs },
-            });
 
             console.log("COGS:", cogs);
-            return { updatedCogs, cogs}
-        });        
-        return { success: true, saleId: result.updatedCogs.id, cogs: result.cogs};
+            return newSale
+
+        }, { timeout: 15000 }  );   
+           
+        return { success: true, saleId: result.id, cogs: result.cogs};
 
     } catch (error) {
         console.error("Error creating sale:", error);
