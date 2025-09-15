@@ -111,9 +111,10 @@ model ActivityLog {
   entityType  String
   entityId    String?
   description String
-  details     String
-  idAddress   String?
+  details     Json?
+  ipAddress   String?
   device      String?
+  severity    String   @default("INFO")
   timestamp   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
