@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { ProductWithMenuItems } from "@/types/types";
+import { logActivity } from "./logs";
 
 export async function createSale(
     saleItems: ProductWithMenuItems[], 
@@ -79,7 +80,19 @@ export async function createSale(
             return newSale
 
         }, { timeout: 15000 }  );   
-           
+        
+        await logActivity(
+            userId,
+            "CREATE_SALE",
+            "SALE",
+            result.id,
+            `Created sale totaling MZN ${totalPrice.toFixed(2)}`,
+            `Sale created with items: ${saleItems.map(i => `${i.name} x${i.quantity}`).join(", ")}`,
+            null,
+            'INFO',
+            null
+        );
+
         return { success: true, saleId: result.id, cogs: result.cogs};
 
     } catch (error) {

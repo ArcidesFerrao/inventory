@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { logActivity } from "./logs";
 
 export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null; stock: number; quantity: number, cost: number | null }[], userId: string) {
 
@@ -42,6 +43,18 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
 
             return purchase
         })
+
+        await logActivity(
+                    userId,
+                    "CREATE_PURCHASE",
+                    "Purchase",
+                    result.id,
+                    `Created purchase totaling MZN ${totalPrice.toFixed(2)}`,
+                    `Purchase created with items: ${purchaseItems.map(i => `${i.name} x${i.quantity}`).join(", ")}`,
+                    null,
+                    'INFO',
+                    null
+                );
 
         return { success: true, purchaseId:result.id};
 

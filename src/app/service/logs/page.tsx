@@ -24,6 +24,7 @@ export default async function ActivityLogs() {
                 <th>User</th>
                 <th>Actions</th>
                 <th>Descriptions</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
@@ -33,6 +34,7 @@ export default async function ActivityLogs() {
                   <td>{log.user.name}</td>
                   <td>{log.actionType}</td>
                   <td>{log.description}</td>
+                  <td>{log.details?.toString()}</td>
                 </tr>
               ))}
             </tbody>
