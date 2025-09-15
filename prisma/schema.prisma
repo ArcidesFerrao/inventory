@@ -108,9 +108,18 @@ model ActivityLog {
   id          String   @id @default(cuid())
   userId      String
   actionType  String
+  entityType  String
+  entityId    String?
   description String
+  details     String
+  idAddress   String?
+  device      String?
   timestamp   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([timestamp])
 }
 
 model StockMovement {
