@@ -86,8 +86,16 @@ export async function createSale(
             "CREATE",
             "Sale",
             result.id,
-            `Created sale totaling MZN ${totalPrice.toFixed(2)}`,
-            `Sale created with items: ${saleItems.map(i => `${i.name} x${i.quantity}`).join(", ")}`,
+            `Sale totaling MZN ${totalPrice.toFixed(2)}`,
+            {
+                        totalPrice,
+                        items: saleItems.map(i => ({
+                            id: i.id, 
+                            name: i.name, 
+                            quantity: i.quantity, 
+                            cost: i.cost, 
+                            price: i.price}))
+                    },
             null,
             'INFO',
             null

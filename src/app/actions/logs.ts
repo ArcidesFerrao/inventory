@@ -23,7 +23,8 @@ export async function logActivity(
   entityType: string, 
   entityId: string | null, 
   description: string, 
-  details: string, 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  details: Record<string, any>,
   ipAddress: string | null, 
   severity: 'INFO' | 'WARN' | 'ERROR' = 'INFO',
   device: string | null = null,

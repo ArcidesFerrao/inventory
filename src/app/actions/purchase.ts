@@ -49,8 +49,8 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
                     "CREATE",
                     "Purchase",
                     result.id,
-                    `Created purchase totaling MZN ${total.toFixed(2)}`,
-                    JSON.stringify({
+                    `Purchase totaling MZN ${total.toFixed(2)}`,
+                    {
                         total,
                         items: purchaseItems.map(i => ({
                             id: i.id, 
@@ -58,7 +58,7 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
                             quantity: i.quantity, 
                             cost: i.cost, 
                             price: i.price}))
-                    }),
+                    },
                     null,
                     'INFO',
                     null
