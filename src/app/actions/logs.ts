@@ -29,7 +29,7 @@ export async function logActivity(
   device: string | null = null,
 ) {
   try {
-    await db.activityLog.create({
+    const activity = await db.activityLog.create({
       data: {
         userId,
         actionType,
@@ -42,6 +42,12 @@ export async function logActivity(
         device,
       }
   })
+    if (!activity) {
+      console.error("Failed to log activity: No activity returned");
+      return { success: false };
+    }
+
+    return { success: true, activityId: activity.id };
   } catch (error) {
     console.error("Failed to log activity:", error);
   }

@@ -83,8 +83,8 @@ export async function createSale(
         
         await logActivity(
             userId,
-            "CREATE_SALE",
-            "SALE",
+            "CREATE",
+            "Sale",
             result.id,
             `Created sale totaling MZN ${totalPrice.toFixed(2)}`,
             `Sale created with items: ${saleItems.map(i => `${i.name} x${i.quantity}`).join(", ")}`,

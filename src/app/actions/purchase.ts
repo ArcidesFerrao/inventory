@@ -6,14 +6,14 @@ import { logActivity } from "./logs";
 export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null; stock: number; quantity: number, cost: number | null }[], userId: string) {
 
     
-    const totalPrice = purchaseItems.reduce((sum, item) => sum + ((item.cost || 0) * item.quantity), 0);
+    const total = purchaseItems.reduce((sum, item) => sum + ((item.cost || 0) * item.quantity), 0);
     try {
         const result  = await db.$transaction(async (tx) => {
             const purchase = await tx.purchase.create({
                 data: {
                 userId: userId,
                 paymentType: "CASH",
-                total: totalPrice,
+                total,
                 PurchaseItem: {
                     create: purchaseItems.map((item) => ({
                         productId: item.id,
@@ -46,11 +46,19 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
 
         await logActivity(
                     userId,
-                    "CREATE_PURCHASE",
+                    "CREATE",
                     "Purchase",
                     result.id,
-                    `Created purchase totaling MZN ${totalPrice.toFixed(2)}`,
-                    `Purchase created with items: ${purchaseItems.map(i => `${i.name} x${i.quantity}`).join(", ")}`,
+                    `Created purchase totaling MZN ${total.toFixed(2)}`,
+                    JSON.stringify({
+                        total,
+                        items: purchaseItems.map(i => ({
+                            id: i.id, 
+                            name: i.name, 
+                            quantity: i.quantity, 
+                            cost: i.cost, 
+                            price: i.price}))
+                    }),
                     null,
                     'INFO',
                     null
