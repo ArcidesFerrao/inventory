@@ -24,53 +24,51 @@ export default async function ActivityLogs() {
   const logs = await getActivityLogs(session.user.id);
 
   return (
-    <div className="logs-section flex flex-col gap-4">
+    <div className="logs-section flex flex-col gap-4 w-full">
       <h1 className="text-2xl font-bold">Activity Logs</h1>
 
-      <div>
-        {!logs || logs.length === 0 ? (
-          <p>No logs found...</p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                {/* <th>User</th> */}
-                <th>Actions</th>
-                <th>Descriptions</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log, index) => {
-                const parsedDetails = log.details as ParsedDetails;
+      {!logs || logs.length === 0 ? (
+        <p>No logs found...</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              {/* <th>User</th> */}
+              <th>Actions</th>
+              <th>Descriptions</th>
+              <th>Details</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {logs.map((log, index) => {
+              const parsedDetails = log.details as ParsedDetails;
 
-                return (
-                  <tr key={index}>
-                    <td>{log.timestamp.toLocaleDateString()}</td>
-                    {/* <td>{log.user.name}</td> */}
-                    <td>{log.actionType}</td>
-                    <td className="line-clamp-1">{log.description}</td>
-                    <td>
-                      {parsedDetails?.items ? (
-                        <ul>
-                          {parsedDetails.items.map((item, i) => (
-                            <li key={i}>
-                              {item.name} - MZN {item.cost} x {item.quantity}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <pre className="text-gray-700"></pre>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
+              return (
+                <tr key={index}>
+                  {/* <td>{log.user.name}</td> */}
+                  <td>{log.actionType}</td>
+                  <td>{log.description}</td>
+                  <td>
+                    {parsedDetails?.items ? (
+                      <ul>
+                        {parsedDetails.items.map((item, i) => (
+                          <li key={i}>
+                            {item.name} - MZN {item.cost} x {item.quantity}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <pre className="text-gray-700"></pre>
+                    )}
+                  </td>
+                  <td>{log.timestamp.toLocaleDateString()}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
