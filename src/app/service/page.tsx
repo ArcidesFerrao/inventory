@@ -115,27 +115,35 @@ export default async function ServicePage() {
           </div>
         </div>
       </div>
-      {filteredProducts.length > 0 && (
-        <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-          <h2 className="text-2xl font-bold">Critic Items</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Quantity</th>
-              </tr>
-            </thead>
-            <tbody>
+
+      <div className="flex  w-fit gap-4">
+        {filteredProducts.length > 0 && (
+          <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
+            <h2 className="text-2xl font-bold">Critic Items</h2>
+            <ul className="flex flex-col gap-1">
               {filteredProducts.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.name}</td>
-                  <td>{item.stock}</td>
-                </tr>
+                <li key={item.id} className="flex justify-between w-60">
+                  <span>{item.name}</span>
+                  <span className="font-medium">{item.stock}</span>
+                </li>
               ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            </ul>
+          </div>
+        )}
+        {stats.topProducts.length > 0 && (
+          <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
+            <h2 className="text-2xl font-bold">Top Products</h2>
+            <ul className="flex flex-col gap-1">
+              {stats.topProducts.map((item) => (
+                <li key={item.id} className="flex justify-between w-60">
+                  <span>{item.name}</span>
+                  <span className="font-medium">{item.quantity}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

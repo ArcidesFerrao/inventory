@@ -77,5 +77,32 @@ export async function getServiceDashBoardStats() {
     const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
     const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases) * 100 : 0;
     
-    return { productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage };
+    const mostBoughtProducts = await db.saleItem.groupBy({
+        by: ['productId'],
+        where: {
+            sale: { userId }
+        },
+        _sum: {
+            quantity: true
+        },
+        orderBy: {
+            _sum: {
+                quantity: 'desc'
+            }
+        },
+        take: 3
+    })
+
+    const topProducts = await Promise.all(mostBoughtProducts.map(async (item) => {
+        const product = await db.product.findUnique({
+            where: { id: item.productId }
+        })
+        return {
+            ...product,
+            quantity: item._sum.quantity
+        }
+    }))
+    
+
+    return { productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topProducts };
 }
