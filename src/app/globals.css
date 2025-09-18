@@ -222,3 +222,14 @@ nav {
   border: solid 1px var(--border-list);
   border-radius: 0.5rem;
 }
+
+.settings-page button:hover {
+  background-color: var(--accent);
+  color: var(--foreground);
+}
+.settings-page button {
+  background-color: var(--border-list);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: solid 1px var(--dash-bg);
+}
