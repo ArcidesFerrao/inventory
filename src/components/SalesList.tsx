@@ -63,7 +63,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     <>
       <div className="products-selection flex flex-col gap-4 w-full p-4">
         <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Refeicao</h3>
+          <h3 className="text-md font-medium underline">Refeição</h3>
           <ul>
             {products.map((product) => {
               if (product.Category?.name === "Refeicao")

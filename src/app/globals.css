@@ -6,7 +6,8 @@
   --divider: #f4f5fa80;
   --accent: #303b2b;
   --accent-fade: #303b2b4b;
-  --border: rgba(45, 45, 46, 0.4);
+  --border: rgba(45, 45, 46, 0.719);
+  --border-list: rgba(0, 0, 0, 0.4);
   --dash-bg: #2f2f2f;
   --input-bg: rgba(32, 32, 32, 0.5);
 }
@@ -29,6 +30,8 @@ body {
   color: var(--foreground);
   padding: 1rem;
   row-gap: 1rem;
+  max-width: 1056px;
+  margin: auto;
   /* font-family: Arial, Helvetica, sans-serif; */
 }
 
@@ -62,8 +65,12 @@ thead th {
   background-color: var(--background);
 }
 
+table td {
+  border-bottom: solid 1px var(--background);
+}
+
 table {
-  border: solid 1px var(--input-bg);
+  border: solid 1px var(--foreground);
   border-radius: 0.5rem;
   overflow: hidden;
 }
@@ -208,10 +215,10 @@ nav {
   /* background-color: var(--input-bg); */
   border-radius: 0.4rem;
   padding: 0.4rem 0.8rem;
-  border: solid 1px var(--input-bg);
+  border: solid 1px var(--border-list);
 }
 
 .products-selection {
-  border: solid 1px var(--input-bg);
-  border-radius: 1rem;
+  border: solid 1px var(--border-list);
+  border-radius: 0.5rem;
 }

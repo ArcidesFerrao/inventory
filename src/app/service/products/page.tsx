@@ -42,37 +42,39 @@ export default async function ProductsPage() {
       {products.length === 0 ? (
         <p>No products found...</p>
       ) : (
-        <div className="flex flex-col gap-4">
-          <section className="flex flex-col gap-2">
-            <h2 className="text-lg font-medium">Lanche</h2>
-            <ul className="flex flex-col gap-4">
-              {lanche.map((item) => (
-                <ListItem
-                  id={item.id}
-                  name={item.name}
-                  price={item.price || 0}
-                  key={item.id}
-                />
-              ))}
-            </ul>
-          </section>
+        <div className="menu-products flex justify-between gap-8">
+          <div className="flex flex-col gap-4">
+            <section className="flex flex-col gap-2">
+              <h2 className="text-lg font-medium">Lanche</h2>
+              <ul className="flex flex-col gap-4">
+                {lanche.map((item) => (
+                  <ListItem
+                    id={item.id}
+                    name={item.name}
+                    price={item.price || 0}
+                    key={item.id}
+                  />
+                ))}
+              </ul>
+            </section>
+            <section className="flex flex-col gap-2">
+              <h2 className="text-lg font-medium">Refeicao</h2>
+              <ul className="flex flex-col gap-4">
+                {refeicao.map((item) => (
+                  <ListItem
+                    id={item.id}
+                    name={item.name}
+                    price={item.price || 0}
+                    key={item.id}
+                  />
+                ))}
+              </ul>
+            </section>
+          </div>
           <section className="flex flex-col gap-2">
             <h2 className="text-lg font-medium">Bebidas</h2>
             <ul className="flex flex-col gap-4">
               {bebidas.map((item) => (
-                <ListItem
-                  id={item.id}
-                  name={item.name}
-                  price={item.price || 0}
-                  key={item.id}
-                />
-              ))}
-            </ul>
-          </section>
-          <section className="flex flex-col gap-2">
-            <h2 className="text-lg font-medium">Refeicao</h2>
-            <ul className="flex flex-col gap-4">
-              {refeicao.map((item) => (
                 <ListItem
                   id={item.id}
                   name={item.name}

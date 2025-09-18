@@ -45,10 +45,10 @@ export default async function StockPage() {
                 <td>
                   <p>{item.stock}</p>
                 </td>
-                <td className="flex justify-center">
-                  {item.stock > 5 ? (
+                <td>
+                  {(item.stock ?? 0) > 10 ? (
                     <span className="inline-block w-4 h-4 bg-green-600 rounded-full"></span>
-                  ) : item.stock > 0 ? (
+                  ) : (item.stock ?? 0) > 5 ? (
                     <span className="inline-block w-4 h-4 bg-amber-400  rounded-full"></span>
                   ) : (
                     <span className="inline-block w-4 h-4 bg-red-400  rounded-full"></span>
