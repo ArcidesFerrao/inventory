@@ -113,3 +113,16 @@ export async function getProducts() {
     return [];
   }
 }
+export async function getProduct({id}: {id: string}) {
+  try {
+    const product = await db.product.findUnique(
+        {where: {
+            id,
+        }}
+    );
+    return product;
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    return [];
+  }
+}
