@@ -19,6 +19,9 @@ export default async function SettingsPage() {
     where: {
       userId: user.id,
     },
+    include: {
+      SaleItem: true,
+    },
   });
 
   const purchases = await db.purchase.findMany({

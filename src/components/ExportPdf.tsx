@@ -5,7 +5,17 @@ import autoTable from "jspdf-autotable";
 import { Product, Purchase, Sale } from "@prisma/client";
 import React from "react";
 
-export const ExportSalesPdf = ({ sales }: { sales: Sale[] }) => {
+type SaleWithItems = Sale & {
+  SaleItem: {
+    id: string;
+    price: number;
+    quantity: number;
+    saleId: string;
+    productId: string;
+  }[];
+};
+
+export const ExportSalesPdf = ({ sales }: { sales: SaleWithItems[] }) => {
   const handleExport = () => {
     const doc = new jsPDF();
 
@@ -20,6 +30,28 @@ export const ExportSalesPdf = ({ sales }: { sales: Sale[] }) => {
         sale.total.toFixed(2),
         sale.cogs.toFixed(2),
       ]),
+    });
+
+    sales.forEach((sale) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const startY = (doc as any).lastAutoTable.finalY + 10;
+
+      doc.setFontSize(14);
+      doc.text(
+        `Products for sale on ${new Date(sale.date).toLocaleDateString()}`,
+        14,
+        startY
+      );
+
+      autoTable(doc, {
+        startY: startY + 5,
+        head: [["ProductId", "Quantity", "Price (MZN)"]],
+        body: sale.SaleItem.map((item) => [
+          item.id,
+          item.quantity,
+          item.price.toFixed(2),
+        ]),
+      });
     });
     doc.save("sales_report.pdf");
   };
