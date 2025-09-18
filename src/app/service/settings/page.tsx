@@ -1,8 +1,4 @@
-import {
-  ExportPurchasesPdf,
-  ExportSalesPdf,
-  ExportStockPdf,
-} from "@/components/ExportPdf";
+import ExportSelection from "@/components/ExportPdf";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
@@ -20,13 +16,24 @@ export default async function SettingsPage() {
       userId: user.id,
     },
     include: {
-      SaleItem: true,
+      SaleItem: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 
   const purchases = await db.purchase.findMany({
     where: {
       userId: user.id,
+    },
+    include: {
+      PurchaseItem: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 
@@ -49,14 +56,11 @@ export default async function SettingsPage() {
           <h4 className="font-medium">Email: </h4>
           <p>arcides@ferrao.com</p>
         </div>
-        <div className="flex flex-col gap-2">
-          <h4 className="font-medium">Export Data</h4>
-          <div className="flex gap-2">
-            <ExportStockPdf stock={stockProducts} />
-            <ExportSalesPdf sales={sales} />
-            <ExportPurchasesPdf purchases={purchases} />
-          </div>
-        </div>
+        <ExportSelection
+          stock={stockProducts}
+          sales={sales}
+          purchases={purchases}
+        />
       </div>
     </section>
   );
