@@ -44,6 +44,12 @@ export default async function SettingsPage() {
     },
   });
 
+  const logs = await db.activityLog.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+
   return (
     <section className="settings-page flex flex-col gap-4">
       <h2 className="text-2xl font-bold">Settings</h2>
@@ -60,6 +66,7 @@ export default async function SettingsPage() {
           stock={stockProducts}
           sales={sales}
           purchases={purchases}
+          logs={logs}
         />
       </div>
     </section>

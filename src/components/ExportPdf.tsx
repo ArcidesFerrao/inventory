@@ -2,13 +2,15 @@
 
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { Product, Purchase, Sale } from "@prisma/client";
+import { ActivityLog, Product, Purchase, Sale } from "@prisma/client";
 import React, { useState } from "react";
+import { JsonValue } from "@prisma/client/runtime/library";
 
 type Props = {
   stock: Product[];
   purchases: PurchaseWithItems[];
   sales: SaleWithItems[];
+  logs: LogWithItems[];
 };
 
 type PurchaseWithItems = Purchase & {
@@ -30,6 +32,14 @@ type SaleWithItems = Sale & {
     productId: string;
     product: Product | null;
   }[];
+};
+
+type LogWithItems = ActivityLog & {
+  id: string;
+  actionType: string;
+  description: string;
+  timestamp: Date;
+  details: JsonValue;
 };
 
 export const ExportSalesPdf = ({ sales }: { sales: SaleWithItems[] }) => {
@@ -138,7 +148,35 @@ export const ExportStockPdf = ({ stock }: { stock: Product[] }) => {
   return <button onClick={handleExport}>Stock Report</button>;
 };
 
-export default function ExportSelection({ stock, purchases, sales }: Props) {
+export const ExportLogsPdf = ({ logs }: { logs: LogWithItems[] }) => {
+  const handleExport = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Purchases Report", 14, 20);
+
+    autoTable(doc, {
+      startY: 30,
+      head: [["Action", "Description", "Details", "Timestamp"]],
+      body: logs.map((log) => [
+        log.actionType,
+        log.description,
+        log.details ? JSON.stringify(log.details) : "",
+        new Date(log.timestamp).toLocaleDateString(),
+      ]),
+    });
+
+    doc.save("logs_report.pdf");
+  };
+  return <button onClick={handleExport}>Activity Logs Report</button>;
+};
+
+export default function ExportSelection({
+  stock,
+  purchases,
+  sales,
+  logs,
+}: Props) {
   const [range, setRange] = useState<"today" | "weekly" | "all">("weekly");
 
   function filterByRange<T extends { date: Date }>(data: T[]) {
@@ -180,6 +218,7 @@ export default function ExportSelection({ stock, purchases, sales }: Props) {
       </div>
       <div className="flex gap-2">
         <ExportStockPdf stock={stock} />
+        <ExportLogsPdf logs={logs} />
         <ExportSalesPdf sales={filterByRange(sales)} />
         <ExportPurchasesPdf purchases={filterByRange(purchases)} />
       </div>
