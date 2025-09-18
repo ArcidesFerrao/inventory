@@ -167,6 +167,7 @@ nav {
 
 .dash-section {
   background-color: var(--dash-bg);
+  min-height: 80vh;
 }
 
 .items-list,
