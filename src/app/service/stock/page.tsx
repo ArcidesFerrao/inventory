@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import React from "react";
 
 export default async function StockPage() {
@@ -41,7 +42,9 @@ export default async function StockPage() {
           <tbody>
             {products.map((item) => (
               <tr key={item.id}>
-                <td>{item.name}</td>
+                <td>
+                  <Link href={`/service/products/${item.id}`}>{item.name}</Link>
+                </td>
                 <td>
                   <p>{item.stock}</p>
                 </td>

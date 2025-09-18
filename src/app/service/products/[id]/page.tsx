@@ -1,4 +1,6 @@
+import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";
+import Link from "next/link";
 import React from "react";
 type Params = Promise<{ id: string }>;
 
@@ -14,28 +16,34 @@ export default async function ProductPage(props: { params: Params }) {
     },
   });
   return (
-    <div className="flex flex-col gap-2 items-start">
+    <div className="flex flex-col gap-5 items-start">
       <div className="flex justify-between w-full">
         <div>
-          <h2 className="text-xl">{product?.name}</h2>
+          <h2 className="text-2xl font-semibold">{product?.name}</h2>
           <p className="text-xs font-thin">Id: {product?.id}</p>
         </div>
         <div className="flex gap-2">
-          <button>Edit</button>
-          <button>Delete</button>
+          <DeleteButton productId={id} />
+          <Link
+            className="edit-button px-3 py-2 flex items-center "
+            href={`/service/products/${id}/edit`}
+          >
+            <span className="mdi--edit"></span>
+          </Link>
         </div>
       </div>
       <div className="flex gap-10">
         <div>
-          {product?.type === "STOCK" && (
+          {product?.type === "STOCK" ? (
             <div>
-              <h2>Unit: {product?.Unit?.name}</h2>
               <h2>Quantity: {product?.quantity}</h2>
-              <h2>Stock: {product?.stock ? "Yes" : "No"}</h2>
-              <h2>Cost: {product?.cost}</h2>
+              <h2>Unit: {product?.Unit?.name}</h2>
+              <h2>Cost: {product?.cost?.toFixed(2)} MZN</h2>
+              <h2>Stock: {product?.stock}</h2>
             </div>
+          ) : (
+            <h2>Price: {product?.price?.toFixed(2)} MZN</h2>
           )}
-          <h2>Price: {product?.price?.toFixed(2)} MZN</h2>
         </div>
 
         <div>
@@ -44,9 +52,17 @@ export default async function ProductPage(props: { params: Params }) {
           {product?.type === "STOCK" && <h2>Status: {product?.status}</h2>}
         </div>
       </div>
-      <h2>Description: {product?.description}</h2>
-      <h2>Created At: {product?.createdAt.toLocaleDateString()}</h2>
-      <h2>Updated At: {product?.updatedAt.toLocaleDateString()}</h2>
+      {product?.type === "SERVICE" && (
+        <h2>Description: {product?.description}</h2>
+      )}
+      <div className="flex justify-between gap-4 w-full">
+        <p className="text-xs font-thin">
+          Created At: {product?.createdAt.toLocaleDateString()}
+        </p>
+        <p className="text-xs font-thin">
+          Updated At: {product?.updatedAt.toLocaleDateString()}
+        </p>
+      </div>
     </div>
   );
 }

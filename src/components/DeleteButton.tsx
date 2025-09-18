@@ -40,7 +40,7 @@ export default function DeleteButton({ productId }: { productId: string }) {
       <button
         onClick={() => setIsDialogOpen(true)}
         disabled={isPending}
-        className="delete-button p-2 flex"
+        className="delete-button px-3 py-2 flex items-center"
       >
         <span className="mdi--delete"></span>
       </button>
