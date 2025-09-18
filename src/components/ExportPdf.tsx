@@ -42,6 +42,18 @@ type LogWithItems = ActivityLog & {
   details: JsonValue;
 };
 
+type ParsedDetails = {
+  total: number;
+  items: LogItem[];
+};
+type LogItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  cost: number;
+  price?: number;
+};
+
 export const ExportSalesPdf = ({ sales }: { sales: SaleWithItems[] }) => {
   const handleExport = () => {
     const doc = new jsPDF();
@@ -158,12 +170,25 @@ export const ExportLogsPdf = ({ logs }: { logs: LogWithItems[] }) => {
     autoTable(doc, {
       startY: 30,
       head: [["Action", "Description", "Details", "Timestamp"]],
-      body: logs.map((log) => [
-        log.actionType,
-        log.description,
-        log.details ? JSON.stringify(log.details) : "",
-        new Date(log.timestamp).toLocaleDateString(),
-      ]),
+      body: logs.map((log) => {
+        const parsedDetails = log.details as ParsedDetails;
+        return [
+          log.actionType,
+          log.description,
+          parsedDetails?.items
+            ? parsedDetails.items
+                .map(
+                  (item) =>
+                    `${item.name} - MZN ${item.cost || item.price} x ${
+                      item.quantity
+                    }`
+                )
+                .join("\n")
+            : "",
+          // log.details ? JSON.stringify(log.details) : "",
+          new Date(log.timestamp).toLocaleDateString(),
+        ];
+      }),
     });
 
     doc.save("logs_report.pdf");
