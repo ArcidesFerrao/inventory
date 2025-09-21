@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const [products, setProducts] = useState(
     initialProducts.map((p) => ({ ...p, quantity: 0 }))
@@ -15,7 +16,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
   const handleCompleteSale = async () => {
     console.log("creating sale");
-
+    setLoading(true);
     const saleItems = products.filter((product) => product.quantity > 0);
 
     if (saleItems.length === 0) return;
@@ -25,6 +26,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     if (result.success) {
       toast.success("Sale Completed");
       setTimeout(() => {
+        setLoading(false);
         router.push("/service/sales");
       }, 500);
     }
@@ -183,9 +185,10 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
         </div>
         <button
           onClick={() => handleCompleteSale()}
+          disabled={loading}
           className="border px-4 py-2 rounded mt-4"
         >
-          Complete Sale
+          {loading ? "..." : "Complete Sale"}
         </button>
       </div>
     </>
