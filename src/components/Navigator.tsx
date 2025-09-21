@@ -29,6 +29,7 @@ export const Navigator = () => {
     </nav>
   );
 };
+
 export const ServiceNav = () => {
   return (
     <nav className="navigator">
@@ -65,6 +66,45 @@ export const ServiceNav = () => {
         />
         <NavLink
           href="/service/settings"
+          label="Settings"
+          icon={<span className="icon-park-outline--setting-one"></span>}
+        />
+      </ul>
+    </nav>
+  );
+};
+
+export const SupplyNav = () => {
+  return (
+    <nav className="navigator">
+      <ul className="flex flex-col gap-2">
+        <NavLink
+          href="/supply"
+          label="Dashboard"
+          icon={<span className="mage--dashboard-fill"></span>}
+        />
+        <NavLink
+          href="/supply/products"
+          label="Products"
+          icon={<span className="ant-design--product-filled"></span>}
+        />
+        <NavLink
+          href="/supply/stock"
+          label="Stock"
+          icon={<span className="lsicon--management-stockout-filled"></span>}
+        />
+        <NavLink
+          href="/supply/sales"
+          label="Sales"
+          icon={<span className="carbon--sales-ops"></span>}
+        />
+        <NavLink
+          href="/supply/logs"
+          label="Active Logs"
+          icon={<span className="lucide--logs"></span>}
+        />
+        <NavLink
+          href="/supply/settings"
           label="Settings"
           icon={<span className="icon-park-outline--setting-one"></span>}
         />

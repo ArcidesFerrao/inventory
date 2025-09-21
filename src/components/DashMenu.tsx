@@ -14,6 +14,10 @@ export default function DashMenu() {
         <span className="fa7-solid--store"></span>
         <p>Take Away Management</p>
       </button>
+      <button className="p-4" onClick={() => redirect("/supply")}>
+        <span className="solar--delivery-bold"></span>
+        <p>Supply Management</p>
+      </button>
     </section>
   );
 }
