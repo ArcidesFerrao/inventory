@@ -12,6 +12,7 @@ export default async function PurchasesPage() {
 
   const purchases = await db.purchase.findMany({
     where: { userId: session.user.id },
+    orderBy: { date: "desc" },
   });
   return (
     <div className="products-list flex flex-col gap-4 w-full">

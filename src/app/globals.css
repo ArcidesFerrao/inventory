@@ -234,3 +234,9 @@ nav {
   padding: 0.4rem 0.8rem;
   border: solid 1px var(--dash-bg);
 }
+
+.complete-btn:disabled {
+  background-color: var(--border);
+  border: solid 1px var(--foreground);
+  cursor: not-allowed;
+}

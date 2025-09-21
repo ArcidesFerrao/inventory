@@ -22,6 +22,9 @@ export default async function SettingsPage() {
         },
       },
     },
+    orderBy: {
+      date: "desc",
+    },
   });
 
   const purchases = await db.purchase.findMany({
@@ -35,6 +38,9 @@ export default async function SettingsPage() {
         },
       },
     },
+    orderBy: {
+      date: "desc",
+    },
   });
 
   const stockProducts = await db.product.findMany({
@@ -47,6 +53,9 @@ export default async function SettingsPage() {
   const logs = await db.activityLog.findMany({
     where: {
       userId: user.id,
+    },
+    orderBy: {
+      timestamp: "desc",
     },
   });
 

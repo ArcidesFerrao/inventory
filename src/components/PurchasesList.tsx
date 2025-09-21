@@ -104,7 +104,7 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
         <button
           onClick={() => handleCompleteSale()}
           disabled={loading}
-          className="border px-4 py-2 rounded mt-4"
+          className="complete-btn border px-4 py-2 rounded mt-4"
         >
           {loading ? "..." : "Complete"}
         </button>

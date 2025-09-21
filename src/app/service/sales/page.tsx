@@ -12,6 +12,7 @@ export default async function SalesPage() {
 
   const sales = await db.sale.findMany({
     where: { userId: session.user.id },
+    orderBy: { date: "desc" },
   });
 
   return (
