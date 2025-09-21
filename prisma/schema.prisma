@@ -164,6 +164,7 @@ enum ProductStatus {
 enum ProductType {
   SERVICE
   STOCK
+  SUPPLY
 }
 
 model Supplier {

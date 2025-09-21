@@ -10,30 +10,22 @@ export default async function ProductsPage() {
 
   if (!session?.user) redirect("/login");
 
-  const products = await db.product.findMany({
+  const products = await db.supplierProduct.findMany({
     where: {
-      userId: session.user.id,
-      type: "SUPPLY",
-    },
-    include: {
-      Category: true,
+      supplierId: session.user.id,
     },
   });
 
-  if (products.length === 0) {
-    <section>
-      <p>No products found...</p>
-    </section>;
-  }
-
-  const lanche = products.filter((p) => p.Category?.name === "Lanche");
-  const bebidas = products.filter((p) => p.Category?.name === "Bebida");
-  const refeicao = products.filter((p) => p.Category?.name === "Refeicao");
+  //   if (products.length === 0) {
+  //     <section>
+  //       <p>No products found...</p>
+  //     </section>;
+  //   }
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-medium">Menu</h2>
+        <h2 className="text-2xl font-medium">Products</h2>
         <Link href="/service/products/new" className="add-product flex gap-1">
           <span>+</span>
           <span className="text-md">Product</span>
@@ -43,47 +35,16 @@ export default async function ProductsPage() {
         <p>No products found...</p>
       ) : (
         <div className="menu-products flex justify-between gap-8">
-          <div className="flex flex-col gap-4">
-            <section className="flex flex-col gap-2">
-              <h2 className="text-lg font-medium">Lanche</h2>
-              <ul className="flex flex-col gap-4">
-                {lanche.map((item) => (
-                  <ListItem
-                    id={item.id}
-                    name={item.name}
-                    price={item.price || 0}
-                    key={item.id}
-                  />
-                ))}
-              </ul>
-            </section>
-            <section className="flex flex-col gap-2">
-              <h2 className="text-lg font-medium">Refeicao</h2>
-              <ul className="flex flex-col gap-4">
-                {refeicao.map((item) => (
-                  <ListItem
-                    id={item.id}
-                    name={item.name}
-                    price={item.price || 0}
-                    key={item.id}
-                  />
-                ))}
-              </ul>
-            </section>
-          </div>
-          <section className="flex flex-col gap-2">
-            <h2 className="text-lg font-medium">Bebidas</h2>
-            <ul className="flex flex-col gap-4">
-              {bebidas.map((item) => (
-                <ListItem
-                  id={item.id}
-                  name={item.name}
-                  price={item.price || 0}
-                  key={item.id}
-                />
-              ))}
-            </ul>
-          </section>
+          <ul className="flex flex-col gap-4">
+            {products.map((item) => (
+              <ListItem
+                id={item.id}
+                name={item.name}
+                price={item.price || 0}
+                key={item.id}
+              />
+            ))}
+          </ul>
         </div>
       )}
     </div>
