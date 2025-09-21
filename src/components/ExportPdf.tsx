@@ -165,12 +165,12 @@ export const ExportLogsPdf = ({ logs }: { logs: LogWithItems[] }) => {
     const doc = new jsPDF();
 
     doc.setFontSize(16);
-    doc.text("Purchases Report", 14, 20);
+    doc.text("Activity Logs Report", 14, 20);
 
     autoTable(doc, {
       startY: 30,
       head: [["Action", "Description", "Details", "Timestamp"]],
-      body: logs.map((log) => {
+      body: (logs ?? []).map((log) => {
         const parsedDetails = log.details as ParsedDetails;
         return [
           log.actionType,
@@ -221,10 +221,16 @@ export default function ExportSelection({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 py-4">
       <div className="export-header flex gap-4 items-center  justify-between">
         <h4 className="font-medium">Export Data</h4>
-        <div className="range-select flex gap-2 items-center">
+        <div>
+          <ExportStockPdf stock={stock} />
+          <ExportLogsPdf logs={logs} />
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 py-4">
+        <div className="range-select flex gap-2 items-center justify-between">
           <label htmlFor="range">Range:</label>
           <select
             name="range"
@@ -240,12 +246,10 @@ export default function ExportSelection({
             <option value="all">All Time</option>
           </select>
         </div>
-      </div>
-      <div className="flex gap-2">
-        <ExportStockPdf stock={stock} />
-        <ExportLogsPdf logs={logs} />
-        <ExportSalesPdf sales={filterByRange(sales)} />
-        <ExportPurchasesPdf purchases={filterByRange(purchases)} />
+        <div className="flex flex-col">
+          <ExportSalesPdf sales={filterByRange(sales)} />
+          <ExportPurchasesPdf purchases={filterByRange(purchases)} />
+        </div>
       </div>
     </div>
   );
