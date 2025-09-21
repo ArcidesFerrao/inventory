@@ -8,18 +8,20 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(cuid())
-  name           String?
-  email          String?       @unique
-  emailVerified  DateTime?
-  image          String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  hashedPassword String?
-  ActivityLog    ActivityLog[]
-  products       Product[]
-  purchases      Purchase[]
-  sales          Sale[]
+  id                String             @id @default(cuid())
+  name              String?
+  email             String?            @unique
+  emailVerified     DateTime?
+  image             String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  hashedPassword    String?
+  ActivityLog       ActivityLog[]
+  products          Product[]
+  purchases         Purchase[]
+  sales             Sale[]
+  supplierCustomers SupplierCustomer[]
+  orders            Order[]
 }
 
 model Product {
@@ -46,6 +48,7 @@ model Product {
   StockItems    RecipeItem[]    @relation("StockItems")
   SaleItem      SaleItem[]
   stockMovement StockMovement[]
+  OrderItem     OrderItem[]
 }
 
 model RecipeItem {
@@ -81,27 +84,32 @@ model SaleItem {
 }
 
 model Purchase {
-  id           String         @id @default(uuid())
-  date         DateTime       @default(now())
-  total        Float
-  supplier     String?
-  paymentType  String
-  userId       String
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  PurchaseItem PurchaseItem[]
+  id                 String            @id @default(uuid())
+  date               DateTime          @default(now())
+  total              Float
+  paymentType        String
+  userId             String
+  supplierId         String?
+  supplierCustomerId String?
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  supplier           Supplier?         @relation(fields: [supplierId], references: [id])
+  PurchaseItem       PurchaseItem[]
+  supplierCustomer   SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
 }
 
 model PurchaseItem {
-  id         String   @id @default(uuid())
-  purchaseId String
-  productId  String
-  stock      Int
-  price      Float
-  quantity   Int      @default(1)
-  unitCost   Float    @default(0)
-  totalCost  Float    @default(0)
-  product    Product  @relation(fields: [productId], references: [id])
-  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  id                String           @id @default(uuid())
+  purchaseId        String
+  productId         String
+  supplierProductId String?
+  stock             Int
+  price             Float
+  quantity          Int              @default(1)
+  unitCost          Float            @default(0)
+  totalCost         Float            @default(0)
+  product           Product          @relation(fields: [productId], references: [id])
+  purchase          Purchase         @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  supplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
 }
 
 model ActivityLog {
@@ -156,4 +164,84 @@ enum ProductStatus {
 enum ProductType {
   SERVICE
   STOCK
+}
+
+model Supplier {
+  id         String             @id @default(cuid())
+  name       String
+  email      String?            @unique
+  phone      String?            @unique
+  address    String?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  orderItems OrderItem[]        @relation("SupplierOrders")
+  products   SupplierProduct[]
+  purchases  Purchase[]
+  customers  SupplierCustomer[]
+}
+
+model SupplierProduct {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  stock        Int?
+  price        Float?
+  cost         Float?
+  status       ProductStatus  @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  supplierId   String
+  supplier     Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  PurchaseItem PurchaseItem[]
+}
+
+model Order {
+  id                 String            @id @default(cuid())
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  deliveryDate       DateTime?
+  notes              String?
+  total              Float
+  status             String
+  paymentType        String
+  userId             String
+  supplierCustomerId String?
+  items              OrderItem[]
+  supplierCustomer   SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([supplierCustomerId])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  price      Float
+  product    Product  @relation(fields: [productId], references: [id])
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  supplierId String
+  supplier   Supplier @relation("SupplierOrders", fields: [supplierId], references: [id])
+
+  @@index([supplierId])
+}
+
+model SupplierCustomer {
+  id         String     @id @default(cuid())
+  name       String
+  email      String?    @unique
+  phone      String?    @unique
+  address    String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  supplierId String
+  userId     String
+  supplier   Supplier   @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchases  Purchase[]
+  Order      Order[]
+
+  @@unique([supplierId, userId])
 }

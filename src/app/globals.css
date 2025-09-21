@@ -236,7 +236,7 @@ nav {
 }
 
 .complete-btn:disabled {
-  background-color: var(--border);
-  border: solid 1px var(--foreground);
+  background-color: var(--dash-bg);
+  border: solid 1px var(--dash-bg);
   cursor: not-allowed;
 }
