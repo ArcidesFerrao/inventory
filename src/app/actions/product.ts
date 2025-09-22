@@ -191,3 +191,42 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
         } satisfies SubmissionResult<string[]>
     }
 }
+
+export async function editSupplierProduct(prevState: unknown, formData: FormData) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) redirect("/login");
+    const submission = parseWithZod(formData, { schema: supplierProductSchema
+        });
+    if (submission.status !== "success") return submission.reply();
+
+    console.log(session);
+    try {
+        const values = submission.value;
+
+
+        await db.supplierProduct.update({
+            where: {
+                id: submission.value.id,
+            },
+            data: {
+                name: values.name,
+                description: values.description,
+                price: values.price,
+                unitQty: values.quantity,
+                unitId: values.unitId,
+                stock: values.stock,
+                cost: values.cost,
+                status: "ACTIVE",
+                supplierId: session.user.id,
+            }
+        });
+
+        return {status: "success"} satisfies SubmissionResult<string[]>
+    } catch (error) {
+        console.error("Failed to update Supplier Product", error);
+        return {
+            status: "error",
+            error: { general: ["Failed to update Supplier Product"]}
+        } satisfies SubmissionResult<string[]>
+    }
+}
