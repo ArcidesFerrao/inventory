@@ -1,4 +1,4 @@
-import { ListItem } from "@/components/List";
+import { ListSupplierItem } from "@/components/List";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
@@ -37,10 +37,11 @@ export default async function ProductsPage() {
         <div className="menu-products flex justify-between gap-8">
           <ul className="flex flex-col gap-4">
             {products.map((item) => (
-              <ListItem
+              <ListSupplierItem
                 id={item.id}
                 name={item.name}
                 price={item.price || 0}
+                qty={item.stock || 0}
                 key={item.id}
               />
             ))}

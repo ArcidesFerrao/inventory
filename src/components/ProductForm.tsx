@@ -1,7 +1,11 @@
 "use client";
 
 import { getCategories } from "@/app/actions/categories";
-import { createProduct, getProducts } from "@/app/actions/product";
+import {
+  createProduct,
+  createSupplierProduct,
+  getProducts,
+} from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
@@ -338,7 +342,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
 };
 
 export const SupplierProductForm = ({ product }: { product?: Product }) => {
-  const actionFn = product ? editProduct : createProduct;
+  const actionFn = product ? editProduct : createSupplierProduct;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -359,7 +363,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
           ? "Product edited successfully!"
           : "Product created successfully!"
       );
-      router.push("/service/products");
+      router.push("/supply/products");
     }
 
     const fetchUnits = async () => {
@@ -377,7 +381,8 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
       className="flex flex-col py-4 gap-2 min-w-md"
     >
       <h2 className="text-center">
-        Fill the form to {product ? "edit the" : "create a new"} Product
+        Fill the form to {product ? "edit the" : "create a new"} Supplier
+        Product
       </h2>
       <section className="flex flex-col gap-4">
         {product && (

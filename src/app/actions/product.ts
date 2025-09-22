@@ -148,21 +148,37 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
     const submission = parseWithZod(formData, { schema: supplierProductSchema });
     if (submission.status !== "success") return submission.reply();
 
+    const supplier = await db.supplier.findFirst({
+        where: {
+            id: session.user.id,
+        }
+    });
+
+    if (!supplier) {
+        await db.supplier.create({
+            data: {
+                id: session.user.id,
+                name: session.user.name || "Unknown Supplier",
+                email: session.user.email || "",
+            }
+        });
+    }
+
     console.log(session);
     try {
         const values = submission.value;
 
-        await db.product.create({
+        await db.supplierProduct.create({
             data: {
                 name: values.name,
                 description: values.description,
                 price: values.price,
-                quantity: values.unitQty,
+                unitQty: values.quantity,
                 unitId: values.unitId,
                 cost: values.cost,
                 stock: values.stock,
                 status: "ACTIVE",
-                userId: session.user.id,
+                supplierId: session.user.id,
             }
         });
 
