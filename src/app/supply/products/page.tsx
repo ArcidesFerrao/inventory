@@ -26,7 +26,7 @@ export default async function ProductsPage() {
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
         <h2 className="text-2xl font-medium">Products</h2>
-        <Link href="/service/products/new" className="add-product flex gap-1">
+        <Link href="/supply/products/new" className="add-product flex gap-1">
           <span>+</span>
           <span className="text-md">Product</span>
         </Link>

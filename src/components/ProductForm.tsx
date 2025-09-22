@@ -398,35 +398,35 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
               <p className="text-xs font-light">{fields.name.errors}</p>
             )}
           </div>
-        </div>
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="quantity">Unit Qty.</label>
-            <input
-              type="number"
-              name="quantity"
-              id="quantity"
-              defaultValue={product?.quantity ?? 1}
-            />
-            {fields.quantity.errors && (
-              <p className="text-xs font-light">{fields.quantity.errors}</p>
-            )}
-          </div>
-          <div className="flex flex-col w-1/2 gap-1">
-            <label htmlFor="unit">Unit</label>
-            <select name="unitId" id="unitId">
-              <option value="" disabled>
-                Select a unit
-              </option>
-              {units.map((unit) => (
-                <option key={unit.id} value={unit.id}>
-                  {unit.name}
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="quantity">Unit Qty.</label>
+              <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                defaultValue={product?.quantity ?? 1}
+              />
+              {fields.quantity.errors && (
+                <p className="text-xs font-light">{fields.quantity.errors}</p>
+              )}
+            </div>
+            <div className="flex flex-col w-1/2 gap-1">
+              <label htmlFor="unit">Unit</label>
+              <select name="unitId" id="unitId">
+                <option value="" disabled>
+                  Select a unit
                 </option>
-              ))}
-            </select>
-            {fields.Unit.errors && (
-              <p className="text-xs font-light">{fields.Unit.errors}</p>
-            )}
+                {units.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
+              {fields.Unit.errors && (
+                <p className="text-xs font-light">{fields.Unit.errors}</p>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex gap-2">
