@@ -4,7 +4,7 @@ import { getCategories } from "@/app/actions/categories";
 import { createProduct, getProducts } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
-import { productSchema } from "@/schemas/productSchema";
+import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useRouter } from "next/navigation";
@@ -308,6 +308,168 @@ export const ProductForm = ({ product }: { product?: Product }) => {
             </fieldset>
           </div>
         )}
+        <div className="flex flex-col gap-1">
+          <textarea
+            name="description"
+            id="description"
+            placeholder="Description"
+            defaultValue={product?.description || ""}
+            className="min-w-80 min-h-40"
+          />
+          {fields.description.errors && (
+            <p className="text-xs font-light">{fields.description.errors}</p>
+          )}
+        </div>
+      </section>
+      <section className="errors">
+        {state?.status === "error" && (
+          <p className="text-xs font-light">{state.error?.general?.[0]}</p>
+        )}
+      </section>
+
+      <input
+        type="submit"
+        disabled={isPending}
+        value={isPending ? "..." : product ? "Edit Product" : "Add Product"}
+        className="submit-button"
+      />
+    </form>
+  );
+};
+
+export const SupplierProductForm = ({ product }: { product?: Product }) => {
+  const actionFn = product ? editProduct : createProduct;
+  const [state, action, isPending] = useActionState(actionFn, undefined);
+  const [form, fields] = useForm({
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: supplierProductSchema });
+    },
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onSubmit",
+    defaultValue: product,
+  });
+  const router = useRouter();
+
+  const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      toast.success(
+        product
+          ? "Product edited successfully!"
+          : "Product created successfully!"
+      );
+      router.push("/service/products");
+    }
+
+    const fetchUnits = async () => {
+      setUnits(await getUnits());
+    };
+
+    fetchUnits();
+  }, [state, product, router]);
+
+  return (
+    <form
+      id={form.id}
+      action={action}
+      onSubmit={form.onSubmit}
+      className="flex flex-col py-4 gap-2 min-w-md"
+    >
+      <h2 className="text-center">
+        Fill the form to {product ? "edit the" : "create a new"} Product
+      </h2>
+      <section className="flex flex-col gap-4">
+        {product && (
+          <input type="hidden" name="id" id="id" value={product.id} />
+        )}
+        <div className="flex gap-2 items-end">
+          <div className="flex w-full flex-col gap-1">
+            <label htmlFor="name">Product Name</label>
+
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Product Name"
+              defaultValue={product?.name}
+            />
+            {fields.name.errors && (
+              <p className="text-xs font-light">{fields.name.errors}</p>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="quantity">Unit Qty.</label>
+            <input
+              type="number"
+              name="quantity"
+              id="quantity"
+              defaultValue={product?.quantity ?? 1}
+            />
+            {fields.quantity.errors && (
+              <p className="text-xs font-light">{fields.quantity.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col w-1/2 gap-1">
+            <label htmlFor="unit">Unit</label>
+            <select name="unitId" id="unitId">
+              <option value="" disabled>
+                Select a unit
+              </option>
+              {units.map((unit) => (
+                <option key={unit.id} value={unit.id}>
+                  {unit.name}
+                </option>
+              ))}
+            </select>
+            {fields.Unit.errors && (
+              <p className="text-xs font-light">{fields.Unit.errors}</p>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="price">Cost</label>
+            <input
+              type="number"
+              name="cost"
+              id="cost"
+              defaultValue={product?.cost || 0}
+            />
+
+            {fields.cost.errors && (
+              <p className="text-xs font-light">{fields.cost.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="price">Price</label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              defaultValue={product?.price || 0}
+            />
+
+            {fields.price.errors && (
+              <p className="text-xs font-light">{fields.price.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="stock">Stock</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              min={0}
+              defaultValue={product?.stock || 0}
+            />
+            {fields.stock.errors && (
+              <p className="text-xs font-light">{fields.stock.errors}</p>
+            )}
+          </div>
+        </div>
         <div className="flex flex-col gap-1">
           <textarea
             name="description"
