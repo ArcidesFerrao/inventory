@@ -89,11 +89,6 @@ export const SupplyNav = () => {
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
-          href="/supply/stock"
-          label="Stock"
-          icon={<span className="lsicon--management-stockout-filled"></span>}
-        />
-        <NavLink
           href="/supply/orders"
           label="Orders"
           icon={<span className="carbon--sales-ops"></span>}

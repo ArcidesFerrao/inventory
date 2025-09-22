@@ -149,10 +149,11 @@ model Category {
 }
 
 model Unit {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  description String?
-  products    Product[]
+  id               String            @id @default(cuid())
+  name             String            @unique
+  description      String?
+  products         Product[]
+  supplierProducts SupplierProduct[]
 }
 
 enum ProductStatus {
@@ -182,18 +183,27 @@ model Supplier {
 }
 
 model SupplierProduct {
-  id           String         @id @default(cuid())
-  name         String
-  description  String?
-  stock        Int?
-  price        Float?
-  cost         Float?
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  unitQty     Int
+  stock       Int?
+  price       Float?
+  cost        Float?
+  unitId      String?
+  Unit        Unit?   @relation(fields: [unitId], references: [id])
+
   status       ProductStatus  @default(ACTIVE)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   supplierId   String
   supplier     Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   PurchaseItem PurchaseItem[]
+
+  @@index([supplierId]) // list products per supplier
+  @@index([status]) // filter by active/inactive
+  @@index([name]) // search/autocomplete
+  @@index([unitId])
 }
 
 model Order {
