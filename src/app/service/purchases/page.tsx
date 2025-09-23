@@ -18,15 +18,21 @@ export default async function PurchasesPage() {
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
         <h2 className="text-2xl font-medium">Recent Purchases</h2>
-        <div className="flex">
-          <h2 className="text-lg font-bold">Total Purchases:</h2>
-          <p className="text-lg font-bold px-2">
-            MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
-          </p>
+
+        <div className="flex gap-4">
+          <Link
+            href="/service/purchases/new"
+            className="add-product flex gap-1"
+          >
+            <span className="text-md px-2">Purchase</span>
+          </Link>
+          <Link
+            href="/service/purchases/orders/new"
+            className="add-product flex gap-1"
+          >
+            <span className="text-md px-2">Order</span>
+          </Link>
         </div>
-        <Link href="/service/purchases/new" className="add-product flex gap-1">
-          <span className="text-md px-2">Purchase</span>
-        </Link>
       </div>
       {purchases.length === 0 ? (
         <p>No purchases found...</p>
@@ -52,6 +58,12 @@ export default async function PurchasesPage() {
           </tbody>
         </table>
       )}
+      <div className="flex">
+        <h2 className="text-lg font-bold">Total Purchases:</h2>
+        <p className="text-lg font-bold px-2">
+          MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
+        </p>
+      </div>
     </div>
   );
 }
