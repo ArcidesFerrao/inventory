@@ -1,7 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -10,9 +9,14 @@ export default async function OrdersPage() {
 
   if (!session?.user) redirect("/login");
 
+  const supplier = await db.supplier.findFirst({
+    where: { id: session.user.id },
+  });
+
   const orders = await db.order.findMany({
-    where: { userId: session.user.id },
+    where: { supplierId: supplier?.id },
     orderBy: { createdAt: "desc" },
+    include: { User: true },
   });
 
   return (
@@ -25,9 +29,6 @@ export default async function OrdersPage() {
             MZN {orders.reduce((acc, order) => acc + order.total, 0)}.00
           </p>
         </div>
-        <Link href="/service/orders/new" className="add-product flex gap-1">
-          <span className="text-md px-2">Sell</span>
-        </Link>
       </div>
       {orders.length === 0 ? (
         <p>No orders found...</p>
@@ -35,19 +36,21 @@ export default async function OrdersPage() {
         <table>
           <thead>
             <tr>
-              <th className="text-start">Payment Type</th>
+              <th className="text-start">Agent</th>
               <th className="text-start">Total (MZN)</th>
               <th className="text-start">Date</th>
               <th className="text-start">Time</th>
+              <th className="text-start">Status</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
-                <td>{order.paymentType}</td>
+                <td>{order.User.name}</td>
                 <td>{order.total}.00</td>
                 <td>{order.createdAt.toLocaleDateString()}</td>
                 <td>{order.createdAt.toLocaleTimeString()}</td>
+                <td>{order.status}</td>
               </tr>
             ))}
           </tbody>

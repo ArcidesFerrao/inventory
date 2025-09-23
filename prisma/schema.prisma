@@ -21,6 +21,7 @@ model User {
   purchases         Purchase[]
   sales             Sale[]
   supplierCustomers SupplierCustomer[]
+  orders            Order[]
 }
 
 model Product {
@@ -220,7 +221,10 @@ model Order {
   items              OrderItem[]
   supplierCustomer   SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
   supplier           Supplier          @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  User               User              @relation(fields: [userId], references: [id])
+  userId             String
 
+  @@index([userId])
   @@index([supplierId])
   @@index([supplierCustomerId])
 }

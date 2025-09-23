@@ -1,18 +1,11 @@
-import { SalesList } from "@/components/SalesList";
-import { authOptions } from "@/lib/auth";
+import { OrdersList } from "@/components/OrdersList";
 import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-export default async function NewOrder() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user) redirect("/login");
-
+export default async function NewOrder({ supplierId }: { supplierId: string }) {
   const products = await db.supplierProduct.findMany({
     where: {
-      supplierId: session.user.id,
+      supplierId: supplierId,
     },
     include: {
       Unit: true,
@@ -31,7 +24,7 @@ export default async function NewOrder() {
         {products.length === 0 ? (
           <p>No products found...</p>
         ) : (
-          <SalesList initialProducts={products} userId={session.user.id} />
+          <OrdersList initialProducts={products} supplierId={supplierId} />
         )}
       </div>
     </div>

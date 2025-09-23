@@ -1,7 +1,19 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
+import { SupplierProduct, Unit } from "@prisma/client";
+import { createOrder } from "@/app/actions/orders";
+import toast from "react-hot-toast";
+
+type ProductsWithUnit = SupplierProduct & Unit;
+
+export const OrdersList = ({
+  initialProducts,
+  supplierId,
+}: {
+  initialProducts: ProductsWithUnit[];
+  supplierId: string;
+}) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +28,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
     if (saleItems.length === 0) return;
 
-    const result = await createSale(saleItems, userId);
+    const result = await createOrder(saleItems, supplierId);
 
     if (result.success) {
       toast.success("Sale Completed");
@@ -60,111 +72,32 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
     <>
       <div className="products-selection flex flex-col gap-4 w-full p-4">
         <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Refeição</h3>
           <ul>
-            {products.map((product) => {
-              if (product.Category?.name === "Refeicao")
-                return (
-                  <li
-                    key={product.id}
-                    className="flex justify-between items-center py-2"
-                  >
-                    <h3>{product.name}</h3>
+            {products.map((product) => (
+              <li
+                key={product.id}
+                className="flex justify-between items-center py-2"
+              >
+                <h3>{product.name}</h3>
 
-                    <div className="flex gap-4 items-center max-w-6/12">
-                      <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(product.id)}>
-                          -
-                        </button>
-                        <span className="w-12 text-center">
-                          {product.quantity}
-                        </span>
-                        <button onClick={() => handleIncrement(product.id)}>
-                          +
-                        </button>
-                      </div>
-                      <span className="min-w-28">
-                        <p>
-                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
-                          MZN
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                );
-            })}
-          </ul>
-        </div>
-        <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Lanches</h3>
-          <ul>
-            {products.map((product) => {
-              if (product.Category?.name === "Lanche")
-                return (
-                  <li
-                    key={product.id}
-                    className="flex justify-between items-center py-2"
-                  >
-                    <h3>{product.name}</h3>
-
-                    <div className="flex gap-4 items-center max-w-6/12">
-                      <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(product.id)}>
-                          -
-                        </button>
-                        <span className="w-12 text-center">
-                          {product.quantity}
-                        </span>
-                        <button onClick={() => handleIncrement(product.id)}>
-                          +
-                        </button>
-                      </div>
-                      <span className="min-w-28">
-                        <p>
-                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
-                          MZN
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                );
-            })}
-          </ul>
-        </div>
-        <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Bebidas</h3>
-          <ul>
-            {products.map((product) => {
-              if (product.Category?.name === "Bebida")
-                return (
-                  <li
-                    key={product.id}
-                    className="flex justify-between items-center py-2"
-                  >
-                    <h3>{product.name}</h3>
-
-                    <div className="flex gap-4 items-center max-w-6/12">
-                      <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(product.id)}>
-                          -
-                        </button>
-                        <span className="w-12 text-center">
-                          {product.quantity}
-                        </span>
-                        <button onClick={() => handleIncrement(product.id)}>
-                          +
-                        </button>
-                      </div>
-                      <span className="min-w-28">
-                        <p>
-                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
-                          MZN
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                );
-            })}
+                <div className="flex gap-4 items-center max-w-6/12">
+                  <div className="amount-btn flex gap-2 items-center px-2 py-1">
+                    <button onClick={() => handleDecrement(product.id)}>
+                      -
+                    </button>
+                    <span className="w-12 text-center">{product.quantity}</span>
+                    <button onClick={() => handleIncrement(product.id)}>
+                      +
+                    </button>
+                  </div>
+                  <span className="min-w-28">
+                    <p>
+                      {((product.price ?? 0) * product.quantity).toFixed(2)} MZN
+                    </p>
+                  </span>
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -183,7 +116,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
           disabled={loading}
           className="complete-btn border px-4 py-2 rounded mt-4"
         >
-          {loading ? "..." : "Complete Sale"}
+          {loading ? "..." : "Order"}
         </button>
       </div>
     </>
