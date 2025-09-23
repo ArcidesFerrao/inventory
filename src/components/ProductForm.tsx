@@ -22,7 +22,7 @@ type Product = {
   cost: number | null;
   stock?: number | null;
   quantity: number;
-  type: "STOCK" | "SERVICE";
+  type: "STOCK" | "SERVICE" | "SUPPLY";
   description: string | null;
   Unit?: {
     id: string;
