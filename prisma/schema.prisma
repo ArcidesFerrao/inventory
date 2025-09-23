@@ -21,7 +21,6 @@ model User {
   purchases         Purchase[]
   sales             Sale[]
   supplierCustomers SupplierCustomer[]
-  orders            Order[]
 }
 
 model Product {
@@ -180,6 +179,7 @@ model Supplier {
   products   SupplierProduct[]
   purchases  Purchase[]
   customers  SupplierCustomer[]
+  Order      Order[]
 }
 
 model SupplierProduct {
@@ -215,13 +215,13 @@ model Order {
   total              Float
   status             String
   paymentType        String
-  userId             String
+  supplierId         String
   supplierCustomerId String?
   items              OrderItem[]
   supplierCustomer   SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
-  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  supplier           Supplier          @relation(fields: [supplierId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
+  @@index([supplierId])
   @@index([supplierCustomerId])
 }
 
