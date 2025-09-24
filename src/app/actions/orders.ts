@@ -9,7 +9,9 @@ import { getServerSession } from "next-auth";
 
 export async function createOrder(
     orderItems: SupplierProduct[], 
-    supplierCustomerId:string
+    supplierCustomerId:string,
+    startDate: string,
+    endDate: string
 ) {    
     const session = await getServerSession(authOptions);
     if (!session?.user) redirect("/login");
@@ -21,6 +23,8 @@ export async function createOrder(
             data: {
                 total,
                 userId: session.user.id,
+                requestedEndDate: endDate,
+                requestedStartDate: startDate,
                 status: "PENDING",
                 paymentType: "CASH",
                 items: {
@@ -47,11 +51,7 @@ export async function createOrder(
                 supplierOrders: true,
             },
         });
-               
-            
-
         return { success: true, order};
-
     } catch (error) {
         console.error("Error creating order:", error);
         throw new Error("Failed to create order");

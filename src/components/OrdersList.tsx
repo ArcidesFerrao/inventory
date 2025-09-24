@@ -18,6 +18,8 @@ export const OrdersList = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const [products, setProducts] = useState(
     initialProducts.map((p) => ({ ...p, quantity: 0 }))
@@ -30,7 +32,7 @@ export const OrdersList = ({
 
     if (saleItems.length === 0) return;
 
-    const result = await createOrder(saleItems, supplierId);
+    const result = await createOrder(saleItems, supplierId, startDate, endDate);
 
     if (result.success) {
       toast.success("Sale Completed");
@@ -112,6 +114,28 @@ export const OrdersList = ({
         <div className="flex justify-between">
           <h3>Total:</h3>
           <p>{totalPrice} MZN</p>
+        </div>
+        <div>
+          <div>
+            <h3>Start Date</h3>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) =>
+                setStartDate((e.target as HTMLInputElement).value)
+              }
+              className="border p-2 rounded w-full"
+            />
+          </div>
+          <div>
+            <h3>End Date</h3>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate((e.target as HTMLInputElement).value)}
+              className="border p-2 rounded w-full"
+            />
+          </div>
         </div>
         <button
           onClick={() => handleCompleteSale()}
