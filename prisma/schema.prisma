@@ -205,6 +205,7 @@ model Order {
   status              String
   paymentType         String
   supplierCustomerId  String?
+  items               OrderItem[]
   confirmedDeliveries Delivery[]
   supplierCustomer    SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
   User                User              @relation(fields: [userId], references: [id])
@@ -228,29 +229,34 @@ model SupplierOrder {
 }
 
 model OrderItem {
-  id                String          @id @default(cuid())
-  supplierOrderId   String
-  supplierProductId String
-  orderedQty        Int
-  deliveredQty      Int
-  price             Float
-  product           SupplierProduct @relation(fields: [supplierProductId], references: [id])
-  supplierOrder     SupplierOrder   @relation(fields: [supplierOrderId], references: [id], onDelete: Cascade)
-  deliveries        DeliveryItem[]
+  id                 String            @id @default(cuid())
+  supplierOrderId    String
+  supplierProductId  String
+  orderedQty         Int
+  deliveredQty       Int
+  price              Float
+  product            SupplierProduct   @relation(fields: [supplierProductId], references: [id])
+  supplierOrder      SupplierOrder     @relation(fields: [supplierOrderId], references: [id], onDelete: Cascade)
+  deliveries         DeliveryItem[]
+  SupplierCustomer   SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
+  supplierCustomerId String?
+  Order              Order?            @relation(fields: [orderId], references: [id])
+  orderId            String?
 }
 
 model SupplierCustomer {
-  id         String     @id @default(cuid())
+  id         String      @id @default(cuid())
   name       String
-  email      String?    @unique
-  phone      String?    @unique
+  email      String?     @unique
+  phone      String?     @unique
   address    String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
   supplierId String
   userId     String
-  supplier   Supplier   @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items      OrderItem[]
+  supplier   Supplier    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   purchases  Purchase[]
   Order      Order[]
 
@@ -258,17 +264,17 @@ model SupplierCustomer {
 }
 
 model Delivery {
-  id          String         @id @default(cuid())
-  orderId     String
-  scheduledAt DateTime
-  deliveredAt DateTime?
-  notes       String?
-  status      String
-  accepted    Boolean?
-  reason      String?
-  rating      Int?
-  items       DeliveryItem[]
-  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id            String         @id @default(cuid())
+  orderId       String
+  scheduledAt   DateTime
+  deliveredAt   DateTime?
+  notes         String?
+  status        String
+  accepted      Boolean?
+  reason        String?
+  rating        Int?
+  deliveryItems DeliveryItem[]
+  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model DeliveryItem {

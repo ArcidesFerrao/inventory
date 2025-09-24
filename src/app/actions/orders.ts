@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 
 export async function createOrder(
     orderItems: SupplierProduct[], 
-    supplierId:string
+    supplierCustomerId:string
 ) {    
     const session = await getServerSession(authOptions);
     if (!session?.user) redirect("/login");
@@ -20,21 +20,31 @@ export async function createOrder(
         const order = await db.order.create({
             data: {
                 total,
-                supplierId,
                 userId: session.user.id,
                 status: "PENDING",
                 paymentType: "CASH",
                 items: {
                     create: orderItems.map((item) => ({
-                        productId: item.id,
-                        quantity: item.unitQty,
+                        supplierProductId: item.id,
+                        orderedQty: item.unitQty,
+                        deliveredQty: 0,
                         price: item.price || 0,
-                        supplierId
+                        supplierCustomerId,
+                        supplierOrder: {
+                            create: { status: "PENDING",
+                                total: (item.price || 0) * item.unitQty,
+                                supplierId: supplierCustomerId,
+                            }
+                        }, // or provide a valid value if required
+                        product: { connect: { id: item.id } }, // assuming item.productId exists
                     })),
+                    include: { supplierProduct: true, product: true}
                 },
             },
             include: {
                 items: true,
+                confirmedDeliveries: true,
+                supplierOrders: true,
             },
         });
                
