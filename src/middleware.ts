@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/products", "/orders"]
+const protectedRoutes = ["/dashboard", "/products", "/orders", "/stock", "/service", "/supply", "/[id]"];
 
 export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET});
@@ -19,5 +19,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/products/:path*", "/orders/:path*","/stock/:path*","/service/:path*",]
+    matcher: ["/dashboard/:path*", "/products/:path*", "/orders/:path*","/stock/:path*","/service/:path*","/supply/:path*", "/:id/:path*", ],
 }

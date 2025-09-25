@@ -6,18 +6,25 @@ import bcrypt from "bcrypt";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { email, name, password } = body;
+        const { email, name, password, phonenumber } = body;
 
-        if (!email || !name || !password ) {
+        if (!email || !name || !password || !phonenumber) {
             return NextResponse.json({ message:"Missing fields"}, { status: 400 });
         }
 
-        const existingUser = await db.user.findUnique({
+        const existingEmailUser = await db.user.findUnique({
             where: { email },
         });
 
-        if (existingUser) {
+        if (existingEmailUser) {
             return new NextResponse("Email already in use", { status: 400 });
+        }
+        const existingPhoneNumberUser = await db.user.findUnique({
+            where: { email },
+        });
+
+        if (existingPhoneNumberUser) {
+            return new NextResponse("Phone number already in use", { status: 400 });
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -26,6 +33,7 @@ export async function POST(req: Request) {
             data: {
                 email,
                 name,
+                phoneNumber: phonenumber,
                 hashedPassword,
             },
         });

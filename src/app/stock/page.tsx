@@ -1,19 +1,14 @@
 import authCheck from "@/lib/authCheck";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function DashboardPage() {
   const session = await authCheck();
 
-  if (!session) {
-    redirect("/login");
-  }
-
   const productCount = await db.product.count({
     where: {
-      userId: session.user.id,
+      userId: session?.user.id,
     },
   });
 

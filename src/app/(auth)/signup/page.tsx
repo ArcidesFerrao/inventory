@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
+  const [phonenumber, setPhonenumber] = useState<number>();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,8 +29,9 @@ export default function SignUpPage() {
       await signIn("credentials", {
         email,
         password,
+        phonenumber,
         redirect: true,
-        callbackUrl: "/dashboard",
+        callbackUrl: "/",
       });
     } else {
       const data = await res.json();
@@ -55,6 +57,18 @@ export default function SignUpPage() {
         placeholder="Email..."
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="phonenumber"
+        name="phonenumber"
+        id="phonenumber"
+        placeholder="Phone Number..."
+        value={phonenumber}
+        onChange={(e) =>
+          setPhonenumber(
+            e.target.value === "" ? undefined : Number(e.target.value)
+          )
+        }
       />
       <input
         type="password"

@@ -1,9 +1,16 @@
 import { LogOutButton } from "@/components/LogOutButton";
 import { db } from "@/lib/db";
-
+import authCheck from "@/lib/authCheck";
+import { redirect } from "next/navigation";
 type Params = Promise<{ id: string }>;
 
 export default async function UserPage(props: { params: Params }) {
+  const session = await authCheck();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const { id } = await props.params;
 
   const user = await db.user.findUnique({
