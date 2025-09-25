@@ -2,11 +2,8 @@ import { OrdersList } from "@/components/OrdersList";
 import { db } from "@/lib/db";
 import Link from "next/link";
 
-export default async function NewOrder({ supplierId }: { supplierId: string }) {
+export default async function NewOrder() {
   const products = await db.supplierProduct.findMany({
-    where: {
-      supplierId: supplierId,
-    },
     include: {
       Unit: true,
     },
@@ -27,7 +24,7 @@ export default async function NewOrder({ supplierId }: { supplierId: string }) {
         {products.length === 0 ? (
           <p>No products found...</p>
         ) : (
-          <OrdersList initialProducts={products} supplierId={supplierId} />
+          <OrdersList initialProducts={products} />
         )}
       </div>
     </div>

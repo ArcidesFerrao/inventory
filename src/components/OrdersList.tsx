@@ -11,10 +11,8 @@ type ProductsWithUnit = SupplierProduct & Unit;
 
 export const OrdersList = ({
   initialProducts,
-  supplierId,
 }: {
   initialProducts: ProductsWithUnit[];
-  supplierId: string;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -32,7 +30,7 @@ export const OrdersList = ({
 
     if (saleItems.length === 0) return;
 
-    const result = await createOrder(saleItems, supplierId, startDate, endDate);
+    const result = await createOrder(saleItems, startDate, endDate);
 
     if (result.success) {
       toast.success("Sale Completed");
@@ -83,6 +81,7 @@ export const OrdersList = ({
                 className="flex justify-between items-center py-2"
               >
                 <h3>{product.name}</h3>
+                <p className="text-xs font-extrathin">{product.supplierId}</p>
 
                 <div className="flex gap-4 items-center max-w-6/12">
                   <div className="amount-btn flex gap-2 items-center px-2 py-1">

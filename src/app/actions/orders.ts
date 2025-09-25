@@ -9,9 +9,9 @@ import { getServerSession } from "next-auth";
 
 export async function createOrder(
     orderItems: SupplierProduct[], 
-    supplierCustomerId:string,
     startDate: string,
-    endDate: string
+    endDate: string,
+    notes?: string
 ) {    
     const session = await getServerSession(authOptions);
     if (!session?.user) redirect("/login");
@@ -22,33 +22,36 @@ export async function createOrder(
         const order = await db.order.create({
             data: {
                 total,
+                notes: notes || "",
                 userId: session.user.id,
-                requestedEndDate: endDate,
-                requestedStartDate: startDate,
+                requestedEndDate: new Date (endDate),
+                requestedStartDate: new Date (startDate),
                 status: "PENDING",
                 paymentType: "CASH",
-                items: {
-                    create: orderItems.map((item) => ({
-                        supplierProductId: item.id,
-                        orderedQty: item.unitQty,
-                        deliveredQty: 0,
-                        price: item.price || 0,
-                        supplierCustomerId,
-                        supplierOrder: {
-                            create: { status: "PENDING",
-                                total: (item.price || 0) * item.unitQty,
-                                supplierId: supplierCustomerId,
-                            }
-                        }, // or provide a valid value if required
-                        product: { connect: { id: item.id } }, // assuming item.productId exists
-                    })),
-                    include: { supplierProduct: true, product: true}
-                },
+                supplierOrders: {
+                    create: {
+                        status: "PENDING",
+                        items: {
+                            create: orderItems.map((item) => ({
+                                supplierProductId: item.id,
+                                supplierId: item.supplierId,
+                                orderedQty: item.unitQty,
+                                deliveredQty: 0,
+                                price: item.price || 0,
+                            })),
+                        },
+                    },
+                }
             },
             include: {
                 items: true,
                 confirmedDeliveries: true,
-                supplierOrders: true,
+                supplierOrders: {
+                    include: {
+                        items: true,
+                    }
+                },
+                
             },
         });
         return { success: true, order};
