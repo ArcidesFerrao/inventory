@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [loginValue, setLoginValue] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -16,29 +16,30 @@ export default function LoginPage() {
 
     const res = await signIn("credentials", {
       redirect: false,
-      email,
+      loginValue,
       password,
     });
-    console.log(email, password);
+    console.log(loginValue, password);
 
     if (res?.error) {
-      setError("Invalid email or password:");
+      setError("Invalid creadentials:");
     } else {
       setError("");
-      router.push("/dashboard");
+      router.push("/");
     }
   };
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
       <h1 className="text-2xl text-center">Login</h1>
       <div className="flex flex-col gap-2">
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Email/PhoneNumber</label>
         <input
-          type="email"
-          name="email"
-          id="emaiil"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          name="loginValue"
+          id="loginValue"
+          placeholder="Email or Phone Number"
+          value={loginValue}
+          onChange={(e) => setLoginValue(e.target.value)}
         />
       </div>
       <div className="flex flex-col gap-2">

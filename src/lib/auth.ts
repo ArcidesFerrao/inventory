@@ -11,14 +11,17 @@ export const authOptions: AuthOptions = {
         Credentials({
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "text" },
+                loginValue: { label: "Email or Phone Number", type: "text" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.email || !credentials.password) return null
+                if (!credentials?.loginValue || !credentials.password) return null
 
-                const user = await db.user.findUnique({
-                    where: { email: credentials.email }
+                const user = await db.user.findFirst({
+                    where: {
+                        OR: [{ email: credentials.loginValue },
+                            { phoneNumber: credentials.loginValue}
+                        ]}
                 })
 
                 if (!user || !user.hashedPassword) return null
