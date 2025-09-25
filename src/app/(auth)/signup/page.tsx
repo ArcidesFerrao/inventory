@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
-  const [phonenumber, setPhonenumber] = useState<number>();
+  const [phonenumber, setPhonenumber] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -22,7 +22,7 @@ export default function SignUpPage() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_SECRET_TOKEN}`,
       },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, phonenumber }),
     });
 
     if (res.ok) {
@@ -64,11 +64,7 @@ export default function SignUpPage() {
         id="phonenumber"
         placeholder="Phone Number..."
         value={phonenumber}
-        onChange={(e) =>
-          setPhonenumber(
-            e.target.value === "" ? undefined : Number(e.target.value)
-          )
-        }
+        onChange={(e) => setPhonenumber(e.target.value.toString())}
       />
       <input
         type="password"
