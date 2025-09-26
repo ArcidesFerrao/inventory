@@ -21,6 +21,7 @@ export default async function EditProductPage(props: { params: Params }) {
     <div className="flex flex-col gap-2 items-center w-full">
       <h1 className="text-xl font-semibold">Edit Product: {id}</h1>
       <ProductForm
+        serviceId={product.serviceId}
         product={{
           ...product,
           Category: product.Category,

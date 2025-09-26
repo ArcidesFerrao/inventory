@@ -8,14 +8,11 @@ import {
 } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { $Enums, Product } from "@prisma/client";
-import { getServerSession } from "next-auth";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -32,7 +29,13 @@ type ProductWithUnit = Product & {
   } | null;
 };
 
-export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
+export const ProductForm = ({
+  product,
+  serviceId,
+}: {
+  product?: ProductWithUnit;
+  serviceId: string;
+}) => {
   const actionFn = product ? editProduct : createProduct;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
@@ -58,17 +61,7 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const session = await getServerSession(authOptions);
-
-      const service = await db.service.findUnique({
-        where: {
-          userId: session?.user.id,
-        },
-      });
-      if (!service) {
-        redirect("/login");
-      }
-      const products = await getProducts(service.id);
+      const products = await getProducts(serviceId);
 
       setRecipeItems(
         products.map((p) => ({
@@ -80,7 +73,7 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
     };
 
     fetchProducts();
-  }, []);
+  }, [serviceId]);
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -117,21 +110,22 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
         {product && (
           <input type="hidden" name="id" id="id" value={product.id} />
         )}
-        <div className="flex gap-2 items-end">
-          <div className="flex w-full flex-col gap-1">
-            <label htmlFor="name">Product Name</label>
+        <div className="flex w-full flex-col gap-1">
+          <label htmlFor="name">Product Name</label>
 
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Product Name"
-              defaultValue={product?.name}
-            />
-            {fields.name.errors && (
-              <p className="text-xs font-light">{fields.name.errors}</p>
-            )}
-          </div>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Product Name"
+            defaultValue={product?.name}
+          />
+          {fields.name.errors && (
+            <p className="text-xs font-light">{fields.name.errors}</p>
+          )}
+        </div>
+
+        <div className="flex gap-2 justify-between">
           <div className="flex flex-col gap-1">
             <label htmlFor="type">Type</label>
             <select
@@ -150,10 +144,8 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
               <p className="text-xs font-light">{fields.type.errors}</p>
             )}
           </div>
-        </div>
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="unitQty">Quantidade Unit.</label>
+          <div className="flex flex-col gap-1 w-1/3">
+            <label htmlFor="unitQty">Unit Quantity</label>
             {type === "SERVICE" ? (
               <input
                 type="number"
@@ -175,7 +167,7 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
               <p className="text-xs font-light">{fields.unitQty.errors}</p>
             )}
           </div>
-          <div className="flex flex-col w-1/2 gap-1">
+          <div className="flex flex-col gap-1">
             <label htmlFor="unit">Unit</label>
             {type === "SERVICE" ? (
               <select
@@ -211,22 +203,22 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
             )}
           </div>
         </div>
-        <div className="flex gap-2">
-          {type === "STOCK" ? (
-            <div className="flex flex-col gap-1">
-              <label htmlFor="price">Cost</label>
-              <input
-                type="number"
-                name="cost"
-                id="cost"
-                defaultValue={product?.price || 0}
-              />
-
-              {fields.price.errors && (
-                <p className="text-xs font-light">{fields.price.errors}</p>
-              )}
-            </div>
-          ) : (
+        <div className="flex gap-2 justify-between">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="stock">Stock Quantity</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              min={0}
+              defaultValue={product?.stock || 0}
+              readOnly={type === "SERVICE"}
+            />
+            {fields.stock.errors && (
+              <p className="text-xs font-light">{fields.stock.errors}</p>
+            )}
+          </div>
+          {type === "SERVICE" && (
             <div className="flex flex-col gap-1">
               <label htmlFor="price">Price</label>
               <input
@@ -241,21 +233,6 @@ export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
               )}
             </div>
           )}
-
-          <div className="flex flex-col gap-1">
-            <label htmlFor="stock">Stock</label>
-            <input
-              type="number"
-              name="stock"
-              id="stock"
-              min={0}
-              defaultValue={product?.stock || 0}
-              readOnly={type === "SERVICE"}
-            />
-            {fields.stock.errors && (
-              <p className="text-xs font-light">{fields.stock.errors}</p>
-            )}
-          </div>
         </div>
         {type === "SERVICE" && (
           <div className="flex flex-col gap-2">
