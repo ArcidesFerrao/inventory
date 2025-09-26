@@ -42,13 +42,29 @@ export const authOptions: AuthOptions = {
     },
     pages: {
         signIn: "/login",
-    },
+    }, 
     callbacks: {
         async session({ session, token }) {
+
             if (session.user) {
-                session.user.id = token.sub as string
+                session.user.id = token.sub as string;
+                
             }
-            return session
+            const service = await db.service.findUnique({
+                where: {
+                    userId: session.user.id
+                },
+                select: {
+                    id: true,
+                }
+            })
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    serviceId: service?.id
+                }
+            }
         }
     },
     secret: process.env.NEXTAUTH_SECRET

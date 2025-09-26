@@ -16,15 +16,9 @@ export default async function StockPage() {
       </section>
     );
 
-  const service = await db.service.findUnique({
-    where: {
-      userId: session.user.id,
-    },
-  });
-
   const products = await db.product.findMany({
     where: {
-      serviceId: service?.id,
+      serviceId: session.user.serviceId,
       type: "STOCK",
     },
   });

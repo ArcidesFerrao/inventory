@@ -4,7 +4,6 @@ import { getServiceDashBoardStats } from "../actions/dashboardStats";
 import { getProducts } from "../actions/product";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { db } from "@/lib/db";
 import { authOptions } from "@/lib/auth";
 
 export default async function ServicePage() {
@@ -14,17 +13,11 @@ export default async function ServicePage() {
     redirect("/login");
   }
 
-  const service = await db.service.findUnique({
-    where: {
-      userId: session.user.id,
-    },
-  });
-
-  if (!service) {
+  if (!session.user.serviceId) {
     redirect("/register/service");
   }
   const stats = await getServiceDashBoardStats();
-  const stockProducts = await getProducts(service.id);
+  const stockProducts = await getProducts(session.user.serviceId);
   const filteredProducts = stockProducts.filter(
     (product) => (product.stock || product.stock == 0) && product.stock < 10
   );
