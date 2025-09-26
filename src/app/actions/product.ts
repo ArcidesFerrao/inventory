@@ -23,14 +23,13 @@ export async function createProduct(prevState: unknown, formData: FormData) {
                 name: values.name,
                 description: values.description,
                 price: values.price,
-                quantity: values.quantity,
+                unitQty: values.quantity,
                 unitId: values.unitId,
                 categoryId: values.categoryId,
                 type: values.type,
-                cost: values.cost,
                 stock: values.stock,
                 status: "ACTIVE",
-                userId: session.user.id,
+                serviceId: session.user.id,
                 MenuItems: {
                     create: values.recipe?.map((r) => ({
                         quantity: r.quantity,
@@ -70,14 +69,13 @@ export async function editProduct(prevState: unknown, formData: FormData) {
                 name: values.name,
                 description: values.description,
                 price: values.price,
-                quantity: values.quantity,
+                unitQty: values.quantity,
                 unitId: values.unitId,
                 categoryId: values.categoryId,
                 type: values.type,
                 stock: values.stock,
-                cost: values.cost,
                 status: "ACTIVE",
-                userId: session.user.id,
+                serviceId: session.user.id,
                 MenuItems: {
                     deleteMany: {},
                     create: values.recipe?.map((r) => ({
@@ -147,24 +145,9 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: supplierProductSchema });
     if (submission.status !== "success") return submission.reply();
-
-    const supplier = await db.supplier.findFirst({
-        where: {
-            id: session.user.id,
-        }
-    });
-
-    if (!supplier) {
-        await db.supplier.create({
-            data: {
-                id: session.user.id,
-                name: session.user.name || "Unknown Supplier",
-                email: session.user.email || "",
-            }
-        });
-    }
-
+ 
     console.log(session);
+    
     try {
         const values = submission.value;
 
