@@ -8,33 +8,31 @@ import {
 } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { useRouter } from "next/navigation";
+import { $Enums, Product } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { redirect, useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-type Product = {
-  id: string;
-  name: string;
-  price: number | null;
-  cost: number | null;
-  stock?: number | null;
-  quantity: number;
-  type: "STOCK" | "SERVICE" | "SUPPLY";
-  description: string | null;
-  Unit?: {
-    id: string;
+type ProductWithUnit = Product & {
+  Unit: {
     name: string;
-  };
-  Category?: {
     id: string;
+    description: string | null;
+  } | null;
+  Category: {
     name: string;
-  };
+    id: string;
+    type: $Enums.CategoryType;
+  } | null;
 };
 
-export const ProductForm = ({ product }: { product?: Product }) => {
+export const ProductForm = ({ product }: { product?: ProductWithUnit }) => {
   const actionFn = product ? editProduct : createProduct;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
@@ -55,18 +53,28 @@ export const ProductForm = ({ product }: { product?: Product }) => {
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
   const [recipeItems, setRecipeItems] = useState<
-    { productId: string; name: string; quantity: number }[]
+    { productId: string; name: string; unitQty: number }[]
   >([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const products = await getProducts();
+      const session = await getServerSession(authOptions);
+
+      const service = await db.service.findUnique({
+        where: {
+          userId: session?.user.id,
+        },
+      });
+      if (!service) {
+        redirect("/login");
+      }
+      const products = await getProducts(service.id);
 
       setRecipeItems(
         products.map((p) => ({
           productId: p.id,
           name: p.name,
-          quantity: 0,
+          unitQty: 0,
         }))
       );
     };
@@ -145,11 +153,11 @@ export const ProductForm = ({ product }: { product?: Product }) => {
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col gap-1">
-            <label htmlFor="quantity">Quantidade Unit.</label>
+            <label htmlFor="unitQty">Quantidade Unit.</label>
             {type === "SERVICE" ? (
               <input
                 type="number"
-                name="quantity"
+                name="unitQty"
                 id="quantity"
                 min={1}
                 defaultValue={1}
@@ -158,13 +166,13 @@ export const ProductForm = ({ product }: { product?: Product }) => {
             ) : (
               <input
                 type="number"
-                name="quantity"
-                id="quantity"
-                defaultValue={product?.quantity ?? 1}
+                name="unitQty"
+                id="unitQty"
+                defaultValue={product?.unitQty ?? 1}
               />
             )}
-            {fields.quantity.errors && (
-              <p className="text-xs font-light">{fields.quantity.errors}</p>
+            {fields.unitQty.errors && (
+              <p className="text-xs font-light">{fields.unitQty.errors}</p>
             )}
           </div>
           <div className="flex flex-col w-1/2 gap-1">
@@ -211,11 +219,11 @@ export const ProductForm = ({ product }: { product?: Product }) => {
                 type="number"
                 name="cost"
                 id="cost"
-                defaultValue={product?.cost || 0}
+                defaultValue={product?.price || 0}
               />
 
-              {fields.cost.errors && (
-                <p className="text-xs font-light">{fields.cost.errors}</p>
+              {fields.price.errors && (
+                <p className="text-xs font-light">{fields.price.errors}</p>
               )}
             </div>
           ) : (
@@ -286,7 +294,7 @@ export const ProductForm = ({ product }: { product?: Product }) => {
                       className="max-w-1/3"
                       min={0}
                       name={`recipe[${index}].quantity`}
-                      value={item.quantity}
+                      value={item.unitQty}
                       onChange={(e) => {
                         const newQuantity = Number(e.target.value);
                         setRecipeItems((prev) =>
@@ -405,15 +413,15 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
           </div>
           <div className="flex gap-2">
             <div className="flex flex-col gap-1">
-              <label htmlFor="quantity">Unit Qty.</label>
+              <label htmlFor="unitQty">Unit Qty.</label>
               <input
                 type="number"
-                name="quantity"
-                id="quantity"
-                defaultValue={product?.quantity ?? 1}
+                name="unitQty"
+                id="unitQty"
+                defaultValue={product?.unitQty ?? 1}
               />
-              {fields.quantity.errors && (
-                <p className="text-xs font-light">{fields.quantity.errors}</p>
+              {fields.unitQty.errors && (
+                <p className="text-xs font-light">{fields.unitQty.errors}</p>
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
@@ -428,8 +436,8 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
                   </option>
                 ))}
               </select>
-              {fields.Unit.errors && (
-                <p className="text-xs font-light">{fields.Unit.errors}</p>
+              {fields.unitId.errors && (
+                <p className="text-xs font-light">{fields.unitId.errors}</p>
               )}
             </div>
           </div>
@@ -439,13 +447,13 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
             <label htmlFor="price">Cost</label>
             <input
               type="number"
-              name="cost"
-              id="cost"
-              defaultValue={product?.cost || 0}
+              name="price"
+              id="price"
+              defaultValue={product?.price || 0}
             />
 
-            {fields.cost.errors && (
-              <p className="text-xs font-light">{fields.cost.errors}</p>
+            {fields.price.errors && (
+              <p className="text-xs font-light">{fields.price.errors}</p>
             )}
           </div>
           <div className="flex flex-col gap-1">

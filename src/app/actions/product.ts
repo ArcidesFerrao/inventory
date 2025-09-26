@@ -98,10 +98,11 @@ export async function editProduct(prevState: unknown, formData: FormData) {
 }
 
 
-export async function getProducts() {
+export async function getProducts(serviceId: string) {
   try {
     const products = await db.product.findMany(
         {where: {
+            serviceId,
             type: "STOCK",
         }}
     );

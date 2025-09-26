@@ -7,23 +7,27 @@ export async function getServiceDashBoardStats() {
 
     if (!session?.user) return null;
 
-    const userId = session.user.id
+    const service = await db.service.findUnique({
+        where: {
+            userId: session.user.id
+        }
+    })
 
     const productCount = await db.product.count({
-        where: {userId, type: "STOCK"}
+        where: {serviceId: service?.id, type: "STOCK"}
     })
 
     const salesCount = await db.sale.count({
-        where: { userId }
+        where: { serviceId: service?.id }
     })
 
     const totalEarnings = await db.sale.aggregate({
-        where: { userId },
+        where: { serviceId: service?.id },
         _sum: { total: true}
     })
 
     const totalPurchases = await db.purchase.aggregate({
-        where: {userId},
+        where: {serviceId: service?.id},
         _sum: {
             total: true
         }
@@ -32,7 +36,7 @@ export async function getServiceDashBoardStats() {
     const sales = await db.saleItem.findMany({
         where: {
             sale: {
-                userId
+                serviceId: service?.id
             }
         },
         include: {
@@ -55,10 +59,10 @@ export async function getServiceDashBoardStats() {
 
         if (!item.product.MenuItems || item.product.MenuItems.length === 0) {
             for (const recipe of item.product.MenuItems) {
-                cogsForItem += recipe.quantity * (recipe.stock.cost || 0);
+                cogsForItem += recipe.quantity * (recipe.stock.price || 0);
             }
         } else {
-            cogsForItem += item.product.cost || 0;
+            cogsForItem += item.product.price || 0;
         }
         cogsForItem *= item.quantity;
         totalCogs += cogsForItem;
@@ -80,7 +84,7 @@ export async function getServiceDashBoardStats() {
     const mostBoughtProducts = await db.saleItem.groupBy({
         by: ['productId'],
         where: {
-            sale: { userId }
+            sale: { serviceId: service?.id }
         },
         _sum: {
             quantity: true

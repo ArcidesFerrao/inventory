@@ -23,10 +23,14 @@ export default async function EditProductPage(props: { params: Params }) {
       <ProductForm
         product={{
           ...product,
-          Category: product.Category ?? undefined,
+          Category: product.Category,
           Unit: product.Unit
-            ? { id: product.Unit.id, name: product.Unit.name }
-            : undefined,
+            ? {
+                name: product.Unit.name,
+                id: product.Unit.id,
+                description: product.Unit.description,
+              }
+            : null,
         }}
       />
     </div>

@@ -24,7 +24,7 @@ export default async function ServicePage() {
     redirect("/register/service");
   }
   const stats = await getServiceDashBoardStats();
-  const stockProducts = await getProducts();
+  const stockProducts = await getProducts(service.id);
   const filteredProducts = stockProducts.filter(
     (product) => (product.stock || product.stock == 0) && product.stock < 10
   );

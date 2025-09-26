@@ -12,7 +12,7 @@ export default async function ProductsPage() {
 
   const products = await db.product.findMany({
     where: {
-      userId: session.user.id,
+      serviceId: session.user.id,
       type: "SERVICE",
     },
     include: {

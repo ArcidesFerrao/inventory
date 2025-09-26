@@ -36,9 +36,9 @@ export default async function ProductPage(props: { params: Params }) {
         <div>
           {product?.type === "STOCK" ? (
             <div>
-              <h2>Quantity: {product?.quantity}</h2>
+              <h2>Quantity: {product?.unitQty}</h2>
               <h2>Unit: {product?.Unit?.name}</h2>
-              <h2>Cost: {product?.cost?.toFixed(2)} MZN</h2>
+              <h2>Cost: {product?.price?.toFixed(2)} MZN</h2>
               <h2>Stock: {product?.stock}</h2>
             </div>
           ) : (
