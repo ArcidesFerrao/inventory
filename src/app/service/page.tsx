@@ -2,8 +2,27 @@ import Link from "next/link";
 import React from "react";
 import { getServiceDashBoardStats } from "../actions/dashboardStats";
 import { getProducts } from "../actions/product";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { db } from "@/lib/db";
+import { authOptions } from "@/lib/auth";
 
 export default async function ServicePage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const service = await db.service.findUnique({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
+  if (!service) {
+    redirect("/service/register");
+  }
   const stats = await getServiceDashBoardStats();
   const stockProducts = await getProducts();
   const filteredProducts = stockProducts.filter(
