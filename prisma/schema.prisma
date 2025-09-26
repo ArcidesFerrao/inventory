@@ -119,7 +119,7 @@ model Service {
   location          String
   businessType      BusinessType
   description       String?
-  operationHours    Json
+  operationHours    String?
   website           String
   ActivityLog       ActivityLog[]
   products          Product[]

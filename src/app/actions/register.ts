@@ -13,7 +13,6 @@ export async function registerService(prevState: unknown, formData: FormData) {
     const session = await getServerSession(authOptions);
     
     if (!session?.user) redirect("/login");
-    
     const submission = parseWithZod(formData, { schema: serviceSchema });
     
     if (submission.status !== "success") return submission.reply();
@@ -21,15 +20,16 @@ export async function registerService(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
         
+        console.log("User id: ",session.user.id)
         await db.service.create({
             data: {
+                userId: session.user.id,
                 businessName: values.businessName,
                 description: values.description,
                 location: values.location,
                 businessType: values.businessType,
                 website: values.website || "",
-                operationHours: JSON.parse(values.operationHours || ""),
-                userId: session.user.id
+                operationHours: values.operationHours || "",
             }
         })
         

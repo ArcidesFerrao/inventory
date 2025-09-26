@@ -21,7 +21,7 @@ export default async function ServicePage() {
   });
 
   if (!service) {
-    redirect("/service/register");
+    redirect("/register/service");
   }
   const stats = await getServiceDashBoardStats();
   const stockProducts = await getProducts();
