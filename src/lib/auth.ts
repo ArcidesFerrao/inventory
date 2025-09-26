@@ -58,11 +58,20 @@ export const authOptions: AuthOptions = {
                     id: true,
                 }
             })
+            const supplier = await db.supplier.findUnique({
+                where: {
+                    userId: session.user.id
+                },
+                select: {
+                    id: true,
+                }
+            })
             return {
                 ...session,
                 user: {
                     ...session.user,
-                    serviceId: service?.id
+                    serviceId: service?.id, 
+                    supplierId: supplier?.id 
                 }
             }
         }
