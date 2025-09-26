@@ -107,6 +107,12 @@ export const ProductForm = ({
         Fill the form to {product ? "edit the" : "create a new"} Product
       </h2>
       <section className="flex flex-col gap-4">
+        <input
+          type="hidden"
+          name="serviceId"
+          id="serviceId"
+          value={serviceId}
+        />
         {product && (
           <input type="hidden" name="id" id="id" value={product.id} />
         )}

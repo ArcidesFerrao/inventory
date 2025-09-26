@@ -29,7 +29,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
                 type: values.type,
                 stock: values.stock,
                 status: "ACTIVE",
-                serviceId: session.user.id,
+                serviceId: values.serviceId,
                 MenuItems: {
                     create: values.recipe?.map((r) => ({
                         quantity: r.quantity,

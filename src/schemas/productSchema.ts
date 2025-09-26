@@ -9,6 +9,7 @@ export const productSchema = z.object({
     stock: z.coerce.number().int().optional(),
     unitId: z.string().optional(),
     categoryId: z.string().optional(),
+    serviceId: z.string(),
     type: z.enum(["STOCK", "SERVICE"]).default("STOCK"),
     recipe: z.array(
         z.object({

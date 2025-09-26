@@ -142,12 +142,8 @@ export const ServiceRegisterForm = () => {
           <p>{fields.operationHours.errors}</p>
         )}
       </div>
-      <button
-        type="submit"
-        disabled={isPending}
-        className="border rounded-xs p-2"
-      >
-        Register
+      <button type="submit" disabled={isPending} className="submit-button">
+        {isPending ? "..." : "Register"}
       </button>
     </form>
   );
