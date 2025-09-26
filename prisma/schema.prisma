@@ -74,6 +74,7 @@ model Supplier {
   products        SupplierProduct[]
   customers       SupplierCustomer[]
   SupplierOrder   SupplierOrder[]
+  ActivityLog     ActivityLog[]
 }
 
 model SupplierProduct {
@@ -249,8 +250,7 @@ model DeliveryItem {
 }
 
 model ActivityLog {
-  id          String   @id @default(cuid())
-  userId      String
+  id          String    @id @default(cuid())
   actionType  String
   entityType  String
   entityId    String?
@@ -258,10 +258,12 @@ model ActivityLog {
   details     Json?
   ipAddress   String?
   device      String?
-  severity    String   @default("INFO")
-  timestamp   DateTime @default(now())
-  Service     Service? @relation(fields: [serviceId], references: [id])
+  severity    String    @default("INFO")
+  timestamp   DateTime  @default(now())
+  supplierId  String?
   serviceId   String?
+  Service     Service?  @relation(fields: [serviceId], references: [id])
+  Supplier    Supplier? @relation(fields: [supplierId], references: [id])
 
   @@index([entityType, entityId])
   @@index([timestamp])

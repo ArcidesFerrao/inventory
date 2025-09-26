@@ -2,7 +2,13 @@
 
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import { ActivityLog, Product, Purchase, Sale } from "@prisma/client";
+import {
+  ActivityLog,
+  Product,
+  Purchase,
+  Sale,
+  SupplierProduct,
+} from "@prisma/client";
 import React, { useState } from "react";
 import { JsonValue } from "@prisma/client/runtime/library";
 
@@ -19,7 +25,7 @@ type PurchaseWithItems = Purchase & {
     price: number;
     quantity: number;
     purchaseId: string;
-    product: Product | null;
+    supplierProduct: SupplierProduct | null;
   }[];
 };
 
@@ -132,9 +138,9 @@ export const ExportPurchasesPdf = ({
         startY: startY + 5,
         head: [["Product", "Quantity", "Cost (MZN)"]],
         body: purchase.PurchaseItem.map((item) => [
-          item.product?.name || "Unknown",
+          item.supplierProduct?.name || "Unknown",
           item.quantity,
-          item.product?.cost?.toFixed(2) || "0.00",
+          item.supplierProduct?.price?.toFixed(2) || "0.00",
         ]),
       });
     });
@@ -153,7 +159,7 @@ export const ExportStockPdf = ({ stock }: { stock: Product[] }) => {
     autoTable(doc, {
       startY: 30,
       head: [["Product", "Quantity", "Cost (MZN)"]],
-      body: stock.map((s) => [s.name, s.stock, s.cost?.toFixed(2) || "0.00"]),
+      body: stock.map((s) => [s.name, s.stock, s.price?.toFixed(2) || "0.00"]),
     });
     doc.save("stock_report.pdf");
   };

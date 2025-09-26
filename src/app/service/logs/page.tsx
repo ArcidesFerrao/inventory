@@ -21,7 +21,9 @@ export default async function ActivityLogs() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) redirect("/login");
-  const logs = await getActivityLogs(session.user.id);
+  if (!session?.user.serviceId) redirect("/register/service");
+
+  const logs = await getActivityLogs(session.user.serviceId);
 
   return (
     <div className="logs-section flex flex-col gap-4 w-full">

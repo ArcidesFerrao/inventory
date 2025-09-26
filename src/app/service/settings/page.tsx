@@ -7,13 +7,12 @@ import React from "react";
 export default async function SettingsPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user) return <p>Access Denied</p>;
-
-  const user = session.user;
+  const serviceId = session?.user.serviceId;
+  if (!serviceId) return <p>Access Denied</p>;
 
   const sales = await db.sale.findMany({
     where: {
-      userId: user.id,
+      serviceId,
     },
     include: {
       SaleItem: {
@@ -29,12 +28,12 @@ export default async function SettingsPage() {
 
   const purchases = await db.purchase.findMany({
     where: {
-      userId: user.id,
+      serviceId,
     },
     include: {
       PurchaseItem: {
         include: {
-          product: true,
+          supplierProduct: true,
         },
       },
     },
@@ -45,14 +44,14 @@ export default async function SettingsPage() {
 
   const stockProducts = await db.product.findMany({
     where: {
-      userId: user.id,
+      serviceId,
       type: "STOCK",
     },
   });
 
   const logs = await db.activityLog.findMany({
     where: {
-      userId: user.id,
+      serviceId,
     },
     orderBy: {
       timestamp: "desc",

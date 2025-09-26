@@ -1,24 +1,25 @@
 import { db } from "@/lib/db";
 
-export default async function getActivityLogs(userId: string) {
+export default async function getActivityLogs(serviceId: string) {
   return await db.activityLog.findMany({
     where: {
-        userId
+        serviceId
     },
     orderBy: {
         timestamp: 'desc',
     },
     take: 20,
     include: {
-        user: {
-            select: { name: true, email: true, id: true }
+        Service: {
+            select: { businessName: true, businessType: true, id: true }
         }
     }
   });
 }
 
 export async function logActivity(
-  userId: string, 
+  serviceId: string, 
+  supplierId: string, 
   actionType: string, 
   entityType: string, 
   entityId: string | null, 
@@ -32,7 +33,8 @@ export async function logActivity(
   try {
     const activity = await db.activityLog.create({
       data: {
-        userId,
+        serviceId,
+        supplierId,
         actionType,
         entityType,
         entityId,
