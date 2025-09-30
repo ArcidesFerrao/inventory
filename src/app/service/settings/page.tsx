@@ -33,6 +33,7 @@ export default async function SettingsPage() {
     include: {
       PurchaseItem: {
         include: {
+          product: true,
           supplierProduct: true,
         },
       },

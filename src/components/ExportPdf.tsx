@@ -26,6 +26,7 @@ type PurchaseWithItems = Purchase & {
     quantity: number;
     purchaseId: string;
     supplierProduct: SupplierProduct | null;
+    product: Product | null;
   }[];
 };
 
@@ -138,9 +139,11 @@ export const ExportPurchasesPdf = ({
         startY: startY + 5,
         head: [["Product", "Quantity", "Cost (MZN)"]],
         body: purchase.PurchaseItem.map((item) => [
-          item.supplierProduct?.name || "Unknown",
+          item.supplierProduct?.name || item.product?.name || "Unknown",
           item.quantity,
-          item.supplierProduct?.price?.toFixed(2) || "0.00",
+          item.supplierProduct?.price?.toFixed(2) ||
+            item.product?.price ||
+            "0.00",
         ]),
       });
     });

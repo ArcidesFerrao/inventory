@@ -49,7 +49,9 @@ export default async function ActivityLogs() {
               return (
                 <tr key={index}>
                   {/* <td>{log.user.name}</td> */}
-                  <td>{log.actionType}</td>
+                  <td>
+                    {log.actionType} {log.entityType}
+                  </td>
                   <td>{log.description}</td>
                   <td>
                     {parsedDetails?.items ? (
