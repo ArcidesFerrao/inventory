@@ -6,6 +6,7 @@ type ProductsProps = {
   id: string;
   name: string;
   price: number;
+  salesCount: number;
 };
 
 type SupplierProductsProps = {
@@ -15,13 +16,14 @@ type SupplierProductsProps = {
   qty: number;
 };
 
-export const ListItem = ({ id, name, price }: ProductsProps) => {
+export const ListItem = ({ id, name, price, salesCount }: ProductsProps) => {
   return (
     <li key={id} className="flex p-4 justify-between">
       <div className="flex flex-col gap-4 justify-between ">
         <Link href={`/supply/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
+        <p>{salesCount} sold</p>
       </div>
       <div className="flex flex-col items-end gap-2">
         <h2 className="text-xl font-bold ">MZN {price},00</h2>
