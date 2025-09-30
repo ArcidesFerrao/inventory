@@ -18,8 +18,8 @@ export default async function getActivityLogs(serviceId: string) {
 }
 
 export async function logActivity(
-  serviceId: string, 
-  supplierId: string, 
+  serviceId: string | null, 
+  supplierId: string | null, 
   actionType: string, 
   entityType: string, 
   entityId: string | null, 

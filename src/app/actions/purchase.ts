@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-// import { logActivity } from "./logs";
+import { logActivity } from "./logs";
 
 export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null;  quantity: number, }[], serviceId: string) {
 
@@ -43,24 +43,25 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
             return purchase
         })
 
-        // await logActivity(
-        //             "CREATE",
-        //             "Purchase",
-        //             result.id,
-        //             `Purchase totaling MZN ${total.toFixed(2)}`,
-        //             {
-        //                 total,
-        //                 items: purchaseItems.map(i => ({
-        //                     id: i.id, 
-        //                     name: i.name, 
-        //                     quantity: i.quantity, 
-        //                     cost: i.cost, 
-        //                     price: i.price}))
-        //             },
-        //             null,
-        //             'INFO',
-        //             null
-        //         );
+        await logActivity(
+                    serviceId,
+                    null,
+                    "CREATE",
+                    "Purchase",
+                    result.id,
+                    `Purchase totaling MZN ${total.toFixed(2)}`,
+                    {
+                        total,
+                        items: purchaseItems.map(i => ({
+                            id: i.id, 
+                            name: i.name, 
+                            quantity: i.quantity, 
+                            price: i.price}))
+                    },
+                    null,
+                    'INFO',
+                    null
+                );
 
         return { success: true, purchaseId:result.id};
 

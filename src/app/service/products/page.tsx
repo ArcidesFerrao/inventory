@@ -17,11 +17,6 @@ export default async function ProductsPage() {
     },
     include: {
       Category: true,
-      _count: {
-        select: {
-          SaleItem: true,
-        },
-      },
     },
   });
 
@@ -57,7 +52,6 @@ export default async function ProductsPage() {
                     id={item.id}
                     name={item.name}
                     price={item.price || 0}
-                    salesCount={item._count.SaleItem}
                     key={item.id}
                   />
                 ))}
@@ -71,7 +65,6 @@ export default async function ProductsPage() {
                     id={item.id}
                     name={item.name}
                     price={item.price || 0}
-                    salesCount={item._count.SaleItem}
                     key={item.id}
                   />
                 ))}
@@ -86,7 +79,6 @@ export default async function ProductsPage() {
                   id={item.id}
                   name={item.name}
                   price={item.price || 0}
-                  salesCount={item._count.SaleItem}
                   key={item.id}
                 />
               ))}

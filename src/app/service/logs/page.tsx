@@ -38,7 +38,7 @@ export default async function ActivityLogs() {
               {/* <th>User</th> */}
               <th>Actions</th>
               <th>Descriptions</th>
-              <th>Details</th>
+              <th>Items</th>
               <th>Date</th>
             </tr>
           </thead>
@@ -56,7 +56,7 @@ export default async function ActivityLogs() {
                       <ul>
                         {parsedDetails.items.map((item, i) => (
                           <li key={i}>
-                            {item.name} - MZN {item.cost} x {item.quantity}
+                            {item.quantity} x {item.name}
                           </li>
                         ))}
                       </ul>
