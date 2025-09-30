@@ -50,28 +50,32 @@ export const authOptions: AuthOptions = {
                 session.user.id = token.sub as string;
                 
             }
-            const service = await db.service.findUnique({
+            const  userData = await db.user.findUnique({
                 where: {
-                    userId: session.user.id
+                    id: session.user.id,
                 },
                 select: {
                     id: true,
-                }
-            })
-            const supplier = await db.supplier.findUnique({
-                where: {
-                    userId: session.user.id
-                },
-                select: {
-                    id: true,
+                    phoneNumber: true,
+                    Service: {
+                        select: {
+                            id: true
+                        }
+                    },
+                    Supplier: {
+                        select: {
+                            id: true
+                        }
+                    },
                 }
             })
             return {
                 ...session,
                 user: {
                     ...session.user,
-                    serviceId: service?.id, 
-                    supplierId: supplier?.id 
+                    phoneNumber: userData?.phoneNumber,
+                    serviceId: userData?.Service?.id, 
+                    supplierId: userData?.Supplier?.id 
                 }
             }
         }

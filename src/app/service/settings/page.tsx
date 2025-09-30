@@ -65,11 +65,15 @@ export default async function SettingsPage() {
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <h4 className="font-medium">Username: </h4>
-          <p>Arcides Ferrao</p>
+          <p>{session.user.name}</p>
         </div>
         <div className="flex gap-2">
           <h4 className="font-medium">Email: </h4>
-          <p>arcides@ferrao.com</p>
+          <p>{session.user.email}</p>
+        </div>
+        <div className="flex gap-2">
+          <h4 className="font-medium">Phone Number: </h4>
+          <p>{session.user.phoneNumber}</p>
         </div>
         <ExportSelection
           stock={stockProducts}
