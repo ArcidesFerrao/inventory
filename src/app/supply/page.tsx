@@ -1,30 +1,23 @@
 import Link from "next/link";
 import React from "react";
 import { getServiceDashBoardStats } from "../actions/dashboardStats";
-import { getProducts } from "../actions/product";
-import { getSession } from "next-auth/react";
+import { getSupplierProducts } from "../actions/product";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function SupplyPage() {
-  const session = await getSession();
+  const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/login");
   }
-
-  const supplier = await db.supplier.findUnique({
-    where: {
-      userId: session.user.id,
-    },
-  });
-
-  if (!supplier) {
-    redirect("/supply/register");
+  if (!session?.user.supplyId) {
+    redirect("/register/supplier");
   }
 
   const stats = await getServiceDashBoardStats();
-  const stockProducts = await getProducts();
+  const stockProducts = await getSupplierProducts(session.user.supplyId);
   const filteredProducts = stockProducts.filter(
     (product) => (product.stock || product.stock == 0) && product.stock < 10
   );

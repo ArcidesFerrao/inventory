@@ -129,9 +129,11 @@ export async function getProduct({id}: {id: string}) {
   }
 }
 
-export async function getSupplierProducts() {
+export async function getSupplierProducts(supplierId: string) {
   try {
-    const products = await db.product.findMany();
+    const products = await db.supplierProduct.findMany({
+        where: {supplierId}
+    });
     return products;
   } catch (error) {
     console.error("Failed to fetch product:", error);
