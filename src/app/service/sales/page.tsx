@@ -11,7 +11,7 @@ export default async function SalesPage() {
   if (!session?.user) redirect("/login");
 
   const sales = await db.sale.findMany({
-    where: { serviceId: session.user.id },
+    where: { serviceId: session.user.serviceId },
     orderBy: { date: "desc" },
   });
 

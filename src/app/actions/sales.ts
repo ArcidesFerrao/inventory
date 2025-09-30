@@ -2,11 +2,10 @@
 
 import { db } from "@/lib/db";
 import { ProductWithMenuItems } from "@/types/types";
-import { logActivity } from "./logs";
+// import { logActivity } from "./logs";
 
 export async function createSale(
-    saleItems: ProductWithMenuItems[], 
-    userId:string
+    saleItems: ProductWithMenuItems[], serviceId: string
 ) {    
     const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
@@ -24,7 +23,7 @@ export async function createSale(
                 where: {
                     id: { in: stockIds}
                 },
-                select: { id: true, cost: true, name: true, stock: true, price: true },
+                select: { id: true, name: true, stock: true, price: true },
             })
 
             for (const saleItem of saleItems) {
@@ -40,8 +39,8 @@ export async function createSale(
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
 
                     stockUsage[recipeItem.stockId] = (stockUsage[recipeItem.stockId] ?? 0) + qtyUsed;
-                    cogs += qtyUsed * (stockProduct.cost ?? 0);
-                    console.log(` - Using ${qtyUsed} of ${stockProduct.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                    cogs += qtyUsed * (stockProduct.price ?? 0);
+                    console.log(` - Using ${qtyUsed} of ${stockProduct.name} at cost ${(stockProduct.price ?? 0)} each, total ${qtyUsed * (stockProduct.price ?? 0)}`);
                 }
             }
 
@@ -59,7 +58,7 @@ export async function createSale(
 
             const newSale = await tx.sale.create({
                 data: {
-                    userId,
+                    serviceId,
                     paymentType: "CASH",
                     total: totalPrice,
                     cogs,
@@ -81,25 +80,25 @@ export async function createSale(
 
         }, { timeout: 15000 }  );   
         
-        await logActivity(
-            userId,
-            "CREATE",
-            "Sale",
-            result.id,
-            `Sale totaling MZN ${totalPrice.toFixed(2)}`,
-            {
-                        totalPrice,
-                        items: saleItems.map(i => ({
-                            id: i.id, 
-                            name: i.name, 
-                            quantity: i.quantity, 
-                            cost: i.cost, 
-                            price: i.price}))
-                    },
-            null,
-            'INFO',
-            null
-        );
+        // await logActivity(
+        //     serviceId,
+        //     "CREATE",
+        //     "Sale",
+        //     result.id,
+        //     `Sale totaling MZN ${totalPrice.toFixed(2)}`,
+        //     {
+        //                 totalPrice,
+        //                 items: saleItems.map(i => ({
+        //                     id: i.id, 
+        //                     name: i.name, 
+        //                     quantity: i.quantity, 
+        //                     cost: i.cost, 
+        //                     price: i.price}))
+        //             },
+        //     null,
+        //     'INFO',
+        //     null
+        // );
 
         return { success: true, saleId: result.id, cogs: result.cogs};
 
@@ -112,7 +111,7 @@ export async function createSale(
 
 export async function createNewSale(
     saleItems: ProductWithMenuItems[], 
-    userId:string
+    serviceId:string
 ) {    
     const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
@@ -120,7 +119,7 @@ export async function createNewSale(
         const result = await db.$transaction(async (tx) => {
             const newSale = await tx.sale.create({
                 data: {
-                    userId,
+                    serviceId,
                     paymentType: "CASH",
                     total: totalPrice,
                     SaleItem: {
@@ -154,7 +153,6 @@ export async function createNewSale(
                             name: true,
                             price: true,
                             stock: true,
-                            cost: true,
                         }
                     })
                     if (!stockProduct) return 0;
@@ -168,7 +166,7 @@ export async function createNewSale(
                                 },
                             },
                         });
-                        return qtyUsed * (stockProduct.cost ?? 0)
+                        return qtyUsed * (stockProduct.price ?? 0)
                     
                     
                 });

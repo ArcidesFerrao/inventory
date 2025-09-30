@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
+export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ export const SalesList = ({ initialProducts, userId }: ProductsProps) => {
 
     if (saleItems.length === 0) return;
 
-    const result = await createSale(saleItems, userId);
+    const result = await createSale(saleItems, serviceId);
 
     if (result.success) {
       toast.success("Sale Completed");

@@ -10,11 +10,11 @@ import React from "react";
 export default async function NewSale() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user) redirect("/login");
+  if (!session?.user.serviceId) redirect("/login");
 
   const products = await db.product.findMany({
     where: {
-      userId: session.user.id,
+      serviceId: session.user.serviceId,
       type: "SERVICE",
     },
     include: {
@@ -27,6 +27,7 @@ export default async function NewSale() {
     ...product,
     price: product.price ?? 0,
     stock: product.stock ?? 0,
+    quantity: 0,
   }));
 
   return (
@@ -43,7 +44,7 @@ export default async function NewSale() {
         ) : (
           <SalesList
             initialProducts={mappedProducts}
-            userId={session.user.id}
+            serviceId={session.user.serviceId}
           />
         )}
       </div>
