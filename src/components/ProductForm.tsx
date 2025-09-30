@@ -130,7 +130,6 @@ export const ProductForm = ({
             <p className="text-xs font-light">{fields.name.errors}</p>
           )}
         </div>
-
         <div className="flex gap-2 justify-between">
           <div className="flex flex-col gap-1">
             <label htmlFor="type">Type</label>
@@ -285,7 +284,7 @@ export const ProductForm = ({
                             ri.productId === item.productId
                               ? {
                                   ...ri,
-                                  quantity: newQuantity,
+                                  unitQty: newQuantity,
                                 }
                               : ri
                           )

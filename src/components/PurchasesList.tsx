@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
+export const PurchasesList = ({
+  initialProducts,
+  serviceId,
+}: PurchasesProps) => {
   const router = useRouter();
-  const [products, setProducts] = useState(
-    initialProducts.map((p) => ({ ...p, quantity: 0 }))
-  );
+  const [products, setProducts] = useState(initialProducts);
   const [loading, setLoading] = useState(false);
 
   const handleCompleteSale = async () => {
@@ -19,7 +20,7 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
     const purchaseItems = products.filter((product) => product.quantity > 0);
     if (purchaseItems.length === 0) return;
 
-    const result = await createPurchase(purchaseItems, userId);
+    const result = await createPurchase(purchaseItems, serviceId);
     if (result.success) {
       toast.success("Purchase Completed");
       setTimeout(() => {
@@ -54,7 +55,7 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
     return sum + product.quantity;
   }, 0);
   const totalPrice = products.reduce((sum, product) => {
-    return sum + (product.cost ?? 0) * product.quantity;
+    return sum + (product.price ?? 0) * product.quantity;
   }, 0);
 
   return (
@@ -82,7 +83,7 @@ export const PurchasesList = ({ initialProducts, userId }: PurchasesProps) => {
                   </div>
                   <span className="min-w-32">
                     <p>
-                      {((product.cost ?? 0) * product.quantity).toFixed(2)} MZN
+                      {((product.price ?? 0) * product.quantity).toFixed(2)} MZN
                     </p>
                   </span>
                 </div>

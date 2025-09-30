@@ -9,11 +9,11 @@ import React from "react";
 export default async function NewPurchase() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user) redirect("/login");
+  if (!session?.user.serviceId) redirect("/login");
 
   const products = await db.product.findMany({
     where: {
-      userId: session.user.id,
+      serviceId: session.user.serviceId,
       type: "STOCK",
     },
   });
@@ -34,10 +34,9 @@ export default async function NewPurchase() {
             initialProducts={products.map((product) => ({
               ...product,
               price: product.price ?? 0,
-              stock: product.stock ?? 0,
               quantity: 0,
             }))}
-            userId={session.user.id}
+            serviceId={session.user.serviceId}
           />
         )}
       </div>

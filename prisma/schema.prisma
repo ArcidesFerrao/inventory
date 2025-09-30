@@ -46,6 +46,7 @@ model Product {
   stockMovement StockMovement[]
   Service       Service         @relation(fields: [serviceId], references: [id])
   serviceId     String
+  PurchaseItem  PurchaseItem[]
 }
 
 model RecipeItem {
@@ -102,13 +103,12 @@ model SupplierProduct {
 }
 
 model SupplierCustomer {
-  id         String     @id @default(cuid())
+  id         String   @id @default(cuid())
   supplierId String
   serviceId  String
-  supplier   Supplier   @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  purchases  Purchase[]
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   Order      Order[]
-  Service    Service    @relation(fields: [serviceId], references: [id])
+  Service    Service  @relation(fields: [serviceId], references: [id])
 
   @@unique([supplierId, serviceId])
 }
@@ -155,19 +155,18 @@ model SaleItem {
 }
 
 model Purchase {
-  id                 String           @id @default(ulid())
-  date               DateTime         @default(now())
-  total              Float
-  paymentType        String
-  supplierCustomerId String
-  PurchaseItem       PurchaseItem[]
-  supplierCustomer   SupplierCustomer @relation(fields: [supplierCustomerId], references: [id])
-  Service            Service?         @relation(fields: [serviceId], references: [id])
-  serviceId          String?
+  id           String         @id @default(ulid())
+  date         DateTime       @default(now())
+  total        Float
+  paymentType  String
+  PurchaseItem PurchaseItem[]
+  Service      Service?       @relation(fields: [serviceId], references: [id])
+  serviceId    String?
 }
 
 model PurchaseItem {
   id                String           @id @default(ulid())
+  productId         String?
   purchaseId        String
   supplierProductId String?
   stock             Int
@@ -175,6 +174,7 @@ model PurchaseItem {
   quantity          Int              @default(1)
   unitCost          Float            @default(0)
   totalCost         Float            @default(0)
+  product           Product?         @relation(fields: [productId], references: [id])
   supplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
   purchase          Purchase         @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
 }

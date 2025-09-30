@@ -34,7 +34,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
                     create: values.recipe?.map((r) => ({
                         quantity: r.quantity,
                         stockId: r.stockId,
-                        productId: r.stockId,
+                        // productId: r.stockId,
                     })) || [],
                 }
             }

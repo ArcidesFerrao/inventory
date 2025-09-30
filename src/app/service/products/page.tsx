@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export default async function ProductsPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user) redirect("/login");
+  if (!session?.user.serviceId) redirect("/login");
 
   const products = await db.product.findMany({
     where: {

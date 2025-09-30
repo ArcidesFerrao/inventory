@@ -20,12 +20,11 @@ export interface FilteredProductsProps {
 
 export type StockProduct = Product & {
   quantity: number;
-  stock: number;
 }
 
 export interface PurchasesProps {
   initialProducts: StockProduct[];
-  userId: string;
+  serviceId: string;
 }
 
 

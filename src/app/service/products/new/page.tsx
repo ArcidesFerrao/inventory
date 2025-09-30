@@ -11,6 +11,10 @@ export default async function NewProductPage() {
   if (!session) {
     redirect("/login");
   }
+
+  if (!session.user.serviceId) {
+    redirect("/register/service");
+  }
   return (
     <div className="flex flex-col gap-2 items-center w-full">
       <h1 className="text-xl font-semibold">Add New Product</h1>
