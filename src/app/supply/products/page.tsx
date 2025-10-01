@@ -9,18 +9,13 @@ export default async function ProductsPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) redirect("/login");
+  if (!session?.user.supplierId) redirect("/register/supplier");
 
   const products = await db.supplierProduct.findMany({
     where: {
-      supplierId: session.user.id,
+      supplierId: session.user.supplierId,
     },
   });
-
-  //   if (products.length === 0) {
-  //     <section>
-  //       <p>No products found...</p>
-  //     </section>;
-  //   }
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">

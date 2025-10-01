@@ -146,6 +146,7 @@ export async function getSupplierProducts(supplierId: string) {
 export async function createSupplierProduct(prevState: unknown, formData: FormData) {
     const session = await getServerSession(authOptions);
     if (!session?.user) redirect("/login");
+    // if (!session?.user.supplyId) redirect("/register/supplier");
     const submission = parseWithZod(formData, { schema: supplierProductSchema });
     if (submission.status !== "success") return submission.reply();
  
@@ -159,12 +160,12 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
                 name: values.name,
                 description: values.description,
                 price: values.price,
-                unitQty: values.quantity,
+                unitQty: values.unitQty,
                 unitId: values.unitId,
                 cost: values.cost,
                 stock: values.stock,
                 status: "ACTIVE",
-                supplierId: session.user.id,
+                supplierId: values.supplierId,
             }
         });
 
@@ -198,12 +199,12 @@ export async function editSupplierProduct(prevState: unknown, formData: FormData
                 name: values.name,
                 description: values.description,
                 price: values.price,
-                unitQty: values.quantity,
+                unitQty: values.unitQty,
                 unitId: values.unitId,
                 stock: values.stock,
                 cost: values.cost,
                 status: "ACTIVE",
-                supplierId: session.user.id,
+                // supplierId: session.user.id,
             }
         });
 

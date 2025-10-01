@@ -11,7 +11,7 @@ declare module "next-auth" {
       image?: string | null
       phoneNumber: string | null
       serviceId?: string | null
-      supplyId?: string | null
+      supplierId?: string | null
     }
   }
 

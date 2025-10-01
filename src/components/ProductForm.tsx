@@ -11,10 +11,18 @@ import { getUnits } from "@/app/actions/units";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { $Enums, Product } from "@prisma/client";
+import { $Enums, Product, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
+type SupplierProductWithUnit = SupplierProduct & {
+  Unit: {
+    name: string;
+    id: string;
+    description: string | null;
+  } | null;
+};
 
 type ProductWithUnit = Product & {
   Unit: {
@@ -331,8 +339,14 @@ export const ProductForm = ({
   );
 };
 
-export const SupplierProductForm = ({ product }: { product?: Product }) => {
-  const actionFn = product ? editProduct : createSupplierProduct;
+export const SupplierProductForm = ({
+  supplierProduct,
+  supplierId,
+}: {
+  supplierProduct?: SupplierProductWithUnit;
+  supplierId: string;
+}) => {
+  const actionFn = supplierProduct ? editProduct : createSupplierProduct;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -340,7 +354,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onSubmit",
-    defaultValue: product,
+    defaultValue: supplierProduct,
   });
   const router = useRouter();
 
@@ -349,7 +363,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
-        product
+        supplierProduct
           ? "Product edited successfully!"
           : "Product created successfully!"
       );
@@ -361,7 +375,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
     };
 
     fetchUnits();
-  }, [state, product, router]);
+  }, [state, supplierProduct, router]);
 
   return (
     <form
@@ -371,13 +385,19 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
       className="flex flex-col py-4 gap-2 min-w-md"
     >
       <h2 className="text-center">
-        Fill the form to {product ? "edit the" : "create a new"} Supplier
-        Product
+        Fill the form to {supplierProduct ? "edit the" : "create a new"}{" "}
+        Supplier Product
       </h2>
       <section className="flex flex-col gap-4">
-        {product && (
-          <input type="hidden" name="id" id="id" value={product.id} />
+        {supplierProduct && (
+          <input type="hidden" name="id" id="id" value={supplierProduct.id} />
         )}
+        <input
+          type="hidden"
+          name="supplierId"
+          id="supplierId"
+          value={supplierId}
+        />
         <div className="flex gap-2 items-end">
           <div className="flex w-full flex-col gap-1">
             <label htmlFor="name">Product Name</label>
@@ -387,7 +407,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
               name="name"
               id="name"
               placeholder="Product Name"
-              defaultValue={product?.name}
+              defaultValue={supplierProduct?.name}
             />
             {fields.name.errors && (
               <p className="text-xs font-light">{fields.name.errors}</p>
@@ -400,7 +420,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
                 type="number"
                 name="unitQty"
                 id="unitQty"
-                defaultValue={product?.unitQty ?? 1}
+                defaultValue={supplierProduct?.unitQty ?? 1}
               />
               {fields.unitQty.errors && (
                 <p className="text-xs font-light">{fields.unitQty.errors}</p>
@@ -426,25 +446,13 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col gap-1">
-            <label htmlFor="price">Cost</label>
-            <input
-              type="number"
-              name="price"
-              id="price"
-              defaultValue={product?.price || 0}
-            />
-
-            {fields.price.errors && (
-              <p className="text-xs font-light">{fields.price.errors}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
             <label htmlFor="price">Price</label>
             <input
               type="number"
               name="price"
               id="price"
-              defaultValue={product?.price || 0}
+              defaultValue={supplierProduct?.price || 0}
+              required
             />
 
             {fields.price.errors && (
@@ -458,10 +466,23 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
               name="stock"
               id="stock"
               min={0}
-              defaultValue={product?.stock || 0}
+              defaultValue={supplierProduct?.stock || 0}
             />
             {fields.stock.errors && (
               <p className="text-xs font-light">{fields.stock.errors}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="cost">Cost</label>
+            <input
+              type="number"
+              name="cost"
+              id="cost"
+              defaultValue={supplierProduct?.cost || 0}
+            />
+
+            {fields.cost.errors && (
+              <p className="text-xs font-light">{fields.cost.errors}</p>
             )}
           </div>
         </div>
@@ -470,7 +491,7 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
             name="description"
             id="description"
             placeholder="Description"
-            defaultValue={product?.description || ""}
+            defaultValue={supplierProduct?.description || ""}
             className="min-w-80 min-h-40"
           />
           {fields.description.errors && (
@@ -487,7 +508,9 @@ export const SupplierProductForm = ({ product }: { product?: Product }) => {
       <input
         type="submit"
         disabled={isPending}
-        value={isPending ? "..." : product ? "Edit Product" : "Add Product"}
+        value={
+          isPending ? "..." : supplierProduct ? "Edit Product" : "Add Product"
+        }
         className="submit-button"
       />
     </form>

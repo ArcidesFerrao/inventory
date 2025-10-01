@@ -5,7 +5,6 @@ import { getSupplierProducts } from "../actions/product";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
 
 export default async function SupplyPage() {
   const session = await getServerSession(authOptions);
@@ -14,24 +13,13 @@ export default async function SupplyPage() {
     redirect("/login");
   }
 
-  const supplierCheck = await db.supplier.findUnique({
-    where: {
-      userId: session.user.id,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  // if (!session.user.supplyId) {
-  if (!supplierCheck?.id) {
-    console.log("No supplier registered");
+  if (!session.user.supplierId) {
     redirect("/register/supplier");
   }
 
   const stats = await getSupplierDashBoardStats();
   // const stockProducts = await getSupplierProducts(session.user.supplyId);
-  const stockProducts = await getSupplierProducts(supplierCheck?.id);
+  const stockProducts = await getSupplierProducts(session.user.supplierId);
   const filteredProducts = stockProducts.filter(
     (product) => (product.stock || product.stock == 0) && product.stock < 10
   );

@@ -26,10 +26,11 @@ export const supplierProductSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(1, "Name is required"),
     description: z.string().optional(),
-    quantity: z.coerce.number().min(0),
+    unitQty: z.coerce.number().min(0),
     stock: z.coerce.number().int().optional(),
     price: z.coerce.number().min(0),
     cost: z.coerce.number().min(0).optional(),
     unitId: z.string().optional(),
+    supplierId: z.string(),
     
 })
