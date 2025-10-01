@@ -2,58 +2,92 @@
 
 import { db } from "@/lib/db";
 import { logActivity } from "./logs";
-import { SupplierProduct } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
+
+type GroupedItems = {
+    supplierId: string;
+    items: {
+        productId: string;
+        name: string;
+        price: number;
+        quantity: number;
+    }[]
+}[];
+
 export async function createOrder(
-    orderItems: SupplierProduct[], 
+    groupedItems: GroupedItems, 
     startDate: string,
     endDate: string,
     notes?: string
 ) {    
     const session = await getServerSession(authOptions);
+
     if (!session?.user) redirect("/login");
 
-    const total = orderItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.unitQty), 0);
+    const total = groupedItems.reduce((sum, supplierOrder) => {
+        const supplierTotal = supplierOrder.items.reduce(
+            (sub, product) => sub + (product.price * product.quantity), 0
+        );
+        return sum + supplierTotal;
+    }, 0)
 
     try {
         const order = await db.order.create({
             data: {
                 total,
                 notes: notes || "",
-                userId: session.user.id,
+                serviceId: session.user.serviceId,
                 requestedEndDate: new Date (endDate),
                 requestedStartDate: new Date (startDate),
-                status: "PENDING",
+                status: "DRAFT",
                 paymentType: "CASH",
                 supplierOrders: {
-                    create: {
-                        status: "PENDING",
-                        items: {
-                            create: orderItems.map((item) => ({
-                                supplierProductId: item.id,
-                                supplierId: item.supplierId,
-                                orderedQty: item.unitQty,
-                                deliveredQty: 0,
-                                price: item.price || 0,
-                            })),
+                    create: groupedItems.map((so) => ({
+                        supplier: { 
+                            connect: { 
+                                id: so.supplierId
+                            }
                         },
-                    },
+                        items: {
+                            create: so.items.map((item) => ({
+                                supplierProductId: item.productId,
+                                orderedQty: item.quantity,
+                                price: item.price,
+                                deliveredQty: 0,
+                            }))
+                        }
+                    }))
                 }
             },
-            include: {
-                items: true,
-                confirmedDeliveries: true,
-                supplierOrders: {
-                    include: {
-                        items: true,
-                    }
-                },
-                
-            },
         });
+
+        await logActivity(
+                    order.supplierCustomerId,
+                    null,
+                    "CREATE",
+                    "Order",
+                    order.id,
+                    `Order totaling MZN ${total.toFixed(2)}`,
+                    {
+                        total,
+                        groupedItems: groupedItems.map(i => ({
+                            supplierId: i.supplierId,
+                            items: i.items.map((item) => ({
+                                name: item.name,
+                                productId: item.productId,
+                                orderedQty: item.quantity,
+                                price: item.price
+                            }))
+                        }))
+                    },
+                    null,
+                    'INFO',
+                    null
+                );
+
         return { success: true, order};
     } catch (error) {
         console.error("Error creating order:", error);

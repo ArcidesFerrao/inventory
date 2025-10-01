@@ -27,20 +27,39 @@ export const OrdersList = ({
     console.log("creating sale");
     setLoading(true);
     const saleItems = products.filter((product) => product.quantity > 0);
-
     if (saleItems.length === 0) return;
 
-    const result = await createOrder(saleItems, startDate, endDate);
+    const groupedBySupplier = saleItems.reduce((acc, item) => {
+      if (!acc[item.supplierId]) acc[item.supplierId] = [];
+
+      acc[item.supplierId].push({
+        productId: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price || 0,
+      });
+
+      return acc;
+    }, {} as Record<string, { productId: string; name: string; price: number; quantity: number }[]>);
+
+    const supplierOrdersList = Object.entries(groupedBySupplier).map(
+      ([supplierId, items]) => ({
+        supplierId,
+        items,
+      })
+    );
+
+    const result = await createOrder(supplierOrdersList, startDate, endDate);
 
     if (result.success) {
-      toast.success("Sale Completed");
+      toast.success("Order Placed Successfuly");
       setTimeout(() => {
         setLoading(false);
-        router.push("/service/sales");
+        router.push("/service/purchases/orders");
       }, 500);
     }
 
-    console.log("Sale completed:", result);
+    console.log("Order placed:", result);
   };
 
   const handleIncrement = (id: string) => {
