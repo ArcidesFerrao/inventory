@@ -110,3 +110,118 @@ export async function getServiceDashBoardStats() {
 
     return { productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topProducts };
 }
+
+
+export async function getSupplierDashBoardStats() {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user) return null 
+    
+    const supplier = await db.supplier.findUnique({
+        where: {
+            userId: session.user.id,
+        },
+        select: {
+            id: true,
+        },
+    });
+    
+
+    if (!supplier?.id) return null
+    const supplierId = supplier.id;
+
+    const productCount = await db.supplierProduct.count({
+        where: { supplierId }
+    })
+
+    const customerCount = await db.supplierCustomer.count({
+        where: { supplierId }
+    })
+
+    const orderCount = await db.supplierOrder.count({
+        where: { supplierId }
+    })
+
+    const totalRevenue = await db.order.aggregate({
+        where: {
+            supplierOrders: {
+                some: {
+                    supplierId 
+                }
+            }
+        },
+        _sum: {
+            total: true,
+        }
+    })
+
+    // const totalCogsAggregate = await db.orderItem.aggregate({
+    //     where: {
+    //         supplierOrder: {
+    //             supplierId
+    //         }
+    //     },
+    //     _sum: {
+    //         price: true
+    //     }
+    // })
+
+    const revenue = totalRevenue._sum.total || 0;
+
+    // const orderItemTotalValue = totalCogsAggregate._sum.price || 0;
+
+    const earnings = revenue;
+
+    const totalCogs = 0;
+
+    const profit = earnings - totalCogs;
+    const averageOrderValue = orderCount > 0 ? earnings / orderCount : 0;
+    const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
+
+    const mostOrderedProducts = await db.orderItem.groupBy({
+        by: ['supplierProductId'],
+        where: {
+            supplierOrder: {
+                supplierId
+            }
+        },
+        _sum: {
+            orderedQty: true
+        },
+        orderBy: {
+            _sum: {
+                orderedQty: "desc"
+            }
+        },
+        take: 3
+    })
+
+    const topProducts = await Promise.all(mostOrderedProducts.map(async (item) => {
+        const product = await db.supplierProduct.findUnique({
+            where: {
+                id: item.supplierProductId!
+            },
+            select: {
+                id: true,
+                price: true,
+                name: true,
+            }
+        });
+
+        return {
+            ...product,
+            quantity: item._sum.orderedQty
+        }
+    }))
+
+    return { 
+        productCount, 
+        customerCount, 
+        orderCount, 
+        revenue: earnings, 
+        profit, 
+        averageOrderValue, 
+        grossMargin, 
+        topProducts 
+    };
+}

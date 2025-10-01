@@ -64,7 +64,7 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
                 phone: values.phone,
                 address: values.address,
                 website: values.website || "",
-                establishedYear: values.establishedYear,
+                establishedYear: Number(values.establishedYear),
                 
             }
         });

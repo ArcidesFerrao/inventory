@@ -7,6 +7,7 @@ import React from "react";
 
 export const Header = () => {
   const { data: session, status } = useSession();
+
   return (
     <header className="flex justify-between p-4 items-center">
       <Link href="/">

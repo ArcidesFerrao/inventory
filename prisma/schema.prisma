@@ -67,7 +67,7 @@ model Supplier {
   businessReg     String?            @unique //Business registration number
   description     String?
   website         String?
-  establishedYear DateTime? // activity year beginning
+  establishedYear Int? // activity year beginning
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   userId          String             @unique
