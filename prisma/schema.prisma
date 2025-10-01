@@ -326,6 +326,7 @@ enum ProductType {
 
 enum OrderStatus {
   DRAFT
+  PLACED
   SUBMITTED
   CONFIRMED
   IN_DELIVERY

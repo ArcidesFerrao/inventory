@@ -42,7 +42,7 @@ export async function createOrder(
                 serviceId: session.user.serviceId,
                 requestedEndDate: new Date (endDate),
                 requestedStartDate: new Date (startDate),
-                status: "DRAFT",
+                status: "PLACED",
                 paymentType: "CASH",
                 supplierOrders: {
                     create: groupedItems.map((so) => ({
