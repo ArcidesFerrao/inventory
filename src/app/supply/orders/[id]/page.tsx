@@ -1,0 +1,145 @@
+// import { DeleteOrderButton } from "@/components/DeleteButton";
+import { db } from "@/lib/db";
+import React from "react";
+
+type Params = Promise<{ id: string }>;
+
+export default async function OrderPage(props: { params: Params }) {
+  const { id } = await props.params;
+
+  const supplierOrder = await db.supplierOrder.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+      order: {
+        include: {
+          confirmedDeliveries: {
+            include: {
+              deliveryItems: {
+                include: {
+                  orderItem: {
+                    include: {
+                      product: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return (
+    <div className="flex flex-col gap-5 items-start w-full">
+      <div className="order-header flex justify-between w-full">
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-bold">
+            Order #{supplierOrder?.id.slice(0, 5)}...
+          </h2>
+          <p className="text-xs font-extralight">
+            Created {supplierOrder?.order.createdAt.toDateString()}
+          </p>
+        </div>
+        <span className="status-span p-2 text-center max-h-fit">
+          {supplierOrder?.order.status}
+        </span>
+      </div>
+      <div className="order-details flex flex-col gap-4">
+        <div className="flex gap-2">
+          <span></span>
+          <div>
+            <p className="text-md font-extralight">Requested Start</p>
+            <h4 className="text-md py-1 whitespace-nowrap font-semibold">
+              {supplierOrder?.order.requestedStartDate.toDateString()}
+            </h4>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <span></span>
+          <div>
+            <p className="text-md font-extralight">Requested End</p>
+            <h4 className="text-md py-1 whitespace-nowrap font-semibold">
+              {supplierOrder?.order.requestedEndDate.toDateString()}
+            </h4>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <span></span>
+          <div>
+            <p className="text-md font-extralight">Total Amount</p>
+            <h4 className="text-md py-1 whitespace-nowrap font-semibold">
+              MZN {supplierOrder?.order.total.toFixed(2)}
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div className="order-buttons flex gap-5">
+        <button>Accept</button>
+        <button>Deny</button>
+      </div>
+      <div className="order-items flex flex-col gap-2 w-full">
+        <h2 className="text-xl font-semibold">Order Items</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Ordered</th>
+              <th>Delivered</th>
+              <th>Remaining</th>
+              <th>Price (MZN)</th>
+              <th>Total (MZN)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {supplierOrder?.items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.product.name}</td>
+                <td>{item.orderedQty}</td>
+                <td>{item.deliveredQty}</td>
+                <td>{item.orderedQty - item.deliveredQty}</td>
+                <td>{item.price.toFixed(2)}</td>
+                <td>{(item.price * item.orderedQty).toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {supplierOrder?.order.confirmedDeliveries &&
+        supplierOrder.order.confirmedDeliveries.length > 0 && (
+          <div className="deliveries-details flex flex-col">
+            <h2>Deliveries</h2>
+            {supplierOrder.order.confirmedDeliveries.map((d) => (
+              <div key={d.id}>
+                <div className="delivery-header">
+                  <div className="delivery-info">
+                    <h3>Delivery # {d.id}</h3>
+                    <p>Scheduled: {d.scheduledAt.toDateString()}</p>
+                  </div>
+                  <span>{d.status}</span>
+                </div>
+                <div className="delivery-items">
+                  <h4>Items:</h4>
+                  <ul>
+                    {d.deliveryItems.map((item) => (
+                      <li key={item.id}>
+                        {item.orderItem.product.name} - Qty: {item.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+    </div>
+  );
+}

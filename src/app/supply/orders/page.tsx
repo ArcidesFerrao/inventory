@@ -1,6 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -53,7 +54,11 @@ export default async function OrdersPage() {
           <tbody>
             {supplierOrders.map((supplierOrder) => (
               <tr key={supplierOrder.id}>
-                <td>{supplierOrder.order.Service?.businessName}</td>
+                <td>
+                  <Link href={`/supply/orders/${supplierOrder.id}`}>
+                    {supplierOrder.order.Service?.businessName}
+                  </Link>
+                </td>
                 <td>{supplierOrder.order.total}.00</td>
                 <td>{supplierOrder.order.createdAt.toLocaleDateString()}</td>
                 <td>{supplierOrder.order.createdAt.toLocaleTimeString()}</td>
