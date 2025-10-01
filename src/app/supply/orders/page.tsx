@@ -8,15 +8,11 @@ export default async function OrdersPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) redirect("/login");
+  if (!session?.user.supplierId) redirect("/register/supplier");
 
-  const supplier = await db.supplier.findFirst({
-    where: { id: session.user.id },
-  });
-
-  const orders = await db.order.findMany({
-    where: { supplierId: supplier?.id },
-    orderBy: { createdAt: "desc" },
-    include: { User: true },
+  const supplierOrders = await db.supplierOrder.findMany({
+    where: { supplierId: session.user.supplierId },
+    include: { order: true },
   });
 
   return (
@@ -26,11 +22,16 @@ export default async function OrdersPage() {
         <div className="flex">
           <h2 className="text-lg font-bold">Total orders:</h2>
           <p className="text-lg font-bold px-2">
-            MZN {orders.reduce((acc, order) => acc + order.total, 0)}.00
+            MZN{" "}
+            {supplierOrders.reduce(
+              (acc, supplierOrder) => acc + supplierOrder.order.total,
+              0
+            )}
+            .00
           </p>
         </div>
       </div>
-      {orders.length === 0 ? (
+      {supplierOrders.length === 0 ? (
         <p>No orders found...</p>
       ) : (
         <table>
@@ -44,13 +45,13 @@ export default async function OrdersPage() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td>{order.User.name}</td>
-                <td>{order.total}.00</td>
-                <td>{order.createdAt.toLocaleDateString()}</td>
-                <td>{order.createdAt.toLocaleTimeString()}</td>
-                <td>{order.status}</td>
+            {supplierOrders.map((supplierOrder) => (
+              <tr key={supplierOrder.id}>
+                <td>{supplierOrder.orderId}</td>
+                <td>{supplierOrder.order.total}.00</td>
+                <td>{supplierOrder.order.createdAt.toLocaleDateString()}</td>
+                <td>{supplierOrder.order.createdAt.toLocaleTimeString()}</td>
+                <td>{supplierOrder.order.status}</td>
               </tr>
             ))}
           </tbody>
