@@ -14,6 +14,13 @@ export default async function PurchasesPage() {
     where: { serviceId: session.user.serviceId },
     orderBy: { date: "desc" },
   });
+
+  const orders = await db.order.findMany({
+    where: { serviceId: session.user.serviceId },
+    include: { confirmedDeliveries: true },
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
@@ -64,6 +71,32 @@ export default async function PurchasesPage() {
           MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
         </p>
       </div>
+      {orders.length === 0 ? (
+        <p>No orders found...</p>
+      ) : (
+        <table className="rounded">
+          <thead>
+            <tr>
+              <th className="text-start">Payment Type</th>
+              <th className="text-start">Total (MZN)</th>
+              <th className="text-start">Deliveries</th>
+              <th className="text-start">Placed Date</th>
+              <th className="text-start">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order.id}>
+                <td>{order.paymentType}</td>
+                <td>{order.total}.00</td>
+                <td>{order.confirmedDeliveries.length}</td>
+                <td>{order.createdAt.toLocaleDateString()}</td>
+                <td>{order.createdAt.toLocaleTimeString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
