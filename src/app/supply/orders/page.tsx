@@ -12,7 +12,13 @@ export default async function OrdersPage() {
 
   const supplierOrders = await db.supplierOrder.findMany({
     where: { supplierId: session.user.supplierId },
-    include: { order: true },
+    include: {
+      order: {
+        include: {
+          Service: true,
+        },
+      },
+    },
   });
 
   return (
@@ -47,7 +53,7 @@ export default async function OrdersPage() {
           <tbody>
             {supplierOrders.map((supplierOrder) => (
               <tr key={supplierOrder.id}>
-                <td>{supplierOrder.orderId}</td>
+                <td>{supplierOrder.order.Service?.businessName}</td>
                 <td>{supplierOrder.order.total}.00</td>
                 <td>{supplierOrder.order.createdAt.toLocaleDateString()}</td>
                 <td>{supplierOrder.order.createdAt.toLocaleTimeString()}</td>
