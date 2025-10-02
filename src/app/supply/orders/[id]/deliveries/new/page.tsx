@@ -37,7 +37,7 @@ export default async function NewDeliveryPage(props: { params: Params }) {
           </div>
         </div>
       </div>
-
+      <ScheduleDelivery />
       <div className="buttons-mng flex gap-4 w-full">
         <button className="bg-amber-50 p-4">Back</button>
         <button className="bg-blue-600 p-4">Continue</button>
@@ -71,62 +71,6 @@ export const ScheduleDelivery = () => {
           <h4>Delivery Notes</h4>
           <textarea name="notes" id="notes" />
         </div>
-      </div>
-    </div>
-  );
-};
-
-export const ItemsDeliveryComponent = (items: {
-  items: {
-    id: string;
-    name: string;
-    price: number;
-    orderedQty: number;
-    deliveredQty: number;
-  }[];
-}) => {
-  const [deliverQty, setDeliverQty] = useState<number>(0);
-  const orderItems = items;
-  if (!orderItems) return <p>Items not found!</p>;
-
-  return (
-    <div className="items-delivery">
-      <div className="items-title">
-        <span></span>
-        <h3>Select Items for Delivery</h3>
-      </div>
-      <ul>
-        {orderItems.items.map((i) => (
-          <li key={i.id}>
-            <div className="flex justify-between">
-              <h4>{i.name}</h4>
-              <p>{i.price}</p>
-            </div>
-            <div className="flex">
-              <p>Ordered: {i.orderedQty}</p>
-              <p>Delivered: {i.deliveredQty}</p>
-              <p>Remaining: {i.orderedQty - i.deliveredQty}</p>
-            </div>
-            <div className="flex">
-              <h4>Deliver Quantity</h4>
-              <div>
-                <span>-</span>
-                <input
-                  type="number"
-                  value={deliverQty}
-                  onChange={(e) => {
-                    setDeliverQty(Number(e.target.value));
-                  }}
-                />
-                <span>+</span>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <div className="total-amount">
-        <h4>Delivery Total:</h4>
-        <h3>MZN 00.00</h3>
       </div>
     </div>
   );

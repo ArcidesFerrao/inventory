@@ -1,6 +1,7 @@
 // import { DeleteOrderButton } from "@/components/DeleteButton";
 import { AcceptButton } from "@/components/ActionButton";
 import { db } from "@/lib/db";
+import Link from "next/link";
 import React from "react";
 
 type Params = Promise<{ id: string }>;
@@ -100,8 +101,13 @@ export default async function OrderPage(props: { params: Params }) {
         )}
 
         {supplierOrder?.status === "APPROVED" && (
-          <div>
-            <button>Delivery</button>
+          <div className="order-buttons flex flex-col justify-end">
+            <Link
+              className="delivery-btn bg-blue-600"
+              href={`/supply/orders/${supplierOrder?.id}/deliveries/new`}
+            >
+              Delivery
+            </Link>
           </div>
         )}
       </div>

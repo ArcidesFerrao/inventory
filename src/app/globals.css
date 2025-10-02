@@ -248,6 +248,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.delivery-btn,
 .deny-btn,
 .accept-btn {
   padding: 0.4rem 1rem;
@@ -264,6 +265,8 @@ nav {
 .deny-btn:hover {
   background-color: var(--border-list);
 }
+
+.delivery-btn:hover,
 .deny-btn:hover,
 .accept-btn:hover {
   border-radius: 0;
