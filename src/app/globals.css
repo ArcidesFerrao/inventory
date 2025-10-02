@@ -284,3 +284,18 @@ nav {
   background-color: var(--border-list);
   border-radius: 0.4rem;
 }
+
+.schedule-info {
+  background-color: var(--input-bg);
+  padding: 1rem;
+  border-radius: 0.4rem;
+}
+.delivery-item:hover {
+  border-radius: 0;
+  background-color: var(--input-bg);
+}
+.delivery-item {
+  background-color: var(--border-list);
+  padding: 1rem;
+  border-radius: 0.4rem;
+}

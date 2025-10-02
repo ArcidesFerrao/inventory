@@ -17,7 +17,7 @@ export const SupplierDelivery = ({
     supplierProductId: string;
     orderedQty: number;
     deliveredQty: number;
-    supplierProduct: SupplierProduct;
+    product: SupplierProduct;
   }[];
 }) => {
   const [deliveryDate, setDeliveryDate] = useState();
@@ -25,17 +25,16 @@ export const SupplierDelivery = ({
   const [quantity, setQuantity] = useState<number>(0);
   return (
     <div className="schedule flex flex-col gap-5  w-full">
-      <h3>Schedule New Delivery</h3>
       <div className="schedule-info">
-        <h4>Requested Delivery Window:</h4>
+        <h4 className="font-semibold">Requested Delivery Window:</h4>
         <div className="flex gap-2">
           <p>{order.requestedStartDate.toLocaleDateString()}</p>
           <p>-</p>
           <p>{order.requestedEndDate.toLocaleDateString()}</p>
         </div>
       </div>
-      <div className="delivery-schedule">
-        <div className="flex flex-col">
+      <div className="delivery-schedule flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <h4>Delivery Date *</h4>
           <input
             type="date"
@@ -44,7 +43,7 @@ export const SupplierDelivery = ({
             value={deliveryDate}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <h4>Delivery Time *</h4>
           <input
             type="time"
@@ -54,23 +53,19 @@ export const SupplierDelivery = ({
             // onChange={(e) => setDeliveryTime(e.target.value)}
           />
         </div>
-        <ul>
+        <ul className="flex flex-col gap-2">
+          <h3 className="text-lg font-semibold">Delivery Items</h3>
           {items.map((i) => (
-            <li key={i.id}>
+            <li key={i.id} className="delivery-item flex justify-between ">
               <div>
-                <h3>{i.supplierProduct.name}</h3>
+                <h3>{i.product.name}</h3>
                 <p>Quantities: {i.orderedQty} units</p>
               </div>
-              <input
-                type="number"
-                max={i.orderedQty}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              />
+              <input type="number" max={i.orderedQty} />
             </li>
           ))}
         </ul>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <h4>Delivery Notes</h4>
           <textarea name="notes" id="notes" />
         </div>

@@ -39,8 +39,6 @@ export default async function OrderPage(props: { params: Params }) {
     },
   });
 
-  function handleScheduleModal() {}
-
   return (
     <div className="flex flex-col gap-5 items-start w-full">
       <div className="order-header flex justify-between w-full">
@@ -104,13 +102,12 @@ export default async function OrderPage(props: { params: Params }) {
 
         {supplierOrder?.status === "APPROVED" && (
           <div className="order-buttons flex flex-col justify-end">
-            <button onClick={() => handleScheduleModal()}>Delivery</button>
-            {/* <Link
+            <Link
               className="delivery-btn bg-blue-600"
               href={`/supply/orders/${supplierOrder?.id}/deliveries/new`}
             >
               Delivery
-            </Link> */}
+            </Link>
           </div>
         )}
       </div>
