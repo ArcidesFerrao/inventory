@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import DeleteButton from "./DeleteButton";
+import { DeleteButton } from "./DeleteButton";
 
 type ProductsProps = {
   id: string;

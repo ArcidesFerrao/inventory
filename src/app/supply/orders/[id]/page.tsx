@@ -48,42 +48,50 @@ export default async function OrderPage(props: { params: Params }) {
             Created {supplierOrder?.order.createdAt.toDateString()}
           </p>
         </div>
-        <span className="status-span p-2 text-center max-h-fit">
+        <button disabled className=" text-center max-h-fit">
           {supplierOrder?.order.status}
-        </span>
+        </button>
       </div>
-      <div className="order-details flex flex-col gap-4">
-        <div className="flex gap-2">
-          <span></span>
-          <div>
-            <p className="text-md font-extralight">Requested Start</p>
-            <h4 className="text-md py-1 whitespace-nowrap font-semibold">
-              {supplierOrder?.order.requestedStartDate.toDateString()}
-            </h4>
+      <div className="order-details flex justify-between gap-4 w-full p-4">
+        <div className="info-details flex flex-col gap-4">
+          <div className="flex gap-2">
+            <span className="p-1">
+              <span className="formkit--date"></span>
+            </span>
+            <div>
+              <p className="text-md font-extralight">Requested Start</p>
+              <h4 className="text-md py-1 whitespace-nowrap font-semibold">
+                {supplierOrder?.order.requestedStartDate.toDateString()}
+              </h4>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <span className="p-1">
+              <span className="formkit--date"></span>
+            </span>
+            <div>
+              <p className="text-md font-extralight">Requested End</p>
+              <h4 className="text-md py-1 whitespace-nowrap font-semibold">
+                {supplierOrder?.order.requestedEndDate.toDateString()}
+              </h4>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <span className="p-1">
+              <span className="fluent-mdl2--table-total-row"></span>
+            </span>
+            <div>
+              <p className="text-md font-extralight">Total Amount</p>
+              <h4 className="text-md py-1 whitespace-nowrap font-semibold">
+                MZN {supplierOrder?.order.total.toFixed(2)}
+              </h4>
+            </div>
           </div>
         </div>
-        <div className="flex gap-2">
-          <span></span>
-          <div>
-            <p className="text-md font-extralight">Requested End</p>
-            <h4 className="text-md py-1 whitespace-nowrap font-semibold">
-              {supplierOrder?.order.requestedEndDate.toDateString()}
-            </h4>
-          </div>
+        <div className="order-buttons flex flex-col gap-5">
+          <button className="accept-btn">Accept</button>
+          <button className="deny-btn">Deny</button>
         </div>
-        <div className="flex gap-2">
-          <span></span>
-          <div>
-            <p className="text-md font-extralight">Total Amount</p>
-            <h4 className="text-md py-1 whitespace-nowrap font-semibold">
-              MZN {supplierOrder?.order.total.toFixed(2)}
-            </h4>
-          </div>
-        </div>
-      </div>
-      <div className="order-buttons flex gap-5">
-        <button>Accept</button>
-        <button>Deny</button>
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">Order Items</h2>

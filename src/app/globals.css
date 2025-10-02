@@ -212,6 +212,7 @@ nav {
   border-right: solid 1px var(--input-bg);
   padding: 0 0.6rem;
 }
+
 .amount-btn {
   /* background-color: var(--input-bg); */
   border-radius: 0.4rem;
@@ -244,5 +245,34 @@ nav {
 .status-span {
   background-color: var(--divider);
   border: solid 1px var(--divider);
+  border-radius: 0.4rem;
+}
+
+.deny-btn,
+.accept-btn,
+.order-header button {
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.2rem;
+}
+
+.deny-btn:hover {
+  background-color: var(--border-list);
+}
+.deny-btn:hover,
+.accept-btn:hover {
+  border-radius: 0;
+  translate: 0 -2px;
+}
+.accept-btn {
+  background-color: #303b2b;
+}
+
+.deny-btn {
+  background-color: var(--dash-bg);
+}
+
+.order-details {
+  background-color: var(--border-list);
   border-radius: 0.4rem;
 }

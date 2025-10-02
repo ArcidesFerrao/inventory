@@ -54,7 +54,7 @@ export default async function OrdersPage() {
           <tbody>
             {supplierOrders.map((supplierOrder) => (
               <tr key={supplierOrder.id}>
-                <td>
+                <td className="hover:underline">
                   <Link href={`/supply/orders/${supplierOrder.id}`}>
                     {supplierOrder.order.Service?.businessName}
                   </Link>
