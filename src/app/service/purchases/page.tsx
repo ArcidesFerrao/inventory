@@ -85,6 +85,7 @@ export default async function PurchasesPage() {
                   <th className="text-start">Deliveries</th>
                   <th className="text-start">Placed Date</th>
                   <th className="text-start">Time</th>
+                  <th className="text-start">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,6 +96,7 @@ export default async function PurchasesPage() {
                     <td>{order.confirmedDeliveries.length}</td>
                     <td>{order.createdAt.toLocaleDateString()}</td>
                     <td>{order.createdAt.toLocaleTimeString()}</td>
+                    <td>{order.status}</td>
                   </tr>
                 ))}
               </tbody>

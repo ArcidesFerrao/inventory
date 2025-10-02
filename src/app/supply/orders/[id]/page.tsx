@@ -1,4 +1,5 @@
 // import { DeleteOrderButton } from "@/components/DeleteButton";
+import { AcceptButton } from "@/components/ActionButton";
 import { db } from "@/lib/db";
 import React from "react";
 
@@ -48,8 +49,8 @@ export default async function OrderPage(props: { params: Params }) {
             Created {supplierOrder?.order.createdAt.toDateString()}
           </p>
         </div>
-        <button disabled className=" text-center max-h-fit">
-          {supplierOrder?.order.status}
+        <button disabled className="text-sm font-light text-center max-h-fit">
+          {supplierOrder?.status}
         </button>
       </div>
       <div className="order-details flex justify-between gap-4 w-full p-4">
@@ -88,10 +89,21 @@ export default async function OrderPage(props: { params: Params }) {
             </div>
           </div>
         </div>
-        <div className="order-buttons flex flex-col gap-5">
-          <button className="accept-btn">Accept</button>
-          <button className="deny-btn">Deny</button>
-        </div>
+        {supplierOrder?.status === "PENDING" && (
+          <div className="order-buttons flex flex-col gap-4 justify-end">
+            <AcceptButton
+              supplierOrderId={supplierOrder?.id || ""}
+              orderId={supplierOrder?.orderId || ""}
+            />
+            <button className="deny-btn">Deny</button>
+          </div>
+        )}
+
+        {supplierOrder?.status === "APPROVED" && (
+          <div>
+            <button>Delivery</button>
+          </div>
+        )}
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">Order Items</h2>

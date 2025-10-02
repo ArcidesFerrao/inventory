@@ -249,13 +249,18 @@ nav {
 }
 
 .deny-btn,
-.accept-btn,
-.order-header button {
+.accept-btn {
   padding: 0.4rem 1rem;
   border: 1px solid var(--divider);
   border-radius: 0.2rem;
 }
+.order-header button {
+  padding: 0 1.2rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.2rem;
+}
 
+.order-header button,
 .deny-btn:hover {
   background-color: var(--border-list);
 }

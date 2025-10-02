@@ -94,3 +94,29 @@ export async function createOrder(
         throw new Error("Failed to create order");
     }
 }
+
+
+export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: string; orderId: string;}) {
+
+    try {
+        await db.order.update({
+            where: {
+                id: orderId
+            },
+            data: {
+                status: "SUBMITTED"
+            }
+        })
+
+        await db.supplierOrder.update({
+            where: {
+                id: supplierOrderId
+            },
+            data: {
+                status: "APPROVED"
+            }
+        })
+    } catch (error) {
+        console.error("Error accepting order", error);
+    }
+}

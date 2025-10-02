@@ -62,7 +62,7 @@ export default async function OrdersPage() {
                 <td>{supplierOrder.order.total}.00</td>
                 <td>{supplierOrder.order.createdAt.toLocaleDateString()}</td>
                 <td>{supplierOrder.order.createdAt.toLocaleTimeString()}</td>
-                <td>{supplierOrder.order.status}</td>
+                <td>{supplierOrder.status}</td>
               </tr>
             ))}
           </tbody>
