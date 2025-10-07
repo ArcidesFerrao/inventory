@@ -183,6 +183,12 @@ nav {
   background-color: var(--divider);
 }
 
+.divider-flat {
+  height: 0.1rem;
+  width: 100%;
+  background-color: var(--divider);
+}
+
 .delete-button,
 .edit-button {
   background-color: var(--dash-bg);
@@ -257,6 +263,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+.purchase-list button,
 .deliveries-details button,
 .order-header button {
   padding: 0.3rem 1.2rem;
@@ -266,11 +273,13 @@ nav {
 
 .deliveries-details button,
 .order-header button,
+.purchase-list button:hover,
 .schedule-button:hover,
 .deny-btn:hover {
   background-color: var(--border-list);
 }
 
+.purchase-list button:hover,
 .schedule-button:hover,
 .delivery-btn:hover,
 .deny-btn:hover,
@@ -308,5 +317,11 @@ nav {
 
 .delivery-details {
   border: 2px solid var(--input-bg);
+  border-radius: 0.4rem;
+}
+
+.list-purchases {
+  border: var(--border-list) 1px solid;
+  padding: 1rem;
   border-radius: 0.4rem;
 }

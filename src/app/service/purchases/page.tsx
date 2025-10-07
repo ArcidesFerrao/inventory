@@ -12,6 +12,13 @@ export default async function PurchasesPage() {
 
   const purchases = await db.purchase.findMany({
     where: { serviceId: session.user.serviceId },
+    include: {
+      PurchaseItem: {
+        include: {
+          product: true,
+        },
+      },
+    },
     orderBy: { date: "desc" },
   });
 
@@ -23,9 +30,18 @@ export default async function PurchasesPage() {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <div className="products-list flex flex-col gap-4">
-        <div className="list-header flex items-center justify-between w-full">
-          <h2 className="text-2xl font-medium">Recent Purchases</h2>
+      <div className="list-header flex items-center justify-between w-full">
+        <div className="list-title">
+          <h2 className="text-2xl font-medium">Recent Purchases & Orders</h2>
+          <p>Manage your direct purchases and orders from suppliers</p>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/service/purchases/orders/new"
+            className="add-product flex gap-1"
+          >
+            <span className="text-md px-2">Order</span>
+          </Link>
           <Link
             href="/service/purchases/new"
             className="add-product flex gap-1"
@@ -33,76 +49,134 @@ export default async function PurchasesPage() {
             <span className="text-md px-2">Purchase</span>
           </Link>
         </div>
+      </div>
+      <div className="purchase-list flex flex-col gap-5">
+        <div className="purchases-header">
+          <h3 className="text-xl font-bold underline">Purchases</h3>
+        </div>
+        <div className="purchases-data flex justify-between w-full">
+          <div>
+            <p>Total Purchases</p>
+            <h2 className="text-2xl font-medium">{purchases.length}</h2>
+          </div>
+          <div>
+            <p>Total Spent</p>
+            <h2 className="text-2xl font-medium">
+              MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
+            </h2>
+          </div>
+          <div>
+            <p>Items Purchased</p>
+            <h2 className="text-2xl font-medium">54</h2>
+          </div>
+        </div>
         {purchases.length === 0 ? (
           <p>No purchases found...</p>
+        ) : (
+          <ul className="list-purchases w-full">
+            {purchases.map((p) => (
+              <li key={p.id} className="flex flex-col gap-5 w-full">
+                <div className="purchase-header flex justify-between">
+                  <div className="purchase-title flex flex-col gap-2">
+                    <h3 className="flex gap-2 items-center text-xl font-medium">
+                      Purchase
+                      <p className="text-sm font-light ">
+                        #{p.id.slice(0, 6)}...
+                      </p>
+                    </h3>
+                    <div className="title-details flex gap-2">
+                      <div>
+                        <span></span>
+                        <p className="text-sm font-light">
+                          {p.date.toLocaleDateString()} ,{" "}
+                          {p.date.toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div>
+                        <span></span>
+                        <p>
+                          {p.PurchaseItem.length > 1
+                            ? `${p.PurchaseItem.length} items`
+                            : ""}
+                        </p>
+                      </div>
+                      <div>
+                        <p></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <p>Total Amount</p>
+                    <h2>MZN {p.total.toFixed(2)}</h2>
+                  </div>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Unit Cost</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {p.PurchaseItem.map((i) => (
+                      <tr key={i.id}>
+                        <td>{i.product?.name}</td>
+                        <td>{i.quantity}</td>
+                        <td>MZN {i.unitCost}.00</td>
+                        <td>MZN {i.totalCost}.00</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="divider-flat"></div>
+      <div className="orders-list flex flex-col gap-4">
+        <div className="purchases-header flex items-center justify-between w-full">
+          <h3 className="text-xl font-bold underline">Orders</h3>
+        </div>
+        {orders.length === 0 ? (
+          <p>No orders found...</p>
+        ) : (
+          <ul>
+            {orders.map((o) => (
+              <li key={o.id}></li>
+            ))}
+          </ul>
+        )}
+        {orders.length === 0 ? (
+          <p>No orders found...</p>
         ) : (
           <table className="rounded">
             <thead>
               <tr>
                 <th className="text-start">Payment Type</th>
                 <th className="text-start">Total (MZN)</th>
-                <th className="text-start">Date</th>
+                <th className="text-start">Deliveries</th>
+                <th className="text-start">Placed Date</th>
                 <th className="text-start">Time</th>
+                <th className="text-start">Status</th>
               </tr>
             </thead>
             <tbody>
-              {purchases.map((purchase) => (
-                <tr key={purchase.id}>
-                  <td>{purchase.paymentType}</td>
-                  <td>{purchase.total}.00</td>
-                  <td>{purchase.date.toLocaleDateString()}</td>
-                  <td>{purchase.date.toLocaleTimeString()}</td>
+              {orders.map((order) => (
+                <tr key={order.id}>
+                  <td>{order.paymentType}</td>
+                  <td>{order.total}.00</td>
+                  <td>{order.confirmedDeliveries.length}</td>
+                  <td>{order.createdAt.toLocaleDateString()}</td>
+                  <td>{order.createdAt.toLocaleTimeString()}</td>
+                  <td>{order.status}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
-        <div className="flex">
-          <h2 className="text-lg font-bold">Total Purchases:</h2>
-          <p className="text-lg font-bold px-2">
-            MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
-          </p>
-        </div>
-        <div className="divider"></div>
-        <div className="products-list flex flex-col gap-4">
-          <div className="list-header flex items-center justify-between w-full">
-            <h2 className="text-2xl font-medium">Orders Placed</h2>
-            <Link
-              href="/service/purchases/orders/new"
-              className="add-product flex gap-1"
-            >
-              <span className="text-md px-2">Order</span>
-            </Link>
-          </div>
-          {orders.length === 0 ? (
-            <p>No orders found...</p>
-          ) : (
-            <table className="rounded">
-              <thead>
-                <tr>
-                  <th className="text-start">Payment Type</th>
-                  <th className="text-start">Total (MZN)</th>
-                  <th className="text-start">Deliveries</th>
-                  <th className="text-start">Placed Date</th>
-                  <th className="text-start">Time</th>
-                  <th className="text-start">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.paymentType}</td>
-                    <td>{order.total}.00</td>
-                    <td>{order.confirmedDeliveries.length}</td>
-                    <td>{order.createdAt.toLocaleDateString()}</td>
-                    <td>{order.createdAt.toLocaleTimeString()}</td>
-                    <td>{order.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
       </div>
     </div>
   );
