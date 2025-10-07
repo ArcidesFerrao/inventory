@@ -1,4 +1,4 @@
-import { Category, Product, RecipeItem } from "@prisma/client";
+import { Category, Product, Purchase, PurchaseItem, RecipeItem } from "@prisma/client";
 
 
 export type ProductWithMenuItems = Product & {
@@ -29,3 +29,10 @@ export interface PurchasesProps {
 }
 
 
+export type PurchaseWithProduct = PurchaseItem & {
+  product: Product
+}
+
+export type PurchaseWithItems = Purchase & {
+  PurchaseItems: PurchaseWithProduct[]
+}

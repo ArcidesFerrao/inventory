@@ -148,17 +148,17 @@ export default async function PurchasesPage() {
         )}
       </div>
       <div className="divider-flat"></div>
-      <div className="orders-list flex flex-col gap-4">
+      <div className="orders-list flex flex-col gap-5">
         <div className="purchases-header flex items-center justify-between w-full">
           <h3 className="text-xl font-bold underline">Orders</h3>
         </div>
         <div className="orders-data flex justify-between">
           <div className="flex flex-col">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
               <p>Total Orders</p>
               <h2 className="text-2xl font-semibold">{orders.length}</h2>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col ">
               <p>Total Value</p>
               <h2 className="text-2xl font-semibold">
                 MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
