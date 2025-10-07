@@ -263,6 +263,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+.order-status button,
 .purchase-list button,
 .deliveries-details button,
 .order-header button {
@@ -271,6 +272,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+.order-status button,
 .deliveries-details button,
 .order-header button,
 .purchase-list button:hover,
@@ -320,6 +322,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.list-orders,
 .list-purchases {
   border: var(--border-list) 1px solid;
   padding: 1rem;

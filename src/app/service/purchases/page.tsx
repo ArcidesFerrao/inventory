@@ -24,7 +24,10 @@ export default async function PurchasesPage() {
 
   const orders = await db.order.findMany({
     where: { serviceId: session.user.serviceId },
-    include: { confirmedDeliveries: true },
+    include: {
+      supplierOrders: { include: { items: true } },
+      confirmedDeliveries: true,
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -73,9 +76,12 @@ export default async function PurchasesPage() {
         {purchases.length === 0 ? (
           <p>No purchases found...</p>
         ) : (
-          <ul className="list-purchases w-full">
+          <ul className=" w-full">
             {purchases.map((p) => (
-              <li key={p.id} className="flex flex-col gap-5 w-full">
+              <li
+                key={p.id}
+                className="list-purchases flex flex-col gap-5 w-full"
+              >
                 <div className="purchase-header flex justify-between">
                   <div className="purchase-title flex flex-col gap-2">
                     <h3 className="flex gap-2 items-center text-xl font-medium">
@@ -140,42 +146,89 @@ export default async function PurchasesPage() {
         <div className="purchases-header flex items-center justify-between w-full">
           <h3 className="text-xl font-bold underline">Orders</h3>
         </div>
+        <div className="orders-data flex justify-between">
+          <div className="flex flex-col">
+            <div className="flex flex-col gap-2">
+              <p>Total Orders</p>
+              <h2 className="text-2xl font-medium">{orders.length}</h2>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p>Total Value</p>
+              <h2 className="text-2xl font-medium">
+                MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
+              </h2>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <div>
+              <p>Draft</p>
+              <h2 className="text-2xl font-medium"></h2>
+            </div>
+            <div>
+              <p>Confirmed</p>
+              <h2 className="text-2xl font-medium"></h2>
+            </div>
+            <div>
+              <p>In Delivery</p>
+              <h2 className="text-2xl font-medium"></h2>
+            </div>
+          </div>
+        </div>
         {orders.length === 0 ? (
           <p>No orders found...</p>
         ) : (
           <ul>
             {orders.map((o) => (
-              <li key={o.id}></li>
+              <li key={o.id} className="list-orders flex justify-between">
+                <div className="flex flex-col gap-5">
+                  <div className="order-header">
+                    <h3 className="order-title flex gap-2 items-center text-xl font-medium">
+                      Order
+                      <p className="text-sm font-light ">#{o.id.slice(0, 6)}</p>
+                    </h3>
+                    <div className="order-info flex items-center gap-2">
+                      <div>
+                        <span></span>
+                        <p className="text-sm font-light">
+                          {o.createdAt.toLocaleDateString()},{" "}
+                          {o.createdAt.toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div>
+                        <span></span>
+                        <p className="text-sm font-light">
+                          {o.supplierOrders.length} items
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="delivery-window flex flex-col gap-2">
+                    <p className="text-sm font-light">
+                      Requested Delivery Window
+                    </p>
+                    <div className=" flex gap-2">
+                      <p className="text-md font-medium">
+                        {o.requestedStartDate.toLocaleDateString()}
+                      </p>
+                      -
+                      <p className="text-md font-medium">
+                        {o.requestedEndDate.toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="order-status flex flex-col justify-between">
+                  <button disabled className="font-sm">
+                    {o.status}
+                  </button>
+                  <div className="order-amount">
+                    <p className="text-sm font-light">Order Total</p>
+                    <h2>MZN {o.total.toFixed(2)}</h2>
+                  </div>
+                </div>
+              </li>
             ))}
           </ul>
-        )}
-        {orders.length === 0 ? (
-          <p>No orders found...</p>
-        ) : (
-          <table className="rounded">
-            <thead>
-              <tr>
-                <th className="text-start">Payment Type</th>
-                <th className="text-start">Total (MZN)</th>
-                <th className="text-start">Deliveries</th>
-                <th className="text-start">Placed Date</th>
-                <th className="text-start">Time</th>
-                <th className="text-start">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.paymentType}</td>
-                  <td>{order.total}.00</td>
-                  <td>{order.confirmedDeliveries.length}</td>
-                  <td>{order.createdAt.toLocaleDateString()}</td>
-                  <td>{order.createdAt.toLocaleTimeString()}</td>
-                  <td>{order.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         )}
       </div>
     </div>
