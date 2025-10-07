@@ -90,30 +90,36 @@ export default async function PurchasesPage() {
                         #{p.id.slice(0, 6)}...
                       </p>
                     </h3>
-                    <div className="title-details flex gap-2">
-                      <div>
-                        <span></span>
+                    <div className="title-details flex gap-4">
+                      <div className="flex gap-2">
+                        <span>
+                          <span className="formkit--date"></span>
+                        </span>
                         <p className="text-sm font-light">
                           {p.date.toLocaleDateString()} ,{" "}
                           {p.date.toLocaleTimeString()}
                         </p>
                       </div>
+                      {p.PurchaseItem.length > 1 && (
+                        <div className="flex items-center gap-2">
+                          <span>
+                            <span className="fluent--box-16-regular"></span>
+                          </span>
+                          <p className="text-sm font-light">
+                            {p.PurchaseItem.length} items
+                          </p>
+                        </div>
+                      )}
                       <div>
-                        <span></span>
-                        <p>
-                          {p.PurchaseItem.length > 1
-                            ? `${p.PurchaseItem.length} items`
-                            : ""}
-                        </p>
-                      </div>
-                      <div>
-                        <p></p>
+                        <p className="text-sm font-light">{p.paymentType}</p>
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
                     <p>Total Amount</p>
-                    <h2>MZN {p.total.toFixed(2)}</h2>
+                    <h2 className="text-lg font-medium">
+                      MZN {p.total.toFixed(2)}
+                    </h2>
                   </div>
                 </div>
                 <table>
@@ -150,11 +156,11 @@ export default async function PurchasesPage() {
           <div className="flex flex-col">
             <div className="flex flex-col gap-2">
               <p>Total Orders</p>
-              <h2 className="text-2xl font-medium">{orders.length}</h2>
+              <h2 className="text-2xl font-semibold">{orders.length}</h2>
             </div>
             <div className="flex flex-col gap-2">
               <p>Total Value</p>
-              <h2 className="text-2xl font-medium">
+              <h2 className="text-2xl font-semibold">
                 MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
               </h2>
             </div>
@@ -181,21 +187,25 @@ export default async function PurchasesPage() {
             {orders.map((o) => (
               <li key={o.id} className="list-orders flex justify-between">
                 <div className="flex flex-col gap-5">
-                  <div className="order-header">
+                  <div className="order-header flex flex-col gap-2">
                     <h3 className="order-title flex gap-2 items-center text-xl font-medium">
                       Order
                       <p className="text-sm font-light ">#{o.id.slice(0, 6)}</p>
                     </h3>
-                    <div className="order-info flex items-center gap-2">
-                      <div>
-                        <span></span>
+                    <div className="order-info flex items-center gap-4">
+                      <div className="flex gap-2 items-center">
+                        <span>
+                          <span className="formkit--date"></span>
+                        </span>
                         <p className="text-sm font-light">
                           {o.createdAt.toLocaleDateString()},{" "}
                           {o.createdAt.toLocaleTimeString()}
                         </p>
                       </div>
-                      <div>
-                        <span></span>
+                      <div className="flex items-center gap-2">
+                        <span>
+                          <span className="fluent--box-16-regular"></span>
+                        </span>
                         <p className="text-sm font-light">
                           {o.supplierOrders.length} items
                         </p>
@@ -218,12 +228,14 @@ export default async function PurchasesPage() {
                   </div>
                 </div>
                 <div className="order-status flex flex-col justify-between">
-                  <button disabled className="font-sm">
+                  <button disabled className="text-sm">
                     {o.status}
                   </button>
                   <div className="order-amount">
-                    <p className="text-sm font-light">Order Total</p>
-                    <h2>MZN {o.total.toFixed(2)}</h2>
+                    <p className="text-sm ">Order Total</p>
+                    <h2 className="text-lg font-semibold">
+                      MZN {o.total.toFixed(2)}
+                    </h2>
                   </div>
                 </div>
               </li>

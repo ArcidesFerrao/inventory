@@ -59,13 +59,15 @@ th {
 th,
 td {
   padding: 0.4rem 0.8rem;
+  font-size: small;
 }
 
-thead th {
-  background-color: var(--background);
+thead th,
+tbody {
+  background-color: var(--border-list);
 }
 
-table td {
+table tr {
   border-bottom: solid 1px var(--background);
 }
 
