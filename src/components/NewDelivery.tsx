@@ -1,14 +1,15 @@
 "use client";
 
-import { Order, SupplierOrder, SupplierProduct } from "@prisma/client";
+import { createDelivery } from "@/app/actions/deliveries";
+import { Order, SupplierProduct } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export const SupplierDelivery = ({
-  supplierOrder,
   order,
   items,
 }: {
-  supplierOrder: SupplierOrder;
   order: Order;
   items: {
     id: string;
@@ -20,9 +21,43 @@ export const SupplierDelivery = ({
     product: SupplierProduct;
   }[];
 }) => {
-  const [deliveryDate, setDeliveryDate] = useState();
-  const [deliveryTime, setDeliveryTime] = useState();
-  const [quantity, setQuantity] = useState<number>(0);
+  const [deliveryDate, setDeliveryDate] = useState<string>("");
+  const [deliveryTime, setDeliveryTime] = useState<string>("");
+  const [deliveredQty, setDeliveredQty] = useState<Record<string, number>>({});
+  const [notes, setNotes] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleCreateDelivery = async () => {
+    setLoading(true);
+    if (!deliveryDate || !deliveryTime) {
+      alert("Please set both date and time!");
+      return;
+    }
+
+    const deliveryData = {
+      orderId: order.id,
+      deliveryDate,
+      deliveryTime,
+      notes,
+      items: Object.entries(deliveredQty).map(([itemId, qty]) => ({
+        itemId,
+        deliveredQty: qty,
+      })),
+    };
+
+    const delivery = await createDelivery(deliveryData);
+
+    if (delivery.success) {
+      toast.success("Delivery scheduled successfully!");
+      setTimeout(() => {
+        setLoading(false);
+        router.push("/supply/orders");
+      }, 100);
+    }
+  };
+
   return (
     <div className="schedule flex flex-col gap-5  w-full">
       <div className="schedule-info">
@@ -41,6 +76,7 @@ export const SupplierDelivery = ({
             name="deliveryDate"
             id="deliveryDate"
             value={deliveryDate}
+            onChange={(e) => setDeliveryDate(e.target.value)}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -50,7 +86,7 @@ export const SupplierDelivery = ({
             name="deliveryTime"
             id="deliveryTime"
             value={deliveryTime}
-            // onChange={(e) => setDeliveryTime(e.target.value)}
+            onChange={(e) => setDeliveryTime(e.target.value)}
           />
         </div>
         <ul className="flex flex-col gap-2">
@@ -59,17 +95,42 @@ export const SupplierDelivery = ({
             <li key={i.id} className="delivery-item flex justify-between ">
               <div>
                 <h3>{i.product.name}</h3>
-                <p>Quantities: {i.orderedQty} units</p>
+                <p className="font-light text-sm">
+                  Quantities: {i.orderedQty} units
+                </p>
               </div>
-              <input type="number" max={i.orderedQty} />
+              <input
+                type="number"
+                max={i.orderedQty}
+                min={0}
+                value={deliveredQty[i.id] ?? ""}
+                onChange={(e) =>
+                  setDeliveredQty((prev) => ({
+                    ...prev,
+                    [i.id]: Math.min(Number(e.target.value), i.orderedQty),
+                  }))
+                }
+              />
             </li>
           ))}
         </ul>
         <div className="flex flex-col gap-2">
           <h4>Delivery Notes</h4>
-          <textarea name="notes" id="notes" />
+          <textarea
+            name="notes"
+            id="notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
         </div>
       </div>
+      <button
+        onClick={handleCreateDelivery}
+        className="schedule-button py-2"
+        disabled={loading}
+      >
+        {loading ? "..." : "Schedule Delivery"}
+      </button>
     </div>
   );
 };

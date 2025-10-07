@@ -36,7 +36,6 @@ export default async function NewDeliveryPage(props: { params: Params }) {
       </div>
       <SupplierDelivery
         order={supplierOrder.order}
-        supplierOrder={supplierOrder}
         items={supplierOrder.items}
       />
     </div>

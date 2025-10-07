@@ -248,6 +248,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.schedule-button,
 .delivery-btn,
 .deny-btn,
 .accept-btn {
@@ -256,16 +257,18 @@ nav {
   border-radius: 0.2rem;
 }
 .order-header button {
-  padding: 0 1.2rem;
-  border: 1px solid var(--divider);
+  padding: 0.3rem 1.2rem;
+  border: 1px solid var(--border-list);
   border-radius: 0.2rem;
 }
 
 .order-header button,
+.schedule-button:hover,
 .deny-btn:hover {
   background-color: var(--border-list);
 }
 
+.schedule-button:hover,
 .delivery-btn:hover,
 .deny-btn:hover,
 .accept-btn:hover {
