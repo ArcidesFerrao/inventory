@@ -35,7 +35,14 @@ export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes
                 deliveryItems: true,
             }
         })
-
+        await db.order.update({
+            where: {
+                id: orderId
+            },
+            data: {
+                status: "IN_DELIVERY"
+            }
+        })
         return {success: true, delivery};
 
     } catch (error) {

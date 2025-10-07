@@ -141,23 +141,40 @@ export default async function OrderPage(props: { params: Params }) {
       </div>
       {supplierOrder?.order.confirmedDeliveries &&
         supplierOrder.order.confirmedDeliveries.length > 0 && (
-          <div className="deliveries-details flex flex-col">
-            <h2>Deliveries</h2>
+          <div className="deliveries-details flex flex-col gap-5 w-full">
+            <h2 className="text-xl font-semibold">Deliveries</h2>
             {supplierOrder.order.confirmedDeliveries.map((d) => (
-              <div key={d.id}>
-                <div className="delivery-header">
+              <div key={d.id} className="p-5 delivery-details">
+                <div className="delivery-header flex justify-between">
                   <div className="delivery-info">
-                    <h3>Delivery # {d.id}</h3>
-                    <p>Scheduled: {d.scheduledAt.toDateString()}</p>
+                    <h3 className="font-medium">Delivery #{d.id}</h3>
+                    <p className="text-sm font-extralight">
+                      Scheduled Date: {d.scheduledAt.toDateString()}
+                    </p>
+                    <p className="text-sm font-extralight">
+                      Scheduled Time: {d.scheduledAt.toLocaleTimeString()}
+                    </p>
+                    {d.status === "DELIVERED" && (
+                      <p>
+                        Delivered Time: {d.deliveredAt?.toLocaleTimeString()}
+                      </p>
+                    )}
                   </div>
-                  <span>{d.status}</span>
+                  <button
+                    disabled
+                    className="text-sm font-light text-center max-h-fit"
+                  >
+                    {d.status}
+                  </button>
                 </div>
-                <div className="delivery-items">
-                  <h4>Items:</h4>
-                  <ul>
+                <div className="delivery-items p-4">
+                  <h4 className="font-medium">Items:</h4>
+                  <ul className="flex flex-col gap-2">
                     {d.deliveryItems.map((item) => (
                       <li key={item.id}>
-                        {item.orderItem.product.name} - Qty: {item.quantity}
+                        <p className="text-md font-extralight">
+                          - {item.orderItem.product.name} - Qty: {item.quantity}
+                        </p>
                       </li>
                     ))}
                   </ul>

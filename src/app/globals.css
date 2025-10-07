@@ -256,12 +256,15 @@ nav {
   border: 1px solid var(--divider);
   border-radius: 0.2rem;
 }
+
+.deliveries-details button,
 .order-header button {
   padding: 0.3rem 1.2rem;
   border: 1px solid var(--border-list);
   border-radius: 0.2rem;
 }
 
+.deliveries-details button,
 .order-header button,
 .schedule-button:hover,
 .deny-btn:hover {
@@ -300,5 +303,10 @@ nav {
 .delivery-item {
   background-color: var(--border-list);
   padding: 1rem;
+  border-radius: 0.4rem;
+}
+
+.delivery-details {
+  border: 2px solid var(--input-bg);
   border-radius: 0.4rem;
 }
