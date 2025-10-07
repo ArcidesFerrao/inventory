@@ -1,3 +1,4 @@
+import PurchasesAndOrders from "@/components/PurchasesAndOrders";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
@@ -53,6 +54,8 @@ export default async function PurchasesPage() {
           </Link>
         </div>
       </div>
+      <PurchasesAndOrders purchases={purchases} orders={orders} />
+      {/*       
       <div className="purchase-list flex flex-col gap-5">
         <div className="purchases-header">
           <h3 className="text-xl font-bold underline">Purchases</h3>
@@ -242,7 +245,7 @@ export default async function PurchasesPage() {
             ))}
           </ul>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

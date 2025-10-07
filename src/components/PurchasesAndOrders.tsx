@@ -1,7 +1,6 @@
 "use client";
 
-import { PurchaseWithItems } from "@/types/types";
-import { Order } from "@prisma/client";
+import { OrderWithSupplierOrders, PurchaseWithItems } from "@/types/types";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -10,7 +9,7 @@ export default function PurchasesAndOrders({
   orders,
 }: {
   purchases: PurchaseWithItems[];
-  orders: Order[];
+  orders: OrderWithSupplierOrders[];
 }) {
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
@@ -25,26 +24,6 @@ export default function PurchasesAndOrders({
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <div className="list-header flex items-center justify-between w-full">
-        <div className="list-title">
-          <h2 className="text-2xl font-medium">Recent Purchases & Orders</h2>
-          <p>Manage your direct purchases and orders from suppliers</p>
-        </div>
-        <div className="flex gap-2">
-          <Link
-            href="/service/purchases/orders/new"
-            className="add-product flex gap-1"
-          >
-            <span className="text-md px-2">Order</span>
-          </Link>
-          <Link
-            href="/service/purchases/new"
-            className="add-product flex gap-1"
-          >
-            <span className="text-md px-2">Purchase</span>
-          </Link>
-        </div>
-      </div>
       <div className="toggle-buttons flex gap-2 my-2">
         <button
           className={`px-2 py-2 ${view === "purchases" && "toggled"}`}
@@ -108,13 +87,13 @@ export default function PurchasesAndOrders({
                             {p.date.toLocaleTimeString()}
                           </p>
                         </div>
-                        {p.PurchaseItems.length > 1 && (
+                        {p.PurchaseItem.length > 1 && (
                           <div className="flex items-center gap-2">
                             <span>
                               <span className="fluent--box-16-regular"></span>
                             </span>
                             <p className="text-sm font-light">
-                              {p.PurchaseItems.length} items
+                              {p.PurchaseItem.length} items
                             </p>
                           </div>
                         )}
@@ -140,7 +119,7 @@ export default function PurchasesAndOrders({
                       </tr>
                     </thead>
                     <tbody>
-                      {p.PurchaseItems.map((i) => (
+                      {p.PurchaseItem.map((i) => (
                         <tr key={i.id}>
                           <td>{i.product?.name}</td>
                           <td>{i.quantity}</td>
@@ -150,6 +129,105 @@ export default function PurchasesAndOrders({
                       ))}
                     </tbody>
                   </table>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+      {view === "orders" && (
+        <div className="orders-list flex flex-col gap-5">
+          <div className="purchases-header flex items-center justify-between w-full">
+            <h3 className="text-xl font-bold underline">Orders</h3>
+          </div>
+          <div className="orders-data flex justify-between">
+            <div className="flex flex-col">
+              <div className="flex flex-col">
+                <p>Total Orders</p>
+                <h2 className="text-2xl font-semibold">{orders.length}</h2>
+              </div>
+              <div className="flex flex-col ">
+                <p>Total Value</p>
+                <h2 className="text-2xl font-semibold">
+                  MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
+                </h2>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div>
+                <p>Draft</p>
+                <h2 className="text-2xl font-medium"></h2>
+              </div>
+              <div>
+                <p>Confirmed</p>
+                <h2 className="text-2xl font-medium"></h2>
+              </div>
+              <div>
+                <p>In Delivery</p>
+                <h2 className="text-2xl font-medium"></h2>
+              </div>
+            </div>
+          </div>
+          {orders.length === 0 ? (
+            <p>No orders found...</p>
+          ) : (
+            <ul>
+              {orders.map((o) => (
+                <li key={o.id} className="list-orders flex justify-between">
+                  <div className="flex flex-col gap-5">
+                    <div className="order-header flex flex-col gap-2">
+                      <h3 className="order-title flex gap-2 items-center text-xl font-medium">
+                        Order
+                        <p className="text-sm font-light ">
+                          #{o.id.slice(0, 6)}
+                        </p>
+                      </h3>
+                      <div className="order-info flex items-center gap-4">
+                        <div className="flex gap-2 items-center">
+                          <span>
+                            <span className="formkit--date"></span>
+                          </span>
+                          <p className="text-sm font-light">
+                            {o.createdAt.toLocaleDateString()},{" "}
+                            {o.createdAt.toLocaleTimeString()}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>
+                            <span className="fluent--box-16-regular"></span>
+                          </span>
+                          <p className="text-sm font-light">
+                            {o.supplierOrders.length} items
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="delivery-window flex flex-col gap-2">
+                      <p className="text-sm font-light">
+                        Requested Delivery Window
+                      </p>
+                      <div className=" flex gap-2">
+                        <p className="text-md font-medium">
+                          {o.requestedStartDate.toLocaleDateString()}
+                        </p>
+                        -
+                        <p className="text-md font-medium">
+                          {o.requestedEndDate.toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="order-status flex flex-col justify-between">
+                    <button disabled className="text-sm">
+                      {o.status}
+                    </button>
+                    <div className="order-amount">
+                      <p className="text-sm ">Order Total</p>
+                      <h2 className="text-lg font-semibold">
+                        MZN {o.total.toFixed(2)}
+                      </h2>
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
