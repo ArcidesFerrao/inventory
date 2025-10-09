@@ -24,6 +24,11 @@ export default function PurchasesAndOrders({
     return true;
   });
 
+  const totalPurchasedItems = purchases.reduce((acc, purchase) => {
+    return (
+      acc + purchase.PurchaseItem.reduce((sum, item) => sum + item.quantity, 0)
+    );
+  }, 0);
   return (
     <div className="flex flex-col gap-5 w-full">
       <div className="header-p-o flex justify-between">
@@ -84,7 +89,7 @@ export default function PurchasesAndOrders({
             </div>
             <div>
               <p>Items Purchased</p>
-              <h2 className="text-2xl font-medium">54</h2>
+              <h2 className="text-2xl font-medium">{totalPurchasedItems}</h2>
             </div>
           </div>
           {purchases.length === 0 ? (
