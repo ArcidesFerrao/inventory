@@ -51,6 +51,11 @@ export const OrdersList = ({
 
     const result = await createOrder(supplierOrdersList, startDate, endDate);
 
+    if (result.message) {
+      toast.error(result.message ?? "Order not processed successfully");
+      setLoading(false);
+    }
+
     if (result.success) {
       toast.success("Order Placed Successfuly");
       setTimeout(() => {
@@ -59,7 +64,7 @@ export const OrdersList = ({
       }, 500);
     }
 
-    console.log("Order placed:", result);
+    console.log(result.message ? result.message : `Order placed: ${result}`);
   };
 
   const handleIncrement = (id: string) => {
