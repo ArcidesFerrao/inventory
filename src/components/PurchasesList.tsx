@@ -18,10 +18,13 @@ export const PurchasesList = ({
     setLoading(true);
     console.log("creating purchase");
     const purchaseItems = products.filter((product) => product.quantity > 0);
-    if (purchaseItems.length === 0) return;
-
     const result = await createPurchase(purchaseItems, serviceId);
-    if (result.success) {
+
+    if (result.message) {
+      toast.error(result.message ?? "Purchase not processed successfully");
+      setLoading(false);
+    }
+    if (result.success && !result.message) {
       toast.success("Purchase Completed");
       setTimeout(() => {
         router.push("/service/purchases");

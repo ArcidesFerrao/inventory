@@ -4,7 +4,8 @@ import { db } from "@/lib/db";
 import { logActivity } from "./logs";
 
 export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null;  quantity: number, }[], serviceId: string) {
-
+    console.log(purchaseItems)
+    if (purchaseItems.length === 0) return {success: false, message: "No purchase items"}
     
     const total = purchaseItems.reduce((sum, item) => sum + ((item.price || 0) * item.quantity), 0);
     try {

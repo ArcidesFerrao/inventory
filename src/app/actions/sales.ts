@@ -7,6 +7,8 @@ import { logActivity } from "./logs";
 export async function createSale(
     saleItems: ProductWithMenuItems[], serviceId: string
 ) {    
+    if (saleItems.length === 0) return {success: false, message: "No sale items"}
+
     const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
     try {

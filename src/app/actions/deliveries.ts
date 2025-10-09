@@ -13,7 +13,7 @@ export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes
     
     if (!session?.user) redirect("/login");
 
-
+    if (items.length === 0) return {success:false, message: "No delivery items"}
 
     try {
         const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`)
