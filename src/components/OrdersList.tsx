@@ -23,13 +23,12 @@ export const OrdersList = ({
     initialProducts.map((p) => ({ ...p, quantity: 0 }))
   );
 
-  const handleCompleteSale = async () => {
-    console.log("creating sale");
+  const handleCompleteOrder = async () => {
+    console.log("creating order");
     setLoading(true);
-    const saleItems = products.filter((product) => product.quantity > 0);
-    if (saleItems.length === 0) return;
+    const orderItems = products.filter((product) => product.quantity > 0);
 
-    const groupedBySupplier = saleItems.reduce((acc, item) => {
+    const groupedBySupplier = orderItems.reduce((acc, item) => {
       if (!acc[item.supplierId]) acc[item.supplierId] = [];
 
       acc[item.supplierId].push({
@@ -56,7 +55,7 @@ export const OrdersList = ({
       setLoading(false);
     }
 
-    if (result.success) {
+    if (result.success && !result.message) {
       toast.success("Order Placed Successfuly");
       setTimeout(() => {
         setLoading(false);
@@ -161,7 +160,7 @@ export const OrdersList = ({
           </div>
         </div>
         <button
-          onClick={() => handleCompleteSale()}
+          onClick={() => handleCompleteOrder()}
           disabled={loading}
           className="complete-btn border px-4 py-2 rounded mt-4"
         >
