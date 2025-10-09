@@ -1,4 +1,4 @@
-import { Category, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, SupplierOrder } from "@prisma/client";
+import { Category, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem, SupplierOrder } from "@prisma/client";
 
 
 export type ProductWithMenuItems = Product & {
@@ -47,4 +47,12 @@ export type SupplierOrderWithItems = SupplierOrder & {
 
 export type ProductWithCategory = Product & {
   Category: Category | null
+}
+
+export type SaleWithItems = Sale & {
+  SaleItem : SaleItemWithProducts[]
+}
+
+export type SaleItemWithProducts = SaleItem & {
+  product: Product
 }

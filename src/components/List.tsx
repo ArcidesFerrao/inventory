@@ -1,7 +1,11 @@
 import Link from "next/link";
 import React from "react";
 import { DeleteButton } from "./DeleteButton";
-import { OrderWithSupplierOrders, PurchaseWithItems } from "@/types/types";
+import {
+  OrderWithSupplierOrders,
+  PurchaseWithItems,
+  SaleWithItems,
+} from "@/types/types";
 
 type ProductsStockProps = {
   id: string;
@@ -134,7 +138,7 @@ export const PurchaseListItem = ({
           </h3>
           <div className="title-details flex gap-4">
             <div className="flex gap-2">
-              <span>
+              <span className="flex items-center">
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
@@ -144,7 +148,7 @@ export const PurchaseListItem = ({
             </div>
             {purchases.PurchaseItem.length > 1 && (
               <div className="flex items-center gap-2">
-                <span>
+                <span className="flex items-center">
                   <span className="fluent--box-16-regular"></span>
                 </span>
                 <p className="text-sm font-light">
@@ -215,7 +219,7 @@ export const OrderListItem = ({
           </h3>
           <div className="order-info flex items-center gap-4">
             <div className="flex gap-2 items-center">
-              <span>
+              <span className="flex items-center">
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
@@ -258,6 +262,72 @@ export const OrderListItem = ({
           </h2>
         </div>
       </div>
+    </li>
+  );
+};
+
+export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
+  return (
+    <li
+      key={sale.id}
+      className="list-orders flex flex-col gap-2 justify-between"
+    >
+      <div className="sale-header flex justify-between">
+        <div className="sale-title flex flex-col gap-2">
+          <h3 className="flex gap-2 items-center text-xl font-medium">
+            Sale
+            <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
+          </h3>
+          <div className="title-details flex gap-4">
+            <div className="flex gap-2">
+              <span className="flex items-center">
+                <span className="formkit--date"></span>
+              </span>
+              <p className="text-sm font-light">
+                {sale.date.toLocaleDateString()} ,{" "}
+                {sale.date.toLocaleTimeString()}
+              </p>
+            </div>
+            {sale.SaleItem.length > 1 && (
+              <div className="flex items-center gap-2">
+                <span className="flex items-center">
+                  <span className="fluent--box-16-regular"></span>
+                </span>
+                <p className="text-sm font-light">
+                  {sale.SaleItem.length} items
+                </p>
+              </div>
+            )}
+            <div className="flex items-center">
+              <p className="text-sm font-light">{sale.paymentType}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Total Amount</p>
+          <h2 className="text-lg font-medium">MZN {sale.total.toFixed(2)}</h2>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Product</th>
+            <th>Unit Cost</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sale.SaleItem.map((i) => (
+            <tr key={i.id}>
+              <td>{i.quantity}</td>
+              <td>{i.product?.name}</td>
+              <td>MZN {i.price}.00</td>
+              <td>MZN {i.quantity * i.price}.00</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </li>
   );
 };

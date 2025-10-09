@@ -350,9 +350,10 @@ nav {
 
 .list-orders,
 .list-purchases {
-  border: var(--border-list) 1px solid;
+  border: var(--input-bg) 1px solid;
   padding: 1rem;
   border-radius: 0.4rem;
+  background-color: var(--input-bg);
 }
 
 .orders-filter div {

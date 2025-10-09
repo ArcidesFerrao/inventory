@@ -1,3 +1,4 @@
+import { SaleListItem } from "@/components/List";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
@@ -12,6 +13,13 @@ export default async function SalesPage() {
 
   const sales = await db.sale.findMany({
     where: { serviceId: session.user.serviceId },
+    include: {
+      SaleItem: {
+        include: {
+          product: true,
+        },
+      },
+    },
     orderBy: { date: "desc" },
   });
 
@@ -58,26 +66,11 @@ export default async function SalesPage() {
       {sales.length === 0 ? (
         <p>No sales found...</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th className="text-start">Payment Type</th>
-              <th className="text-start">Total (MZN)</th>
-              <th className="text-start">Date</th>
-              <th className="text-start">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sales.map((sale) => (
-              <tr key={sale.id}>
-                <td>{sale.paymentType}</td>
-                <td>{sale.total}.00</td>
-                <td>{sale.date.toLocaleDateString()}</td>
-                <td>{sale.date.toLocaleTimeString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul className="w-full flex flex-col gap-2">
+          {sales.map((sale) => (
+            <SaleListItem key={sale.id} sale={sale} />
+          ))}
+        </ul>
       )}
     </div>
   );
