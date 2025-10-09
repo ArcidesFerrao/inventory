@@ -3,7 +3,7 @@
 import { ProductWithCategory } from "@/types/types";
 import Link from "next/link";
 import React, { useState } from "react";
-import { ListItem } from "./List";
+import { ListDrinkItem, ListItem, ListStockItem } from "./List";
 
 export default function MenuAndStock({
   products,
@@ -21,7 +21,7 @@ export default function MenuAndStock({
   const stockProducts = products.filter((p) => p.type === "STOCK");
 
   const lanche = menuProducts.filter((p) => p.Category?.name === "Lanche");
-  const bebidas = menuProducts.filter((p) => p.Category?.name === "Bebida");
+  const bebidas = menuProducts.filter((p) => p.Category?.name === "Bebidas");
   const refeicao = menuProducts.filter((p) => p.Category?.name === "Refeicao");
 
   return (
@@ -61,7 +61,8 @@ export default function MenuAndStock({
             <div className="menu-products flex justify-between gap-8">
               <div className="flex flex-col gap-4">
                 <section className="flex flex-col gap-2">
-                  <h2 className="text-lg font-medium">Lanche</h2>
+                  <h2 className="text-lg font-medium">Lunch</h2>
+                  {/* <h2 className="text-lg font-medium">Lanche</h2> */}
                   <ul className="flex flex-col gap-4">
                     {lanche.map((item) => (
                       <ListItem
@@ -74,7 +75,8 @@ export default function MenuAndStock({
                   </ul>
                 </section>
                 <section className="flex flex-col gap-2">
-                  <h2 className="text-lg font-medium">Refeicao</h2>
+                  <h2 className="text-lg font-medium">Meal</h2>
+                  {/* <h2 className="text-lg font-medium">Refeição</h2> */}
                   <ul className="flex flex-col gap-4">
                     {refeicao.map((item) => (
                       <ListItem
@@ -87,11 +89,12 @@ export default function MenuAndStock({
                   </ul>
                 </section>
               </div>
-              <section className="flex flex-col gap-2">
-                <h2 className="text-lg font-medium">Bebidas</h2>
-                <ul className="flex flex-col gap-4">
+              <section className="drinks-list flex flex-col p-4 gap-2 max-w-72">
+                <h2 className="text-lg font-medium">Drinks</h2>
+                {/* <h2 className="text-lg font-medium">Bebidas</h2> */}
+                <ul className="flex flex-col">
                   {bebidas.map((item) => (
-                    <ListItem
+                    <ListDrinkItem
                       id={item.id}
                       name={item.name}
                       price={item.price || 0}
@@ -106,12 +109,13 @@ export default function MenuAndStock({
       )}
       {view === "stock" && (
         <section>
-          <ul>
+          <ul className="flex flex-col gap-4">
             {stockProducts.map((p) => (
-              <ListItem
+              <ListStockItem
                 id={p.id}
                 name={p.name}
                 price={p.price || 0}
+                stock={p.stock || 0}
                 key={p.id}
               />
             ))}

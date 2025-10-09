@@ -4,12 +4,12 @@
   --background: #45474f;
   --foreground: #f4f5fa;
   --divider: #f4f5fa80;
-  --accent: #303b2b;
+  --accent: #00000066;
   --accent-fade: #303b2b4b;
   --border: rgba(45, 45, 46, 0.719);
-  --border-list: rgba(0, 0, 0, 0.4);
+  --border-list: #00000066;
   --dash-bg: #2f2f2f;
-  --input-bg: rgba(32, 32, 32, 0.5);
+  --input-bg: rgba(32, 32, 32, 0.7);
 }
 
 /* @theme inline {
@@ -92,12 +92,20 @@ input {
   border: 1px solid var(--input-bg);
 }
 
-input:read-only,
+/* input:read-only, */
 input[type="submit"]:disabled {
-  background-color: var(--border);
-  border: solid 1px var(--foreground);
+  background-color: var(--foreground);
+  border: solid 1px var(--input-bg);
+  color: var(--input-bg);
 }
 
+.innovante {
+  padding: 0.1rem 0.2rem;
+}
+.innovante,
+input[type="submit"] {
+  border: solid 1px var(--foreground);
+}
 input[type="submit"],
 a,
 button {
@@ -107,7 +115,7 @@ button {
 
 input[type="submit"]:active,
 button:active {
-  background-color: var(--divider);
+  background-color: var(--foreground);
   color: var(--dash-bg);
 }
 
@@ -132,7 +140,15 @@ form p a:hover {
 .dash-menu button:hover,
 .login-button:hover,
 .navigator a:hover {
+  background-color: var(--border-list);
+}
+
+.is-active {
   background-color: var(--dash-bg);
+}
+.navigator a:active {
+  background-color: #f4f5fa;
+  color: #2f2f2f;
 }
 .navigator a {
   border-radius: 0.2rem;
@@ -156,9 +172,14 @@ li a {
   white-space: nowrap;
 }
 
-.products-list li {
-  background-color: var(--background);
+.listing-item {
+  background-color: var(--input-bg);
   width: 380px;
+  border-radius: 0.4rem;
+}
+
+.drinks-list {
+  background-color: var(--input-bg);
   border-radius: 0.4rem;
 }
 

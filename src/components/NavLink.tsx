@@ -18,7 +18,7 @@ export const NavLink = ({ href, icon, label }: NavLinkProps) => {
     <Link
       href={href}
       className={`py-2 px-6 flex items-center gap-2 ${
-        isActive ? "bg-black" : ""
+        isActive ? "is-active" : ""
       } `}
     >
       {icon}
