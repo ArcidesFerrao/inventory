@@ -142,6 +142,7 @@ form p a:hover {
   padding: 0.5rem 1rem;
   border-radius: 0.4rem;
   background-color: var(--background);
+  height: fit-content;
 }
 
 .delete-button:hover,
@@ -328,5 +329,11 @@ nav {
 .list-purchases {
   border: var(--border-list) 1px solid;
   padding: 1rem;
+  border-radius: 0.4rem;
+}
+
+.orders-filter div {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-list);
   border-radius: 0.4rem;
 }

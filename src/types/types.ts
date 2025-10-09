@@ -30,7 +30,7 @@ export interface PurchasesProps {
 
 
 export type PurchaseWithProduct = PurchaseItem & {
-  product: Product
+  product: Product | null
 }
 
 export type PurchaseWithItems = Purchase & {

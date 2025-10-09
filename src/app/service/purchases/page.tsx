@@ -23,6 +23,11 @@ export default async function PurchasesPage() {
     orderBy: { date: "desc" },
   });
 
+  // const sanitizedPurchases = purchases.map((p) => ({
+  //   ...p,
+  //   PurchaseItem: p.PurchaseItem.filter((i) => i.product !== null),
+  // }));
+
   const orders = await db.order.findMany({
     where: { serviceId: session.user.serviceId },
     include: {
@@ -37,21 +42,9 @@ export default async function PurchasesPage() {
       <div className="list-header flex items-center justify-between w-full">
         <div className="list-title">
           <h2 className="text-2xl font-medium">Recent Purchases & Orders</h2>
-          <p>Manage your direct purchases and orders from suppliers</p>
-        </div>
-        <div className="flex gap-2">
-          <Link
-            href="/service/purchases/orders/new"
-            className="add-product flex gap-1"
-          >
-            <span className="text-md px-2">Order</span>
-          </Link>
-          <Link
-            href="/service/purchases/new"
-            className="add-product flex gap-1"
-          >
-            <span className="text-md px-2">Purchase</span>
-          </Link>
+          <p className="text-md font-extralight">
+            Manage your direct purchases and orders from suppliers
+          </p>
         </div>
       </div>
       <PurchasesAndOrders purchases={purchases} orders={orders} />

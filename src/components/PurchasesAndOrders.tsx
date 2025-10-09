@@ -13,10 +13,11 @@ export default function PurchasesAndOrders({
 }) {
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
-    "ALL" | "CONFIRMED" | "IN_DELIVERY"
+    "ALL" | "DRAFT" | "CONFIRMED" | "IN_DELIVERY"
   >("ALL");
 
   const filteredOrders = orders.filter((o) => {
+    if (orderFilter === "DRAFT") return o.status === "DRAFT";
     if (orderFilter === "CONFIRMED") return o.status === "CONFIRMED";
     if (orderFilter === "IN_DELIVERY") return o.status === "IN_DELIVERY";
     return true;
@@ -24,26 +25,51 @@ export default function PurchasesAndOrders({
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <div className="toggle-buttons flex gap-2 my-2">
-        <button
-          className={`px-2 py-2 ${view === "purchases" && "toggled"}`}
-          onClick={() => setView("purchases")}
-        >
-          Purchases
-        </button>
-        <button
-          className={`px-2 py-2 ${view === "orders" && "toggled"}`}
-          onClick={() => setView("orders")}
-        >
-          Orders
-        </button>
+      <div className="header-p-o flex justify-between">
+        <div className="toggle-buttons flex">
+          <button
+            className={`flex items-center gap-2 px-4 py-2 text-xl ${
+              view === "purchases" && "toggled border-b-2"
+            }`}
+            onClick={() => setView("purchases")}
+          >
+            <span className="roentgen--bag"></span> Purchases
+          </button>
+          <button
+            className={` flex items-center gap-2 px-4 py-2 text-xl ${
+              view === "orders" && "toggled border-b-2"
+            }`}
+            onClick={() => setView("orders")}
+          >
+            <span className="flowbite--cart-solid"></span> Orders
+          </button>
+        </div>
+        <div className="flex gap-2 items-center">
+          {view === "orders" && (
+            <Link
+              href="/service/purchases/orders/new"
+              className="add-product flex gap-1"
+            >
+              <span className="text-md px-2 flex items-center gap-2">
+                <span className="flowbite--cart-solid"></span>New Order
+              </span>
+            </Link>
+          )}
+          {view === "purchases" && (
+            <Link
+              href="/service/purchases/new"
+              className="add-product flex gap-1"
+            >
+              <span className="text-md px-2 flex items-center gap-2">
+                <span className="roentgen--bag"></span>New Purchase
+              </span>
+            </Link>
+          )}
+        </div>
       </div>
 
       {view === "purchases" && (
         <div className="purchase-list flex flex-col gap-5">
-          <div className="purchases-header">
-            <h3 className="text-xl font-bold underline">Purchases</h3>
-          </div>
           <div className="purchases-data flex justify-between w-full">
             <div>
               <p>Total Purchases</p>
@@ -137,42 +163,67 @@ export default function PurchasesAndOrders({
       )}
       {view === "orders" && (
         <div className="orders-list flex flex-col gap-5">
-          <div className="purchases-header flex items-center justify-between w-full">
-            <h3 className="text-xl font-bold underline">Orders</h3>
-          </div>
           <div className="orders-data flex justify-between">
-            <div className="flex flex-col">
-              <div className="flex flex-col">
-                <p>Total Orders</p>
-                <h2 className="text-2xl font-semibold">{orders.length}</h2>
-              </div>
-              <div className="flex flex-col ">
-                <p>Total Value</p>
-                <h2 className="text-2xl font-semibold">
-                  MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
-                </h2>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div>
-                <p>Draft</p>
-                <h2 className="text-2xl font-medium"></h2>
-              </div>
-              <div>
-                <p>Confirmed</p>
-                <h2 className="text-2xl font-medium"></h2>
-              </div>
-              <div>
-                <p>In Delivery</p>
-                <h2 className="text-2xl font-medium"></h2>
-              </div>
+            <div className="flex flex-col ">
+              <p>Total Value</p>
+              <h2 className="text-2xl font-semibold">
+                MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
+              </h2>
             </div>
           </div>
+
+          {/* <div className="orders-filter flex gap-4">
+            <div className="flex gap-5 items-center justify-between">
+            <p>All</p>
+              <span className="filter-order">{orders.length}</span>
+              </div>
+            <div className="flex gap-5 items-center justify-between">
+            <p>Draft</p>
+              <span className="filter-order">{orders.length}</span>
+            </div>
+            <div className="flex gap-5 items-center justify-between">
+            <p>Confirmed</p>
+            <span className="filter-order">{orders.length}</span>
+            </div>
+            <div className="flex gap-5 items-center justify-between">
+              <p>In Delivery</p>
+              <span className="filter-order">{orders.length}</span>
+            </div>
+            </div> */}
           {orders.length === 0 ? (
             <p>No orders found...</p>
           ) : (
-            <ul>
-              {orders.map((o) => (
+            <ul className="flex flex-col gap-2">
+              <div className="orders-filter flex gap-2">
+                {[
+                  { value: "ALL", label: "All" },
+                  { value: "DRAFT", label: "Draft" },
+                  { value: "CONFIRMED", label: "Confirmed" },
+                  { value: "IN_DELIVERY", label: "In Delivery" },
+                ].map((filter) => (
+                  <label
+                    key={filter.value}
+                    className={`cursor-pointer px-4 py-2 text-sm  ${
+                      orderFilter === filter.value
+                        ? "font-bold border-b-2"
+                        : " hover:border-b-2 font-medium"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="orderFilter"
+                      value={filter.value}
+                      checked={orderFilter === filter.value}
+                      onChange={(e) =>
+                        setOrderFilter(e.target.value as typeof orderFilter)
+                      }
+                      className="hidden"
+                    />
+                    {filter.label}
+                  </label>
+                ))}
+              </div>
+              {filteredOrders.map((o) => (
                 <li key={o.id} className="list-orders flex justify-between">
                   <div className="flex flex-col gap-5">
                     <div className="order-header flex flex-col gap-2">
