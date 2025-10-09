@@ -5,7 +5,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { ListItem } from "./List";
 
-export default function MenuAndStock(products: ProductWithCategory[]) {
+export default function MenuAndStock({
+  products,
+}: {
+  products: ProductWithCategory[];
+}) {
   const [view, setView] = useState<"menu" | "stock">("menu");
 
   if (products.length === 0) {
@@ -42,40 +46,15 @@ export default function MenuAndStock(products: ProductWithCategory[]) {
           </button>
         </div>
         <div className="flex gap-2 items-center">
-          {view === "stock" && (
-            <Link
-              href="/service/purchases/stock/new"
-              className="add-product flex gap-1"
-            >
-              <span className="text-md px-2 flex items-center gap-2">
-                <span className="flowbite--cart-solid"></span>New Stock Product
-              </span>
-            </Link>
-          )}
-          {view === "menu" && (
-            <Link
-              href="/service/purchases/new"
-              className="add-product flex gap-1"
-            >
-              <span className="text-md px-2 flex items-center gap-2">
-                <span className="roentgen--bag"></span>New Menu Product
-              </span>
-            </Link>
-          )}
+          <Link href="/service/products/new" className="add-product flex gap-1">
+            <span className="text-md px-2 flex items-center gap-2">
+              New Product
+            </span>
+          </Link>
         </div>
       </div>
       {view === "menu" && (
         <>
-          <div className="list-header flex items-center justify-between w-full">
-            <h2 className="text-2xl font-medium">Menu</h2>
-            <Link
-              href="/service/products/new"
-              className="add-product flex gap-1"
-            >
-              <span>+</span>
-              <span className="text-md">Product</span>
-            </Link>
-          </div>
           {products.length === 0 ? (
             <p>No products found...</p>
           ) : (
@@ -124,6 +103,20 @@ export default function MenuAndStock(products: ProductWithCategory[]) {
             </div>
           )}
         </>
+      )}
+      {view === "stock" && (
+        <section>
+          <ul>
+            {stockProducts.map((p) => (
+              <ListItem
+                id={p.id}
+                name={p.name}
+                price={p.price || 0}
+                key={p.id}
+              />
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   );

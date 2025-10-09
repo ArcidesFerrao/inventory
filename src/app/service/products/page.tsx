@@ -20,7 +20,15 @@ export default async function ProductsPage() {
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">
-      <MenuAndStock {...products} />
+      <div className="list-header flex items-center justify-between w-full">
+        <div className="list-title">
+          <h2 className="text-2xl font-medium">Menu & Stock Products</h2>
+          <p className="text-md font-extralight">
+            Manage your menu items and stock inventory
+          </p>
+        </div>
+      </div>
+      <MenuAndStock products={products} />
     </div>
   );
 }

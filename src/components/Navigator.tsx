@@ -45,11 +45,6 @@ export const ServiceNav = () => {
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
-          href="/service/stock"
-          label="Stock"
-          icon={<span className="lsicon--management-stockout-filled"></span>}
-        />
-        <NavLink
           href="/service/purchases"
           label="Purchases"
           icon={<span className="f7--purchased"></span>}
