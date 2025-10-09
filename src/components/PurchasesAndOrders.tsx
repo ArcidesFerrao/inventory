@@ -13,10 +13,11 @@ export default function PurchasesAndOrders({
 }) {
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
-    "ALL" | "DRAFT" | "CONFIRMED" | "IN_DELIVERY"
+    "ALL" | "PLACED" | "DRAFT" | "CONFIRMED" | "IN_DELIVERY"
   >("ALL");
 
   const filteredOrders = orders.filter((o) => {
+    if (orderFilter === "PLACED") return o.status === "PLACED";
     if (orderFilter === "DRAFT") return o.status === "DRAFT";
     if (orderFilter === "CONFIRMED") return o.status === "CONFIRMED";
     if (orderFilter === "IN_DELIVERY") return o.status === "IN_DELIVERY";
@@ -197,6 +198,7 @@ export default function PurchasesAndOrders({
               <div className="orders-filter flex gap-2">
                 {[
                   { value: "ALL", label: "All" },
+                  { value: "PLACED", label: "Placed" },
                   { value: "DRAFT", label: "Draft" },
                   { value: "CONFIRMED", label: "Confirmed" },
                   { value: "IN_DELIVERY", label: "In Delivery" },
@@ -223,64 +225,70 @@ export default function PurchasesAndOrders({
                   </label>
                 ))}
               </div>
-              {filteredOrders.map((o) => (
-                <li key={o.id} className="list-orders flex justify-between">
-                  <div className="flex flex-col gap-5">
-                    <div className="order-header flex flex-col gap-2">
-                      <h3 className="order-title flex gap-2 items-center text-xl font-medium">
-                        Order
-                        <p className="text-sm font-light ">
-                          #{o.id.slice(0, 6)}
-                        </p>
-                      </h3>
-                      <div className="order-info flex items-center gap-4">
-                        <div className="flex gap-2 items-center">
-                          <span>
-                            <span className="formkit--date"></span>
-                          </span>
-                          <p className="text-sm font-light">
-                            {o.createdAt.toLocaleDateString()},{" "}
-                            {o.createdAt.toLocaleTimeString()}
-                          </p>
+              {filteredOrders.length === 0 ? (
+                <p>No orders found...</p>
+              ) : (
+                <>
+                  {filteredOrders.map((o) => (
+                    <li key={o.id} className="list-orders flex justify-between">
+                      <div className="flex flex-col gap-5">
+                        <div className="order-header flex flex-col gap-2">
+                          <h3 className="order-title flex gap-2 items-center text-xl font-medium">
+                            Order
+                            <p className="text-sm font-light ">
+                              #{o.id.slice(0, 6)}
+                            </p>
+                          </h3>
+                          <div className="order-info flex items-center gap-4">
+                            <div className="flex gap-2 items-center">
+                              <span>
+                                <span className="formkit--date"></span>
+                              </span>
+                              <p className="text-sm font-light">
+                                {o.createdAt.toLocaleDateString()},{" "}
+                                {o.createdAt.toLocaleTimeString()}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span>
+                                <span className="fluent--box-16-regular"></span>
+                              </span>
+                              <p className="text-sm font-light">
+                                {o.supplierOrders.length} items
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span>
-                            <span className="fluent--box-16-regular"></span>
-                          </span>
+                        <div className="delivery-window flex flex-col gap-2">
                           <p className="text-sm font-light">
-                            {o.supplierOrders.length} items
+                            Requested Delivery Window
                           </p>
+                          <div className=" flex gap-2">
+                            <p className="text-md font-medium">
+                              {o.requestedStartDate.toLocaleDateString()}
+                            </p>
+                            -
+                            <p className="text-md font-medium">
+                              {o.requestedEndDate.toLocaleDateString()}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="delivery-window flex flex-col gap-2">
-                      <p className="text-sm font-light">
-                        Requested Delivery Window
-                      </p>
-                      <div className=" flex gap-2">
-                        <p className="text-md font-medium">
-                          {o.requestedStartDate.toLocaleDateString()}
-                        </p>
-                        -
-                        <p className="text-md font-medium">
-                          {o.requestedEndDate.toLocaleDateString()}
-                        </p>
+                      <div className="order-status flex flex-col justify-between">
+                        <button disabled className="text-sm">
+                          {o.status}
+                        </button>
+                        <div className="order-amount">
+                          <p className="text-sm ">Order Total</p>
+                          <h2 className="text-lg font-semibold">
+                            MZN {o.total.toFixed(2)}
+                          </h2>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="order-status flex flex-col justify-between">
-                    <button disabled className="text-sm">
-                      {o.status}
-                    </button>
-                    <div className="order-amount">
-                      <p className="text-sm ">Order Total</p>
-                      <h2 className="text-lg font-semibold">
-                        MZN {o.total.toFixed(2)}
-                      </h2>
-                    </div>
-                  </div>
-                </li>
-              ))}
+                    </li>
+                  ))}
+                </>
+              )}
             </ul>
           )}
         </div>

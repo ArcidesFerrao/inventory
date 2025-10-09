@@ -55,7 +55,7 @@ export const OrdersList = ({
       toast.success("Order Placed Successfuly");
       setTimeout(() => {
         setLoading(false);
-        router.push("/service/purchases/orders");
+        router.push("/service/purchases");
       }, 500);
     }
 
