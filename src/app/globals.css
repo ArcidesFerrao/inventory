@@ -157,12 +157,14 @@ form p a:hover {
 }
 
 .add-product {
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 1rem;
+  border: solid 1px var(--foreground);
   border-radius: 0.4rem;
-  background-color: var(--background);
+  background-color: var(--input-bg);
   height: fit-content;
 }
 
+.complete-btn:hover,
 .delete-button:hover,
 .edit-button:hover,
 .submit-button:hover,
@@ -199,7 +201,7 @@ nav {
 .items-list,
 .balance,
 .stats {
-  background-color: var(--background);
+  background-color: var(--input-bg);
   border-radius: 0.4rem;
 }
 
@@ -266,12 +268,6 @@ nav {
   border-radius: 0.4rem;
   padding: 0.4rem 0.8rem;
   border: solid 1px var(--dash-bg);
-}
-
-.complete-btn:disabled {
-  background-color: var(--dash-bg);
-  border: solid 1px var(--dash-bg);
-  cursor: not-allowed;
 }
 
 .status-span {
