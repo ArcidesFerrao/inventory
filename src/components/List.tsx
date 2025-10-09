@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { DeleteButton } from "./DeleteButton";
+import { OrderWithSupplierOrders, PurchaseWithItems } from "@/types/types";
 
 type ProductsStockProps = {
   id: string;
@@ -107,6 +108,154 @@ export const ListSupplierItem = ({
           >
             <span className="mdi--edit"></span>
           </Link>
+        </div>
+      </div>
+    </li>
+  );
+};
+
+export const PurchaseListItem = ({
+  purchases,
+}: {
+  purchases: PurchaseWithItems;
+}) => {
+  return (
+    <li
+      key={purchases.id}
+      className="list-purchases flex flex-col gap-5 w-full"
+    >
+      <div className="purchase-header flex justify-between">
+        <div className="purchase-title flex flex-col gap-2">
+          <h3 className="flex gap-2 items-center text-xl font-medium">
+            Purchase
+            <p className="text-sm font-light ">
+              #{purchases.id.slice(0, 6)}...
+            </p>
+          </h3>
+          <div className="title-details flex gap-4">
+            <div className="flex gap-2">
+              <span>
+                <span className="formkit--date"></span>
+              </span>
+              <p className="text-sm font-light">
+                {purchases.date.toLocaleDateString()} ,{" "}
+                {purchases.date.toLocaleTimeString()}
+              </p>
+            </div>
+            {purchases.PurchaseItem.length > 1 && (
+              <div className="flex items-center gap-2">
+                <span>
+                  <span className="fluent--box-16-regular"></span>
+                </span>
+                <p className="text-sm font-light">
+                  {purchases.PurchaseItem.length} items
+                </p>
+              </div>
+            )}
+            <div>
+              <p className="text-sm font-light">{purchases.paymentType}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Total Amount</p>
+          <h2 className="text-lg font-medium">
+            MZN {purchases.total.toFixed(2)}
+          </h2>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Product</th>
+            <th>Unit Cost</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {purchases.PurchaseItem.map((i) => (
+            <tr key={i.id}>
+              <td>{i.stock}</td>
+              <td>{i.product?.name}</td>
+              <td>MZN {i.unitCost}.00</td>
+              <td>MZN {i.totalCost}.00</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </li>
+  );
+};
+
+export const OrderListItem = ({
+  order,
+}: {
+  order: OrderWithSupplierOrders;
+}) => {
+  const totalItemsOrdered = order.supplierOrders.reduce(
+    (supplierAcc, supplierOrder) => {
+      return (
+        supplierAcc +
+        supplierOrder.items.reduce(
+          (itemAcc, item) => itemAcc + item.orderedQty,
+          0
+        )
+      );
+    },
+    0
+  );
+  return (
+    <li key={order.id} className="list-orders flex justify-between">
+      <div className="flex flex-col gap-5">
+        <div className="order-header flex flex-col gap-2">
+          <h3 className="order-title flex gap-2 items-center text-xl font-medium">
+            Order
+            <p className="text-sm font-light ">#{order.id.slice(0, 6)}</p>
+          </h3>
+          <div className="order-info flex items-center gap-4">
+            <div className="flex gap-2 items-center">
+              <span>
+                <span className="formkit--date"></span>
+              </span>
+              <p className="text-sm font-light">
+                {order.createdAt.toLocaleDateString()},{" "}
+                {order.createdAt.toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="delivery-window flex flex-col gap-2">
+          <p className="text-sm font-light">Requested Delivery Window</p>
+          <div className=" flex gap-2">
+            <p className="text-md font-medium">
+              {order.requestedStartDate.toLocaleDateString()}
+            </p>
+            -
+            <p className="text-md font-medium">
+              {order.requestedEndDate.toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="order-status flex flex-col justify-between">
+        <div className="flex flex-col gap-2 items-end">
+          <button disabled className="text-sm">
+            {order.status}
+          </button>
+          <div className="flex items-center gap-2 text-sm font-light">
+            <span className="flex items-center">
+              <span className="fluent--box-16-regular"></span>
+            </span>
+            {totalItemsOrdered}
+            <p className="">items</p>
+          </div>
+        </div>
+        <div className="order-amount text-end">
+          <p className="text-sm ">Order Total</p>
+          <h2 className="text-lg font-semibold">
+            MZN {order.total.toFixed(2)}
+          </h2>
         </div>
       </div>
     </li>

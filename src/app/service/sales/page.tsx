@@ -18,16 +18,42 @@ export default async function SalesPage() {
   return (
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-medium">Recent Sales</h2>
-        <div className="flex">
-          <h2 className="text-lg font-bold">Total Sales:</h2>
-          <p className="text-lg font-bold px-2">
-            MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
+        <div className="sales-title">
+          <h2 className="text-2xl font-medium">Recent Sales</h2>
+          <p className="text-md font-extralight">
+            Track and manage your sales transactions
           </p>
         </div>
         <Link href="/service/sales/new" className="add-product flex gap-1">
-          <span className="text-md px-2">Sell</span>
+          <span className="text-md px-2">New Sale</span>
         </Link>
+      </div>
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <p>Total Sales</p>
+          <h2 className="text-xl font-bold">{sales.length}</h2>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Revenue</p>
+          <h2 className="text-xl font-bold">
+            MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
+          </h2>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Cogs</p>
+          <h2 className="text-xl font-bold">
+            MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0)}.00
+          </h2>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Gross Profit</p>
+          <h2 className="text-xl font-bold">
+            MZN{" "}
+            {sales.reduce((acc, sale) => acc + sale.total, 0) -
+              sales.reduce((acc, sale) => acc + sale.cogs, 0)}
+            .00
+          </h2>
+        </div>
       </div>
       {sales.length === 0 ? (
         <p>No sales found...</p>

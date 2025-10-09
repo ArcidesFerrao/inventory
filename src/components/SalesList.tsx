@@ -140,7 +140,7 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
           <h3 className="text-md font-medium underline">Bebidas</h3>
           <ul>
             {products.map((product) => {
-              if (product.Category?.name === "Bebida")
+              if (product.Category?.name === "Bebidas")
                 return (
                   <li
                     key={product.id}

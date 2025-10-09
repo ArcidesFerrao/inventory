@@ -93,6 +93,8 @@ input {
 }
 
 /* input:read-only, */
+
+.complete-btn:disabled,
 input[type="submit"]:disabled {
   background-color: var(--foreground);
   border: solid 1px var(--input-bg);

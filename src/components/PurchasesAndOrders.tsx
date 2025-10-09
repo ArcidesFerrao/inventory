@@ -3,6 +3,7 @@
 import { OrderWithSupplierOrders, PurchaseWithItems } from "@/types/types";
 import Link from "next/link";
 import React, { useState } from "react";
+import { OrderListItem, PurchaseListItem } from "./List";
 
 export default function PurchasesAndOrders({
   purchases,
@@ -111,73 +112,9 @@ export default function PurchasesAndOrders({
           {purchases.length === 0 ? (
             <p>No purchases found...</p>
           ) : (
-            <ul className=" w-full">
+            <ul className="flex flex-col gap-2 w-full">
               {purchases.map((p) => (
-                <li
-                  key={p.id}
-                  className="list-purchases flex flex-col gap-5 w-full"
-                >
-                  <div className="purchase-header flex justify-between">
-                    <div className="purchase-title flex flex-col gap-2">
-                      <h3 className="flex gap-2 items-center text-xl font-medium">
-                        Purchase
-                        <p className="text-sm font-light ">
-                          #{p.id.slice(0, 6)}...
-                        </p>
-                      </h3>
-                      <div className="title-details flex gap-4">
-                        <div className="flex gap-2">
-                          <span>
-                            <span className="formkit--date"></span>
-                          </span>
-                          <p className="text-sm font-light">
-                            {p.date.toLocaleDateString()} ,{" "}
-                            {p.date.toLocaleTimeString()}
-                          </p>
-                        </div>
-                        {p.PurchaseItem.length > 1 && (
-                          <div className="flex items-center gap-2">
-                            <span>
-                              <span className="fluent--box-16-regular"></span>
-                            </span>
-                            <p className="text-sm font-light">
-                              {p.PurchaseItem.length} items
-                            </p>
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-sm font-light">{p.paymentType}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <p>Total Amount</p>
-                      <h2 className="text-lg font-medium">
-                        MZN {p.total.toFixed(2)}
-                      </h2>
-                    </div>
-                  </div>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Quantity</th>
-                        <th>Product</th>
-                        <th>Unit Cost</th>
-                        <th>Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {p.PurchaseItem.map((i) => (
-                        <tr key={i.id}>
-                          <td>{i.stock}</td>
-                          <td>{i.product?.name}</td>
-                          <td>MZN {i.unitCost}.00</td>
-                          <td>MZN {i.totalCost}.00</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </li>
+                <PurchaseListItem key={p.id} purchases={p} />
               ))}
             </ul>
           )}
@@ -198,24 +135,6 @@ export default function PurchasesAndOrders({
             </div>
           </div>
 
-          {/* <div className="orders-filter flex gap-4">
-            <div className="flex gap-5 items-center justify-between">
-            <p>All</p>
-              <span className="filter-order">{orders.length}</span>
-              </div>
-            <div className="flex gap-5 items-center justify-between">
-            <p>Draft</p>
-              <span className="filter-order">{orders.length}</span>
-            </div>
-            <div className="flex gap-5 items-center justify-between">
-            <p>Confirmed</p>
-            <span className="filter-order">{orders.length}</span>
-            </div>
-            <div className="flex gap-5 items-center justify-between">
-              <p>In Delivery</p>
-              <span className="filter-order">{orders.length}</span>
-            </div>
-            </div> */}
           {orders.length === 0 ? (
             <p>No orders found...</p>
           ) : (
@@ -253,84 +172,11 @@ export default function PurchasesAndOrders({
               {filteredOrders.length === 0 ? (
                 <p>No orders found...</p>
               ) : (
-                <>
-                  {filteredOrders.map((o) => {
-                    const totalItemsOrdered = o.supplierOrders.reduce(
-                      (supplierAcc, supplierOrder) => {
-                        return (
-                          supplierAcc +
-                          supplierOrder.items.reduce(
-                            (itemAcc, item) => itemAcc + item.orderedQty,
-                            0
-                          )
-                        );
-                      },
-                      0
-                    );
-                    return (
-                      <li
-                        key={o.id}
-                        className="list-orders flex justify-between"
-                      >
-                        <div className="flex flex-col gap-5">
-                          <div className="order-header flex flex-col gap-2">
-                            <h3 className="order-title flex gap-2 items-center text-xl font-medium">
-                              Order
-                              <p className="text-sm font-light ">
-                                #{o.id.slice(0, 6)}
-                              </p>
-                            </h3>
-                            <div className="order-info flex items-center gap-4">
-                              <div className="flex gap-2 items-center">
-                                <span>
-                                  <span className="formkit--date"></span>
-                                </span>
-                                <p className="text-sm font-light">
-                                  {o.createdAt.toLocaleDateString()},{" "}
-                                  {o.createdAt.toLocaleTimeString()}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="delivery-window flex flex-col gap-2">
-                            <p className="text-sm font-light">
-                              Requested Delivery Window
-                            </p>
-                            <div className=" flex gap-2">
-                              <p className="text-md font-medium">
-                                {o.requestedStartDate.toLocaleDateString()}
-                              </p>
-                              -
-                              <p className="text-md font-medium">
-                                {o.requestedEndDate.toLocaleDateString()}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="order-status flex flex-col justify-between">
-                          <div className="flex flex-col gap-2 items-end">
-                            <button disabled className="text-sm">
-                              {o.status}
-                            </button>
-                            <div className="flex items-center gap-2 text-sm font-light">
-                              <span className="flex items-center">
-                                <span className="fluent--box-16-regular"></span>
-                              </span>
-                              {totalItemsOrdered}
-                              <p className="">items</p>
-                            </div>
-                          </div>
-                          <div className="order-amount text-end">
-                            <p className="text-sm ">Order Total</p>
-                            <h2 className="text-lg font-semibold">
-                              MZN {o.total.toFixed(2)}
-                            </h2>
-                          </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </>
+                <ul className="flex flex-col gap-2">
+                  {filteredOrders.map((o) => (
+                    <OrderListItem key={o.id} order={o} />
+                  ))}
+                </ul>
               )}
             </ul>
           )}
