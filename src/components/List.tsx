@@ -331,3 +331,37 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
     </li>
   );
 };
+
+export default function LogListItem({
+  id,
+  actionType,
+  entityType,
+  description,
+  timestamp,
+}: {
+  id: string;
+  actionType: string;
+  entityType: string;
+  description: string;
+  timestamp: Date;
+}) {
+  return (
+    <li className="flex justify-between items-center">
+      <div className="flex flex-col gap-2">
+        <div className="log-info flex gap-2 items-center">
+          <span>{actionType}</span>
+          <span>{entityType}</span>
+        </div>
+        <p className="log-desc ">{description}</p>
+        <div className="log-date flex gap-2 items-center">
+          <p>{timestamp.toLocaleDateString()}</p>
+          <p>{timestamp.toLocaleTimeString()}</p>
+        </div>
+      </div>
+      <div>
+        <span>log-type</span>
+        <Link href={`services/activityLogs/${id}`}>View</Link>
+      </div>
+    </li>
+  );
+}
