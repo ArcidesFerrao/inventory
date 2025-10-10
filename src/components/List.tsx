@@ -35,7 +35,7 @@ export const ListStockItem = ({
   return (
     <li key={id} className="listing-item flex p-4 justify-between">
       <div className="flex flex-col gap-4 justify-between ">
-        <Link href={`/supply/products/${id}`}>
+        <Link href={`/service/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
         <p className="text-sm font-light">Quantity: {stock}</p>
@@ -59,7 +59,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
   return (
     <li key={id} className="listing-item flex p-4 justify-between">
       <div className="flex flex-col gap-4 justify-between ">
-        <Link href={`/supply/products/${id}`}>
+        <Link href={`/service/products/${id}`}>
           <h3 className="text-md font-medium">{name}</h3>
         </Link>
       </div>
@@ -81,7 +81,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
 export const ListDrinkItem = ({ id, name, price }: ProductsProps) => {
   return (
     <li key={id} className="flex gap-4 justify-between py-1">
-      <Link href={`/supply/products/${id}`}>
+      <Link href={`/service/products/${id}`}>
         <h4 className="text-md font-light hover:underline">{name}</h4>
       </Link>
       <h2 className="text-md font-semibold ">MZN {price},00</h2>

@@ -369,3 +369,9 @@ nav {
   border: 1px solid var(--border-list);
   border-radius: 0.16rem;
 }
+
+.recipe-items-list,
+.product-detail-desc {
+  background-color: var(--input-bg);
+  border-radius: 0.4rem;
+}
