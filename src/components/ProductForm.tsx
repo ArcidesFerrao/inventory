@@ -139,7 +139,7 @@ export const ProductForm = ({
           )}
         </div>
         <div className="flex gap-2 justify-between">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             <label htmlFor="type">Type</label>
             <select
               name="type"
@@ -158,57 +158,67 @@ export const ProductForm = ({
             )}
           </div>
           <div className="flex flex-col gap-1 w-1/3">
-            <label htmlFor="unitQty">Unit Quantity</label>
             {type === "SERVICE" ? (
-              <input
-                type="number"
-                name="unitQty"
-                id="quantity"
-                min={1}
-                defaultValue={1}
-                readOnly
-              />
+              <div hidden className="flex flex-col gap-2">
+                <label htmlFor="unitQty">Unit Quantity</label>
+                <input
+                  type="number"
+                  name="unitQty"
+                  id="quantity"
+                  min={1}
+                  defaultValue={1}
+                  readOnly
+                />
+              </div>
             ) : (
-              <input
-                type="number"
-                name="unitQty"
-                id="unitQty"
-                defaultValue={product?.unitQty ?? 1}
-              />
+              <div className="flex flex-col gap-2">
+                <label htmlFor="unitQty">Unit Quantity</label>
+                <input
+                  type="number"
+                  name="unitQty"
+                  id="unitQty"
+                  defaultValue={product?.unitQty ?? 1}
+                />
+              </div>
             )}
             {fields.unitQty.errors && (
               <p className="text-xs font-light">{fields.unitQty.errors}</p>
             )}
           </div>
           <div className="flex flex-col gap-1">
-            <label htmlFor="unit">Unit</label>
             {type === "SERVICE" ? (
-              <select
-                name="unitId"
-                id="unitId"
-                value={units.find((u) => u.name === "pcs")?.id}
-                disabled
-              >
-                <option value="" disabled>
-                  Select a unit
-                </option>
-                {units.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
-                    {unit.name}
+              <div hidden className="flex flex-col">
+                <label htmlFor="unit">Unit</label>
+                <select
+                  name="unitId"
+                  id="unitId"
+                  value={units.find((u) => u.name === "pcs")?.id}
+                  disabled
+                >
+                  <option value="" disabled>
+                    Select a unit
                   </option>
-                ))}
-              </select>
+                  {units.map((unit) => (
+                    <option key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             ) : (
-              <select name="unitId" id="unitId">
-                <option value="" disabled>
-                  Select a unit
-                </option>
-                {units.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
-                    {unit.name}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="unit">Unit</label>
+                <select name="unitId" id="unitId">
+                  <option value="" disabled>
+                    Select a unit
                   </option>
-                ))}
-              </select>
+                  {units.map((unit) => (
+                    <option key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
 
             {fields.Unit.errors && (
@@ -217,10 +227,10 @@ export const ProductForm = ({
           </div>
         </div>
         <div className="flex gap-2 justify-between">
-          <div className="flex flex-col gap-1">
+          <div hidden className="flex flex-col gap-1">
             <label htmlFor="stock">Stock Quantity</label>
             <input
-              type="number"
+              type="hidden"
               name="stock"
               id="stock"
               min={0}

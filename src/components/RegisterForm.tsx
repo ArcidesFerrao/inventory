@@ -92,7 +92,9 @@ export const ServiceRegisterForm = () => {
           >
             <option value="RESTAURANT">Restaurant</option>
             <option value="SHOP">Shop</option>
-            <option value="TAKEAWAY">Take Away</option>
+            <option value="STORE">Store</option>
+            <option value="SUPERMARKET">Super Market</option>
+            <option value="RETAIL">Retail</option>
           </select>
         </div>
         {fields.businessType.allErrors && <p>{fields.businessType.errors}</p>}
