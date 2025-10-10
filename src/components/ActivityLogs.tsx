@@ -12,22 +12,22 @@ export default function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
           <p>Total Logs</p>
-          <h2>{totalLogs}</h2>
+          <h2 className="text-xl font-bold">{totalLogs}</h2>
         </div>
         <div className="flex flex-col gap-2">
           <p>Info</p>
-          <h2>{infoLogs.length}</h2>
+          <h2 className="text-xl font-bold">{infoLogs.length}</h2>
         </div>
         <div className="flex flex-col gap-2">
           <p>Warnings</p>
-          <h2>{warningLogs.length}</h2>
+          <h2 className="text-xl font-bold">{warningLogs.length}</h2>
         </div>
         <div className="flex flex-col gap-2">
           <p>Errors</p>
-          <h2>{errorLogs.length}</h2>
+          <h2 className="text-xl font-bold">{errorLogs.length}</h2>
         </div>
       </div>
-      <ul>
+      <ul className="flex flex-col gap-2">
         {logs.map((log) => (
           <LogListItem
             key={log.id}

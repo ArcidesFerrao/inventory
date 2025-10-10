@@ -346,6 +346,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.list-logs,
 .list-orders,
 .list-purchases {
   border: var(--input-bg) 1px solid;
@@ -358,4 +359,13 @@ nav {
   padding: 0.4rem 0.6rem;
   border: 1px solid var(--border-list);
   border-radius: 0.4rem;
+}
+
+.severity-logs:hover {
+  border: 1px solid var(--divider);
+}
+.severity-logs {
+  background-color: var(--border-list);
+  border: 1px solid var(--border-list);
+  border-radius: 0.16rem;
 }

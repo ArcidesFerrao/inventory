@@ -30,7 +30,9 @@ export default async function ActivityLogs() {
     <div className="logs-section flex flex-col gap-4 w-full">
       <div className="log-title">
         <h1 className="text-2xl font-bold">Activity Logs</h1>
-        <p>Monitor all system activities and events</p>
+        <p className="text-md font-extralight">
+          Monitor all system activities and events
+        </p>
       </div>
 
       {!logs || logs.length === 0 ? (
