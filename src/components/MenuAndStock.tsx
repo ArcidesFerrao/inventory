@@ -89,7 +89,7 @@ export default function MenuAndStock({
                   </ul>
                 </section>
               </div>
-              <section className="drinks-list flex flex-col p-4 gap-2 max-w-72">
+              <section className="drinks-list flex flex-col p-4 gap-2 max-w-72 max-h-fit">
                 <h2 className="text-lg font-medium">Drinks</h2>
                 {/* <h2 className="text-lg font-medium">Bebidas</h2> */}
                 <ul className="flex flex-col">

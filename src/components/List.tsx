@@ -41,7 +41,7 @@ export const ListStockItem = ({
         <p className="text-sm font-light">Quantity: {stock}</p>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <h2 className="text-lg font-bold ">MZN {price},00</h2>
+        <h2 className="text-lg font-bold  text-nowrap">MZN {price},00</h2>
         {/* <div className="flex gap-2">
           <DeleteButton productId={id} />
           <Link
@@ -64,7 +64,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
         </Link>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <h2 className="text-lg font-bold ">MZN {price},00</h2>
+        <h2 className="text-lg font-bold text-nowrap ">MZN {price},00</h2>
         {/* <div className="flex gap-2">
           <DeleteButton productId={id} />
           <Link
@@ -84,7 +84,7 @@ export const ListDrinkItem = ({ id, name, price }: ProductsProps) => {
       <Link href={`/service/products/${id}`}>
         <h4 className="text-md font-light hover:underline">{name}</h4>
       </Link>
-      <h2 className="text-md font-semibold ">MZN {price},00</h2>
+      <h2 className="text-md font-semibold  text-nowrap">MZN {price},00</h2>
     </li>
   );
 };
@@ -103,7 +103,7 @@ export const ListSupplierItem = ({
         <span className="text-sm font-light">Qty: {qty}</span>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <h2 className="text-xl font-bold ">MZN {price},00</h2>
+        <h2 className="text-xl font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
           <DeleteButton productId={id} />
           <Link
@@ -163,7 +163,7 @@ export const PurchaseListItem = ({
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-medium">
+          <h2 className="text-lg font-medium  text-nowrap">
             MZN {purchases.total.toFixed(2)}
           </h2>
         </div>
@@ -257,7 +257,7 @@ export const OrderListItem = ({
         </div>
         <div className="order-amount text-end">
           <p className="text-sm ">Order Total</p>
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-lg font-semibold  text-nowrap">
             MZN {order.total.toFixed(2)}
           </h2>
         </div>
@@ -305,7 +305,9 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-medium">MZN {sale.total.toFixed(2)}</h2>
+          <h2 className="text-lg font-medium  text-nowrap">
+            MZN {sale.total.toFixed(2)}
+          </h2>
         </div>
       </div>
       <table>
