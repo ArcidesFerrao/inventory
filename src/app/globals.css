@@ -50,7 +50,7 @@ header {
   /* background-color: var(--accent); */
   /* border: var(--border) 2px solid; */
   /* border-radius: 0.2rem; */
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 th {
@@ -158,8 +158,8 @@ form p a:hover {
 
 .add-product {
   padding: 0.4rem 1rem;
-  border: solid 1px var(--foreground);
   border-radius: 0.4rem;
+  border: solid 1px var(--input-bg);
   background-color: var(--input-bg);
   height: fit-content;
 }
@@ -169,6 +169,8 @@ form p a:hover {
 .edit-button:hover,
 .submit-button:hover,
 .add-product:hover {
+  translate: 0 -2px;
+  border: solid 1px var(--foreground);
   background-color: var(--accent);
 }
 

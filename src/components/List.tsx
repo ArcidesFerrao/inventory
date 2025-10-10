@@ -41,8 +41,8 @@ export const ListStockItem = ({
         <p className="text-sm font-light">Quantity: {stock}</p>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <h2 className="text-xl font-bold ">MZN {price},00</h2>
-        <div className="flex gap-2">
+        <h2 className="text-lg font-bold ">MZN {price},00</h2>
+        {/* <div className="flex gap-2">
           <DeleteButton productId={id} />
           <Link
             className="edit-button p-2 flex "
@@ -50,7 +50,7 @@ export const ListStockItem = ({
           >
             <span className="mdi--edit"></span>
           </Link>
-        </div>
+        </div> */}
       </div>
     </li>
   );
@@ -60,12 +60,12 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
     <li key={id} className="listing-item flex p-4 justify-between">
       <div className="flex flex-col gap-4 justify-between ">
         <Link href={`/supply/products/${id}`}>
-          <h3 className="text-lg font-medium">{name}</h3>
+          <h3 className="text-md font-medium">{name}</h3>
         </Link>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <h2 className="text-xl font-bold ">MZN {price},00</h2>
-        <div className="flex gap-2">
+        <h2 className="text-lg font-bold ">MZN {price},00</h2>
+        {/* <div className="flex gap-2">
           <DeleteButton productId={id} />
           <Link
             className="edit-button p-2 flex "
@@ -73,7 +73,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
           >
             <span className="mdi--edit"></span>
           </Link>
-        </div>
+        </div> */}
       </div>
     </li>
   );
@@ -215,7 +215,7 @@ export const OrderListItem = ({
         <div className="order-header flex flex-col gap-2">
           <h3 className="order-title flex gap-2 items-center text-xl font-medium">
             Order
-            <p className="text-sm font-light ">#{order.id.slice(0, 6)}</p>
+            <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
           </h3>
           <div className="order-info flex items-center gap-4">
             <div className="flex gap-2 items-center">
@@ -244,7 +244,7 @@ export const OrderListItem = ({
       </div>
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">
-          <button disabled className="text-sm">
+          <button disabled className="text-xs">
             {order.status}
           </button>
           <div className="flex items-center gap-2 text-sm font-light">
