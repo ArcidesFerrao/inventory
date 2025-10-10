@@ -338,12 +338,14 @@ export default function LogListItem({
   entityType,
   description,
   timestamp,
+  severity,
 }: {
   id: string;
   actionType: string;
   entityType: string;
   description: string;
   timestamp: Date;
+  severity: string;
 }) {
   return (
     <li className="flex justify-between items-center">
@@ -359,7 +361,7 @@ export default function LogListItem({
         </div>
       </div>
       <div>
-        <span>log-type</span>
+        <span>{severity}</span>
         <Link href={`services/activityLogs/${id}`}>View</Link>
       </div>
     </li>
