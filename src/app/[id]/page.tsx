@@ -2,6 +2,7 @@ import { LogOutButton } from "@/components/LogOutButton";
 import { db } from "@/lib/db";
 import authCheck from "@/lib/authCheck";
 import { redirect } from "next/navigation";
+import UserProfile from "@/components/UserProfile";
 type Params = Promise<{ id: string }>;
 
 export default async function UserPage(props: { params: Params }) {
@@ -17,26 +18,32 @@ export default async function UserPage(props: { params: Params }) {
     where: {
       id,
     },
+    include: {
+      Service: true,
+      Supplier: true,
+    },
   });
 
   if (!user) {
-    <section className="user-page flex flex-col items-center w-full">
-      <p>User not found</p>
-    </section>;
+    return (
+      <section className="user-page flex flex-col items-center w-full">
+        <p>User not found</p>
+      </section>
+    );
   }
 
   return (
-    <section className="user-page flex flex-col ">
+    <section className="user-page flex flex-col gap-5">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-semibold">{user?.name}</h2>
-          <div className="font-light text-xs">
-            <p>User Id: {id} </p>
-            <p></p>
-          </div>
+          <h2 className="text-3xl font-semibold">{user.name}</h2>
+          <p className="text-xs font-extralight">
+            User Id: {id.slice(0, 5)}...{" "}
+          </p>
         </div>
         <LogOutButton />
       </div>
+      <UserProfile user={user} />
     </section>
   );
 }

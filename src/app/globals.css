@@ -378,3 +378,15 @@ nav {
   background-color: var(--input-bg);
   border-radius: 0.4rem;
 }
+
+.profile-sections button {
+  background: none;
+  color: var(--divider);
+  border-radius: 0;
+  border-bottom: 1px solid var(--dash-bg);
+}
+.profile-sections button:hover {
+  background: none;
+  color: var(--foreground);
+  border-bottom: 1px solid var(--divider);
+}

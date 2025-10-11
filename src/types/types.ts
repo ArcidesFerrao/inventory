@@ -1,4 +1,4 @@
-import { ActivityLog, BusinessType, Category, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  SupplierOrder } from "@prisma/client";
+import { ActivityLog, BusinessType, Category, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier,  SupplierOrder, User } from "@prisma/client";
 
 
 export type ProductWithMenuItems = Product & {
@@ -61,4 +61,9 @@ export type ActivityLogsWithService = ActivityLog & {
   Service: {
     id: string; businessName: string; businessType: BusinessType;
   } | null
+}
+
+export type UserProfile = User & {
+  Service: Service | null;
+  Supplier: Supplier | null;
 }
