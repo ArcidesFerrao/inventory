@@ -235,8 +235,11 @@ nav {
 }
 
 .user-page {
-  padding: 1rem;
+  border-radius: 0.4rem;
+  padding: 2rem;
+  margin: 1rem;
   min-height: 80vh;
+  background-color: var(--accent);
 }
 
 .home-dash {
