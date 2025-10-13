@@ -4,6 +4,7 @@ import { getCategories } from "@/app/actions/categories";
 import {
   createProduct,
   createSupplierProduct,
+  editSupplierProduct,
   getProducts,
 } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
@@ -358,7 +359,9 @@ export const SupplierProductForm = ({
   supplierProduct?: SupplierProductWithUnit | null;
   supplierId: string;
 }) => {
-  const actionFn = supplierProduct ? editProduct : createSupplierProduct;
+  const actionFn = supplierProduct
+    ? editSupplierProduct
+    : createSupplierProduct;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -443,13 +446,17 @@ export const SupplierProductForm = ({
               <select
                 name="unitId"
                 id="unitId"
-                value={supplierProduct?.unitId || ""}
+                // value={supplierProduct?.unitId || ""}
               >
                 <option value="" disabled>
                   Select a unit
                 </option>
                 {units.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
+                  <option
+                    key={unit.id}
+                    value={unit.id}
+                    defaultChecked={unit.id === supplierProduct?.unitId}
+                  >
                     {unit.name}
                   </option>
                 ))}

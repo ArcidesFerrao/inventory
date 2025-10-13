@@ -217,3 +217,23 @@ export async function editSupplierProduct(prevState: unknown, formData: FormData
         } satisfies SubmissionResult<string[]>
     }
 }
+
+export async function deleteSupplierProduct(supplierProductId: string) {
+
+    try {
+        await db.supplierProduct.delete({
+            where: {
+                id: supplierProductId,
+            }
+        });
+
+        return {status: "success"}
+    } catch (error) {
+        console.error("Failed to delete Supplier Product", error);
+        return {
+            status: "error",
+            error: { general: ["Failed to delete Supplier Product"]}
+        } satisfies SubmissionResult<string[]>
+    }
+
+}

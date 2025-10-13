@@ -3,7 +3,49 @@
 import React, { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import ConfirmDialog from "./ConfirmDialog";
+import { deleteSupplierProduct } from "@/app/actions/product";
 
+export const SupplierProductDeleteButton = ({
+  supplierProductId,
+}: {
+  supplierProductId: string;
+}) => {
+  const [isPending, startTransition] = useTransition();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const handleDelete = () => {
+    startTransition(async () => {
+      const res = await deleteSupplierProduct(supplierProductId);
+
+      if (res.status === "success") {
+        toast.success("Supplier Product deleted successfully");
+        window.location.reload();
+      } else {
+        const error = await res.error;
+        toast.error("something went wrong!");
+        console.log("Error deleting product: ", error);
+      }
+    });
+  };
+
+  return (
+    <>
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        onConfirm={handleDelete}
+        onCancel={() => setIsDialogOpen(false)}
+        title="Delete this product?"
+        description="This cannot be undone."
+      />
+      <button
+        onClick={() => setIsDialogOpen(true)}
+        disabled={isPending}
+        className="delete-button px-3 py-2 flex items-center"
+      >
+        <span className="mdi--delete"></span>
+      </button>
+    </>
+  );
+};
 export const DeleteButton = ({ productId }: { productId: string }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);

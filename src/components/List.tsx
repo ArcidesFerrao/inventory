@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { DeleteButton } from "./DeleteButton";
+import { SupplierProductDeleteButton } from "./DeleteButton";
 import {
   OrderWithSupplierOrders,
   PurchaseWithItems,
@@ -105,7 +105,7 @@ export const ListSupplierItem = ({
       <div className="flex flex-col items-end gap-2">
         <h2 className="text-xl font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
-          <DeleteButton productId={id} />
+          <SupplierProductDeleteButton supplierProductId={id} />
           <Link
             className="edit-button p-2 flex "
             href={`/supply/products/${id}/edit`}

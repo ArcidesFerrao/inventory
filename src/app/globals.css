@@ -172,6 +172,7 @@ form p a:hover {
 .submit-button:hover,
 .add-product:hover {
   translate: 0 -2px;
+  border-radius: 0;
   border: solid 1px var(--foreground);
   background-color: var(--accent);
 }
