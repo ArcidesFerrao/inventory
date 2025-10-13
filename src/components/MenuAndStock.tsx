@@ -20,9 +20,9 @@ export default function MenuAndStock({
   const menuProducts = products.filter((p) => p.type === "SERVICE");
   const stockProducts = products.filter((p) => p.type === "STOCK");
 
-  const lanche = menuProducts.filter((p) => p.Category?.name === "Lanche");
-  const bebidas = menuProducts.filter((p) => p.Category?.name === "Bebidas");
-  const refeicao = menuProducts.filter((p) => p.Category?.name === "Refeicao");
+  const lanche = menuProducts.filter((p) => p.Category?.name === "Lunch");
+  const bebidas = menuProducts.filter((p) => p.Category?.name === "Drink");
+  const refeicao = menuProducts.filter((p) => p.Category?.name === "Meal");
 
   return (
     <div className="flex flex-col gap-5 w-full">

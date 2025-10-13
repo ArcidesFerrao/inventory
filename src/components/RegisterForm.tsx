@@ -28,6 +28,17 @@ export const ServiceRegisterForm = () => {
   const [operationEnd, setOperationEnd] = useState("");
   const [businessType, setBusinessType] = useState("");
 
+  const handleWebsiteOnChange = (e: { target: { value: string } }) => {
+    let value = e.target.value.trim();
+
+    if (value) {
+      if (!value.match(/^https?:\/\//i)) {
+        value = `https://${value}`;
+      }
+    }
+
+    setWebsite(value);
+  };
   useEffect(() => {
     if (state?.status === "success") {
       toast.success("Service Registered Successfully!");
@@ -107,7 +118,7 @@ export const ServiceRegisterForm = () => {
             name="website"
             id="website"
             value={website}
-            onChange={(e) => setWebsite(e.target.value)}
+            onChange={handleWebsiteOnChange}
           />
         </div>
         {fields.website.allErrors && <p>{fields.website.errors}</p>}

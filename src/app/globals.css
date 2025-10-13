@@ -408,6 +408,7 @@ nav {
   padding: 2rem;
 }
 .details-section p,
+.products-selection p,
 .personal-section p {
   color: var(--divider);
 }

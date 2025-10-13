@@ -16,6 +16,7 @@ export default async function ServicePage() {
   if (!session.user.serviceId) {
     redirect("/register/service");
   }
+
   const stats = await getServiceDashBoardStats();
   const stockProducts = await getProducts(session.user.serviceId);
   const filteredProducts = stockProducts.filter(

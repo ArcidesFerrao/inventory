@@ -96,36 +96,36 @@ export const OrdersList = ({
   return (
     <>
       <div className="products-selection flex flex-col gap-4 w-full p-4">
-        <div className="flex flex-col">
-          <ul>
-            {products.map((product) => (
-              <li
-                key={product.id}
-                className="flex justify-between items-center py-2"
-              >
+        <ul>
+          {products.map((product) => (
+            <li
+              key={product.id}
+              className="flex justify-between items-center py-2"
+            >
+              <div>
                 <h3>{product.name}</h3>
-                <p className="text-xs font-extrathin">{product.supplierId}</p>
+                <p className="text-xs font-extrathin">
+                  Id: {product.supplierId.slice(0, 5)}...
+                </p>
+              </div>
 
-                <div className="flex gap-4 items-center max-w-6/12">
-                  <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                    <button onClick={() => handleDecrement(product.id)}>
-                      -
-                    </button>
-                    <span className="w-12 text-center">{product.quantity}</span>
-                    <button onClick={() => handleIncrement(product.id)}>
-                      +
-                    </button>
-                  </div>
-                  <span className="min-w-28">
-                    <p>
-                      {((product.price ?? 0) * product.quantity).toFixed(2)} MZN
-                    </p>
+              <div className="flex gap-4 items-center max-w-6/12">
+                <div className="amount-btn flex gap-2 items-center px-2">
+                  <button onClick={() => handleDecrement(product.id)}>-</button>
+                  <span className="w-12 text-center text-sm">
+                    {product.quantity}
                   </span>
+                  <button onClick={() => handleIncrement(product.id)}>+</button>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+                <span className="min-w-28">
+                  <p>
+                    {((product.price ?? 0) * product.quantity).toFixed(2)} MZN
+                  </p>
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="order-summary flex flex-col gap-4 w-1/3">
         <h2 className="text-xl font-medium">Order Summary</h2>
