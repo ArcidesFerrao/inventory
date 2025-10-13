@@ -22,7 +22,7 @@ export default function LoginPage() {
     console.log(loginValue, password);
 
     if (res?.error) {
-      setError("Invalid creadentials:");
+      setError(`Invalid credentials: ${res.error}`);
     } else {
       setError("");
       router.push("/");
