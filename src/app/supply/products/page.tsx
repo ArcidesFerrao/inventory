@@ -18,30 +18,47 @@ export default async function ProductsPage() {
   });
 
   return (
-    <div className="products-list flex flex-col gap-4 w-full">
+    <div className="products-list flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-medium">Products</h2>
+        <div className="list-title">
+          <h2 className="text-2xl font-medium">Products</h2>
+          <p className="text-md font-extralight">
+            Manage your product catalog and inventory
+          </p>
+        </div>
         <Link href="/supply/products/new" className="add-product flex gap-1">
           <span>+</span>
           <span className="text-md">Product</span>
         </Link>
       </div>
+      <div className="state-products flex justify-between w-full">
+        <div>
+          <p>Total Products</p>
+          <h2 className="text-2xl font-medium">{products.length}</h2>
+        </div>
+        <div>
+          <p>Low Stock</p>
+          <h2 className="text-2xl font-medium">2</h2>
+        </div>
+        <div>
+          <p>Out of Stock</p>
+          <h2 className="text-2xl font-medium">1</h2>
+        </div>
+      </div>
       {products.length === 0 ? (
         <p>No products found...</p>
       ) : (
-        <div className="menu-products flex justify-between gap-8">
-          <ul className="flex flex-col gap-4">
-            {products.map((item) => (
-              <ListSupplierItem
-                id={item.id}
-                name={item.name}
-                price={item.price || 0}
-                qty={item.stock || 0}
-                key={item.id}
-              />
-            ))}
-          </ul>
-        </div>
+        <ul className="flex flex-col gap-4 w-full">
+          {products.map((item) => (
+            <ListSupplierItem
+              id={item.id}
+              name={item.name}
+              price={item.price || 0}
+              qty={item.stock || 0}
+              key={item.id}
+            />
+          ))}
+        </ul>
       )}
     </div>
   );

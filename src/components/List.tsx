@@ -95,14 +95,14 @@ export const ListSupplierItem = ({
   qty,
 }: SupplierProductsProps) => {
   return (
-    <li key={id} className="listing-item flex p-4 justify-between">
-      <div className="flex flex-col gap-4 justify-between ">
+    <li key={id} className="supplier-item flex p-4 justify-between">
+      <div className="flex gap-4 justify-between items-center ">
         <Link href={`/supply/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
         <span className="text-sm font-light">Qty: {qty}</span>
       </div>
-      <div className="flex flex-col items-end gap-2">
+      <div className="flex items-center gap-5">
         <h2 className="text-xl font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
           <SupplierProductDeleteButton supplierProductId={id} />

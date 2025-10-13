@@ -187,6 +187,11 @@ li a {
   border-radius: 0.4rem;
 }
 
+.supplier-item {
+  background-color: var(--input-bg);
+  border-radius: 0.4rem;
+}
+
 .drinks-list {
   background-color: var(--input-bg);
   border-radius: 0.4rem;
