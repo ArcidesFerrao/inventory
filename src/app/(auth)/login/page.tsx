@@ -3,7 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
@@ -13,9 +13,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  if (session?.user && status === "authenticated") {
-    router.push(`/${session.user.id}`);
-  }
+  useEffect(() => {
+    if (session?.user && status === "authenticated") {
+      router.push(`/${session.user.id}`);
+    }
+  }, [session, status, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
