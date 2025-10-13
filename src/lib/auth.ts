@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
 
                 const user = await db.user.findFirst({
                     where: {
-                        OR: [{ email: credentials.loginValue },
+                        OR: [{ email: credentials.loginValue.toLowerCase() },
                             { phoneNumber: credentials.loginValue}
                         ]}
                 })

@@ -1,15 +1,21 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function LoginPage() {
+  const { data: session, status } = useSession();
+
   const [loginValue, setLoginValue] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  if (session?.user && status === "authenticated") {
+    router.push(`/${session.user.id}`);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +34,10 @@ export default function LoginPage() {
       router.push("/");
     }
   };
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
       <h1 className="text-2xl text-center">Login</h1>

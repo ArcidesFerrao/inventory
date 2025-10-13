@@ -20,7 +20,7 @@ export async function POST(req: Request) {
             return new NextResponse("Email already in use", { status: 400 });
         }
         const existingPhoneNumberUser = await db.user.findUnique({
-            where: { email },
+            where: { phoneNumber: phonenumber },
         });
 
         if (existingPhoneNumberUser) {
