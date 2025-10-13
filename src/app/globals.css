@@ -156,6 +156,7 @@ form p a:hover {
   border-radius: 0.2rem;
 }
 
+.user-header a,
 .add-product {
   padding: 0.4rem 1rem;
   border-radius: 0.4rem;
@@ -164,6 +165,7 @@ form p a:hover {
   height: fit-content;
 }
 
+.user-header a:hover,
 .complete-btn:hover,
 .delete-button:hover,
 .edit-button:hover,
@@ -290,6 +292,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+/* .user-header a, */
 .order-status button,
 .purchase-list button,
 .deliveries-details button,
@@ -308,6 +311,7 @@ nav {
   background-color: var(--border-list);
 }
 
+.user-header a:hover,
 .purchase-list button:hover,
 .schedule-button:hover,
 .delivery-btn:hover,

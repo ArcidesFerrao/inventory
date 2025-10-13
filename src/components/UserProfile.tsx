@@ -1,6 +1,7 @@
 "use client";
 
 import type { UserProfile } from "@/types/types";
+import Link from "next/link";
 import React, { useState } from "react";
 
 export default function UserProfile({ user }: { user: UserProfile }) {
@@ -10,17 +11,22 @@ export default function UserProfile({ user }: { user: UserProfile }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="profile-sections">
-        <button onClick={() => setView("personal")}>
-          Personal Information
-        </button>
-        {user.Service && (
-          <button onClick={() => setView("detail")}>Service Details</button>
-        )}
-        {user.Supplier && (
-          <button onClick={() => setView("detail")}>Supplier Details</button>
-        )}
-        <button onClick={() => setView("security")}>Security</button>
+      <div className="user-header flex justify-between items-center">
+        <div className="profile-sections">
+          <button onClick={() => setView("personal")}>
+            Personal Information
+          </button>
+          {user.Service && (
+            <button onClick={() => setView("detail")}>Service Details</button>
+          )}
+          {user.Supplier && (
+            <button onClick={() => setView("detail")}>Supplier Details</button>
+          )}
+          <button onClick={() => setView("security")}>Security</button>
+        </div>
+        <Link href="/supply">
+          <span>Supplier Dashboard</span>
+        </Link>
       </div>
       {view === "personal" && (
         <div className="personal-section flex flex-col gap-5">
