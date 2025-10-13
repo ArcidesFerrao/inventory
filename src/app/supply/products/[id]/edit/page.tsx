@@ -20,16 +20,24 @@ export default async function EditSupplierProductPage(props: {
 
   return (
     <div className="flex flex-col gap-2 items-center w-full">
-      <h1 className="text-xl font-semibold">Edit Product: {id}</h1>
+      <div className="flex flex-col items-center">
+        <h1 className="text-xl font-semibold">Edit Product</h1>
+        <p className="text-xs font-extralight">Id: {id}</p>
+      </div>
       <SupplierProductForm
-        product={{
+        supplierProduct={{
           ...product,
           quantity: product.unitQty,
           type: "SUPPLY",
           Unit: product.Unit
-            ? { id: product.Unit.id, name: product.Unit.name }
-            : undefined,
+            ? {
+                id: product.Unit.id,
+                name: product.Unit.name,
+                description: product.Unit.description,
+              }
+            : null,
         }}
+        supplierId={product.supplierId}
       />
     </div>
   );

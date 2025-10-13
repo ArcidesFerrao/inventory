@@ -22,6 +22,8 @@ type SupplierProductWithUnit = SupplierProduct & {
     id: string;
     description: string | null;
   } | null;
+  type: "SUPPLY" | "STOCK" | "SERVICE";
+  quantity: number;
 };
 
 type ProductWithUnit = Product & {
@@ -353,7 +355,7 @@ export const SupplierProductForm = ({
   supplierProduct,
   supplierId,
 }: {
-  supplierProduct?: SupplierProductWithUnit;
+  supplierProduct?: SupplierProductWithUnit | null;
   supplierId: string;
 }) => {
   const actionFn = supplierProduct ? editProduct : createSupplierProduct;
@@ -438,7 +440,11 @@ export const SupplierProductForm = ({
             </div>
             <div className="flex flex-col w-1/2 gap-1">
               <label htmlFor="unit">Unit</label>
-              <select name="unitId" id="unitId">
+              <select
+                name="unitId"
+                id="unitId"
+                value={supplierProduct?.unitId || ""}
+              >
                 <option value="" disabled>
                   Select a unit
                 </option>
