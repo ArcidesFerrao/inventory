@@ -24,9 +24,16 @@ export default function UserProfile({ user }: { user: UserProfile }) {
           )}
           <button onClick={() => setView("security")}>Security</button>
         </div>
-        <Link href="/supply">
-          <span>Supplier Dashboard</span>
-        </Link>
+        {user.Service && (
+          <Link href="/service">
+            <span>Service Dashboard</span>
+          </Link>
+        )}
+        {user.Supplier && (
+          <Link href="/supply">
+            <span>Supplier Dashboard</span>
+          </Link>
+        )}
       </div>
       {view === "personal" && (
         <div className="personal-section flex flex-col gap-5">
