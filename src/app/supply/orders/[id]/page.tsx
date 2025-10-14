@@ -141,10 +141,10 @@ export default async function OrderPage(props: { params: Params }) {
       </div>
       {supplierOrder?.order.confirmedDeliveries &&
         supplierOrder.order.confirmedDeliveries.length > 0 && (
-          <div className="deliveries-details flex flex-col gap-5 w-full">
+          <div className="deliveries-details flex flex-col gap-2 w-full">
             <h2 className="text-xl font-semibold">Deliveries</h2>
             {supplierOrder.order.confirmedDeliveries.map((d) => (
-              <div key={d.id} className="p-5 delivery-details">
+              <div key={d.id} className="p-4 delivery-details">
                 <div className="delivery-header flex justify-between">
                   <div className="delivery-info">
                     <h3 className="font-medium">Delivery #{d.id}</h3>
@@ -167,12 +167,12 @@ export default async function OrderPage(props: { params: Params }) {
                     {d.status}
                   </button>
                 </div>
-                <div className="delivery-items p-4">
+                <div className="delivery-items px-4 py-2">
                   <h4 className="font-medium">Items:</h4>
                   <ul className="flex flex-col gap-2">
                     {d.deliveryItems.map((item) => (
                       <li key={item.id}>
-                        <p className="text-md font-extralight">
+                        <p className="text-sm font-extralight">
                           - {item.orderItem.product.name} - Qty: {item.quantity}
                         </p>
                       </li>

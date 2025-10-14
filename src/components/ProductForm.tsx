@@ -374,6 +374,13 @@ export const SupplierProductForm = ({
   const router = useRouter();
 
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
+  const [unitId, setUnitId] = useState(supplierProduct?.unitId || "");
+
+  useEffect(() => {
+    if (supplierProduct?.unitId) {
+      setUnitId(supplierProduct.unitId);
+    }
+  }, [supplierProduct]);
 
   useEffect(() => {
     if (state?.status === "success") {
@@ -446,7 +453,8 @@ export const SupplierProductForm = ({
               <select
                 name="unitId"
                 id="unitId"
-                // value={supplierProduct?.unitId || ""}
+                value={unitId}
+                onChange={(e) => setUnitId(e.target.value)}
               >
                 <option value="" disabled>
                   Select a unit
@@ -455,7 +463,7 @@ export const SupplierProductForm = ({
                   <option
                     key={unit.id}
                     value={unit.id}
-                    defaultChecked={unit.id === supplierProduct?.unitId}
+                    // defaultChecked={unit.id === supplierProduct?.unitId}
                   >
                     {unit.name}
                   </option>

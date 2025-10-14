@@ -5,10 +5,10 @@
   --background: #14111a;
   --foreground: #f4f5fa;
   /* --divider: #f4f5fa80; */
-  --divider: #b9b4c74b;
+  --divider: rgba(180, 180, 200, 0.6);
   --accent: #00000066;
   --accent-fade: #303b2b4b;
-  --border: rgba(45, 45, 46, 0.719);
+  --border: rgba(45, 45, 46, 0.8);
   --hover-bg: #5c54709c;
   /* --border-list: #0000008a; */
   --list-bg: #13111aa9;
@@ -96,7 +96,7 @@ input {
 .dash-menu button {
   padding: 2rem;
   max-width: 12rem;
-  border: 1px solid var(--input-bg);
+  border: 1px solid var(--border-list);
 }
 
 /* input:read-only, */
@@ -254,7 +254,8 @@ nav {
   padding: 2rem;
   margin: 1rem;
   min-height: 80vh;
-  background-color: var(--accent);
+  /* background-color: var(--accent); */
+  background-color: var(--dash-bg);
 }
 
 .home-dash {
@@ -365,6 +366,7 @@ nav {
 }
 
 .delivery-details {
+  background-color: var(--border-list);
   border: 2px solid var(--input-bg);
   border-radius: 0.4rem;
 }
@@ -403,7 +405,7 @@ nav {
   background: none;
   color: var(--divider);
   border-radius: 0;
-  border-bottom: 1px solid var(--dash-bg);
+  border-bottom: 1px solid var(--divider);
 }
 .profile-sections button:hover {
   background: none;
