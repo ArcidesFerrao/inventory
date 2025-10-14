@@ -21,6 +21,7 @@ export default async function OrderPage(props: { params: Params }) {
       },
       order: {
         include: {
+          Service: true,
           confirmedDeliveries: {
             include: {
               deliveryItems: {
@@ -112,7 +113,9 @@ export default async function OrderPage(props: { params: Params }) {
         )}
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
-        <h2 className="text-xl font-semibold">Order Items</h2>
+        <h2 className="text-xl font-semibold">
+          Ordered Items by {supplierOrder?.order.Service?.businessName}
+        </h2>
 
         <table>
           <thead>

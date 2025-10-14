@@ -93,6 +93,13 @@ input {
   border-radius: 0.2rem;
 }
 
+.signup-form input,
+.login-form input {
+  background-color: var(--accent);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.2rem;
+}
+
 .dash-menu button {
   padding: 2rem;
   max-width: 12rem;

@@ -39,7 +39,7 @@ export default function SignUpPage() {
     }
   };
   return (
-    <form className="flex flex-col gap-4 " onSubmit={handleSubmit}>
+    <form className="signup-form flex flex-col gap-4 " onSubmit={handleSubmit}>
       <h1 className="text-2xl text-center">Create Account</h1>
       {error && <p>{error}</p>}
       <input

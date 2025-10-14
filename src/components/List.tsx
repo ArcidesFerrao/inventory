@@ -5,6 +5,7 @@ import {
   OrderWithSupplierOrders,
   PurchaseWithItems,
   SaleWithItems,
+  SupplierOrderWithOrderAndItems,
 } from "@/types/types";
 
 type ProductsStockProps = {
@@ -229,18 +230,21 @@ export const OrderListItem = ({
             </div>
           </div>
         </div>
-        <div className="delivery-window flex flex-col gap-2">
-          <p className="text-sm font-light">Requested Delivery Window</p>
-          <div className=" flex gap-2">
-            <p className="text-md font-medium">
-              {order.requestedStartDate.toLocaleDateString()}
-            </p>
-            -
-            <p className="text-md font-medium">
-              {order.requestedEndDate.toLocaleDateString()}
-            </p>
-          </div>
-        </div>
+        {order.status === "DRAFT" ||
+          (order.status === "PLACED" && (
+            <div className="delivery-window flex flex-col gap-2">
+              <p className="text-sm font-light">Requested Delivery Window</p>
+              <div className=" flex gap-2">
+                <p className="text-md font-medium">
+                  {order.requestedStartDate.toLocaleDateString()}
+                </p>
+                -
+                <p className="text-md font-medium">
+                  {order.requestedEndDate.toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          ))}
       </div>
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">
@@ -255,7 +259,7 @@ export const OrderListItem = ({
             <p className="">items</p>
           </div>
         </div>
-        <div className="order-amount text-end">
+        <div className="order-amount text-end py-2">
           <p className="text-sm ">Order Total</p>
           <h2 className="text-lg font-semibold  text-nowrap">
             MZN {order.total.toFixed(2)}
@@ -377,3 +381,77 @@ export default function LogListItem({
     </li>
   );
 }
+
+export const SupplierOrderListItem = ({
+  supplierOrder,
+}: {
+  supplierOrder: SupplierOrderWithOrderAndItems;
+}) => {
+  const totalItemsOrdered = supplierOrder.items.reduce(
+    (itemAcc, item) => itemAcc + item.orderedQty,
+    0
+  );
+  return (
+    <li key={supplierOrder.id} className="list-orders flex justify-between">
+      <div className="flex flex-col gap-5">
+        <div className="order-header flex flex-col gap-2">
+          <Link
+            href={`/supply/orders/${supplierOrder.id}`}
+            className="flex items-center gap-2"
+          >
+            <h3 className="order-title  text-xl font-medium">Order</h3>
+            <p className="text-xs font-light">
+              #{supplierOrder.id.slice(0, 6)}...
+            </p>
+          </Link>
+          <div className="order-info flex items-center gap-4">
+            <div className="flex gap-2 items-center">
+              <span className="flex items-center">
+                <span className="formkit--date"></span>
+              </span>
+              <p className="text-sm font-light">
+                {supplierOrder.order?.createdAt.toLocaleDateString()},{" "}
+                {supplierOrder.order?.createdAt.toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="delivery-window flex flex-col gap-2">
+          <p className="text-sm font-light">
+            {supplierOrder.order?.Service?.businessName} - Requested Delivery
+            Window
+          </p>
+          <div className=" flex gap-2">
+            <p className="text-md font-medium">
+              {supplierOrder.order?.requestedStartDate.toLocaleDateString()}
+            </p>
+            -
+            <p className="text-md font-medium">
+              {supplierOrder.order?.requestedEndDate.toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="order-status flex flex-col justify-between">
+        <div className="flex flex-col gap-2 items-end">
+          <button disabled className="text-xs">
+            {supplierOrder.status}
+          </button>
+          <div className="flex items-center gap-2 text-sm font-light">
+            <span className="flex items-center">
+              <span className="fluent--box-16-regular"></span>
+            </span>
+            {totalItemsOrdered}
+            <p className="">items</p>
+          </div>
+        </div>
+        <div className="order-amount text-end">
+          <p className="text-sm ">Order Total</p>
+          <h2 className="text-lg font-semibold  text-nowrap">
+            MZN {supplierOrder.order?.total.toFixed(2)}
+          </h2>
+        </div>
+      </div>
+    </li>
+  );
+};

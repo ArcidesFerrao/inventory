@@ -41,7 +41,7 @@ export default function LoginPage() {
     return <p>Loading...</p>;
   }
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 ">
+    <form onSubmit={handleSubmit} className="login-form flex flex-col gap-4 ">
       <h1 className="text-2xl text-center">Login</h1>
       <div className="flex flex-col gap-2">
         <label htmlFor="email">Email/PhoneNumber</label>
