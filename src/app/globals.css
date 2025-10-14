@@ -1,15 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #45474f;
+  /* --background: #45474f; */
+  --background: #14111a;
   --foreground: #f4f5fa;
-  --divider: #f4f5fa80;
+  /* --divider: #f4f5fa80; */
+  --divider: #b9b4c74b;
   --accent: #00000066;
   --accent-fade: #303b2b4b;
   --border: rgba(45, 45, 46, 0.719);
-  --border-list: #00000066;
-  --dash-bg: #2f2f2f;
-  --input-bg: rgba(32, 32, 32, 0.7);
+  --hover-bg: #5c54709c;
+  /* --border-list: #0000008a; */
+  --list-bg: #13111aa9;
+  --border-list: #13111aa9;
+  /* --dash-bg: #2f2f2f; */
+  --dash-bg: #4e475f70;
+  /* --input-bg: rgba(32, 32, 32, 0.7); */
+  --input-bg: #13111aa9;
 }
 
 /* @theme inline {
@@ -142,7 +149,7 @@ form p a:hover {
 .dash-menu button:hover,
 .login-button:hover,
 .navigator a:hover {
-  background-color: var(--border-list);
+  background-color: var(--hover-bg);
 }
 
 .is-active {
@@ -174,7 +181,7 @@ form p a:hover {
   translate: 0 -2px;
   border-radius: 0;
   border: solid 1px var(--foreground);
-  background-color: var(--accent);
+  background-color: var(--hover-bg);
 }
 
 li a {
@@ -273,7 +280,9 @@ nav {
 }
 
 .settings-page button:hover {
-  background-color: var(--accent);
+  /* background-color: var(--accent); */
+  background-color: var(--hover-bg);
+
   color: var(--foreground);
 }
 .settings-page button {
@@ -346,7 +355,8 @@ nav {
 }
 .delivery-item:hover {
   border-radius: 0;
-  background-color: var(--input-bg);
+  /* background-color: var(--input-bg); */
+  background-color: var(--hover-bg);
 }
 .delivery-item {
   background-color: var(--border-list);
@@ -362,10 +372,10 @@ nav {
 .list-logs,
 .list-orders,
 .list-purchases {
-  border: var(--input-bg) 1px solid;
+  border: var(--list-bg) 1px solid;
   padding: 1rem;
   border-radius: 0.4rem;
-  background-color: var(--input-bg);
+  background-color: var(--list-bg);
 }
 
 .orders-filter div {

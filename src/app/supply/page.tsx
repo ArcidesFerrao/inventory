@@ -68,7 +68,7 @@ export default async function SupplyPage() {
                 <div>
                   <h3 className="text-lg font-normal">Orders</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                    MZN {stats.orderCount}
+                    {stats.orderCount}
                   </h4>
                 </div>
                 <div>
@@ -87,13 +87,13 @@ export default async function SupplyPage() {
                 <div>
                   <h3 className="text-lg font-normal">Total Customers</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                    MZN {stats.customerCount}
+                    {stats.customerCount}
                   </h4>
                 </div>
                 <div>
                   <h3 className="text-lg font-normal">Avg. Order Value</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                    {stats.averageOrderValue.toFixed(2)}
+                    MZN {stats.averageOrderValue.toFixed(2)}
                   </h4>
                 </div>
               </div>

@@ -15,6 +15,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
     if (submission.status !== "success") return submission.reply();
 
     console.log(session);
+    
     try {
         const values = submission.value;
 
