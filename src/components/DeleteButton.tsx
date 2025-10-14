@@ -39,7 +39,7 @@ export const SupplierProductDeleteButton = ({
       <button
         onClick={() => setIsDialogOpen(true)}
         disabled={isPending}
-        className="delete-button px-3 py-2 flex items-center"
+        className="delete-button px-2 py-2 flex items-center"
       >
         <span className="mdi--delete"></span>
       </button>
@@ -82,7 +82,7 @@ export const DeleteButton = ({ productId }: { productId: string }) => {
       <button
         onClick={() => setIsDialogOpen(true)}
         disabled={isPending}
-        className="delete-button px-3 py-2 flex items-center"
+        className="delete-button px-2 py-2 flex items-center"
       >
         <span className="mdi--delete"></span>
       </button>

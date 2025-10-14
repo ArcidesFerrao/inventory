@@ -17,6 +17,10 @@ export default async function ProductsPage() {
     },
   });
 
+  const filteredProducts = products.filter(
+    (product) => (product.stock || product.stock == 0) && product.stock < 10
+  );
+
   return (
     <div className="products-list flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
@@ -38,7 +42,7 @@ export default async function ProductsPage() {
         </div>
         <div>
           <p>Low Stock</p>
-          <h2 className="text-2xl font-medium">2</h2>
+          <h2 className="text-2xl font-medium">{filteredProducts.length}</h2>
         </div>
         <div>
           <p>Out of Stock</p>
