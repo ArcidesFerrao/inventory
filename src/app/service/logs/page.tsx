@@ -5,19 +5,6 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import Logs from "@/components/ActivityLogs";
 
-// type LogItem = {
-//   id: string;
-//   name: string;
-//   quantity: number;
-//   cost: number;
-//   price?: number;
-// };
-
-// type ParsedDetails = {
-//   total: number;
-//   items: LogItem[];
-// };
-
 export default async function ActivityLogs() {
   const session = await getServerSession(authOptions);
 
