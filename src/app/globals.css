@@ -247,11 +247,13 @@ nav {
   border-radius: 0.4rem;
 }
 
+.delivery-header a:hover,
 .logout-button a:hover,
 .header-welcome a:hover {
   text-decoration: underline;
 }
 
+.delivery-header a,
 .user-page button:hover {
   background-color: rgba(220, 20, 60, 0.7);
 }

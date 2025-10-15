@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { logActivity } from "./logs";
 
 export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{ orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
@@ -35,14 +36,35 @@ export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes
                 deliveryItems: true,
             }
         })
-        await db.order.update({
+        const updatedOrder = await db.order.update({
             where: {
                 id: orderId
             },
             data: {
                 status: "IN_DELIVERY"
+            },
+            include: {
+                supplierOrders: true
             }
         })
+
+        await logActivity(
+                            updatedOrder.serviceId,
+                            session.user.id,
+                            "CREATE",
+                            "Delivery",
+                            updatedOrder.id,
+                            `Scheduled delivery for Order #${updatedOrder.id.slice(0,6)}...`,
+                            {
+                                scheduledAt: delivery.scheduledAt,
+                                totalItems: items.length,
+                                items
+                            },
+                            null,
+                            'INFO',
+                            null
+                        );
+
         return {success: true, delivery};
 
     } catch (error) {
