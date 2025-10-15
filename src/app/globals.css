@@ -414,10 +414,15 @@ nav {
   border-radius: 0;
   border-bottom: 1px solid var(--divider);
 }
+
+.active-view {
+  color: var(--foreground) !important;
+  border-bottom: 1px solid var(--foreground) !important;
+}
 .profile-sections button:hover {
   background: none;
   color: var(--foreground);
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .details-section,

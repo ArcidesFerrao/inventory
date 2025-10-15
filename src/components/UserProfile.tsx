@@ -13,16 +13,34 @@ export default function UserProfile({ user }: { user: UserProfile }) {
     <div className="flex flex-col gap-5">
       <div className="user-header flex justify-between items-center">
         <div className="profile-sections">
-          <button onClick={() => setView("personal")}>
+          <button
+            onClick={() => setView("personal")}
+            className={view === "personal" ? "active-view" : ""}
+          >
             Personal Information
           </button>
           {user.Service && (
-            <button onClick={() => setView("detail")}>Service Details</button>
+            <button
+              onClick={() => setView("detail")}
+              className={view === "detail" ? "active-view" : ""}
+            >
+              Service Details
+            </button>
           )}
           {user.Supplier && (
-            <button onClick={() => setView("detail")}>Supplier Details</button>
+            <button
+              onClick={() => setView("detail")}
+              className={view === "detail" ? "active-view" : ""}
+            >
+              Supplier Details
+            </button>
           )}
-          <button onClick={() => setView("security")}>Security</button>
+          <button
+            onClick={() => setView("security")}
+            className={view === "security" ? "active-view" : ""}
+          >
+            Security
+          </button>
         </div>
         {user.Service && (
           <Link href="/service">
