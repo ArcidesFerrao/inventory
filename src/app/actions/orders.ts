@@ -67,7 +67,7 @@ export async function createOrder(
         });
 
         await logActivity(
-                    order.supplierCustomerId,
+                    order.serviceId,
                     null,
                     "CREATE",
                     "Order",
@@ -89,6 +89,7 @@ export async function createOrder(
                     'INFO',
                     null
                 );
+        
 
         return { success: true, order};
     } catch (error) {
@@ -101,7 +102,7 @@ export async function createOrder(
 export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: string; orderId: string;}) {
 
     try {
-        await db.order.update({
+        const order = await db.order.update({
             where: {
                 id: orderId
             },
@@ -110,7 +111,7 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
             }
         })
 
-        await db.supplierOrder.update({
+        const supplierOrder = await db.supplierOrder.update({
             where: {
                 id: supplierOrderId
             },
@@ -118,6 +119,23 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                 status: "APPROVED"
             }
         })
+        await logActivity(
+                    order.serviceId,
+                    supplierOrder.supplierId,
+                    "UPDATE",
+                    "Order",
+                    order.id,
+                    `Order status`,
+                    {
+                        update: `Order status to "Submitted" and Supplier Order to "Approved"`
+                    },
+                    null,
+                    'INFO',
+                    null
+                );
+        return { success: true, order};
+
+
     } catch (error) {
         console.error("Error accepting order", error);
     }
