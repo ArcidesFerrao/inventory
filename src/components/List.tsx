@@ -375,7 +375,7 @@ export default function LogListItem({
       <div>
         <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
           <span>{severity}</span>
-          <Link href={`services/activityLogs/${id}`}>View</Link>
+          <Link href={`/service/logs/${id}`}>View</Link>
         </div>
       </div>
     </li>

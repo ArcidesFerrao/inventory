@@ -39,46 +39,6 @@ export default async function ActivityLogs() {
         <p>No logs found...</p>
       ) : (
         <Logs logs={logs} />
-        // <table>
-        //   <thead>
-        //     <tr>
-        //       {/* <th>User</th> */}
-        //       <th>Actions</th>
-        //       <th>Descriptions</th>
-        //       <th>Items</th>
-        //       <th>Date</th>
-        //     </tr>
-        //   </thead>
-        //   <tbody>
-        //     {logs.map((log, index) => {
-        //       const parsedDetails = log.details as ParsedDetails;
-
-        //       return (
-        //         <tr key={index}>
-        //           {/* <td>{log.user.name}</td> */}
-        //           <td>
-        //             {log.actionType} {log.entityType}
-        //           </td>
-        //           <td>{log.description}</td>
-        //           <td>
-        //             {parsedDetails?.items ? (
-        //               <ul>
-        //                 {parsedDetails.items.map((item, i) => (
-        //                   <li key={i}>
-        //                     {item.quantity} x {item.name}
-        //                   </li>
-        //                 ))}
-        //               </ul>
-        //             ) : (
-        //               <pre className="text-gray-700"></pre>
-        //             )}
-        //           </td>
-        //           <td>{log.timestamp.toLocaleDateString()}</td>
-        //         </tr>
-        //       );
-        //     })}
-        //   </tbody>
-        // </table>
       )}
     </div>
   );
