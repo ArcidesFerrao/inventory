@@ -49,26 +49,66 @@ export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes
         })
 
         await logActivity(
-                            updatedOrder.serviceId,
-                            session.user.id,
-                            "CREATE",
-                            "Delivery",
-                            updatedOrder.id,
-                            `Scheduled delivery for Order #${updatedOrder.id.slice(0,6)}...`,
-                            {
-                                scheduledAt: delivery.scheduledAt,
-                                totalItems: items.length,
-                                items
-                            },
-                            null,
-                            'INFO',
-                            null
-                        );
+            updatedOrder.serviceId,
+            session.user.id,
+            "CREATE",
+            "Delivery",
+            updatedOrder.id,
+            `Scheduled delivery for Order #${updatedOrder.id.slice(0,6)}...`,
+            {
+                scheduledAt: delivery.scheduledAt,
+                totalItems: items.length,
+                items
+            },
+            null,
+            'INFO',
+            null
+        );
 
         return {success: true, delivery};
 
     } catch (error) {
         console.error("Error creating delivery:", error);
         throw new Error("Failed to create delivery");
+    }
+}
+
+
+
+
+export async function completeDelivery({deliveryId, orderId, supplierOrderId}:{deliveryId:string, orderId:string, supplierOrderId: string}) {
+  const session = await getServerSession(authOptions);
+    
+    if (!session?.user) redirect("/login");
+
+    try {
+        const delivery = await db.delivery.update({
+            where: {
+                id: deliveryId,
+            },
+            data: {
+                status: "COMPLETED",
+            }})
+        const suppplierOrder = await db.supplierOrder.update({
+            where: {
+                id: supplierOrderId,
+            },
+            data: {
+                status: "COMPLETED",
+            }
+        })
+        const order = await db.order.update({
+            where: {
+                id: orderId,
+            },
+            data: {
+                status: "DELIVERED",
+            }
+        })
+
+        return {success: true, delivery, order, suppplierOrder};
+    } catch (error) {
+        console.error("Error completing delivery:", error);
+        throw new Error("Failed to complete delivery");
     }
 }

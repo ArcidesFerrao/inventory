@@ -158,7 +158,11 @@ export default async function OrderPage(props: { params: Params }) {
               <div key={d.id} className="p-4 delivery-details">
                 <div className="delivery-header flex justify-between">
                   <div className="delivery-info">
-                    <h3 className="font-medium">Delivery #{d.id}</h3>
+                    <Link href={`/supply/orders/delivery/${d.id}`}>
+                      <h3 className="font-medium">
+                        Delivery #{d.id.slice(0, 5)}...
+                      </h3>
+                    </Link>
                     <p className="text-sm font-extralight">
                       Scheduled Date: {d.scheduledAt.toDateString()}
                     </p>

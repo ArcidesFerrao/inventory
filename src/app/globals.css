@@ -329,6 +329,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+.fullfill-btn:hover,
 .order-status button,
 .deliveries-details button,
 .order-header button,
