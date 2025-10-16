@@ -112,11 +112,9 @@ export const ProductForm = ({
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col py-4 gap-2 min-w-md"
+      className="flex flex-col gap-4 min-w-md"
     >
-      <h2 className="text-center">
-        Fill the form to {product ? "edit the" : "create a new"} Product
-      </h2>
+      <h2>Fill the form to {product ? "edit the" : "create a new"} Product</h2>
       <section className="flex flex-col gap-4">
         <input
           type="hidden"
@@ -404,7 +402,7 @@ export const SupplierProductForm = ({
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col py-4 gap-2 min-w-md"
+      className="flex flex-col gap-4 min-w-md"
     >
       <h2>
         Fill the form to {supplierProduct ? "edit the" : "create a new"}{" "}
@@ -442,6 +440,7 @@ export const SupplierProductForm = ({
                 type="number"
                 name="unitQty"
                 id="unitQty"
+                className="max-w-32"
                 defaultValue={supplierProduct?.unitQty ?? 1}
               />
               {fields.unitQty.errors && (
@@ -475,7 +474,7 @@ export const SupplierProductForm = ({
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full justify-between">
           <div className="flex flex-col gap-1">
             <label htmlFor="price">Price</label>
             <input

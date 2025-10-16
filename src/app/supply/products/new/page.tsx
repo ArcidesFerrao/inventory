@@ -19,7 +19,7 @@ export default async function NewProductPage() {
     <div className="flex flex-col gap-2 items-center w-full">
       <div className="form-header flex items-center justify-between w-full">
         <h1 className="text-xl font-semibold">Add New Product</h1>
-        <Link href="/supply/orders">
+        <Link href="/supply/products">
           <span className="ep--back"></span>
         </Link>
       </div>

@@ -1,11 +1,11 @@
 import React from "react";
-import { NavLink, SupplyHomeNavLink } from "./NavLink";
+import { NavLink, HomeNavLink } from "./NavLink";
 
 export const Navigator = () => {
   return (
     <nav className="navigator">
       <ul className="flex flex-col gap-2">
-        <NavLink
+        <HomeNavLink
           href="/stock"
           label="Overview"
           icon={<span className="mage--dashboard-fill"></span>}
@@ -34,7 +34,7 @@ export const ServiceNav = () => {
   return (
     <nav className="navigator">
       <ul className="flex flex-col gap-2">
-        <NavLink
+        <HomeNavLink
           href="/service"
           label="Dashboard"
           icon={<span className="mage--dashboard-fill"></span>}
@@ -73,7 +73,7 @@ export const SupplyNav = () => {
   return (
     <nav className="navigator">
       <ul className="flex flex-col gap-2">
-        <SupplyHomeNavLink
+        <HomeNavLink
           href="/supply"
           label="Dashboard"
           icon={<span className="mage--dashboard-fill"></span>}

@@ -27,7 +27,7 @@ export const NavLink = ({ href, icon, label }: NavLinkProps) => {
     </Link>
   );
 };
-export const SupplyHomeNavLink = ({ href, icon, label }: NavLinkProps) => {
+export const HomeNavLink = ({ href, icon, label }: NavLinkProps) => {
   const pathname = usePathname();
   const isActive = pathname === href;
   // const isActivated = pathname.startsWith(href) && href !== "/";
