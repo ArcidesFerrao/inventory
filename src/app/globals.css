@@ -444,3 +444,14 @@ nav {
   padding: 1rem;
   border-radius: 0.4rem;
 }
+
+.ep--back {
+  transition: all 250ms ease-in;
+}
+.ep--back:hover {
+  translate: 0 -2px;
+}
+
+.order-details button {
+  background-color: var(--input-bg);
+}

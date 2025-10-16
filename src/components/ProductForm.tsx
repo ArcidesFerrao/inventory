@@ -406,7 +406,7 @@ export const SupplierProductForm = ({
       onSubmit={form.onSubmit}
       className="flex flex-col py-4 gap-2 min-w-md"
     >
-      <h2 className="text-center">
+      <h2>
         Fill the form to {supplierProduct ? "edit the" : "create a new"}{" "}
         Supplier Product
       </h2>

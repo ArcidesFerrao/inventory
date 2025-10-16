@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "./NavLink";
+import { NavLink, SupplyHomeNavLink } from "./NavLink";
 
 export const Navigator = () => {
   return (
@@ -73,7 +73,7 @@ export const SupplyNav = () => {
   return (
     <nav className="navigator">
       <ul className="flex flex-col gap-2">
-        <NavLink
+        <SupplyHomeNavLink
           href="/supply"
           label="Dashboard"
           icon={<span className="mage--dashboard-fill"></span>}

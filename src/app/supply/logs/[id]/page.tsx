@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import Link from "next/link";
 import React from "react";
 
 type Params = Promise<{ id: string }>;
@@ -12,7 +13,9 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
     <div className="flex flex-col gap-5 w-full">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Activity details</h2>
-        <span></span>
+        <Link href="/supply/logs">
+          <span className="ep--back"></span>
+        </Link>
       </div>
       <div className="log-info flex flex-col gap-5">
         <div className="grid grid-cols-3 gap-4">

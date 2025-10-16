@@ -12,7 +12,25 @@ type NavLinkProps = {
 
 export const NavLink = ({ href, icon, label }: NavLinkProps) => {
   const pathname = usePathname();
+  // const isActive = pathname === href;
+  const isActivated = pathname.startsWith(href) && href !== "/";
+
+  return (
+    <Link
+      href={href}
+      className={`py-2 px-6 flex items-center gap-2 ${
+        isActivated ? "is-active" : ""
+      } `}
+    >
+      {icon}
+      <li className="whitespace-nowrap">{label}</li>
+    </Link>
+  );
+};
+export const SupplyHomeNavLink = ({ href, icon, label }: NavLinkProps) => {
+  const pathname = usePathname();
   const isActive = pathname === href;
+  // const isActivated = pathname.startsWith(href) && href !== "/";
 
   return (
     <Link

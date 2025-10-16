@@ -51,9 +51,9 @@ export default async function OrderPage(props: { params: Params }) {
             Created {supplierOrder?.order.createdAt.toDateString()}
           </p>
         </div>
-        <button disabled className="text-sm font-light text-center max-h-fit">
-          {supplierOrder?.status}
-        </button>
+        <Link href="/supply/orders">
+          <span className="ep--back"></span>
+        </Link>
       </div>
       <div className="order-details flex justify-between gap-4 w-full p-4">
         <div className="info-details flex flex-col gap-4">
@@ -91,26 +91,34 @@ export default async function OrderPage(props: { params: Params }) {
             </div>
           </div>
         </div>
-        {supplierOrder?.status === "PENDING" && (
-          <div className="order-buttons flex flex-col gap-4 justify-end">
-            <AcceptButton
-              supplierOrderId={supplierOrder?.id || ""}
-              orderId={supplierOrder?.orderId || ""}
-            />
-            <button className="deny-btn">Deny</button>
-          </div>
-        )}
+        <div className="flex flex-col justify-between">
+          <button
+            disabled
+            className="text-sm font-light text-center px-4 py-2 rounded-sm "
+          >
+            {supplierOrder?.status}
+          </button>
+          {supplierOrder?.status === "PENDING" && (
+            <div className="order-buttons flex flex-col gap-4">
+              <AcceptButton
+                supplierOrderId={supplierOrder?.id || ""}
+                orderId={supplierOrder?.orderId || ""}
+              />
+              <button className="deny-btn">Deny</button>
+            </div>
+          )}
 
-        {supplierOrder?.status === "APPROVED" && (
-          <div className="order-buttons flex flex-col justify-end">
-            <Link
-              className="delivery-btn bg-blue-600"
-              href={`/supply/orders/${supplierOrder?.id}/deliveries/new`}
-            >
-              Delivery
-            </Link>
-          </div>
-        )}
+          {supplierOrder?.status === "APPROVED" && (
+            <div className="order-buttons flex flex-col ">
+              <Link
+                className="delivery-btn bg-blue-600 text-center"
+                href={`/supply/orders/${supplierOrder?.id}/deliveries/new`}
+              >
+                Delivery
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">
