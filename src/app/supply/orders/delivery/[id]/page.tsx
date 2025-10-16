@@ -1,3 +1,5 @@
+import { completeDelivery } from "@/app/actions/deliveries";
+import { CompleteDeliveryButton } from "@/components/completeDeliveryButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
@@ -21,6 +23,7 @@ export default async function DeliveryPage(props: { params: Params }) {
         include: {
           orderItem: {
             include: {
+              supplierOrder: true,
               product: true,
             },
           },
@@ -28,6 +31,13 @@ export default async function DeliveryPage(props: { params: Params }) {
       },
     },
   });
+
+  // const handleCompleteDelivery = await completeDelivery({
+  //   deliveryId: delivery?.id as string,
+  //   orderId: delivery?.orderId as string,
+  //   supplierOrderId: delivery?.deliveryItems[0].orderItem
+  //     .supplierOrderId as string,
+  // });
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -92,7 +102,26 @@ export default async function DeliveryPage(props: { params: Params }) {
           <p>{delivery.notes}</p>
         </div>
       )}
-      <button className="delivery-btn fullfill-btn">Complete Delivery</button>
+      <CompleteDeliveryButton
+        deliveryId={delivery?.id || ""}
+        orderId={delivery?.orderId || ""}
+        supplierOrderId={
+          delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
+        }
+      />
+      {/* <button
+        onClick={async () => {
+          await completeDelivery({
+            deliveryId: delivery?.id as string,
+            orderId: delivery?.orderId as string,
+            supplierOrderId: delivery?.deliveryItems[0].orderItem
+              .supplierOrderId as string,
+          });
+        }}
+        className="delivery-btn fullfill-btn"
+      >
+        Complete Delivery
+      </button> */}
     </div>
   );
 }

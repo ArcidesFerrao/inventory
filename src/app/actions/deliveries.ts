@@ -152,7 +152,7 @@ export async function completeDelivery({deliveryId, orderId, supplierOrderId}:{d
 
                 await tx.stockMovement.create({
                     data: {
-                        productId: supplierProduct.id,
+                        supplierProductId: supplierProduct.id,
                         changeType: "SALE",
                         quantity,
                         referenceId: deliveryItem.id,
