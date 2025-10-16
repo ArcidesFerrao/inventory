@@ -76,6 +76,8 @@ model Supplier {
   customers       SupplierCustomer[]
   SupplierOrder   SupplierOrder[]
   ActivityLog     ActivityLog[]
+
+  Sale Sale[]
 }
 
 model SupplierProduct {
@@ -140,9 +142,11 @@ model Sale {
   total       Float
   cogs        Float      @default(0)
   paymentType String
+  supplierId  String?
   serviceId   String?
   SaleItem    SaleItem[]
   Service     Service?   @relation(fields: [serviceId], references: [id])
+  Supplier    Supplier?  @relation(fields: [supplierId], references: [id])
 }
 
 model SaleItem {

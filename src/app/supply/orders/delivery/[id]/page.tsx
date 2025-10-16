@@ -1,5 +1,5 @@
-import { completeDelivery } from "@/app/actions/deliveries";
-import { CompleteDeliveryButton } from "@/components/completeDeliveryButton";
+// import { completeDelivery } from "@/app/actions/deliveries";
+import { CompleteDeliveryButton } from "@/components/CompleteDeliveryButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
