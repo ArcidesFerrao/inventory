@@ -26,7 +26,7 @@ export const AcceptButton = ({
       onClick={() => handleOnClick()}
       className="accept-btn"
     >
-      Accept
+      {loading ? "..." : "Accept"}
     </button>
   );
 };

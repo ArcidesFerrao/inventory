@@ -1,9 +1,9 @@
-import getActivityLogs from "@/app/actions/logs";
+import { getActivityLogs } from "@/app/actions/logs";
 import React from "react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
-import Logs from "@/components/ActivityLogs";
+import { Logs } from "@/components/ActivityLogs";
 
 export default async function ActivityLogs() {
   const session = await getServerSession(authOptions);

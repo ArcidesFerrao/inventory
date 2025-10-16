@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 
-export default async function getActivityLogs(serviceId: string) {
+export async function getActivityLogs(serviceId: string) {
   return await db.activityLog.findMany({
     where: {
         serviceId
@@ -12,6 +12,23 @@ export default async function getActivityLogs(serviceId: string) {
     include: {
         Service: {
             select: { businessName: true, businessType: true, id: true }
+        }
+    }
+  });
+}
+
+export async function getSupplierActivityLogs(supplierId: string) {
+  return await db.activityLog.findMany({
+    where: {
+        supplierId
+    },
+    orderBy: {
+        timestamp: 'desc',
+    },
+    take: 20,
+    include: {
+        Supplier: {
+            select: { name: true, phone: true, id: true }
         }
     }
   });

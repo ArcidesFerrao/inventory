@@ -78,7 +78,7 @@ export default async function OrdersPage() {
       {supplierOrders.length === 0 ? (
         <p>No orders found...</p>
       ) : (
-        <ul>
+        <ul className="flex flex-col gap-2">
           {supplierOrders.map((supplierOrder) => (
             <SupplierOrderListItem
               key={supplierOrder.id}

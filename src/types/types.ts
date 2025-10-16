@@ -64,6 +64,11 @@ export type SaleItemWithProducts = SaleItem & {
   product: Product
 }
 
+export type ActivityLogsWithSupplier = ActivityLog & {
+  Supplier: {
+    id: string; name: string; phone: string | null;
+  } | null
+}
 export type ActivityLogsWithService = ActivityLog & {
   Service: {
     id: string; businessName: string; businessType: BusinessType;

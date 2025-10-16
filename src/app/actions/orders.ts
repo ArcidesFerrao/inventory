@@ -133,7 +133,7 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                     'INFO',
                     null
                 );
-        return { success: true, order};
+        return { success: true, order, supplierOrder};
 
 
     } catch (error) {
