@@ -381,6 +381,49 @@ export default function LogListItem({
     </li>
   );
 }
+export function SupplierLogListItem({
+  id,
+  actionType,
+  entityType,
+  description,
+  timestamp,
+  severity,
+}: {
+  id: string;
+  actionType: string;
+  entityType: string;
+  description: string;
+  timestamp: Date;
+  severity: string;
+}) {
+  return (
+    <li className="list-logs flex justify-between ">
+      <div className="flex flex-col gap-2">
+        <div className="log-info flex gap-2 items-center">
+          <span className="text-xs text-gray-400">{actionType}</span>
+          <span className="text-xs text-blue-400">
+            {entityType.toUpperCase()}
+          </span>
+        </div>
+        <p className="log-desc ">{description}</p>
+        <div className="log-date flex gap-2 items-center">
+          <p className="font-extralight text-gray-400 text-xs">
+            {timestamp.toLocaleDateString()}
+          </p>
+          <p className="font-extralight text-gray-400 text-xs">
+            {timestamp.toLocaleTimeString()}
+          </p>
+        </div>
+      </div>
+      <div>
+        <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
+          <span>{severity}</span>
+          <Link href={`/supply/logs/${id}`}>View</Link>
+        </div>
+      </div>
+    </li>
+  );
+}
 
 export const SupplierOrderListItem = ({
   supplierOrder,

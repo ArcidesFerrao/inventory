@@ -3,7 +3,7 @@ import {
   ActivityLogsWithSupplier,
 } from "@/types/types";
 import React from "react";
-import LogListItem from "./List";
+import LogListItem, { SupplierLogListItem } from "./List";
 
 export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
   const totalLogs = logs.length;
@@ -74,7 +74,7 @@ export function SupplierLogs({ logs }: { logs: ActivityLogsWithSupplier[] }) {
       </div>
       <ul className="flex flex-col gap-2">
         {logs.map((log) => (
-          <LogListItem
+          <SupplierLogListItem
             key={log.id}
             actionType={log.actionType}
             description={log.description}

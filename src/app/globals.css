@@ -438,3 +438,9 @@ nav {
 .personal-section p {
   color: var(--divider);
 }
+
+.log-info-details span {
+  background-color: var(--input-bg);
+  padding: 1rem;
+  border-radius: 0.4rem;
+}
