@@ -78,7 +78,8 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
 
     } catch (error) {
         console.error("Error creating delivery:", error);
-        throw new Error("Failed to create delivery");
+        return { success: false, error: "Failed to create delivery" };
+        // throw new Error("Failed to create delivery");
     }
 }
 

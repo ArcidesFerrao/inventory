@@ -139,5 +139,6 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
 
     } catch (error) {
         console.error("Error accepting order", error);
+        return { success: false, error: "Failed to accept order" };
     }
 }

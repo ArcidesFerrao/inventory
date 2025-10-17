@@ -25,7 +25,6 @@ export const SupplierDelivery = ({
 }) => {
   const [deliveryDate, setDeliveryDate] = useState<string>("");
   const [deliveryTime, setDeliveryTime] = useState<string>("");
-  const [deliveredQty, setDeliveredQty] = useState<Record<string, number>>({});
   const [notes, setNotes] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,9 +45,9 @@ export const SupplierDelivery = ({
       deliveryDate,
       deliveryTime,
       notes,
-      items: Object.entries(deliveredQty).map(([itemId, qty]) => ({
-        itemId,
-        deliveredQty: qty,
+      items: items.map((i) => ({
+        itemId: i.id,
+        deliveredQty: i.orderedQty,
       })),
     };
 
@@ -60,6 +59,12 @@ export const SupplierDelivery = ({
         setLoading(false);
         router.push("/supply/orders");
       }, 100);
+    }
+
+    if (delivery.error) {
+      setError(delivery.error);
+      setLoading(false);
+      return;
     }
   };
 
@@ -104,18 +109,7 @@ export const SupplierDelivery = ({
                   Quantities: {i.orderedQty} units
                 </p>
               </div>
-              <input
-                type="number"
-                max={i.orderedQty}
-                min={0}
-                value={deliveredQty[i.id] ?? ""}
-                onChange={(e) =>
-                  setDeliveredQty((prev) => ({
-                    ...prev,
-                    [i.id]: Math.min(Number(e.target.value), i.orderedQty),
-                  }))
-                }
-              />
+              <p>Full Delivery</p>
             </li>
           ))}
         </ul>

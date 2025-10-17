@@ -1,6 +1,7 @@
 "use client";
 
 import { arrivedDelivery, completeDelivery } from "@/app/actions/deliveries";
+import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import toast from "react-hot-toast";
 
@@ -53,6 +54,8 @@ export const ConfirmDeliveryButton = ({
 }) => {
   const [isPending, startTransition] = useTransition();
 
+  const router = useRouter();
+
   async function handleConfirmDelivery() {
     startTransition(async () => {
       try {
@@ -73,6 +76,9 @@ export const ConfirmDeliveryButton = ({
               arrivingConfirmation.error ||
                 "Failed to mark delivery as arrived."
             );
+            setTimeout(() => {
+              router.refresh();
+            }, 100);
           }
         } else if (role === "SERVICE" && status === "ARRIVED") {
           const confirmation = await completeDelivery({
