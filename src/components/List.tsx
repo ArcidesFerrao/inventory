@@ -492,7 +492,9 @@ export const SupplierOrderListItem = ({
           <div>
             <p>{supplierOrder.order.Service?.businessName}</p>
             <div className="flex">
-              <p className="text-sm font-light">{supplierOrder.order.status}</p>
+              <p className="text-sm font-light text-green-400">
+                {supplierOrder.order.status}
+              </p>
             </div>
           </div>
         ) : (

@@ -26,13 +26,15 @@ export const SupplierDelivery = ({
   const [deliveredQty, setDeliveredQty] = useState<Record<string, number>>({});
   const [notes, setNotes] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
   const handleCreateDelivery = async () => {
     setLoading(true);
     if (!deliveryDate || !deliveryTime) {
-      alert("Please set both date and time!");
+      setError("Please set both date and time!");
+      setLoading(false);
       return;
     }
 
@@ -124,6 +126,7 @@ export const SupplierDelivery = ({
           />
         </div>
       </div>
+      {error && <p className="text-red-400">*{error}*</p>}
       <button
         onClick={handleCreateDelivery}
         className="schedule-button py-2"
