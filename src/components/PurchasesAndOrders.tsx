@@ -14,7 +14,14 @@ export default function PurchasesAndOrders({
 }) {
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
-    "ALL" | "SUBMITTED" | "DRAFT" | "CONFIRMED" | "IN_DELIVERY"
+    | "ALL"
+    | "SUBMITTED"
+    | "DRAFT"
+    | "CONFIRMED"
+    | "IN_DELIVERY"
+    | "IN_PREPARATION"
+    | "DELIVERED"
+    | "CANCELLED"
   >("ALL");
 
   const filteredOrders = orders.filter((o) => {
@@ -22,6 +29,9 @@ export default function PurchasesAndOrders({
     if (orderFilter === "DRAFT") return o.status === "DRAFT";
     if (orderFilter === "CONFIRMED") return o.status === "CONFIRMED";
     if (orderFilter === "IN_DELIVERY") return o.status === "IN_DELIVERY";
+    if (orderFilter === "IN_PREPARATION") return o.status === "IN_PREPARATION";
+    if (orderFilter === "DELIVERED") return o.status === "DELIVERED";
+    if (orderFilter === "CANCELLED") return o.status === "CANCELLED";
     return true;
   });
 

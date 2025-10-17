@@ -41,7 +41,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
                 id: orderId
             },
             data: {
-                status: "IN_DELIVERY"
+                status: "IN_PREPARATION"
             },
             include: {
                 supplierOrders: true
