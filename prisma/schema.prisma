@@ -332,22 +332,32 @@ enum ProductType {
 }
 
 enum OrderStatus {
-  DRAFT
-  PLACED
-  SUBMITTED
-  CONFIRMED
-  IN_DELIVERY
-  DELIVERED
-  CANCELLED
+  DRAFT // not submitted yet
+  SUBMITTED // sent to supplier(s)
+  CONFIRMED // supplier approved
+  IN_PREPARATION // being prepared
+  IN_DELIVERY // out for delivery
+  DELIVERED // completed successfully
+  CANCELLED // cancelled at any stage
 }
 
 enum SupplierOrderStatus {
-  PENDING
-  APPROVED
-  PARTIAL
-  REJECTED
-  COMPLETED
-  CANCELLED
+  PENDING // waiting for review
+  APPROVED // accepted by supplier
+  REJECTED // rejected by supplier
+  PARTIAL // only part can be fulfilled
+  IN_PREPARATION // preparing goods
+  COMPLETED // fulfilled and sent
+  CANCELLED // cancelled by supplier or system
+}
+
+enum DeliveryStatus {
+  PENDING // waiting to be picked up
+  IN_TRANSIT // being transported
+  ARRIVED // reached destination
+  COMPLETED // confirmed delivery received
+  FAILED // failed delivery (e.g., not received)
+  CANCELLED // cancelled delivery
 }
 
 enum PaymentType {

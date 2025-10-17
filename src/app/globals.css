@@ -458,3 +458,8 @@ nav {
 .order-details button {
   background-color: var(--input-bg);
 }
+
+.signup-form,
+.login-form {
+  max-width: 500px;
+}
