@@ -56,7 +56,11 @@ export const ConfirmDeliveryButton = ({
   async function handleConfirmDelivery() {
     startTransition(async () => {
       try {
-        if (role === "SUPPLIER" && status !== "ARRIVED") {
+        if (
+          role === "SUPPLIER" &&
+          status !== "ARRIVED" &&
+          status !== "COMPLETED"
+        ) {
           const arrivingConfirmation = await arrivedDelivery(
             deliveryId,
             supplierOrderId
@@ -83,7 +87,7 @@ export const ConfirmDeliveryButton = ({
   }
 
   const label =
-    role === "SUPPLIER" && status !== "ARRIVED"
+    role === "SUPPLIER" && status !== "ARRIVED" && status !== "COMPLETED"
       ? "Mark as arrived"
       : role === "SERVICE" && status === "ARRIVED"
       ? "Confirm Delivery"
@@ -95,8 +99,8 @@ export const ConfirmDeliveryButton = ({
     <button
       disabled={isDisabled}
       onClick={handleConfirmDelivery}
-      className={`delivery-btn confirm-delivery-btn ${
-        isPending ? "opacity-50" : ""
+      className={`delivery-btn text-sm  confirm-delivery-btn ${
+        isPending || status === "COMPLETED" ? "opacity-50" : ""
       } `}
     >
       {isPending ? "Processing..." : label}

@@ -1,5 +1,8 @@
 // import { completeDelivery } from "@/app/actions/deliveries";
-import { CompleteDeliveryButton } from "@/components/CompleteDeliveryButton";
+import {
+  CompleteDeliveryButton,
+  ConfirmDeliveryButton,
+} from "@/components/CompleteDeliveryButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
@@ -108,28 +111,25 @@ export default async function DeliveryPage(props: { params: Params }) {
           <p>{delivery.notes}</p>
         </div>
       )}
+      <ConfirmDeliveryButton
+        deliveryId={delivery?.id || ""}
+        status={delivery?.status || ""}
+        serviceId={delivery?.order.Service?.id || ""}
+        orderId={delivery?.orderId || ""}
+        supplierOrderId={
+          delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
+        }
+        role="SUPPLIER"
+      />
       <CompleteDeliveryButton
+        deliveryId={delivery?.id || ""}
         deliveryStatus={delivery?.status || ""}
         serviceId={delivery?.order.Service?.id || ""}
-        deliveryId={delivery?.id || ""}
         orderId={delivery?.orderId || ""}
         supplierOrderId={
           delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
         }
       />
-      {/* <button
-        onClick={async () => {
-          await completeDelivery({
-            deliveryId: delivery?.id as string,
-            orderId: delivery?.orderId as string,
-            supplierOrderId: delivery?.deliveryItems[0].orderItem
-              .supplierOrderId as string,
-          });
-        }}
-        className="delivery-btn fullfill-btn"
-      >
-        Complete Delivery
-      </button> */}
     </div>
   );
 }
