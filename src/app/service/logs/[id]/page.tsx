@@ -1,9 +1,9 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
-
-export default async function LogPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+type Params = Promise<{ id: string }>;
+export default async function LogPage(props: { params: Params }) {
+  const { id } = await props.params;
 
   const log = await db.activityLog.findUnique({
     where: { id },

@@ -4,10 +4,12 @@ import { completeDelivery } from "@/app/actions/deliveries";
 import React from "react";
 
 export const CompleteDeliveryButton = ({
+  serviceId,
   deliveryId,
   orderId,
   supplierOrderId,
 }: {
+  serviceId: string;
   deliveryId: string;
   orderId: string;
   supplierOrderId: string;
@@ -16,6 +18,7 @@ export const CompleteDeliveryButton = ({
     <button
       onClick={async () => {
         await completeDelivery({
+          serviceId,
           deliveryId,
           orderId,
           supplierOrderId,

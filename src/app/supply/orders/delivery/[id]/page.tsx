@@ -103,6 +103,7 @@ export default async function DeliveryPage(props: { params: Params }) {
         </div>
       )}
       <CompleteDeliveryButton
+        serviceId={delivery?.order.Service?.id || ""}
         deliveryId={delivery?.id || ""}
         orderId={delivery?.orderId || ""}
         supplierOrderId={
