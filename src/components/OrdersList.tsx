@@ -3,11 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { SupplierProduct, Unit } from "@prisma/client";
+import { Supplier, SupplierProduct, Unit } from "@prisma/client";
 import { createOrder } from "@/app/actions/orders";
 import toast from "react-hot-toast";
 
-type ProductsWithUnit = SupplierProduct & Unit;
+type ProductsWithUnit = SupplierProduct & {
+  Unit: Unit | null;
+  supplier: Supplier;
+};
 
 export const OrdersList = ({
   initialProducts,
@@ -105,7 +108,7 @@ export const OrdersList = ({
               <div>
                 <h3>{product.name}</h3>
                 <p className="text-xs font-extrathin">
-                  Id: {product.supplierId.slice(0, 5)}...
+                  Supplier: {product.supplier.name}
                 </p>
               </div>
 

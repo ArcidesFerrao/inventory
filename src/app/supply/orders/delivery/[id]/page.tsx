@@ -61,7 +61,13 @@ export default async function DeliveryPage(props: { params: Params }) {
         <div className="grid grid-cols-2">
           <div className="flex flex-col gap-1">
             <p className="text-sm font-extralight">Status</p>
-            <h4>{delivery?.status}</h4>
+            <h4
+              className={
+                delivery?.status === "COMPLETED" ? "text-green-400" : ""
+              }
+            >
+              {delivery?.status}
+            </h4>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm font-extralight">Scheduled Time</p>
@@ -103,6 +109,7 @@ export default async function DeliveryPage(props: { params: Params }) {
         </div>
       )}
       <CompleteDeliveryButton
+        deliveryStatus={delivery?.status || ""}
         serviceId={delivery?.order.Service?.id || ""}
         deliveryId={delivery?.id || ""}
         orderId={delivery?.orderId || ""}

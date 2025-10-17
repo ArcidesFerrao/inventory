@@ -4,11 +4,13 @@ import { completeDelivery } from "@/app/actions/deliveries";
 import React from "react";
 
 export const CompleteDeliveryButton = ({
+  deliveryStatus,
   serviceId,
   deliveryId,
   orderId,
   supplierOrderId,
 }: {
+  deliveryStatus: string;
   serviceId: string;
   deliveryId: string;
   orderId: string;
@@ -24,7 +26,9 @@ export const CompleteDeliveryButton = ({
           supplierOrderId,
         });
       }}
-      className="delivery-btn fullfill-btn"
+      className={
+        deliveryStatus === "COMPLETED" ? "hidden" : "delivery-btn fullfill-btn"
+      }
     >
       Complete Delivery
     </button>

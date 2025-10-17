@@ -6,6 +6,7 @@ export default async function NewOrder() {
   const products = await db.supplierProduct.findMany({
     include: {
       Unit: true,
+      supplier: true,
     },
   });
 
