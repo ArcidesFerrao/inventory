@@ -7,6 +7,7 @@ import {
   SaleWithItems,
   SupplierOrderWithOrderAndItems,
 } from "@/types/types";
+import { ConfirmDeliveryButton } from "./CompleteDeliveryButton";
 
 type ProductsStockProps = {
   id: string;
@@ -231,7 +232,7 @@ export const OrderListItem = ({
           </div>
         </div>
         {order.status === "DRAFT" ||
-          (order.status === "PLACED" && (
+          (order.status === "SUBMITTED" && (
             <div className="delivery-window flex flex-col gap-2">
               <p className="text-sm font-light">Requested Delivery Window</p>
               <div className=" flex gap-2">
@@ -245,6 +246,34 @@ export const OrderListItem = ({
               </div>
             </div>
           ))}
+        {order.status === "DELIVERED" && (
+          <div className="confirm-delivery flex flex-col gap-2">
+            <div className="text-xs font-extralight flex flex-col gap-2">
+              <p className="text-xs font-extralight">
+                {order.confirmedDeliveries.length}{" "}
+                {order.confirmedDeliveries.length === 1
+                  ? "delivery"
+                  : "deliveries"}
+              </p>
+              {order.confirmedDeliveries.length > 0 &&
+                order.confirmedDeliveries.map((delivery) => (
+                  <p key={delivery.id}>
+                    {delivery.status} at{" "}
+                    {delivery.deliveredAt?.toLocaleTimeString()},{" "}
+                    {delivery.deliveredAt?.toLocaleDateString()}
+                  </p>
+                ))}
+            </div>
+            <ConfirmDeliveryButton
+              deliveryId={order.confirmedDeliveries[0]?.id || ""}
+              orderId={order.id}
+              supplierOrderId={order.supplierOrders[0]?.id || ""}
+              serviceId={order.serviceId || ""}
+              status={order.confirmedDeliveries[0]?.status || ""}
+              role="SERVICE"
+            />
+          </div>
+        )}
       </div>
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">
@@ -459,21 +488,30 @@ export const SupplierOrderListItem = ({
             </div>
           </div>
         </div>
-        <div className="delivery-window flex flex-col gap-2">
-          <p className="text-sm font-light">
-            {supplierOrder.order?.Service?.businessName} - Requested Delivery
-            Window
-          </p>
-          <div className=" flex gap-2">
-            <p className="text-md font-medium">
-              {supplierOrder.order?.requestedStartDate.toLocaleDateString()}
-            </p>
-            -
-            <p className="text-md font-medium">
-              {supplierOrder.order?.requestedEndDate.toLocaleDateString()}
-            </p>
+        {supplierOrder.order?.status === "DELIVERED" ? (
+          <div>
+            <p>{supplierOrder.order.Service?.businessName}</p>
+            <div className="flex">
+              <p className="text-sm font-light">{supplierOrder.order.status}</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="delivery-window flex flex-col gap-2">
+            <p className="text-sm font-light">
+              {supplierOrder.order?.Service?.businessName} - Requested Delivery
+              Window
+            </p>
+            <div className=" flex gap-2">
+              <p className="text-md font-medium">
+                {supplierOrder.order?.requestedStartDate.toLocaleDateString()}
+              </p>
+              -
+              <p className="text-md font-medium">
+                {supplierOrder.order?.requestedEndDate.toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">

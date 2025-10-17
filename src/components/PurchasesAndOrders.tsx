@@ -14,11 +14,11 @@ export default function PurchasesAndOrders({
 }) {
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
-    "ALL" | "PLACED" | "DRAFT" | "CONFIRMED" | "IN_DELIVERY"
+    "ALL" | "SUBMITTED" | "DRAFT" | "CONFIRMED" | "IN_DELIVERY"
   >("ALL");
 
   const filteredOrders = orders.filter((o) => {
-    if (orderFilter === "PLACED") return o.status === "PLACED";
+    if (orderFilter === "SUBMITTED") return o.status === "SUBMITTED";
     if (orderFilter === "DRAFT") return o.status === "DRAFT";
     if (orderFilter === "CONFIRMED") return o.status === "CONFIRMED";
     if (orderFilter === "IN_DELIVERY") return o.status === "IN_DELIVERY";
@@ -142,10 +142,13 @@ export default function PurchasesAndOrders({
               <div className="orders-filter flex gap-2">
                 {[
                   { value: "ALL", label: "All" },
-                  { value: "PLACED", label: "Placed" },
                   { value: "DRAFT", label: "Draft" },
-                  { value: "CONFIRMED", label: "Confirmed" },
+                  { value: "SUBMITTED", label: "Submitted" },
+                  { value: "IN_PREPARATION", label: "In Preparation" },
                   { value: "IN_DELIVERY", label: "In Delivery" },
+                  { value: "DELIVERED", label: "Delivered" },
+                  { value: "CONFIRMED", label: "Confirmed" },
+                  { value: "CANCELLED", label: "Cancelled" },
                 ].map((filter) => (
                   <label
                     key={filter.value}

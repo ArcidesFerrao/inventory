@@ -1,7 +1,8 @@
 "use client";
 
-import { completeDelivery } from "@/app/actions/deliveries";
-import React from "react";
+import { arrivedDelivery, completeDelivery } from "@/app/actions/deliveries";
+import React, { useTransition } from "react";
+import toast from "react-hot-toast";
 
 export const CompleteDeliveryButton = ({
   deliveryStatus,
@@ -31,6 +32,74 @@ export const CompleteDeliveryButton = ({
       }
     >
       Complete Delivery
+    </button>
+  );
+};
+
+export const ConfirmDeliveryButton = ({
+  deliveryId,
+  orderId,
+  supplierOrderId,
+  serviceId,
+  status,
+  role,
+}: {
+  deliveryId: string;
+  orderId: string;
+  supplierOrderId: string;
+  serviceId: string;
+  status: string;
+  role: string;
+}) => {
+  const [isPending, startTransition] = useTransition();
+
+  async function handleConfirmDelivery() {
+    startTransition(async () => {
+      try {
+        if (role === "SUPPLIER" && status !== "ARRIVED") {
+          const arrivingConfirmation = await arrivedDelivery(
+            deliveryId,
+            supplierOrderId
+          );
+          if (arrivingConfirmation.success) {
+            toast.success("Delivery marked as arrived.");
+          }
+        } else if (role === "SERVICE" && status === "ARRIVED") {
+          const confirmation = await completeDelivery({
+            deliveryId,
+            orderId,
+            serviceId,
+            supplierOrderId,
+          });
+
+          if (confirmation.success) {
+            toast.success("Delivery confirmed successfully.");
+          }
+        }
+      } catch (error) {
+        console.error("Error confirming delivery:", error);
+      }
+    });
+  }
+
+  const label =
+    role === "SUPPLIER" && status !== "ARRIVED"
+      ? "Mark as arrived"
+      : role === "SERVICE" && status === "ARRIVED"
+      ? "Confirm Delivery"
+      : "Delivery Completed";
+
+  const isDisabled = status === "COMPLETED" || isPending;
+
+  return (
+    <button
+      disabled={isDisabled}
+      onClick={handleConfirmDelivery}
+      className={`delivery-btn confirm-delivery-btn ${
+        isPending ? "opacity-50" : ""
+      } `}
+    >
+      {isPending ? "Processing..." : label}
     </button>
   );
 };

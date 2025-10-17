@@ -29,6 +29,9 @@ export default async function OrdersPage() {
   const approvedOrders = supplierOrders.filter(
     (order) => order.status === "APPROVED"
   );
+  const deliveredOrders = supplierOrders.filter(
+    (order) => order.status === "COMPLETED"
+  );
 
   const totalOrderedItems = supplierOrders.reduce((acc, supplierOrder) => {
     return (
@@ -62,6 +65,10 @@ export default async function OrdersPage() {
         <div className="flex flex-col ">
           <p>Approved</p>
           <h2 className="text-2xl font-semibold">{approvedOrders.length}</h2>
+        </div>
+        <div className="flex flex-col ">
+          <p>Delivered</p>
+          <h2 className="text-2xl font-semibold">{deliveredOrders.length}</h2>
         </div>
         <div className="flex flex-col text-end">
           <p>Total Value</p>

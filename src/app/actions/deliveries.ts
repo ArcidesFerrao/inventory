@@ -87,6 +87,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     },
                     data: {
                         status: "COMPLETED",
+                        deliveredAt: new Date(),
                     },
                     include: {
                         deliveryItems: {
@@ -120,13 +121,9 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             ])
 
             const updatedProducts = await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
-                const orderItem = deliveryItem.orderItem;
-                const supplierProduct = orderItem.product;
-                // const supplierId = orderItem.supplierOrder.supplierId;
-                // const service = orderItem.supplierOrder.order.Service;
+                const supplierProduct = deliveryItem.orderItem.product;
                 const quantity = deliveryItem.quantity;
 
-                // if (!service) return null;
 
                 const updatedSupplierProduct = await tx.supplierProduct.update({
                     where: {
@@ -244,28 +241,54 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
     }
 }
 
-                    // const delivery = await db.delivery.update({
-                    //     where: {
-                    //         id: deliveryId,
-                    //     },
-                    //     data: {
-                    //         status: "COMPLETED",
-                    //     }})
-                    // const suppplierOrder = await db.supplierOrder.update({
-                    //     where: {
-                    //         id: supplierOrderId,
-                    //     },
-                    //     data: {
-                    //         status: "COMPLETED",
-                    //     }
-                    // })
-                    // const order = await db.order.update({
-                    //     where: {
-                    //         id: orderId,
-                    //     },
-                    //     data: {
-                    //         status: "DELIVERED",
-                    //     }
-                    // })
-            
-                    // return {success: true, delivery, order, suppplierOrder};
+export async function arrivedDelivery(deliveryId: string, supplierOrderId: string) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) redirect("/login");
+
+    try {
+        const [delivery, supplierOrder] = await Promise.all([
+            db.delivery.update({
+                where: {
+                    id: deliveryId
+                },
+                data: {
+                    status: "ARRIVED",
+                    deliveredAt: new Date(),
+                },
+                include: {
+                    deliveryItems: true,
+                }
+            }),
+            db.supplierOrder.update({
+                where: {
+                    id: supplierOrderId},
+                data: {
+                    status: "COMPLETED",
+                }
+            })
+        ])
+
+        await logActivity(
+            null,
+            supplierOrder.supplierId,
+            "DELIVERY_ARRIVED",
+            "Delivery",
+            delivery.id,
+            `Delivery #${delivery.id} marked as Arrived by Supplier`,
+            {
+                deliveryId,
+                supplierOrderId,
+                deliveredAt: delivery.deliveredAt,
+                items: delivery.deliveryItems
+            },
+            null,
+            "INFO",
+            null
+        )
+
+        return { success: true, delivery, supplierOrder };
+    } catch (error) {
+        console.error("Error marking delivery as arrived:", error);
+        throw new Error("Failed to mark delivery as arrived");
+    }
+}

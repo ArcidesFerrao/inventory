@@ -310,6 +310,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.confirm-delivery button,
 .schedule-button,
 .delivery-btn,
 .deny-btn,
@@ -329,6 +330,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+.confirm-delivery button:hover,
 .fullfill-btn:hover,
 .order-status button,
 .deliveries-details button,
@@ -339,6 +341,7 @@ nav {
   background-color: var(--border-list);
 }
 
+.confirm-delivery button:hover,
 .user-header a:hover,
 .purchase-list button:hover,
 .schedule-button:hover,
