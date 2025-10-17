@@ -1,6 +1,6 @@
 // import { completeDelivery } from "@/app/actions/deliveries";
 import {
-  CompleteDeliveryButton,
+  // CompleteDeliveryButton,
   ConfirmDeliveryButton,
 } from "@/components/CompleteDeliveryButton";
 import { db } from "@/lib/db";
@@ -121,7 +121,7 @@ export default async function DeliveryPage(props: { params: Params }) {
         }
         role="SUPPLIER"
       />
-      <CompleteDeliveryButton
+      {/* <CompleteDeliveryButton
         deliveryId={delivery?.id || ""}
         deliveryStatus={delivery?.status || ""}
         serviceId={delivery?.order.Service?.id || ""}
@@ -129,7 +129,7 @@ export default async function DeliveryPage(props: { params: Params }) {
         supplierOrderId={
           delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
         }
-      />
+      /> */}
     </div>
   );
 }

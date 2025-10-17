@@ -7,7 +7,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
 
-export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{ orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
+export async function createDelivery({ supplierOrderId, orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
 }[]}) {
     const session = await getServerSession(authOptions);
@@ -21,7 +21,7 @@ export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes
         const delivery = await db.delivery.create({
             data: {
                 orderId,
-                status: "SCHEDULED",
+                status: "PENDING",
                 scheduledAt,
                 deliveredAt: null,
                 notes,
@@ -48,12 +48,21 @@ export async function createDelivery({ orderId, deliveryDate, deliveryTime,notes
             }
         })
 
+        await db.supplierOrder.update({
+            where: {
+                id: supplierOrderId
+            },
+            data: {
+                status: "IN_PREPARATION"
+            }
+        })
+
         await logActivity(
             updatedOrder.serviceId,
             session.user.id,
             "CREATE",
             "Delivery",
-            updatedOrder.id,
+            supplierOrderId,
             `Scheduled delivery for Order #${updatedOrder.id.slice(0,6)}...`,
             {
                 scheduledAt: delivery.scheduledAt,
@@ -241,12 +250,18 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
     }
 }
 
-export async function arrivedDelivery(deliveryId: string, supplierOrderId: string) {
+export async function arrivedDelivery(orderId: string, deliveryId: string, supplierOrderId: string) {
     const session = await getServerSession(authOptions);
     if (!session?.user) redirect("/login");
 
     try {
-        const [delivery, supplierOrder] = await Promise.all([
+        const [order, delivery, supplierOrder] = await Promise.all([
+            db.order.update({
+                where: { id: orderId },
+                data: {
+                    status: "IN_DELIVERY",
+                },
+            }),
             db.delivery.update({
                 where: {
                     id: deliveryId
@@ -276,6 +291,7 @@ export async function arrivedDelivery(deliveryId: string, supplierOrderId: strin
             delivery.id,
             `Delivery #${delivery.id} marked as Arrived by Supplier`,
             {
+                
                 deliveryId,
                 supplierOrderId,
                 deliveredAt: delivery.deliveredAt,
@@ -286,7 +302,7 @@ export async function arrivedDelivery(deliveryId: string, supplierOrderId: strin
             null
         )
 
-        return { success: true, delivery, supplierOrder };
+        return { success: true, order, delivery, supplierOrder };
     } catch (error) {
         console.error("Error marking delivery as arrived:", error);
         throw new Error("Failed to mark delivery as arrived");

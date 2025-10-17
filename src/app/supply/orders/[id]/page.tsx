@@ -169,7 +169,7 @@ export default async function OrderPage(props: { params: Params }) {
                     <p className="text-sm font-extralight">
                       Scheduled Time: {d.scheduledAt.toLocaleTimeString()}
                     </p>
-                    {d.status === "DELIVERED" && (
+                    {d.status === "COMPLETED" && (
                       <p>
                         Delivered Time: {d.deliveredAt?.toLocaleTimeString()}
                       </p>

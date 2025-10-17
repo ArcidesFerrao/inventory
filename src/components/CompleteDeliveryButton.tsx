@@ -62,6 +62,7 @@ export const ConfirmDeliveryButton = ({
           status !== "COMPLETED"
         ) {
           const arrivingConfirmation = await arrivedDelivery(
+            orderId,
             deliveryId,
             supplierOrderId
           );

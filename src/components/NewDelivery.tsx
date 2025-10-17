@@ -7,9 +7,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const SupplierDelivery = ({
+  supplierOrderId,
   order,
   items,
 }: {
+  supplierOrderId: string;
   order: Order;
   items: {
     id: string;
@@ -39,6 +41,7 @@ export const SupplierDelivery = ({
     }
 
     const deliveryData = {
+      supplierOrderId,
       orderId: order.id,
       deliveryDate,
       deliveryTime,
