@@ -46,7 +46,7 @@ export default async function DeliveryPage(props: { params: Params }) {
     <div className="flex flex-col gap-5 w-full">
       <div className="order-header flex justify-between w-full">
         <h2 className="text-2xl font-semibold">Delivery Details</h2>
-        <Link href="/supply/orders">
+        <Link href={`/supply/orders`}>
           <span className="ep--back"></span>
         </Link>
       </div>

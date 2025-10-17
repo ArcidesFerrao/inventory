@@ -68,6 +68,11 @@ export const ConfirmDeliveryButton = ({
           );
           if (arrivingConfirmation.success) {
             toast.success("Delivery marked as arrived.");
+          } else if (!arrivingConfirmation.success) {
+            toast.error(
+              arrivingConfirmation.error ||
+                "Failed to mark delivery as arrived."
+            );
           }
         } else if (role === "SERVICE" && status === "ARRIVED") {
           const confirmation = await completeDelivery({
@@ -83,6 +88,7 @@ export const ConfirmDeliveryButton = ({
         }
       } catch (error) {
         console.error("Error confirming delivery:", error);
+        toast.error("Failed to confirm delivery. Please try again.");
       }
     });
   }

@@ -88,7 +88,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
     if (!session?.user) redirect("/login");
 
     try {
-        const { delivery, supplierOrder, order, updatedProducts } =  await db.$transaction(async (tx) => {
+        const { delivery, supplierOrder, order } =  await db.$transaction(async (tx) => {
             const [delivery, supplierOrder, order] = await Promise.all([
                 tx.delivery.update({
                     where: {
@@ -207,25 +207,26 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
 
         }, { timeout: 20000});
 
-        await Promise.all(updatedProducts.filter(Boolean).map( p => logActivity(
-                    p.serviceId,
-                    p.supplierId,
-                    "DELIVERY_CONFIRMED",
-                    "Delivery",
-                    delivery.id,
-                    `Delivery #${delivery.id} marked as Completed`,
-                    {
-                        deliveryId,
-                        orderId,
-                        supplierOrderId,
-                        totalItems: delivery.deliveryItems.length,
-                        deliveryItems: delivery.deliveryItems
-                    },
-                    null,
-                    'INFO',
-                    null
-                )
-            ))
+        logActivity(
+            serviceId,
+            supplierOrder.supplierId,
+            "DELIVERY_CONFIRMED",
+            "Delivery",
+            delivery.id,
+            `Delivery #${delivery.id} marked as Completed`,
+            {
+                deliveryId,
+                orderId,
+                supplierOrderId,
+                totalItems: delivery.deliveryItems.length,
+                deliveryItems: delivery.deliveryItems,
+                
+            },
+            null,
+            'INFO',
+            null
+        )
+         
             
 
             return { success: true, delivery, supplierOrder, order };
@@ -233,7 +234,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
     } catch (error) {
         console.error("Error completing delivery:", error);
         await logActivity(
-            null,
+            serviceId,
             null,
                     "DELIVERY_Error",
                     "Delivery",
@@ -305,6 +306,21 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
         return { success: true, order, delivery, supplierOrder };
     } catch (error) {
         console.error("Error marking delivery as arrived:", error);
-        throw new Error("Failed to mark delivery as arrived");
+        await logActivity(
+            null,
+            session.user.id,
+                    "DELIVERY_Error",
+                    "Delivery",
+                    deliveryId,
+                    `Error while completing delivery #${deliveryId}`,
+                    {
+                        error: error instanceof Error ? error.message : String(error),
+                    },
+                    null,
+                    'INFO',
+                    null
+                )
+                // throw new Error("Failed to mark delivery as arrived");
+        return {success: false, error: "Error marking delivery as arrived"}
     }
 }

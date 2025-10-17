@@ -44,7 +44,7 @@ export async function createOrder(
                 serviceId: session.user.serviceId,
                 requestedEndDate: new Date (endDate),
                 requestedStartDate: new Date (startDate),
-                status: "PLACED",
+                status: "DRAFT",
                 paymentType: "CASH",
                 supplierOrders: {
                     create: groupedItems.map((so) => ({
@@ -94,6 +94,7 @@ export async function createOrder(
         return { success: true, order};
     } catch (error) {
         console.error("Error creating order:", error);
+        return { success: false, error: "Failed to create order" };
         throw new Error("Failed to create order");
     }
 }

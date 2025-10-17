@@ -246,38 +246,44 @@ export const OrderListItem = ({
               </div>
             </div>
           ))}
-        {order.status === "DELIVERED" && (
-          <div className="confirm-delivery flex flex-col gap-2">
-            <div className="text-xs font-extralight flex flex-col gap-2">
-              <p className="text-xs font-extralight">
-                {order.confirmedDeliveries.length}{" "}
-                {order.confirmedDeliveries.length === 1
-                  ? "delivery"
-                  : "deliveries"}
-              </p>
-              {order.confirmedDeliveries.length > 0 &&
-                order.confirmedDeliveries.map((delivery) => (
-                  <p key={delivery.id}>
-                    {delivery.status} at{" "}
-                    {delivery.deliveredAt?.toLocaleTimeString()},{" "}
-                    {delivery.deliveredAt?.toLocaleDateString()}
-                  </p>
-                ))}
+        {order.status === "DELIVERED" ||
+          (order.status === "IN_DELIVERY" && (
+            <div className="confirm-delivery flex flex-col gap-2">
+              <div className="text-xs font-extralight flex flex-col gap-2">
+                <p className="text-xs font-extralight">
+                  {order.confirmedDeliveries.length}{" "}
+                  {order.confirmedDeliveries.length === 1
+                    ? "delivery"
+                    : "deliveries"}
+                </p>
+                {order.confirmedDeliveries.length > 0 &&
+                  order.confirmedDeliveries.map((delivery) => (
+                    <p key={delivery.id}>
+                      {delivery.status} at{" "}
+                      {delivery.deliveredAt?.toLocaleTimeString()},{" "}
+                      {delivery.deliveredAt?.toLocaleDateString()}
+                    </p>
+                  ))}
+              </div>
+              <ConfirmDeliveryButton
+                deliveryId={order.confirmedDeliveries[0]?.id || ""}
+                orderId={order.id}
+                supplierOrderId={order.supplierOrders[0]?.id || ""}
+                serviceId={order.serviceId || ""}
+                status={order.confirmedDeliveries[0]?.status || ""}
+                role="SERVICE"
+              />
             </div>
-            <ConfirmDeliveryButton
-              deliveryId={order.confirmedDeliveries[0]?.id || ""}
-              orderId={order.id}
-              supplierOrderId={order.supplierOrders[0]?.id || ""}
-              serviceId={order.serviceId || ""}
-              status={order.confirmedDeliveries[0]?.status || ""}
-              role="SERVICE"
-            />
-          </div>
-        )}
+          ))}
       </div>
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">
-          <button disabled className="text-xs">
+          <button
+            disabled
+            className={`text-xs ${
+              order.status === "DELIVERED" ? "text-green-400" : ""
+            }`}
+          >
             {order.status}
           </button>
           <div className="flex items-center gap-2 text-sm font-light">

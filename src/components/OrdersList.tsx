@@ -53,17 +53,17 @@ export const OrdersList = ({
 
     const result = await createOrder(supplierOrdersList, startDate, endDate);
 
-    if (result.message) {
-      toast.error(result.message ?? "Order not processed successfully");
+    if (result.error || !result.success) {
+      toast.error(result.error ?? "Order not processed successfully");
       setLoading(false);
     }
 
-    if (result.success && !result.message) {
+    if (result.success) {
       toast.success("Order Placed Successfuly");
       setTimeout(() => {
         setLoading(false);
         router.push("/service/purchases");
-      }, 500);
+      }, 300);
     }
 
     console.log(result.message ? result.message : `Order placed: ${result}`);
