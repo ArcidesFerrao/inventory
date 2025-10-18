@@ -93,6 +93,8 @@ input {
   border-radius: 0.2rem;
 }
 
+.reg-form textarea,
+.reg-form input,
 .signup-form input,
 .login-form input {
   background-color: var(--accent);

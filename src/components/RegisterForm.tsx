@@ -216,10 +216,10 @@ export const SupplierRegisterForm = () => {
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col gap-2 min-w-96"
+      className="reg-form flex flex-col gap-2 max-w-lg"
     >
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-2 ">
           <label>Name</label>
           <input
             type="text"
@@ -232,7 +232,7 @@ export const SupplierRegisterForm = () => {
         {fields.name.allErrors && <p>{fields.name.errors}</p>}
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-2">
           <label>Email</label>
           <input
             type="text"
@@ -245,7 +245,7 @@ export const SupplierRegisterForm = () => {
         {fields.email.allErrors && <p>{fields.email.errors}</p>}
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-2">
           <label>Phone Number</label>
           <input
             type="text"
@@ -258,7 +258,7 @@ export const SupplierRegisterForm = () => {
         {fields.phone.allErrors && <p>{fields.phone.errors}</p>}
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-2">
           <label>Address</label>
           <input
             type="text"
@@ -284,7 +284,7 @@ export const SupplierRegisterForm = () => {
         {fields.description.allErrors && <p>{fields.description.errors}</p>}
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-2">
           <label>Website</label>
           <input
             type="text"
