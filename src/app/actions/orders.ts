@@ -103,24 +103,60 @@ export async function createOrder(
 export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: string; orderId: string;}) {
 
     try {
-        const order = await db.order.update({
-            where: {
-                id: orderId
-            },
-            data: {
-                status: "SUBMITTED"
-            }
-        })
+        const result = await db.$transaction(async (tx) => {
+            const [order, supplierOrder] = await Promise.all([
 
-        const supplierOrder = await db.supplierOrder.update({
-            where: {
-                id: supplierOrderId
-            },
-            data: {
-                status: "APPROVED"
-            }
-        })
-        await logActivity(
+                tx.order.update({
+                    where: {
+                        id: orderId
+                    },
+                    data: {
+                        status: "SUBMITTED"
+                    }
+                }),
+                tx.supplierOrder.update({
+                    where: {
+                        id: supplierOrderId
+                    },
+                    data: {
+                        status: "APPROVED"
+                    }
+                })
+            ])
+            
+            if (order.serviceId) {
+                
+                await tx.supplierCustomer.upsert({
+                    where: {
+                        supplierId_serviceId: {
+                            supplierId: supplierOrder.supplierId,
+                            serviceId: order.serviceId,
+                        }
+                        
+                    },
+                    update: {
+                        Order: {
+                            connect: [{
+                                id: orderId
+                            }]
+                        }
+                    },
+                    create: {
+                        serviceId: order.serviceId,
+                        supplierId: supplierOrder.supplierId,
+                        Order: {
+                            connect: [{
+                                id: orderId
+                            }]
+                        }
+                    }
+                    
+                })
+
+                
+            };
+            
+            await logActivity(
                     order.serviceId,
                     supplierOrder.supplierId,
                     "UPDATE",
@@ -128,13 +164,18 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                     order.id,
                     `Order status`,
                     {
+                        supplierOrderId,
                         update: `Order status to "Submitted" and Supplier Order to "Approved"`
                     },
                     null,
                     'INFO',
                     null
                 );
-        return { success: true, order, supplierOrder};
+
+            return {order, supplierOrder}
+        })
+
+        return { success: true, ...result};
 
 
     } catch (error) {
