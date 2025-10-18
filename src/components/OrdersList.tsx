@@ -3,19 +3,20 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { Supplier, SupplierProduct, Unit } from "@prisma/client";
+// import { Supplier, SupplierProduct, Unit } from "@prisma/client";
 import { createOrder } from "@/app/actions/orders";
 import toast from "react-hot-toast";
+import { SupplierProductsWithUnit } from "@/types/types";
 
-type ProductsWithUnit = SupplierProduct & {
-  Unit: Unit | null;
-  supplier: Supplier;
-};
+// type ProductsWithUnit = SupplierProduct & {
+//   Unit: Unit | null;
+//   supplier: Supplier;
+// };
 
 export const OrdersList = ({
   initialProducts,
 }: {
-  initialProducts: ProductsWithUnit[];
+  initialProducts: SupplierProductsWithUnit[];
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -110,7 +111,7 @@ export const OrdersList = ({
   }, 0);
 
   return (
-    <>
+    <div className="sales-content flex justify-between gap-4">
       <div className="products-selection flex flex-col gap-4 w-full p-4">
         <ul>
           {products.map((product) => (
@@ -120,9 +121,9 @@ export const OrdersList = ({
             >
               <div>
                 <h3>{product.name}</h3>
-                <p className="text-xs font-extrathin">
+                {/* <p className="text-xs font-extrathin">
                   Supplier: {product.supplier.name}
-                </p>
+                </p> */}
               </div>
 
               <div className="flex gap-4 items-center max-w-6/12">
@@ -191,6 +192,6 @@ export const OrdersList = ({
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };

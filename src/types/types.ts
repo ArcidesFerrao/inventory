@@ -92,3 +92,11 @@ export type UserProfile = User & {
   Service: Service | null;
   Supplier: Supplier | null;
 }
+
+export type SupplierWithProducts = Supplier & {
+  products: SupplierProductsWithUnit[]
+}
+
+export type SupplierProductsWithUnit = SupplierProduct & {
+  supplier: Supplier
+}

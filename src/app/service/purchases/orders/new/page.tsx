@@ -1,30 +1,45 @@
-import { OrdersList } from "@/components/OrdersList";
+// import { OrdersList } from "@/components/OrdersList";
+import { ServiceOrder } from "@/components/ServiceOrder";
 import { db } from "@/lib/db";
 import Link from "next/link";
 
 export default async function NewOrder() {
-  const products = await db.supplierProduct.findMany({
+  // const products = await db.supplierProduct.findMany({
+  //   include: {
+  //     Unit: true,
+  //     supplier: true,
+  //   },
+  // });
+
+  const suppliers = await db.supplier.findMany({
     include: {
-      Unit: true,
-      supplier: true,
+      products: {
+        include: {
+          Unit: true,
+          supplier: true,
+        },
+      },
     },
   });
 
   return (
-    <div className="sales-section flex flex-col gap-5 w-full">
-      <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-bold">Order Products</h2>
-        <Link href="/service/purchases" className="add-product flex gap-1">
-          <span className="text-md px-2">Cancel</span>
-        </Link>
+    <>
+      <div className="sales-section flex flex-col gap-5 w-full">
+        <div className="list-header flex items-center justify-between w-full">
+          <h2 className="text-2xl font-bold">Order Products</h2>
+          <Link href="/service/purchases" className="add-product flex gap-1">
+            <span className="text-md px-2">Cancel</span>
+          </Link>
+        </div>
+        {/* <div className="sales-content flex justify-between gap-4">
+          {products.length === 0 ? (
+            <p>No products found...</p>
+          ) : (
+            <OrdersList initialProducts={products} />
+          )}
+        </div> */}
+        {suppliers.length > 0 && <ServiceOrder suppliers={suppliers} />}
       </div>
-      <div className="sales-content flex justify-between gap-4">
-        {products.length === 0 ? (
-          <p>No products found...</p>
-        ) : (
-          <OrdersList initialProducts={products} />
-        )}
-      </div>
-    </div>
+    </>
   );
 }
