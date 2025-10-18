@@ -98,6 +98,7 @@ model SupplierProduct {
   PurchaseItem  PurchaseItem[]
   OrderItem     OrderItem[]
   StockMovement StockMovement[]
+  SaleItem      SaleItem[]
 
   @@index([supplierId]) // list products per supplier
   @@index([status]) // filter by active/inactive
@@ -150,13 +151,15 @@ model Sale {
 }
 
 model SaleItem {
-  id        String  @id @default(ulid())
-  saleId    String
-  productId String
-  quantity  Int
-  price     Float
-  product   Product @relation(fields: [productId], references: [id])
-  sale      Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  id                String           @id @default(ulid())
+  saleId            String
+  productId         String?
+  supplierProductId String?
+  quantity          Int
+  price             Float
+  product           Product?         @relation(fields: [productId], references: [id])
+  sale              Sale             @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  supplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
 }
 
 model Purchase {

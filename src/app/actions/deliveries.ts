@@ -90,6 +90,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
 
     try {
         const { delivery, supplierOrder, order } =  await db.$transaction(async (tx) => {
+            // Update delivery, supplierOrder and order 
             const [delivery, supplierOrder, order] = await Promise.all([
                 tx.delivery.update({
                     where: {
@@ -111,7 +112,6 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                         }
                     }
                 }),
-                
                 tx.supplierOrder.update({
                     where: {
                         id: supplierOrderId,
@@ -129,6 +129,8 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     },
                 })
             ])
+
+            //Handle stock updates
 
             const updatedProducts = await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
                 const supplierProduct = deliveryItem.orderItem.product;
@@ -199,10 +201,48 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                         referenceId: deliveryItem.id,
                         notes: `Delivery #${delivery.id.slice(0,8)}... completed, added to service stock`,
                     }
-            });
+                });
 
                 return { serviceId, supplierId: updatedSupplierProduct.supplierId, deliveryId}
-        }));
+            }));
+
+            // Create Sale + purchase with their items
+            const total = delivery.deliveryItems.reduce((sum, item) => sum + item.orderItem.price * item.quantity, 0);
+
+            const supplierSale = await tx.sale.create({
+                data: {
+                    supplierId: supplierOrder.supplierId,
+                    total,
+                    cogs: 0,
+                    paymentType: "CASH",
+                    SaleItem: {
+                        create: delivery.deliveryItems.map((item) => ({
+                            supplierProductId: item.orderItem.supplierProductId,
+                            quantity: item.quantity,
+                            price: item.orderItem.price
+                        }))
+                    }
+                }
+            })
+
+            const servicePurchase = await tx.purchase.create({
+                data: {
+                    serviceId,
+                    total,
+                    paymentType: "CASH",
+                    PurchaseItem: {
+                        create: delivery.deliveryItems.map((item) => ({
+                            supplierProductId: item.orderItem.supplierProductId,
+                            stock: item.quantity,
+                            price: item.orderItem.price,
+                            quantity: item.quantity,
+                            totalCost: item.orderItem.price * item.quantity
+                        }))
+                    }
+                }
+            })
+
+
 
             return { delivery, supplierOrder, order, updatedProducts};
 
