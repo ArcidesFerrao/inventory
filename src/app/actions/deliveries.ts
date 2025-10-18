@@ -244,7 +244,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
 
 
 
-            return { delivery, supplierOrder, order, updatedProducts};
+            return { delivery, supplierOrder, order, updatedProducts, supplierSale, servicePurchase};
 
         }, { timeout: 20000});
 
@@ -288,7 +288,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     'INFO',
                     null
                 )
-        throw new Error("Failed to complete delivery");
+        return {success: false, error: "Error confirming delivery"}
     }
 }
 

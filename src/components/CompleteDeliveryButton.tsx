@@ -90,6 +90,10 @@ export const ConfirmDeliveryButton = ({
 
           if (confirmation.success) {
             toast.success("Delivery confirmed successfully.");
+            router.refresh();
+          }
+          if (!confirmation.success && confirmation.error) {
+            toast.error(confirmation.error);
           }
         }
       } catch (error) {
