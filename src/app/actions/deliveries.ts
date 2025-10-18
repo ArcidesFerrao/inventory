@@ -18,44 +18,52 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
 
     try {
         const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`)
-        const delivery = await db.delivery.create({
-            data: {
-                orderId,
-                status: "PENDING",
-                scheduledAt,
-                deliveredAt: null,
-                notes,
-                deliveryItems: {
-                    create: items.map((i) => ({
-                        orderItemId: i.itemId,
-                        quantity: i.deliveredQty,
-                    }))
-                }
-            },
-            include: {
-                deliveryItems: true,
-            }
-        })
-        const updatedOrder = await db.order.update({
-            where: {
-                id: orderId
-            },
-            data: {
-                status: "IN_PREPARATION"
-            },
-            include: {
-                supplierOrders: true
-            }
+        const {delivery, updatedOrder} = await db.$transaction(async (tx) => {
+            const [delivery, updatedOrder, updatedSupplierOrder] = await Promise.all([
+                tx.delivery.create({
+                    data: {
+                        orderId,
+                        status: "PENDING",
+                        scheduledAt,
+                        deliveredAt: null,
+                        notes,
+                        deliveryItems: {
+                            create: items.map((i) => ({
+                                orderItemId: i.itemId,
+                                quantity: i.deliveredQty,
+                            }))
+                        }
+                    },
+                    include: {
+                        deliveryItems: true,
+                    }
+                }),
+
+                tx.order.update({
+                    where: {
+                        id: orderId
+                    },
+                    data: {
+                        status: "IN_PREPARATION"
+                    },
+                    include: {
+                        supplierOrders: true
+                    }
+                }),
+
+                tx.supplierOrder.update({
+                    where: {
+                        id: supplierOrderId
+                    },
+                    data: {
+                        status: "IN_PREPARATION"
+                    }
+                })
+            ])
+
+            return {delivery, updatedOrder}
         })
 
-        await db.supplierOrder.update({
-            where: {
-                id: supplierOrderId
-            },
-            data: {
-                status: "IN_PREPARATION"
-            }
-        })
 
         await logActivity(
             updatedOrder.serviceId,
@@ -74,12 +82,11 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
             null
         );
 
-        return {success: true, delivery};
+        return {success: true, delivery, updatedOrder};
 
     } catch (error) {
         console.error("Error creating delivery:", error);
         return { success: false, error: "Failed to create delivery" };
-        // throw new Error("Failed to create delivery");
     }
 }
 

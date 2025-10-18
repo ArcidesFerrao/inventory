@@ -108,17 +108,17 @@ export default function PurchasesAndOrders({
           <div className="purchases-data flex justify-between w-full">
             <div>
               <p>Total Purchases</p>
-              <h2 className="text-2xl font-medium">{purchases.length}</h2>
+              <h2 className="text-2xl font-semibold">{purchases.length}</h2>
             </div>
             <div>
               <p>Total Spent</p>
-              <h2 className="text-2xl font-medium">
+              <h2 className="text-2xl font-semibold">
                 MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
               </h2>
             </div>
             <div>
               <p>Items Purchased</p>
-              <h2 className="text-2xl font-medium">{totalPurchasedItems}</h2>
+              <h2 className="text-2xl font-semibold">{totalPurchasedItems}</h2>
             </div>
           </div>
           {purchases.length === 0 ? (

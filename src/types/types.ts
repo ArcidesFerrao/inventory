@@ -51,6 +51,13 @@ export type SupplierOrderWithOrderAndItems = SupplierOrder & {
   } | null;
   items: OrderItem[]
 }
+export type SupplierOrderWithOrderAndDeliveries = SupplierOrder & {
+  order: Order & {
+    Service: Service | null;
+    confirmedDeliveries: Delivery[]
+  } | null;
+  items: OrderItem[]
+}
 
 export type ProductWithCategory = Product & {
   Category: Category | null

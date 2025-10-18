@@ -5,7 +5,8 @@ import {
   OrderWithSupplierOrders,
   PurchaseWithItems,
   SaleWithItems,
-  SupplierOrderWithOrderAndItems,
+  SupplierOrderWithOrderAndDeliveries,
+  // SupplierOrderWithOrderAndItems,
   SupplierSaleWithItems,
 } from "@/types/types";
 import { ConfirmDeliveryButton } from "./CompleteDeliveryButton";
@@ -166,7 +167,7 @@ export const PurchaseListItem = ({
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-medium  text-nowrap">
+          <h2 className="text-lg font-bold text-nowrap">
             MZN {purchases.total.toFixed(2)}
           </h2>
         </div>
@@ -538,12 +539,15 @@ export function SupplierLogListItem({
 export const SupplierOrderListItem = ({
   supplierOrder,
 }: {
-  supplierOrder: SupplierOrderWithOrderAndItems;
+  supplierOrder: SupplierOrderWithOrderAndDeliveries;
+  // supplierOrder: SupplierOrderWithOrderAndItems;
 }) => {
   const totalItemsOrdered = supplierOrder.items.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
     0
   );
+  const delivery = supplierOrder.order?.confirmedDeliveries?.[0];
+  // console.log(delivery);
   return (
     <li key={supplierOrder.id} className="list-orders flex justify-between">
       <div className="flex flex-col gap-5">
@@ -578,6 +582,21 @@ export const SupplierOrderListItem = ({
               </p>
             </div>
           </div>
+        ) : supplierOrder.status === "COMPLETED" && delivery ? (
+          <div className="text-md font-medium">
+            <p className="text-sm font-light">Delivered at: </p>
+            <div className="flex gap-1 text-md font-medium">
+              <p>
+                {supplierOrder.order?.confirmedDeliveries[0].deliveredAt?.toLocaleDateString()}
+                ,
+              </p>
+              <p>
+                {supplierOrder.order?.confirmedDeliveries[0].deliveredAt?.toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+        ) : supplierOrder.status === "REJECTED" ? (
+          ""
         ) : (
           <div className="delivery-window flex flex-col gap-2">
             <p className="text-sm font-light">

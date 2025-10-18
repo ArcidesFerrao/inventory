@@ -71,6 +71,7 @@ export const ConfirmDeliveryButton = ({
           );
           if (arrivingConfirmation.success) {
             toast.success("Delivery marked as arrived.");
+            router.refresh();
           } else if (!arrivingConfirmation.success) {
             toast.error(
               arrivingConfirmation.error ||

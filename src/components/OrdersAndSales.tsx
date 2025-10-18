@@ -2,17 +2,18 @@
 
 import {
   SupplierSaleWithItems,
-  SupplierOrderWithOrderAndItems,
+  // SupplierOrderWithOrderAndItems,
+  SupplierOrderWithOrderAndDeliveries,
 } from "@/types/types";
 import React, { useState } from "react";
 import { SupplierSaleListItem, SupplierOrderListItem } from "./List";
 
-export default function PurchasesAndOrders({
+export default function OrdersAndSales({
   supplierOrders,
   sales,
 }: {
   sales: SupplierSaleWithItems[];
-  supplierOrders: SupplierOrderWithOrderAndItems[];
+  supplierOrders: SupplierOrderWithOrderAndDeliveries[];
 }) {
   const [view, setView] = useState<"sales" | "orders">("orders");
 

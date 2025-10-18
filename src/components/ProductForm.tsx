@@ -48,6 +48,7 @@ export const ProductForm = ({
   serviceId: string;
 }) => {
   const actionFn = product ? editProduct : createProduct;
+  // console.log(actionFn);
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -94,6 +95,11 @@ export const ProductForm = ({
           : "Product created successfully!"
       );
       router.push("/service/products");
+    }
+    if (state?.status === "error") {
+      toast.error(
+        product ? "Failed to edit Product" : "Failed to add Product!"
+      );
     }
 
     const fetchCategories = async () => {
@@ -196,7 +202,6 @@ export const ProductForm = ({
                   name="unitId"
                   id="unitId"
                   value={units.find((u) => u.name === "pcs")?.id}
-                  disabled
                 >
                   <option value="" disabled>
                     Select a unit
@@ -280,8 +285,8 @@ export const ProductForm = ({
                 ))}
               </select>
 
-              {fields.Category.errors && (
-                <p className="text-xs font-light">{fields.Category.errors}</p>
+              {fields.categoryId.errors && (
+                <p className="text-xs font-light">{fields.categoryId.errors}</p>
               )}
             </div>
             <fieldset className="flex flex-col gap-4">

@@ -18,6 +18,7 @@ export default async function OrdersPage() {
       order: {
         include: {
           Service: true,
+          confirmedDeliveries: true,
         },
       },
     },
