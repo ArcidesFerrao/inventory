@@ -1,4 +1,4 @@
-import ExportSelection from "@/components/ExportPdf";
+import { ExportSelection } from "@/components/ExportPdf";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";

@@ -42,7 +42,7 @@ type SaleWithItems = Sale & {
     price: number;
     quantity: number;
     saleId: string;
-    productId: string;
+    productId: string | null;
     product: Product | null;
   }[];
 };
