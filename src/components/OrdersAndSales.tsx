@@ -60,31 +60,25 @@ export default function OrdersAndSales({
       {view === "orders" && (
         <>
           <div className="orders-data flex justify-between">
-            <div className="flex flex-col ">
+            <div className="flex flex-col gap-1">
               <p>Total Orders</p>
-              <h2 className="text-2xl font-semibold">
-                {supplierOrders.length}
-              </h2>
+              <h2 className="text-xl font-bold">{supplierOrders.length}</h2>
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col  gap-1">
               <p>Pending</p>
-              <h2 className="text-2xl font-semibold">{pendingOrders.length}</h2>
+              <h2 className="text-xl font-bold">{pendingOrders.length}</h2>
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col  gap-1">
               <p>Approved</p>
-              <h2 className="text-2xl font-semibold">
-                {approvedOrders.length}
-              </h2>
+              <h2 className="text-xl font-bold">{approvedOrders.length}</h2>
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col  gap-1">
               <p>Delivered</p>
-              <h2 className="text-2xl font-semibold">
-                {deliveredOrders.length}
-              </h2>
+              <h2 className="text-xl font-bold">{deliveredOrders.length}</h2>
             </div>
-            <div className="flex flex-col text-end">
+            <div className="flex flex-col text-end gap-1">
               <p>Total Value</p>
-              <h2 className="text-2xl font-semibold">
+              <h2 className="text-xl font-bold">
                 MZN{" "}
                 {supplierOrders
                   .filter((so) => so.status !== "REJECTED")
@@ -114,17 +108,17 @@ export default function OrdersAndSales({
       {view === "sales" && (
         <>
           <div className="flex justify-between">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <p>Total Sales</p>
               <h2 className="text-xl font-bold">{sales.length}</h2>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <p>Revenue</p>
               <h2 className="text-xl font-bold">
                 MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
               </h2>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <p>Gross Profit</p>
               <h2 className="text-xl font-bold">
                 MZN{" "}
