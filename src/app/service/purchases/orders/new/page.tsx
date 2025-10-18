@@ -1,16 +1,8 @@
-// import { OrdersList } from "@/components/OrdersList";
 import { ServiceOrder } from "@/components/ServiceOrder";
 import { db } from "@/lib/db";
 import Link from "next/link";
 
 export default async function NewOrder() {
-  // const products = await db.supplierProduct.findMany({
-  //   include: {
-  //     Unit: true,
-  //     supplier: true,
-  //   },
-  // });
-
   const suppliers = await db.supplier.findMany({
     include: {
       products: {
@@ -31,13 +23,6 @@ export default async function NewOrder() {
             <span className="text-md px-2">Cancel</span>
           </Link>
         </div>
-        {/* <div className="sales-content flex justify-between gap-4">
-          {products.length === 0 ? (
-            <p>No products found...</p>
-          ) : (
-            <OrdersList initialProducts={products} />
-          )}
-        </div> */}
         {suppliers.length > 0 && <ServiceOrder suppliers={suppliers} />}
       </div>
     </>

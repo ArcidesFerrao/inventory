@@ -468,3 +468,21 @@ nav {
 .login-form {
   max-width: 500px;
 }
+
+.unselected-supplier:hover {
+  background-color: var(--input-bg);
+  border: solid 1px var(--foreground);
+  border-radius: 0;
+}
+.unselected-supplier {
+  border: solid 1px var(--divider);
+  border-radius: 0.4rem;
+  /* padding: 1rem; */
+  background-color: var(--hover-bg);
+}
+
+.selected-supplier {
+  border: solid 1px var(--divider);
+  background-color: var(--hover-bg);
+  padding: 1rem;
+}
