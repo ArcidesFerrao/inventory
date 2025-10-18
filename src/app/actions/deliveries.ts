@@ -226,6 +226,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     SaleItem: {
                         create: delivery.deliveryItems.map((item) => ({
                             supplierProductId: item.orderItem.supplierProductId,
+                            productId: item.orderItem.product.id,
                             quantity: item.quantity,
                             price: item.orderItem.price
                         }))
@@ -254,21 +255,6 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                 }
             })
 
-            // for (const item of servicePurchase.PurchaseItem) {
-            //     if (!item.productId) continue;
-
-            //     await tx.product.update({
-            //         where: {
-            //             id: item.productId
-            //         },
-            //         data: {
-            //             price: item.price,
-            //         }
-            //     })
-            // }
-
-
-
             return { delivery, supplierOrder, order, updatedProducts, supplierSale, servicePurchase};
 
         }, { timeout: 20000});
@@ -292,27 +278,26 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             'INFO',
             null
         )
-         
-            
 
-            return { success: true, delivery, supplierOrder, order };
+        return { success: true, delivery, supplierOrder, order };
         
     } catch (error) {
         console.error("Error completing delivery:", error);
         await logActivity(
             serviceId,
             null,
-                    "DELIVERY_Error",
-                    "Delivery",
-                    deliveryId,
-                    `Error while completing delivery #${deliveryId}`,
-                    {
-                        error: error instanceof Error ? error.message : String(error),
-                    },
-                    null,
-                    'INFO',
-                    null
-                )
+            "DELIVERY_Error",
+            "Delivery",
+            deliveryId,
+            `Error while completing delivery #${deliveryId}`,
+            {
+                error: error instanceof Error ? error.message : String(error),
+            },
+            null,
+            'INFO',
+            null
+        )
+            
         return {success: false, error: "Error confirming delivery"}
     }
 }
@@ -375,18 +360,18 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
         await logActivity(
             null,
             session.user.id,
-                    "DELIVERY_Error",
-                    "Delivery",
-                    deliveryId,
-                    `Error while completing delivery #${deliveryId}`,
-                    {
-                        error: error instanceof Error ? error.message : String(error),
-                    },
-                    null,
-                    'INFO',
-                    null
-                )
-                // throw new Error("Failed to mark delivery as arrived");
+            "DELIVERY_Error",
+            "Delivery",
+            deliveryId,
+            `Error while completing delivery #${deliveryId}`,
+            {
+                error: error instanceof Error ? error.message : String(error),
+            },
+            null,
+            'INFO',
+            null
+        )
+            // throw new Error("Failed to mark delivery as arrived");
         return {success: false, error: "Error marking delivery as arrived"}
     }
 }

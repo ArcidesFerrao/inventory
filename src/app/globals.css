@@ -223,7 +223,8 @@ nav {
 
 .dash-section {
   background-color: var(--dash-bg);
-  min-height: 80vh;
+  height: 75vh;
+  overflow: auto;
 }
 
 .items-list,
