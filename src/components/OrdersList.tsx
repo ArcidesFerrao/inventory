@@ -21,6 +21,8 @@ export const OrdersList = ({
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [listError, setListError] = useState<string | null>(null);
 
   const [products, setProducts] = useState(
     initialProducts.map((p) => ({ ...p, quantity: 0 }))
@@ -29,7 +31,18 @@ export const OrdersList = ({
   const handleCompleteOrder = async () => {
     console.log("creating order");
     setLoading(true);
+    if (startDate === "" || endDate === "") {
+      setError("Start and End dates required");
+    } else {
+      setError(null);
+    }
     const orderItems = products.filter((product) => product.quantity > 0);
+
+    if (orderItems.length === 0) {
+      setListError("No order items");
+    } else {
+      setError(null);
+    }
 
     const groupedBySupplier = orderItems.reduce((acc, item) => {
       if (!acc[item.supplierId]) acc[item.supplierId] = [];
@@ -66,7 +79,7 @@ export const OrdersList = ({
       }, 300);
     }
 
-    console.log(result.message ? result.message : `Order placed: ${result}`);
+    console.log(result.error ? result.error : `Order placed: ${result.order}`);
   };
 
   const handleIncrement = (id: string) => {
@@ -129,6 +142,9 @@ export const OrdersList = ({
             </li>
           ))}
         </ul>
+        {listError && (
+          <p className="font-extralight text-sm text-red-400">{listError}</p>
+        )}
       </div>
       <div className="order-summary flex flex-col gap-4 w-1/3">
         <h2 className="text-xl font-medium">Order Summary</h2>
@@ -140,8 +156,8 @@ export const OrdersList = ({
           <h3>Total:</h3>
           <p>{totalPrice} MZN</p>
         </div>
-        <div>
-          <div>
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <h3>Start Date</h3>
             <input
               type="date"
@@ -152,7 +168,7 @@ export const OrdersList = ({
               className="border p-2 rounded w-full"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1">
             <h3>End Date</h3>
             <input
               type="date"
@@ -162,13 +178,18 @@ export const OrdersList = ({
             />
           </div>
         </div>
-        <button
-          onClick={() => handleCompleteOrder()}
-          disabled={loading}
-          className="complete-btn border px-4 py-2 rounded mt-4"
-        >
-          {loading ? "..." : "Order"}
-        </button>
+        <div className="flex flex-col gap-1">
+          {error && (
+            <p className="font-extralight text-sm text-red-400">{error}</p>
+          )}
+          <button
+            onClick={() => handleCompleteOrder()}
+            disabled={loading}
+            className="complete-btn border px-4 py-2 rounded mt-4"
+          >
+            {loading ? "..." : "Order"}
+          </button>
+        </div>
       </div>
     </>
   );

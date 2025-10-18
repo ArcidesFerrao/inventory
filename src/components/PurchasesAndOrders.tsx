@@ -41,12 +41,12 @@ export default function PurchasesAndOrders({
     );
   }, 0);
 
-  const totalOrderedItems = orders.reduce((acc, order) => {
-    return (
-      acc +
-      order.supplierOrders
-        .filter((so) => so.status !== "CANCELLED")
-        .reduce((supplierAcc, supplierOrder) => {
+  const totalOrderedItems = orders
+    .filter((so) => so.status !== "CANCELLED")
+    .reduce((acc, order) => {
+      return (
+        acc +
+        order.supplierOrders.reduce((supplierAcc, supplierOrder) => {
           return (
             supplierAcc +
             supplierOrder.items.reduce(
@@ -55,8 +55,8 @@ export default function PurchasesAndOrders({
             )
           );
         }, 0)
-    );
-  }, 0);
+      );
+    }, 0);
 
   return (
     <div className="flex flex-col gap-5 w-full">

@@ -27,7 +27,7 @@ export async function createOrder(
 
     if (!session?.user) redirect("/login");
 
-    if (groupedItems.length === 0) return {success: false, message: "No order items"}
+    if (groupedItems.length === 0) return {success: false, error: "No order items"}
 
     const total = groupedItems.reduce((sum, supplierOrder) => {
         const supplierTotal = supplierOrder.items.reduce(
