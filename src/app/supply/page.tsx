@@ -35,34 +35,34 @@ export default async function SupplyPage() {
       </div>
 
       <div className=" flex gap-4 my-8">
-        <div className="stats p-4 h-fit flex flex-col justify-between gap-2 min-w-52">
+        <div className="stats p-4 flex flex-col gap-2 min-w-52">
           <h2 className="text-2xl font-semibold underline">Financials</h2>
-          <div className="flex flex-col stats-container gap-1">
-            <div>
-              <h3 className="text-lg font-normal">Total Revenue</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                MZN {stats.revenue.toFixed(2)}
-              </h4>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-normal">Gross Profit</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                MZN {stats.profit.toFixed(2)}
-              </h4>
-            </div>
+          {/* <div className="flex flex-col stats-container gap-1"> */}
+          <div>
+            <h3 className="text-lg font-normal">Total Revenue</h3>
+            <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+              MZN {stats.revenue.toFixed(2)}
+            </h4>
           </div>
+
+          <div>
+            <h3 className="text-lg font-normal">Gross Profit</h3>
+            <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+              MZN {stats.profit.toFixed(2)}
+            </h4>
+          </div>
+          {/* </div> */}
         </div>
-        <div className="stats flex w-full flex-col p-4 justify-between">
-          <div className="stats-header flex flex-col gap-2">
-            <h2 className="text-xl font-semibold underline">Statistics</h2>
+        <div className="stats flex w-full flex-col p-4 gap-2">
+          <div className="stats-header flex flex-col gap-1">
+            <h2 className="text-2xl font-semibold underline">Statistics</h2>
             <p className="font-thin">
               metrics on orders, customers and profitability
             </p>
           </div>
           <div className="stats-container flex justify-between">
             <div className=" flex flex-col gap-2">
-              <h2 className="text-xl font-medium underline ">Profitability</h2>
+              <h2 className="text-lg font-medium underline ">Profitability</h2>
               <div className="stats-container flex flex-col">
                 <div>
                   <h3 className="text-lg font-normal">Orders</h3>
@@ -81,7 +81,7 @@ export default async function SupplyPage() {
             <span className="divider"></span>
 
             <div className=" flex flex-col gap-2">
-              <h2 className="text-xl font-medium underline">Customers</h2>
+              <h2 className="text-lg font-medium underline">Customers</h2>
               <div className="stats-container flex flex-col">
                 <div>
                   <h3 className="text-lg font-normal">Total Customers</h3>
@@ -100,7 +100,7 @@ export default async function SupplyPage() {
             <span className="divider"></span>
 
             <div className=" flex flex-col gap-2">
-              <h2 className="text-xl font-medium underline">Products</h2>
+              <h2 className="text-lg font-medium underline">Products</h2>
               <div>
                 <div className="stats-container flex flex-col">
                   <h3 className="text-lg font-normal">Products Offered</h3>
