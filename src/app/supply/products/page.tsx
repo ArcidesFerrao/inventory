@@ -46,7 +46,7 @@ export default async function ProductsPage() {
         </div>
         <div>
           <p>Out of Stock</p>
-          <h2 className="text-2xl font-medium">1</h2>
+          <h2 className="text-2xl font-medium">0</h2>
         </div>
       </div>
       {products.length === 0 ? (

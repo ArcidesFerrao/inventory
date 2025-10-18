@@ -114,7 +114,9 @@ export const ProductForm = ({
       onSubmit={form.onSubmit}
       className="flex flex-col gap-4 min-w-md"
     >
-      <h2>Fill the form to {product ? "edit the" : "create a new"} Product</h2>
+      <h2 className="font-extralight">
+        Fill the form to {product ? "edit the" : "create a new"} Product
+      </h2>
       <section className="flex flex-col gap-4">
         <input
           type="hidden"
@@ -404,7 +406,7 @@ export const SupplierProductForm = ({
       onSubmit={form.onSubmit}
       className="flex flex-col gap-4 min-w-md"
     >
-      <h2>
+      <h2 className="font-extralight">
         Fill the form to {supplierProduct ? "edit the" : "create a new"}{" "}
         Supplier Product
       </h2>

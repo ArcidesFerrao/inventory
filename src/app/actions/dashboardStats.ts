@@ -56,18 +56,21 @@ export async function getServiceDashBoardStats() {
     // calculate cogs
     for (const item of sales) {
         let cogsForItem = 0
+        if (item.product) {
 
-        if (!item.product?.MenuItems || item.product.MenuItems.length === 0) {
-            for (const recipe of item.product.MenuItems) {
-                cogsForItem += recipe.quantity * (recipe.stock.price || 0);
+            if (item.product?.MenuItems || item.product.MenuItems.length > 0) {
+                for (const recipe of item.product.MenuItems) {
+                    cogsForItem += recipe.quantity * (recipe.stock.price || 0);
+                }
+            } else {
+                cogsForItem += item.product.price || 0;
             }
         } else {
-            cogsForItem += item.product.price || 0;
+            console.warn(`SaleItem ${item.id} has no menu items`)
         }
         cogsForItem *= item.quantity;
         totalCogs += cogsForItem;
     }
-
     const earnings = totalEarnings._sum.total || 0;
     const purchases = totalPurchases._sum.total || 0;
     
@@ -98,6 +101,8 @@ export async function getServiceDashBoardStats() {
     })
 
     const topProducts = await Promise.all(mostBoughtProducts.map(async (item) => {
+        if (!item.productId) return
+
         const product = await db.product.findUnique({
             where: { id: item.productId }
         })
