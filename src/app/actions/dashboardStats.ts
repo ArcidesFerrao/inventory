@@ -57,7 +57,7 @@ export async function getServiceDashBoardStats() {
     for (const item of sales) {
         let cogsForItem = 0
 
-        if (!item.product.MenuItems || item.product.MenuItems.length === 0) {
+        if (!item.product?.MenuItems || item.product.MenuItems.length === 0) {
             for (const recipe of item.product.MenuItems) {
                 cogsForItem += recipe.quantity * (recipe.stock.price || 0);
             }
@@ -155,20 +155,7 @@ export async function getSupplierDashBoardStats() {
         }
     })
 
-    // const totalCogsAggregate = await db.orderItem.aggregate({
-    //     where: {
-    //         supplierOrder: {
-    //             supplierId
-    //         }
-    //     },
-    //     _sum: {
-    //         price: true
-    //     }
-    // })
-
     const revenue = totalRevenue._sum.total || 0;
-
-    // const orderItemTotalValue = totalCogsAggregate._sum.price || 0;
 
     const earnings = revenue;
 

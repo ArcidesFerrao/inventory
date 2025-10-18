@@ -34,26 +34,6 @@ export default async function OrdersPage() {
     },
   });
 
-  // const pendingOrders = supplierOrders.filter(
-  //   (order) => order.status === "PENDING"
-  // );
-  // const approvedOrders = supplierOrders.filter(
-  //   (order) => order.status === "APPROVED"
-  // );
-  // const deliveredOrders = supplierOrders.filter(
-  //   (order) => order.status === "COMPLETED"
-  // );
-
-  // const totalOrderedItems = supplierOrders.reduce((acc, supplierOrder) => {
-  //   return (
-  //     acc +
-  //     supplierOrder.items.reduce(
-  //       (itemAcc, item) => itemAcc + item.orderedQty,
-  //       0
-  //     )
-  //   );
-  // }, 0);
-
   return (
     <div className="products-list flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">

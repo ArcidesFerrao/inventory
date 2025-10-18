@@ -18,7 +18,6 @@ export default async function SupplyPage() {
   }
 
   const stats = await getSupplierDashBoardStats();
-  // const stockProducts = await getSupplierProducts(session.user.supplyId);
   const stockProducts = await getSupplierProducts(session.user.supplierId);
   const filteredProducts = stockProducts.filter(
     (product) => (product.stock || product.stock == 0) && product.stock < 10
