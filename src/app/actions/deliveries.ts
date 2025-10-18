@@ -12,7 +12,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
 }[]}) {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user) redirect("/login");
+    if (!session?.user.supplierId) redirect("/login");
 
     if (items.length === 0) return {success:false, message: "No delivery items"}
 
@@ -67,7 +67,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
 
         await logActivity(
             updatedOrder.serviceId,
-            session.user.id,
+            session.user.supplierId,
             "CREATE",
             "Delivery",
             supplierOrderId,

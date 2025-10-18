@@ -162,7 +162,7 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                     "UPDATE",
                     "Order",
                     order.id,
-                    `Order status`,
+                    `Order accepted by supplier`,
                     {
                         supplierOrderId,
                         update: `Order status to "Submitted" and Supplier Order to "Approved"`
