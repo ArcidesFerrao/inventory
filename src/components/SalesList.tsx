@@ -15,7 +15,7 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
   );
 
   const handleCompleteSale = async () => {
-    console.log("creating sale");
+    // console.log("creating sale");
     setLoading(true);
     const saleItems = products.filter((product) => product.quantity > 0);
     const result = await createSale(saleItems, serviceId);
@@ -30,10 +30,10 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
       setTimeout(() => {
         setLoading(false);
         router.push("/service/sales");
-      }, 500);
+      }, 100);
     }
 
-    console.log(result.message ? result.message : `Sale completed: ${result}`);
+    // console.log(result.message ? result.message : `Sale completed`);
   };
 
   const handleIncrement = (id: string) => {
@@ -70,7 +70,7 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
           <h3 className="text-md font-medium underline">Refeição</h3>
           <ul>
             {products.map((product) => {
-              if (product.Category?.name === "Refeicao")
+              if (product.Category?.name === "Meal")
                 return (
                   <li
                     key={product.id}
@@ -106,7 +106,7 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
           <h3 className="text-md font-medium underline">Lanches</h3>
           <ul>
             {products.map((product) => {
-              if (product.Category?.name === "Lanche")
+              if (product.Category?.name === "Lunch")
                 return (
                   <li
                     key={product.id}
@@ -142,7 +142,7 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
           <h3 className="text-md font-medium underline">Bebidas</h3>
           <ul>
             {products.map((product) => {
-              if (product.Category?.name === "Bebidas")
+              if (product.Category?.name === "Drink")
                 return (
                   <li
                     key={product.id}

@@ -346,7 +346,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-medium  text-nowrap">
+          <h2 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
           </h2>
         </div>

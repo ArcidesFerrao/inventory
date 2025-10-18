@@ -61,7 +61,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
                 })
             ])
 
-            return {delivery, updatedOrder}
+            return {delivery, updatedOrder, updatedSupplierOrder}
         })
 
 
@@ -181,6 +181,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                             id: serviceProduct.id,
                         },
                         data: {
+                            price: supplierProduct.price,
                             stock: {
                                 increment: quantity,
                             }
@@ -246,8 +247,24 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                             totalCost: item.orderItem.price * item.quantity
                         }))
                     }
+                },
+                include: {
+                    PurchaseItem: true,
                 }
             })
+
+            // for (const item of servicePurchase.PurchaseItem) {
+            //     if (!item.productId) continue;
+
+            //     await tx.product.update({
+            //         where: {
+            //             id: item.productId
+            //         },
+            //         data: {
+            //             price: item.price,
+            //         }
+            //     })
+            // }
 
 
 
