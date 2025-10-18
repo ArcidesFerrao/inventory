@@ -241,6 +241,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     PurchaseItem: {
                         create: delivery.deliveryItems.map((item) => ({
                             supplierProductId: item.orderItem.supplierProductId,
+                            productId: item.orderItem.product.id,
                             stock: item.quantity,
                             price: item.orderItem.price,
                             quantity: item.quantity,

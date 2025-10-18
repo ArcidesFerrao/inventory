@@ -186,7 +186,7 @@ export const PurchaseListItem = ({
             <tr key={i.id}>
               <td>{i.stock}</td>
               <td>{i.product?.name}</td>
-              <td>MZN {i.unitCost}.00</td>
+              <td>MZN {i.price}.00</td>
               <td>MZN {i.totalCost}.00</td>
             </tr>
           ))}
