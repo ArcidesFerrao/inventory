@@ -46,19 +46,19 @@ export default async function ServicePage() {
           <div className="flex flex-col stats-container gap-1">
             <div>
               <h3 className="text-lg font-normal">Revenue</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
+              <h4 className="text-lg py-1 whitespace-nowrap font-bold">
                 MZN {stats.earnings.toFixed(2)}
               </h4>
             </div>
             <div>
               <h3 className="text-lg font-normal">Purchases</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
+              <h4 className="text-lg py-1 whitespace-nowrap font-bold">
                 MZN {stats.purchases.toFixed(2)}
               </h4>
             </div>
             <div>
               <h3 className="text-lg font-normal">Net Position</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
+              <h4 className="text-lg py-1 whitespace-nowrap font-bold">
                 MZN {stats.balance.toFixed(2)}
               </h4>
             </div>
@@ -66,12 +66,14 @@ export default async function ServicePage() {
         </div>
         <div className="stats flex w-full flex-col p-4 justify-between">
           <div className="stats-header flex flex-col gap-2">
-            <h2 className="text-xl font-medium underline">Statistics</h2>
+            <h2 className="text-2xl font-bold underline">Statistics</h2>
             <p className="font-thin">stats of products, sales and earnings</p>
           </div>
           <div className="stats-container flex justify-between">
             <div className=" flex flex-col gap-2">
-              <h2 className="text-xl font-medium underline ">Profitability</h2>
+              <h2 className="text-lg font-semibold underline ">
+                Profitability
+              </h2>
               <div className="stats-container flex flex-col">
                 <div>
                   <h3 className="text-lg font-normal">Gross Profit</h3>
@@ -90,7 +92,7 @@ export default async function ServicePage() {
             <span className="divider"></span>
 
             <div className=" flex flex-col gap-2">
-              <h2 className="text-xl font-medium underline">Inventory</h2>
+              <h2 className="text-lg font-semibold underline">Inventory</h2>
               <div className="stats-container flex flex-col">
                 <div>
                   <h3 className="text-lg font-normal">Total Value</h3>
@@ -109,7 +111,7 @@ export default async function ServicePage() {
             <span className="divider"></span>
 
             <div className=" flex flex-col gap-2">
-              <h2 className="text-xl font-medium underline">Sales</h2>
+              <h2 className="text-lg font-semibold underline">Sales</h2>
               <div>
                 <div className="stats-container flex flex-col">
                   <h3 className="text-lg font-normal">Total Sales</h3>
@@ -132,7 +134,7 @@ export default async function ServicePage() {
       <div className="flex  w-fit gap-4">
         {filteredProducts.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-2xl font-bold">Critic Items</h2>
+            <h2 className="text-xl font-bold">Critic Items</h2>
             <ul className="flex flex-col gap-1">
               {filteredProducts.map((item) => (
                 <li key={item.id} className="flex justify-between w-60">
@@ -145,7 +147,7 @@ export default async function ServicePage() {
         )}
         {stats.topProducts.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-2xl font-bold">Top Products</h2>
+            <h2 className="text-xl font-bold">Top Products</h2>
             <ul className="flex flex-col gap-1">
               {stats.topProducts.map(
                 (item) =>
