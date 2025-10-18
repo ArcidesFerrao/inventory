@@ -174,12 +174,60 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
 
             return {order, supplierOrder}
         })
-
+        
         return { success: true, ...result};
-
-
+        
+        
     } catch (error) {
         console.error("Error accepting order", error);
         return { success: false, error: "Failed to accept order" };
+    }
+}
+
+export async function denyOrder({supplierOrderId, orderId}: {supplierOrderId: string; orderId: string;}) {
+    
+    try {
+        const result = await db.$transaction(async (tx) => {
+            const [order, supplierOrder] = await Promise.all([
+                tx.order.update({
+                    where: {
+                        id: orderId
+                    },
+                    data: {
+                        status: "CANCELLED"
+                    }
+                }),
+                tx.supplierOrder.update({
+                    where: {
+                        id: supplierOrderId
+                    },
+                    data: {
+                        status: "REJECTED"
+                    }
+                })
+            ])
+            await logActivity(
+                    order.serviceId,
+                    supplierOrder.supplierId,
+                    "UPDATE",
+                    "Order",
+                    order.id,
+                    `Supplier denied the order`,
+                    {
+                        supplierOrderId,
+                        update: `Order status to "REJECTED" by the Supplier`
+                    },
+                    null,
+                    'INFO',
+                    null
+                );
+        
+            return {order, supplierOrder}
+        })
+
+        return {success: true, ...result}
+    } catch (error) {
+        console.error("Error denying order", error);
+        return { success: false, error: "Failed to deny order" };
     }
 }

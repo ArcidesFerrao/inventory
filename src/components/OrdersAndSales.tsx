@@ -26,15 +26,15 @@ export default function PurchasesAndOrders({
     (order) => order.status === "COMPLETED"
   );
 
-  const totalOrderedItems = supplierOrders.reduce((acc, supplierOrder) => {
-    return (
-      acc +
-      supplierOrder.items.reduce(
-        (itemAcc, item) => itemAcc + item.orderedQty,
-        0
-      )
-    );
-  }, 0);
+  // const totalOrderedItems = supplierOrders.reduce((acc, supplierOrder) => {
+  //   return (
+  //     acc +
+  //     supplierOrder.items.reduce(
+  //       (itemAcc, item) => itemAcc + item.orderedQty,
+  //       0
+  //     )
+  //   );
+  // }, 0);
 
   return (
     <div className="flex flex-col gap-5">
@@ -60,8 +60,10 @@ export default function PurchasesAndOrders({
         <>
           <div className="orders-data flex justify-between">
             <div className="flex flex-col ">
-              <p>Total Ordered</p>
-              <h2 className="text-2xl font-semibold">{totalOrderedItems}</h2>
+              <p>Total Orders</p>
+              <h2 className="text-2xl font-semibold">
+                {supplierOrders.length}
+              </h2>
             </div>
             <div className="flex flex-col ">
               <p>Pending</p>
@@ -83,11 +85,13 @@ export default function PurchasesAndOrders({
               <p>Total Value</p>
               <h2 className="text-2xl font-semibold">
                 MZN{" "}
-                {supplierOrders.reduce(
-                  (acc, supplierOrder) =>
-                    acc + (supplierOrder.order?.total ?? 0),
-                  0
-                )}
+                {supplierOrders
+                  .filter((so) => so.status !== "REJECTED")
+                  .reduce(
+                    (acc, supplierOrder) =>
+                      acc + (supplierOrder.order?.total ?? 0),
+                    0
+                  )}
                 .00
               </h2>
             </div>

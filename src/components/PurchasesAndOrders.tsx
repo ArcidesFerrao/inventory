@@ -44,15 +44,17 @@ export default function PurchasesAndOrders({
   const totalOrderedItems = orders.reduce((acc, order) => {
     return (
       acc +
-      order.supplierOrders.reduce((supplierAcc, supplierOrder) => {
-        return (
-          supplierAcc +
-          supplierOrder.items.reduce(
-            (itemAcc, item) => itemAcc + item.orderedQty,
-            0
-          )
-        );
-      }, 0)
+      order.supplierOrders
+        .filter((so) => so.status !== "CANCELLED")
+        .reduce((supplierAcc, supplierOrder) => {
+          return (
+            supplierAcc +
+            supplierOrder.items.reduce(
+              (itemAcc, item) => itemAcc + item.orderedQty,
+              0
+            )
+          );
+        }, 0)
     );
   }, 0);
 
@@ -140,7 +142,11 @@ export default function PurchasesAndOrders({
             <div className="flex flex-col text-end">
               <p>Total Value</p>
               <h2 className="text-2xl font-semibold">
-                MZN {orders.reduce((acc, sale) => acc + sale.total, 0)}.00
+                MZN{" "}
+                {orders
+                  .filter((so) => so.status !== "CANCELLED")
+                  .reduce((acc, sale) => acc + sale.total, 0)}
+                .00
               </h2>
             </div>
           </div>

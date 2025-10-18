@@ -21,6 +21,11 @@ export default async function OrdersPage() {
         },
       },
     },
+    orderBy: {
+      order: {
+        createdAt: "desc",
+      },
+    },
   });
 
   const supplierSales = await db.sale.findMany({
@@ -31,6 +36,9 @@ export default async function OrdersPage() {
           supplierProduct: true,
         },
       },
+    },
+    orderBy: {
+      date: "desc",
     },
   });
 

@@ -1,5 +1,5 @@
 // import { DeleteOrderButton } from "@/components/DeleteButton";
-import { AcceptButton } from "@/components/ActionButton";
+import { AcceptButton, DenyButton } from "@/components/ActionButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
@@ -104,7 +104,10 @@ export default async function OrderPage(props: { params: Params }) {
                 supplierOrderId={supplierOrder?.id || ""}
                 orderId={supplierOrder?.orderId || ""}
               />
-              <button className="deny-btn">Deny</button>
+              <DenyButton
+                supplierOrderId={supplierOrder?.id || ""}
+                orderId={supplierOrder?.orderId || ""}
+              />
             </div>
           )}
 
