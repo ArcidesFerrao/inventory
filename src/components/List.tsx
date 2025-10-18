@@ -419,7 +419,7 @@ export const SupplierSaleListItem = ({
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-medium  text-nowrap">
+          <h2 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
           </h2>
           <p className="text-sm font-light">Payment: {sale.paymentType}</p>
@@ -630,7 +630,7 @@ export const SupplierOrderListItem = ({
         </div>
         <div className="order-amount text-end">
           <p className="text-sm ">Order Total</p>
-          <h2 className="text-lg font-semibold  text-nowrap">
+          <h2 className="text-lg font-bold  text-nowrap">
             MZN {supplierOrder.order?.total.toFixed(2)}
           </h2>
         </div>

@@ -46,19 +46,19 @@ export default async function ServicePage() {
           <div className="flex flex-col stats-container gap-1">
             <div>
               <h3 className="text-lg font-normal">Revenue</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                 MZN {stats.earnings.toFixed(2)}
               </h4>
             </div>
             <div>
               <h3 className="text-lg font-normal">Purchases</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                 MZN {stats.purchases.toFixed(2)}
               </h4>
             </div>
             <div>
               <h3 className="text-lg font-normal">Net Position</h3>
-              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                 MZN {stats.balance.toFixed(2)}
               </h4>
             </div>
@@ -75,13 +75,13 @@ export default async function ServicePage() {
               <div className="stats-container flex flex-col">
                 <div>
                   <h3 className="text-lg font-normal">Gross Profit</h3>
-                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     MZN {stats.profit.toFixed(2)}
                   </h4>
                 </div>
                 <div>
                   <h3 className="text-lg font-normal">Margin</h3>
-                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     {stats.grossMargin.toFixed(1)}%
                   </h4>
                 </div>
@@ -94,13 +94,13 @@ export default async function ServicePage() {
               <div className="stats-container flex flex-col">
                 <div>
                   <h3 className="text-lg font-normal">Total Value</h3>
-                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     MZN {stats.inventoryValue.toFixed(2)}
                   </h4>
                 </div>
                 <div>
                   <h3 className="text-lg font-normal">Remaining</h3>
-                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     {stats.inventoryPercentage.toFixed(1)}%
                   </h4>
                 </div>
@@ -113,13 +113,13 @@ export default async function ServicePage() {
               <div>
                 <div className="stats-container flex flex-col">
                   <h3 className="text-lg font-normal">Total Sales</h3>
-                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     {stats.salesCount}
                   </h4>
                 </div>
                 <div>
                   <h3 className="text-lg font-normal">Avg. Value</h3>
-                  <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     MZN {stats.averageSaleValue.toFixed(2)}
                   </h4>
                 </div>
@@ -147,12 +147,15 @@ export default async function ServicePage() {
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
             <h2 className="text-2xl font-bold">Top Products</h2>
             <ul className="flex flex-col gap-1">
-              {stats.topProducts.map((item) => (
-                <li key={item.id} className="flex justify-between w-60">
-                  <span>{item.name}</span>
-                  <span className="font-medium">{item.quantity}</span>
-                </li>
-              ))}
+              {stats.topProducts.map(
+                (item) =>
+                  item && (
+                    <li key={item.id} className="flex justify-between w-60">
+                      <span>{item.name}</span>
+                      <span className="font-medium">{item.quantity}</span>
+                    </li>
+                  )
+              )}
             </ul>
           </div>
         )}
