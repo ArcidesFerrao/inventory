@@ -1,5 +1,16 @@
+import {
+  ArrivedDeliveryLogDetails,
+  ConfirmedDeliveryLogDetails,
+  UpdateOrderLogDetails,
+} from "@/components/LogDetails";
 import { db } from "@/lib/db";
+import {
+  ArrivedDeliveryLogs,
+  ConfirmedDeliveryLogs,
+  UpdateOrderLogs,
+} from "@/types/types";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import React from "react";
 
 type Params = Promise<{ id: string }>;
@@ -9,6 +20,14 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
   const log = await db.activityLog.findUnique({
     where: { id },
   });
+
+  if (!log) return notFound();
+
+  const parsedDetails =
+    typeof log.details === "string" ? JSON.parse(log.details) : log.details;
+
+  const details = parsedDetails as ConfirmedDeliveryLogs;
+
   return (
     <div className="flex flex-col gap-5 w-full">
       <div className="flex justify-between items-center">
@@ -35,7 +54,7 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <p className="font-extralight text-gray-400 text-sm">Description</p>
-            <h2>{log?.description}</h2>
+            <h2 className="text-sm">{log?.description}</h2>
           </div>
           <div></div>
           <div className="flex flex-col gap-2">
@@ -50,11 +69,17 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
       <div className="log-info-details flex flex-col gap-2">
         <p className="font-extralight text-gray-400 text-sm">Details</p>
         <span>
-          <p>
-            {typeof log?.details === "object"
-              ? JSON.stringify(log?.details)
-              : log?.details}
-          </p>
+          {log.actionType === "DELIVERY_CONFIRMED" && (
+            <ConfirmedDeliveryLogDetails details={details} />
+          )}
+          {log.actionType === "DELIVERY_ARRIVED" && (
+            <ArrivedDeliveryLogDetails
+              details={parsedDetails as ArrivedDeliveryLogs}
+            />
+          )}
+          {log.actionType === "UPDATE" && log.entityType === "Order" && (
+            <UpdateOrderLogDetails details={parsedDetails as UpdateOrderLogs} />
+          )}
         </span>
       </div>
     </div>

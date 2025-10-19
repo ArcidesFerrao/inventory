@@ -72,7 +72,7 @@ export async function createOrder(
                     "CREATE",
                     "Order",
                     order.id,
-                    `Order totaling MZN ${total.toFixed(2)}`,
+                    `Order totaling MZN ${total.toFixed(2)} created`,
                     {
                         total,
                         groupedItems: groupedItems.map(i => ({

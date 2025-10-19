@@ -322,15 +322,20 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
                     status: "ARRIVED",
                     deliveredAt: new Date(),
                 },
-                include: {
-                    deliveryItems: true,
-                }
+                
             }),
             db.supplierOrder.update({
                 where: {
                     id: supplierOrderId},
                 data: {
                     status: "COMPLETED",
+                },
+                include: {
+                    items: {
+                        include: {
+                            product: true
+                        }
+                    }
                 }
             })
         ])
@@ -347,7 +352,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
                 deliveryId,
                 supplierOrderId,
                 deliveredAt: delivery.deliveredAt,
-                items: delivery.deliveryItems
+                deliveryItems: supplierOrder.items
             },
             null,
             "INFO",
@@ -360,7 +365,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
         await logActivity(
             null,
             session.user.id,
-            "DELIVERY_Error",
+            "ERROR",
             "Delivery",
             deliveryId,
             `Error while completing delivery #${deliveryId}`,

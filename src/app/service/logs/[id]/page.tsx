@@ -1,5 +1,21 @@
+import {
+  ArrivedDeliveryLogDetails,
+  ConfirmedDeliveryLogDetails,
+  CreateOrderLogDetails,
+  CreateSaleLogDetails,
+  UpdateOrderLogDetails,
+} from "@/components/LogDetails";
+import {
+  ArrivedDeliveryLogs,
+  ConfirmedDeliveryLogs,
+  CreateOrderLogs,
+  CreateSaleLogs,
+  UpdateOrderLogs,
+} from "@/types/types";
+
 import { db } from "@/lib/db";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import React from "react";
 type Params = Promise<{ id: string }>;
 export default async function LogPage(props: { params: Params }) {
@@ -8,6 +24,12 @@ export default async function LogPage(props: { params: Params }) {
   const log = await db.activityLog.findUnique({
     where: { id },
   });
+
+  if (!log) return notFound();
+
+  const parsedDetails =
+    typeof log.details === "string" ? JSON.parse(log.details) : log.details;
+
   return (
     <div className="flex flex-col gap-5 w-full">
       <div className="flex justify-between items-center">
@@ -34,7 +56,7 @@ export default async function LogPage(props: { params: Params }) {
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <p className="font-extralight text-gray-400 text-sm">Description</p>
-            <h2>{log?.description}</h2>
+            <h2 className="text-sm">{log?.description}</h2>
           </div>
           <div></div>
           <div className="flex flex-col gap-2">
@@ -49,11 +71,25 @@ export default async function LogPage(props: { params: Params }) {
       <div className="log-info-details flex flex-col gap-2">
         <p className="font-extralight text-gray-400 text-sm">Details</p>
         <span>
-          <p>
-            {typeof log?.details === "object"
-              ? JSON.stringify(log?.details)
-              : log?.details}
-          </p>
+          {log.actionType === "DELIVERY_CONFIRMED" && (
+            <ConfirmedDeliveryLogDetails
+              details={parsedDetails as ConfirmedDeliveryLogs}
+            />
+          )}
+          {log.actionType === "DELIVERY_ARRIVED" && (
+            <ArrivedDeliveryLogDetails
+              details={parsedDetails as ArrivedDeliveryLogs}
+            />
+          )}
+          {log.actionType === "UPDATE" && log.entityType === "Order" && (
+            <UpdateOrderLogDetails details={parsedDetails as UpdateOrderLogs} />
+          )}
+          {log.actionType === "CREATE" && log.entityType === "Order" && (
+            <CreateOrderLogDetails details={parsedDetails as CreateOrderLogs} />
+          )}
+          {log.actionType === "CREATE" && log.entityType === "Sale" && (
+            <CreateSaleLogDetails details={parsedDetails as CreateSaleLogs} />
+          )}
         </span>
       </div>
     </div>

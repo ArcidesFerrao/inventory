@@ -1,4 +1,4 @@
-import { ActivityLog, BusinessType, Category, Delivery, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier,  SupplierOrder, SupplierProduct, User } from "@prisma/client";
+import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier,  SupplierOrder, SupplierProduct, User } from "@prisma/client";
 
 
 export type ProductWithMenuItems = Product & {
@@ -99,4 +99,60 @@ export type SupplierWithProducts = Supplier & {
 
 export type SupplierProductsWithUnit = SupplierProduct & {
   supplier: Supplier
+}
+
+export type SupplierDeliveryItemsWithOrderItem = DeliveryItem & {
+  orderItem: OrderItem & {
+    product: Product;
+  };
+};
+export type DeliveryItemsWithOrderItem = DeliveryItem & {
+  orderItem: OrderItem & {
+    product: Product;
+  };
+};
+
+export type ConfirmedDeliveryLogs = {
+  deliveryId: string;
+  orderId: string;
+  supplierOrderId: string;
+  totalItems: number;
+  deliveryItems: DeliveryItemsWithOrderItem[];
+};
+export type ArrivedDeliveryLogs = {
+  deliveryId: string;
+  supplierOrderId: string;
+  deliveredAt: Date;
+  deliveryItems: OrderItem & {
+   product: Product 
+  }[];
+  
+};
+
+export type UpdateOrderLogs = {
+  supplierOrderId: string;
+  update: string;
+}
+
+export type CreateOrderLogs = {
+  total: number;
+  groupedItems: {
+    supplierId: string;
+    items: {
+      name: string,
+      productId: string,
+      orderedQty: number,
+      price: number
+    }[]
+  }[];
+}
+
+export type CreateSaleLogs = {
+  totalPrice: number;
+  items: {
+    id: string,
+    name: string,
+    quantity: number,
+    price: number
+  }[]
 }
