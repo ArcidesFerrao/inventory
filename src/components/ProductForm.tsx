@@ -395,6 +395,7 @@ export const SupplierProductForm = ({
 
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
   const [unitId, setUnitId] = useState(supplierProduct?.unitId || "");
+  const [price, setPrice] = useState(supplierProduct?.price || 0);
 
   useEffect(() => {
     if (supplierProduct?.unitId) {
@@ -503,10 +504,13 @@ export const SupplierProductForm = ({
               type="number"
               name="price"
               id="price"
-              defaultValue={supplierProduct?.price || 0}
+              onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+              value={price}
               required
             />
-
+            {price > 0 && (
+              <p className="text-sm font-extralight">MZN {price.toFixed(2)}</p>
+            )}
             {fields.price.errors && (
               <p className="text-xs font-light">{fields.price.errors}</p>
             )}
