@@ -130,8 +130,14 @@ export const ProductForm = ({
           id="serviceId"
           value={serviceId}
         />
+        {fields.serviceId.errors && (
+          <p className="text-xs font-light">{fields.serviceId.errors}</p>
+        )}
         {product && (
           <input type="hidden" name="id" id="id" value={product.id} />
+        )}
+        {fields.id.errors && (
+          <p className="text-xs font-light">{fields.id.errors}</p>
         )}
         <div className="flex w-full flex-col gap-1">
           <label htmlFor="name">Product Name</label>
@@ -212,6 +218,9 @@ export const ProductForm = ({
                     </option>
                   ))}
                 </select>
+                {fields.unitId.errors && (
+                  <p className="text-xs font-light">{fields.unitId.errors}</p>
+                )}
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -229,8 +238,8 @@ export const ProductForm = ({
               </div>
             )}
 
-            {fields.Unit.errors && (
-              <p className="text-xs font-light">{fields.Unit.errors}</p>
+            {fields.unitId.errors && (
+              <p className="text-xs font-light">{fields.unitId.errors}</p>
             )}
           </div>
         </div>
@@ -266,7 +275,7 @@ export const ProductForm = ({
           )}
         </div>
         {type === "SERVICE" && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <label htmlFor="categoryId">Category</label>
               <select
@@ -289,46 +298,52 @@ export const ProductForm = ({
                 <p className="text-xs font-light">{fields.categoryId.errors}</p>
               )}
             </div>
-            <fieldset className="flex flex-col gap-4">
-              <legend>Recipe</legend>
-              <div className="flex flex-col gap-2">
-                {recipeItems.map((item, index) => (
-                  <div key={item.productId} className="flex justify-between">
-                    <label htmlFor={`recipe[${index}].quantity`}>
-                      {item.name}
-                    </label>
-                    <input
-                      type="number"
-                      className="max-w-1/3"
-                      min={0}
-                      name={`recipe[${index}].quantity`}
-                      value={item.unitQty}
-                      onChange={(e) => {
-                        const newQuantity = Number(e.target.value);
-                        setRecipeItems((prev) =>
-                          prev.map((ri) =>
-                            ri.productId === item.productId
-                              ? {
-                                  ...ri,
-                                  unitQty: newQuantity,
-                                }
-                              : ri
-                          )
-                        );
-                      }}
-                    />
-                    <input
-                      type="hidden"
-                      name={`recipe[${index}].stockId`}
-                      value={item.productId}
-                    />
-                  </div>
-                ))}
-              </div>
+            <fieldset className="flex flex-col gap-4 p-4">
+              <legend className="font-semibold">Recipe Items</legend>
+              {recipeItems.map((item, index) => (
+                <div
+                  key={item.productId}
+                  className="flex items-center justify-between"
+                >
+                  <label
+                    className="pl-2 py-1 font-light "
+                    htmlFor={`recipe[${index}].quantity`}
+                  >
+                    {item.name}
+                  </label>
+                  <input
+                    type="number"
+                    className="max-w-1/3 text-sm"
+                    min={0}
+                    name={`recipe[${index}].quantity`}
+                    value={item.unitQty}
+                    onChange={(e) => {
+                      const newQuantity = Number(e.target.value);
+                      setRecipeItems((prev) =>
+                        prev.map((ri) =>
+                          ri.productId === item.productId
+                            ? {
+                                ...ri,
+                                unitQty: newQuantity,
+                              }
+                            : ri
+                        )
+                      );
+                    }}
+                  />
+                  <input
+                    type="hidden"
+                    name={`recipe[${index}].stockId`}
+                    value={item.productId}
+                  />
+                </div>
+              ))}
             </fieldset>
           </div>
         )}
         <div className="flex flex-col gap-1">
+          <label htmlFor="description">Description</label>
+
           <textarea
             name="description"
             id="description"
@@ -524,6 +539,8 @@ export const SupplierProductForm = ({
           </div>
         </div>
         <div className="flex flex-col gap-1">
+          <label htmlFor="description">Description</label>
+
           <textarea
             name="description"
             id="description"

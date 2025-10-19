@@ -154,6 +154,24 @@ form p a:hover {
   text-decoration: underline;
 }
 
+fieldset {
+  /* border: 1px solid var(--border-list); */
+  border-radius: 0.4rem;
+  background-color: var(--dash-bg);
+}
+
+fieldset legend {
+  padding: 0.4rem;
+  /* border: 1px solid var(--border-list); */
+  border-radius: 0.4rem;
+  background-color: var(--input-bg);
+}
+
+fieldset div {
+  border-radius: 0.4rem;
+  background-color: var(--input-bg);
+}
+
 .dash-menu button:hover {
   border: var(--foreground) 1px solid;
 }

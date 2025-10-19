@@ -76,13 +76,13 @@ export async function editProduct(prevState: unknown, formData: FormData) {
                 type: values.type,
                 stock: values.stock,
                 status: "ACTIVE",
-                serviceId: session.user.id,
+                // serviceId: session.user.serviceId,
                 MenuItems: {
                     deleteMany: {},
                     create: values.recipe?.map((r) => ({
                         quantity: r.quantity,
                         stockId: r.stockId,
-                        productId: r.stockId,
+                        // productId: r.stockId,
                     })) || [],
                 }
             }
