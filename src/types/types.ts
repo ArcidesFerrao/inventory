@@ -31,6 +31,7 @@ export interface PurchasesProps {
 
 export type PurchaseWithProduct = PurchaseItem & {
   product: Product | null
+  supplierProduct: SupplierProduct | null
 }
 
 export type PurchaseWithItems = Purchase & {

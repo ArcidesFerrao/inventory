@@ -98,11 +98,13 @@ export default async function LogPage(props: { params: Params }) {
               details={parsedDetails as CreateSaleLogs}
             />
           )}
-          {log.actionType === "ERROR" && log.entityType === "Delivery" && (
-            <ErroDeliveryLogDetails
-              details={parsedDetails as ErrorDeliveryLogs}
-            />
-          )}
+          {log.actionType === "ERROR" ||
+            (log.actionType === "DELIVERY_Error" &&
+              log.entityType === "Delivery" && (
+                <ErroDeliveryLogDetails
+                  details={parsedDetails as ErrorDeliveryLogs}
+                />
+              ))}
         </span>
       </div>
     </div>

@@ -226,7 +226,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     SaleItem: {
                         create: delivery.deliveryItems.map((item) => ({
                             supplierProductId: item.orderItem.supplierProductId,
-                            productId: item.orderItem.product.id,
+                            // productId: item.orderItem.product.id,
                             quantity: item.quantity,
                             price: item.orderItem.price
                         }))
@@ -242,7 +242,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     PurchaseItem: {
                         create: delivery.deliveryItems.map((item) => ({
                             supplierProductId: item.orderItem.supplierProductId,
-                            productId: item.orderItem.product.id,
+                            // productId: item.orderItem.product.id,
                             stock: item.quantity,
                             price: item.orderItem.price,
                             quantity: item.quantity,
@@ -286,7 +286,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
         await logActivity(
             serviceId,
             null,
-            "DELIVERY_Error",
+            "ERROR",
             "Delivery",
             deliveryId,
             `Error while completing delivery`,

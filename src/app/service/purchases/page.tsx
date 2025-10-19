@@ -15,6 +15,7 @@ export default async function PurchasesPage() {
     include: {
       PurchaseItem: {
         include: {
+          supplierProduct: true,
           product: true,
         },
       },
