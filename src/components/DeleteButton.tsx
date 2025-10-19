@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import ConfirmDialog from "./ConfirmDialog";
 import { deleteSupplierProduct } from "@/app/actions/product";
+import { useRouter } from "next/navigation";
 
 export const SupplierProductDeleteButton = ({
   supplierProductId,
@@ -12,13 +13,14 @@ export const SupplierProductDeleteButton = ({
 }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
   const handleDelete = () => {
     startTransition(async () => {
       const res = await deleteSupplierProduct(supplierProductId);
 
       if (res.status === "success") {
         toast.success("Supplier Product deleted successfully");
-        window.location.reload();
+        router.push("/supply/products");
       } else {
         const error = await res.error;
         toast.error("something went wrong!");
@@ -49,6 +51,8 @@ export const SupplierProductDeleteButton = ({
 export const DeleteButton = ({ productId }: { productId: string }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
+
   const handleDelete = () => {
     startTransition(async () => {
       const res = await fetch(`/api/products/${productId}`, {
@@ -61,7 +65,7 @@ export const DeleteButton = ({ productId }: { productId: string }) => {
 
       if (res.ok) {
         toast.success("Product deleted successfully");
-        window.location.reload();
+        router.push("/service/products");
       } else {
         const { error } = await res.json();
         toast.error("something went wrong!");

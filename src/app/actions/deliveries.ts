@@ -35,7 +35,15 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
                         }
                     },
                     include: {
-                        deliveryItems: true,
+                        deliveryItems: {
+                            include: {
+                                orderItem: {
+                                    include: {
+                                        product: true
+                                    }
+                                }
+                            }
+                        },
                     }
                 }),
 
@@ -71,11 +79,12 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
             "CREATE",
             "Delivery",
             supplierOrderId,
-            `Scheduled delivery for Order #${updatedOrder.id.slice(0,6)}...`,
+            `Scheduled delivery for Order`,
             {
+                orderId,
                 scheduledAt: delivery.scheduledAt,
                 totalItems: items.length,
-                items
+                items: delivery.deliveryItems,
             },
             null,
             'INFO',
@@ -265,7 +274,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             "DELIVERY_CONFIRMED",
             "Delivery",
             delivery.id,
-            `Delivery #${delivery.id} marked as Completed`,
+            `Delivery marked as Completed`,
             {
                 deliveryId,
                 orderId,

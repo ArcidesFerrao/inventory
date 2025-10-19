@@ -1,6 +1,7 @@
 import {
   ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
+  CreateDeliveryLogs,
   CreateOrderLogs,
   CreateSaleLogs,
   ErrorDeliveryLogs,
@@ -45,6 +46,30 @@ export const ArrivedDeliveryLogDetails = ({
             <li key={item.product.id}>
               {item.product.name} - {item.product.stock} x MZN{" "}
               {item.product.price}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No extra details</p>
+      )}
+    </div>
+  );
+};
+export const CreateDeliveryLogDetails = ({
+  details,
+}: {
+  details: CreateDeliveryLogs;
+}) => {
+  return (
+    <div className="flex flex-col gap-1">
+      <p>Order Id: {details.orderId}</p>
+      <h4>{details.totalItems} Delivery Items:</h4>
+      {typeof details === "object" && details ? (
+        <ul className="text-sm font-extralight">
+          {details.items.map((item) => (
+            <li key={item.id}>
+              {item.orderItem.product.name} - {item.orderItem.product.stock} x
+              MZN {item.orderItem.product.price}
             </li>
           ))}
         </ul>

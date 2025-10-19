@@ -1,6 +1,7 @@
 import {
   ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
+  CreateDeliveryLogDetails,
   CreateOrderLogDetails,
   CreatePurchaseLogDetails,
   CreateSaleLogDetails,
@@ -10,6 +11,7 @@ import {
 import {
   ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
+  CreateDeliveryLogs,
   CreateOrderLogs,
   CreateSaleLogs,
   ErrorDeliveryLogs,
@@ -96,6 +98,11 @@ export default async function LogPage(props: { params: Params }) {
           {log.actionType === "CREATE" && log.entityType === "Purchase" && (
             <CreatePurchaseLogDetails
               details={parsedDetails as CreateSaleLogs}
+            />
+          )}
+          {log.actionType === "CREATE" && log.entityType === "Delivery" && (
+            <CreateDeliveryLogDetails
+              details={parsedDetails as CreateDeliveryLogs}
             />
           )}
           {log.actionType === "ERROR" ||

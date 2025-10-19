@@ -129,6 +129,13 @@ export type ArrivedDeliveryLogs = {
   }[];
   
 };
+export type CreateDeliveryLogs = {
+  orderId: string;
+  scheduledAt: Date;
+  totalItems: number;
+  items: DeliveryItemsWithOrderItem[]
+  
+};
 
 export type UpdateOrderLogs = {
   supplierOrderId: string;

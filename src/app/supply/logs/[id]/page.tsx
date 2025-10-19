@@ -1,6 +1,7 @@
 import {
   ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
+  CreateDeliveryLogDetails,
   ErroDeliveryLogDetails,
   UpdateOrderLogDetails,
 } from "@/components/LogDetails";
@@ -8,6 +9,7 @@ import { db } from "@/lib/db";
 import {
   ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
+  CreateDeliveryLogs,
   ErrorDeliveryLogs,
   UpdateOrderLogs,
 } from "@/types/types";
@@ -71,6 +73,11 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
       <div className="log-info-details flex flex-col gap-2">
         <p className="font-extralight text-gray-400 text-sm">Details</p>
         <span>
+          {log.actionType === "CREATE" && log.entityType === "Delivery" && (
+            <CreateDeliveryLogDetails
+              details={parsedDetails as CreateDeliveryLogs}
+            />
+          )}
           {log.actionType === "DELIVERY_CONFIRMED" && (
             <ConfirmedDeliveryLogDetails details={details} />
           )}
