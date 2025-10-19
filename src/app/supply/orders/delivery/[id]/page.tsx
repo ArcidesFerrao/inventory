@@ -66,7 +66,9 @@ export default async function DeliveryPage(props: { params: Params }) {
             <p className="text-sm font-extralight">Status</p>
             <h4
               className={
-                delivery?.status === "COMPLETED" ? "text-green-400" : ""
+                delivery?.status === "COMPLETED"
+                  ? "text-green-400 font-semibold"
+                  : "text-orange-400 font-semibold"
               }
             >
               {delivery?.status}
@@ -111,16 +113,18 @@ export default async function DeliveryPage(props: { params: Params }) {
           <p>{delivery.notes}</p>
         </div>
       )}
-      <ConfirmDeliveryButton
-        deliveryId={delivery?.id || ""}
-        status={delivery?.status || ""}
-        serviceId={delivery?.order.Service?.id || ""}
-        orderId={delivery?.orderId || ""}
-        supplierOrderId={
-          delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
-        }
-        role="SUPPLIER"
-      />
+      {delivery?.status !== "ARRIVED" && (
+        <ConfirmDeliveryButton
+          deliveryId={delivery?.id || ""}
+          status={delivery?.status || ""}
+          serviceId={delivery?.order.Service?.id || ""}
+          orderId={delivery?.orderId || ""}
+          supplierOrderId={
+            delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
+          }
+          role="SUPPLIER"
+        />
+      )}
       {/* <CompleteDeliveryButton
         deliveryId={delivery?.id || ""}
         deliveryStatus={delivery?.status || ""}
