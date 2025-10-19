@@ -1,12 +1,14 @@
 import {
   ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
+  ErroDeliveryLogDetails,
   UpdateOrderLogDetails,
 } from "@/components/LogDetails";
 import { db } from "@/lib/db";
 import {
   ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
+  ErrorDeliveryLogs,
   UpdateOrderLogs,
 } from "@/types/types";
 import Link from "next/link";
@@ -79,6 +81,11 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
           )}
           {log.actionType === "UPDATE" && log.entityType === "Order" && (
             <UpdateOrderLogDetails details={parsedDetails as UpdateOrderLogs} />
+          )}
+          {log.actionType === "ERROR" && log.entityType === "Delivery" && (
+            <ErroDeliveryLogDetails
+              details={parsedDetails as ErrorDeliveryLogs}
+            />
           )}
         </span>
       </div>

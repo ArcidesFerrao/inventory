@@ -134,6 +134,12 @@ export type UpdateOrderLogs = {
   update: string;
 }
 
+export type ErrorDeliveryLogs = {
+  serviceId: string | null;
+  supplierOrderId: string;
+  error: string;
+}
+
 export type CreateOrderLogs = {
   total: number;
   groupedItems: {

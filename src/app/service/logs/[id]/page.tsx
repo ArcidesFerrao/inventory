@@ -2,7 +2,9 @@ import {
   ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
   CreateOrderLogDetails,
+  CreatePurchaseLogDetails,
   CreateSaleLogDetails,
+  ErroDeliveryLogDetails,
   UpdateOrderLogDetails,
 } from "@/components/LogDetails";
 import {
@@ -10,6 +12,7 @@ import {
   ConfirmedDeliveryLogs,
   CreateOrderLogs,
   CreateSaleLogs,
+  ErrorDeliveryLogs,
   UpdateOrderLogs,
 } from "@/types/types";
 
@@ -70,7 +73,7 @@ export default async function LogPage(props: { params: Params }) {
       </div>
       <div className="log-info-details flex flex-col gap-2">
         <p className="font-extralight text-gray-400 text-sm">Details</p>
-        <span>
+        <span className="overflow-y-auto">
           {log.actionType === "DELIVERY_CONFIRMED" && (
             <ConfirmedDeliveryLogDetails
               details={parsedDetails as ConfirmedDeliveryLogs}
@@ -89,6 +92,16 @@ export default async function LogPage(props: { params: Params }) {
           )}
           {log.actionType === "CREATE" && log.entityType === "Sale" && (
             <CreateSaleLogDetails details={parsedDetails as CreateSaleLogs} />
+          )}
+          {log.actionType === "CREATE" && log.entityType === "Purchase" && (
+            <CreatePurchaseLogDetails
+              details={parsedDetails as CreateSaleLogs}
+            />
+          )}
+          {log.actionType === "ERROR" && log.entityType === "Delivery" && (
+            <ErroDeliveryLogDetails
+              details={parsedDetails as ErrorDeliveryLogs}
+            />
           )}
         </span>
       </div>

@@ -289,8 +289,10 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             "DELIVERY_Error",
             "Delivery",
             deliveryId,
-            `Error while completing delivery #${deliveryId}`,
+            `Error while completing delivery`,
             {
+                serviceId,
+                supplierOrderId,
                 error: error instanceof Error ? error.message : String(error),
             },
             null,
@@ -346,7 +348,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
             "DELIVERY_ARRIVED",
             "Delivery",
             delivery.id,
-            `Delivery #${delivery.id} marked as Arrived by Supplier`,
+            `Delivery marked as Arrived by Supplier`,
             {
                 
                 deliveryId,
@@ -368,8 +370,9 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
             "ERROR",
             "Delivery",
             deliveryId,
-            `Error while completing delivery #${deliveryId}`,
+            `Error while completing delivery`,
             {
+                supplierOrderId,
                 error: error instanceof Error ? error.message : String(error),
             },
             null,

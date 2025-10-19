@@ -3,6 +3,7 @@ import {
   ConfirmedDeliveryLogs,
   CreateOrderLogs,
   CreateSaleLogs,
+  ErrorDeliveryLogs,
   UpdateOrderLogs,
 } from "@/types/types";
 import React from "react";
@@ -138,6 +139,19 @@ export const UpdateOrderLogDetails = ({
     <div className="flex flex-col gap-2 text-sm font-extralight">
       <p>Supplier Order Id: {details.supplierOrderId}</p>
       <p>Update: {details.update}</p>
+    </div>
+  );
+};
+export const ErroDeliveryLogDetails = ({
+  details,
+}: {
+  details: ErrorDeliveryLogs;
+}) => {
+  return (
+    <div className="flex flex-col gap-2 text-sm font-extralight">
+      {details.serviceId && <p>Service Id: {details.serviceId}</p>}
+      <p>Supplier Order Id: {details.supplierOrderId}</p>
+      <p>Update: {details.error}</p>
     </div>
   );
 };
