@@ -96,6 +96,7 @@ export const DeleteButton = ({ productId }: { productId: string }) => {
 export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
   const handleDelete = () => {
     startTransition(async () => {
       const res = await fetch(`/api/orders/${orderId}`, {
@@ -108,7 +109,7 @@ export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
 
       if (res.ok) {
         toast.success("Product deleted successfully");
-        window.location.reload();
+        router.push("/service/orders");
       } else {
         const { error } = await res.json();
         toast.error("something went wrong!");
