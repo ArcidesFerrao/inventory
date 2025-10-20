@@ -39,20 +39,11 @@ export const SalesList = ({
     // console.log(result.message ? result.message : `Sale completed`);
   };
 
-  // const handleIncrement = (id: string) => {
-  //   setProducts((prevProducts) =>
-  //     prevProducts.map((product) =>
-  //       product.id === id
-  //         ? { ...product, quantity: product.quantity + 1 }
-  //         : product
-  //     )
-  //   );
-  // };
   const handleIncrement = (id: string) => {
     setProducts((prevProducts) => {
       return prevProducts.map((product) => {
         if (product.id !== id) return product;
-
+        // console.log(product.stock);
         const recipe = product.MenuItems ?? [];
 
         if (recipe.length === 0) {
@@ -121,10 +112,7 @@ export const SalesList = ({
                         <span className="w-12 text-center">
                           {product.quantity}
                         </span>
-                        <button
-                          onClick={() => handleIncrement(product.id)}
-                          disabled={product.stock === 0}
-                        >
+                        <button onClick={() => handleIncrement(product.id)}>
                           +
                         </button>
                       </div>
@@ -186,7 +174,9 @@ export const SalesList = ({
                     key={product.id}
                     className="flex justify-between items-center py-2"
                   >
-                    <h3>{product.name}</h3>
+                    <div>
+                      <h3>{product.name}</h3>
+                    </div>
 
                     <div className="flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
