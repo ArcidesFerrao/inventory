@@ -392,3 +392,22 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
         return {success: false, error: "Error marking delivery as arrived"}
     }
 }
+
+export async function  rateDelivery(deliveryId: string, star: number) {
+    
+    try {
+
+        const ratedDelivery = await db.delivery.update({
+            where: {
+                id: deliveryId
+            },
+            data: {
+                rating: star
+            }
+        })
+        return {success: true, ratedDelivery}
+    } catch (error) {
+        return {success: false, message: "Error rating delivery", error}
+    }
+
+}

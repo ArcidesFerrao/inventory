@@ -20,6 +20,7 @@ export default async function NewDeliveryPage(props: { params: Params }) {
       },
     },
   });
+
   if (!supplierOrder) return <div>Order not found</div>;
 
   return (

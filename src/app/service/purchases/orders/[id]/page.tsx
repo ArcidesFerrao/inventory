@@ -1,4 +1,4 @@
-// import { DeleteOrderButton } from "@/components/DeleteButton";
+import { RateButtons } from "@/components/ActionButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
@@ -46,7 +46,7 @@ export default async function OrderPage(props: { params: Params }) {
             Created {order?.createdAt.toDateString()}
           </p>
         </div>
-        <Link href="/supply/orders">
+        <Link href="/service/purchases">
           <span className="ep--back"></span>
         </Link>
       </div>
@@ -99,36 +99,9 @@ export default async function OrderPage(props: { params: Params }) {
         <h2 className="text-xl font-semibold">
           Supplier {order?.supplierOrders?.[0].supplier.name}
         </h2>
-
-        {/* <table>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Ordered</th>
-              <th>Delivered</th>
-              <th>Remaining</th>
-              <th>Price (MZN)</th>
-              <th>Total (MZN)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order?.confirmedDeliveries.length > 0 &&
-              order?.confirmedDeliveries?.[0].map((item) => (
-                <tr key={item.id}>
-                  <td>{item.product.name}</td>
-                  <td>{item.orderedQty}</td>
-                  <td>{item.deliveredQty}</td>
-                  <td>{item.orderedQty - item.deliveredQty}</td>
-                  <td>{item.price.toFixed(2)}</td>
-                  <td>{(item.price * item.orderedQty).toFixed(2)}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table> */}
       </div>
       {order?.confirmedDeliveries && order.confirmedDeliveries.length > 0 && (
         <div className="deliveries-details flex flex-col gap-2 w-full">
-          <h2 className="text-xl font-semibold">Deliveries</h2>
           {order.confirmedDeliveries.map((d) => (
             <div
               key={d.id}
@@ -162,22 +135,47 @@ export default async function OrderPage(props: { params: Params }) {
                   </ul>
                 </div>
               </div>
-              <div className="delivery-header flex flex-col gap-1">
-                <button
-                  disabled
-                  className="text-sm font-light text-center max-h-fit"
-                >
-                  {d.status}
-                </button>
-                {d.status === "COMPLETED" && (
-                  <p className="text-xs font-light ">
-                    Delivered Time:{" "}
-                    {d.deliveredAt?.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </p>
+              <div className="delivery-settings flex flex-col justify-between">
+                <div className="delivery-status flex flex-col gap-1">
+                  <button
+                    disabled
+                    className="text-sm font-light text-center max-h-fit"
+                  >
+                    {d.status}
+                  </button>
+                  {d.status === "COMPLETED" && (
+                    <p className="text-xs font-light ">
+                      Delivered Time:{" "}
+                      {d.deliveredAt?.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </p>
+                  )}
+                </div>
+                {d.rating !== null ? (
+                  <div className="delivery-rating self-end">
+                    <div className="rate-buttons flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={
+                            star <= (d.rating ?? 0)
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          }
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="delivery-rating">
+                    <p>Rate this delivery:</p>
+                    <RateButtons deliveryId={d.id} />
+                  </div>
                 )}
               </div>
             </div>

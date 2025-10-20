@@ -504,3 +504,12 @@ nav {
   background-color: var(--hover-bg);
   padding: 1rem;
 }
+
+.rate-buttons button {
+  border: none;
+  background: none;
+  padding: 0.2rem 0.2rem;
+}
+.rate-buttons button:hover {
+  background-color: var(--list-bg);
+}

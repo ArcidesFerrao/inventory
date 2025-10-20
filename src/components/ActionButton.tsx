@@ -1,5 +1,6 @@
 "use client";
 
+import { rateDelivery } from "@/app/actions/deliveries";
 import { acceptOrder, denyOrder } from "@/app/actions/orders";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -67,5 +68,40 @@ export const DenyButton = ({
     >
       {loading ? "..." : "Deny"}
     </button>
+  );
+};
+
+export const RateButtons = ({ deliveryId }: { deliveryId: string }) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const handleRateDelivery = async (star: number) => {
+    setLoading(true);
+    try {
+      const ratedDelivery = await rateDelivery(deliveryId, star);
+
+      if (ratedDelivery.success) {
+        toast.success("Delivery rated successfully!");
+        setLoading(false);
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error rating delivery: ", error);
+      toast.error("Error rating delivery!");
+      setLoading(false);
+    }
+  };
+  return (
+    <div className="rate-buttons flex items-center gap-2">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          disabled={loading}
+          className="text-yellow-400"
+          onClick={() => handleRateDelivery(star)}
+        >
+          ★
+        </button>
+      ))}
+    </div>
   );
 };
