@@ -113,7 +113,7 @@ export async function getServiceDashBoardStats() {
     }))
     
 
-    return { productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topProducts };
+    return { service: service?.businessName, productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topProducts };
 }
 
 
@@ -128,6 +128,7 @@ export async function getSupplierDashBoardStats() {
         },
         select: {
             id: true,
+            name: true,
         },
     });
     
@@ -207,6 +208,7 @@ export async function getSupplierDashBoardStats() {
     }))
 
     return { 
+        supplier: supplier.name,
         productCount, 
         customerCount, 
         orderCount, 

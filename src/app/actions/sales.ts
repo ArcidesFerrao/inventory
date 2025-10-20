@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { ProductWithMenuItems } from "@/types/types";
+import {  SaleProductWithMenuItems } from "@/types/types";
 import { logActivity } from "./logs";
 
 export async function createSale(
-    saleItems: ProductWithMenuItems[], serviceId: string
+    saleItems: SaleProductWithMenuItems[], serviceId: string
 ) {    
     if (saleItems.length === 0) return {success: false, message: "No sale items"}
 
@@ -19,7 +19,7 @@ export async function createSale(
             const stockUsage: Record<string, number> = {};
 
             const stockIds = saleItems.flatMap(item => 
-                ( item.MenuItems ?? []).map(recipe => recipe.stockId) 
+                ( item.MenuItems ?? []).map(recipe => recipe.stock.id) 
             );
             const stocks = await tx.product.findMany({
                 where: {
@@ -33,14 +33,14 @@ export async function createSale(
                 const productRecipes = saleItem.MenuItems || [];
                 
                 for (const recipeItem of productRecipes) {
-                    const stockProduct = stocks.find(s => s.id === recipeItem.stockId)
+                    const stockProduct = stocks.find(s => s.id === recipeItem.stock.id)
                     if (!stockProduct) continue;
 
                     // console.log("Found stockProduct:", stockProduct.name);
                         
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
 
-                    stockUsage[recipeItem.stockId] = (stockUsage[recipeItem.stockId] ?? 0) + qtyUsed;
+                    stockUsage[recipeItem.stock.id] = (stockUsage[recipeItem.stock.id] ?? 0) + qtyUsed;
                     cogs += qtyUsed * (stockProduct.price ?? 0);
                     // console.log(` - Using ${qtyUsed} of ${stockProduct.name} at cost ${(stockProduct.price ?? 0)} each, total ${qtyUsed * (stockProduct.price ?? 0)}`);
                 }
@@ -77,11 +77,23 @@ export async function createSale(
                 },
             });
 
+            await tx.stockMovement.createMany({
+                data: Object.entries(stockUsage).map(([stockId, qty]) => ({
+                    productId: stockId,
+                    quantity: qty,
+                    changeType: "SALE",
+                    referenceId: newSale.id,
+                    notes: "Sold Products"
+                }))
+            })
+
             console.log("COGS:", cogs);
             return newSale
 
         }, { timeout: 15000 }  );   
         
+        
+
         await logActivity(
             serviceId,
             null,

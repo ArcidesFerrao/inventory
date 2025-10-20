@@ -1,10 +1,21 @@
 import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier,  SupplierOrder, SupplierProduct, User } from "@prisma/client";
 
 
+export type SaleProductWithMenuItems = Product & {
+  quantity: number;
+  MenuItems: (RecipeItem & {
+    stock: Product
+  })[] ;
+  Category: Category | null;
+};
 export type ProductWithMenuItems = Product & {
   quantity: number;
-  MenuItems: RecipeItem[];
+  MenuItems: RecipeItem[] ;
   Category: Category | null;
+};
+export interface SaleProductsProps {
+  initialProducts: SaleProductWithMenuItems[];
+  serviceId: string;
 };
 export interface ProductsProps {
   initialProducts: ProductWithMenuItems[];

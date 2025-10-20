@@ -1,12 +1,15 @@
 "use client";
 
 import { createSale } from "@/app/actions/sales";
-import { ProductsProps } from "@/types/types";
+import { SaleProductsProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
+export const SalesList = ({
+  initialProducts,
+  serviceId,
+}: SaleProductsProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -36,14 +39,46 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
     // console.log(result.message ? result.message : `Sale completed`);
   };
 
+  // const handleIncrement = (id: string) => {
+  //   setProducts((prevProducts) =>
+  //     prevProducts.map((product) =>
+  //       product.id === id
+  //         ? { ...product, quantity: product.quantity + 1 }
+  //         : product
+  //     )
+  //   );
+  // };
   const handleIncrement = (id: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id
-          ? { ...product, quantity: product.quantity + 1 }
-          : product
-      )
-    );
+    setProducts((prevProducts) => {
+      return prevProducts.map((product) => {
+        if (product.id !== id) return product;
+
+        const recipe = product.MenuItems ?? [];
+
+        if (recipe.length === 0) {
+          if ((product.stock ?? 0) <= product.quantity) {
+            toast.error(`Not enough stock of ${product.name}`);
+            return product;
+          }
+          return { ...product, quantity: product.quantity + 1 };
+        }
+
+        for (const recipeItem of recipe) {
+          const ingredientStock = recipeItem.stock?.stock ?? 0;
+          const totalNeeded = (product.quantity + 1) * recipeItem.quantity;
+
+          if (ingredientStock < totalNeeded) {
+            toast.error(
+              `Not enough ${
+                recipeItem.stock.name ?? "ingredient"
+              } to make another ${product.name}`
+            );
+            return product;
+          }
+        }
+        return { ...product, quantity: product.quantity + 1 };
+      });
+    });
   };
 
   const handleDecrement = (id: string) => {
@@ -86,7 +121,10 @@ export const SalesList = ({ initialProducts, serviceId }: ProductsProps) => {
                         <span className="w-12 text-center">
                           {product.quantity}
                         </span>
-                        <button onClick={() => handleIncrement(product.id)}>
+                        <button
+                          onClick={() => handleIncrement(product.id)}
+                          disabled={product.stock === 0}
+                        >
                           +
                         </button>
                       </div>

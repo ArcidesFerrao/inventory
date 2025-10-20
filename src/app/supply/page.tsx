@@ -27,7 +27,9 @@ export default async function SupplyPage() {
   return (
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
-        <h1 className="text-4xl font-semibold">Supplier Dashboard</h1>
+        <h1 className="text-4xl font-semibold">
+          {stats.supplier}&apos;s Dashboard
+        </h1>
         <Link href="/supply/products/new" className="add-product flex gap-2">
           <span>+</span>
           <span className="text-md">Product</span>

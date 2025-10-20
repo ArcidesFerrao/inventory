@@ -1,7 +1,7 @@
 import { SalesList } from "@/components/SalesList";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ProductWithMenuItems } from "@/types/types";
+import { SaleProductWithMenuItems } from "@/types/types";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -18,17 +18,23 @@ export default async function NewSale() {
       type: "SERVICE",
     },
     include: {
-      MenuItems: true,
+      MenuItems: {
+        include: {
+          stock: true,
+        },
+      },
       Category: true,
     },
   });
 
-  const mappedProducts: ProductWithMenuItems[] = products.map((product) => ({
-    ...product,
-    price: product.price ?? 0,
-    stock: product.stock ?? 0,
-    quantity: 0,
-  }));
+  const mappedProducts: SaleProductWithMenuItems[] = products.map(
+    (product) => ({
+      ...product,
+      price: product.price ?? 0,
+      stock: product.stock ?? 0,
+      quantity: 0,
+    })
+  );
 
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
