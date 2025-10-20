@@ -217,10 +217,12 @@ export const OrderListItem = ({
     <li key={order.id} className="list-orders flex justify-between">
       <div className="flex flex-col gap-5">
         <div className="order-header flex flex-col gap-2">
-          <h3 className="order-title flex gap-2 items-center text-xl font-medium">
-            Order
-            <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
-          </h3>
+          <Link href={`/service/purchases/orders/${order.id}`}>
+            <h3 className="order-title flex gap-2 items-center text-xl font-medium">
+              Order
+              <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
+            </h3>
+          </Link>
           <div className="order-info flex items-center gap-4">
             <div className="flex gap-2 items-center">
               <span className="flex items-center">

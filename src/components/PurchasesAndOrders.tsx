@@ -168,7 +168,7 @@ export default function PurchasesAndOrders({
                 ].map((filter) => (
                   <label
                     key={filter.value}
-                    className={`cursor-pointer px-4 py-2 text-sm  ${
+                    className={`cursor-pointer text-nowrap px-4 py-2 text-sm  ${
                       orderFilter === filter.value
                         ? "font-bold border-b-2"
                         : " hover:border-b-2 font-medium"
