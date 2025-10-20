@@ -68,6 +68,8 @@ model Supplier {
   description     String?
   website         String?
   establishedYear Int? // activity year beginning
+  specialization  String?
+  badge           String?
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   userId          String             @unique
