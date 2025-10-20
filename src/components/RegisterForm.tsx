@@ -183,6 +183,7 @@ export const SupplierRegisterForm = () => {
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [specialization, setSpecialization] = useState("");
   const [description, setDescription] = useState("");
   const [website, setWebsite] = useState("");
   const [establishedYear, setEstablishedYear] = useState("");
@@ -270,6 +271,20 @@ export const SupplierRegisterForm = () => {
           />
         </div>
         {fields.address.allErrors && <p>{fields.address.errors}</p>}
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
+          <label>Specialization</label>
+          <textarea
+            name="specialization"
+            id="specialization"
+            value={specialization}
+            onChange={(e) => setSpecialization(e.target.value)}
+          />
+        </div>
+        {fields.specialization.allErrors && (
+          <p>{fields.specialization.errors}</p>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">

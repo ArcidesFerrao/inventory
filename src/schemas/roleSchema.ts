@@ -4,6 +4,7 @@ export const supplierSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(2, "Name is required").max(100, "Name too long"),
     description: z.string().max(500).optional(),
+    specialization: z.string().max(500).optional(),
     email: z.string().email("Invalid email address").optional(),
     phone: z.string().regex(/^\+?\d{7,15}$/, "Phone number must be valid"),
     address: z.string().min(5, "Address required"),

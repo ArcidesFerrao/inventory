@@ -60,6 +60,7 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
                 userId: session.user.id,
                 name: values.name,
                 description: values.description,
+                specialization: values.specialization,
                 email: values.email,
                 phone: values.phone,
                 address: values.address,
