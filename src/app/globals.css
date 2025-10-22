@@ -514,3 +514,22 @@ nav {
 .rate-buttons button:hover {
   background-color: var(--list-bg);
 }
+
+.search-term input:active,
+.search-term input:focus,
+.search-term input {
+  border: none;
+  background: none;
+  width: 100%;
+}
+.search-term button:hover {
+  text-decoration: underline;
+  color: var(--foreground);
+}
+.search-term button {
+  padding: 0 0.4rem;
+}
+
+.search-term {
+  background-color: var(--background);
+}

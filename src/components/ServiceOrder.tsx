@@ -10,6 +10,7 @@ export const ServiceOrder = ({
   suppliers: SupplierWithProducts[];
 }) => {
   const [toggleSupplier, setToggleSupplier] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const openSupplier = (supplierId: string) => {
     setToggleSupplier(supplierId);
@@ -20,9 +21,29 @@ export const ServiceOrder = ({
   };
   if (!suppliers) return null;
 
+  const filteredSuppliers = suppliers.filter(
+    (supplier) =>
+      supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
-      {suppliers.map((supplier) => (
+      <div className="search-term flex items-center text-sm gap-2">
+        <input
+          type="text"
+          placeholder="Search suppliers..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {searchTerm && (
+          <button className="text-gray-500" onClick={() => setSearchTerm("")}>
+            Clear
+          </button>
+        )}
+      </div>
+
+      {filteredSuppliers.map((supplier) => (
         <div
           key={supplier.id}
           className={
