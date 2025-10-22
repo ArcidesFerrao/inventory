@@ -17,7 +17,14 @@ export const PurchasesList = ({
   const handleCompleteSale = async () => {
     setLoading(true);
     console.log("creating purchase");
-    const purchaseItems = products.filter((product) => product.quantity > 0);
+    const purchaseItems = products.filter(
+      (product) => product.quantity > 0 && (product.price ?? 0) > 0
+    );
+    if (purchaseItems.length === 0) {
+      toast.error("Add at least one product with a valid price.");
+      setLoading(false);
+      return;
+    }
     const result = await createPurchase(purchaseItems, serviceId);
 
     if (result.message) {
@@ -73,7 +80,26 @@ export const PurchasesList = ({
                 className="flex justify-between items-center py-2"
               >
                 <h3>{product.name}</h3>
-
+                <label
+                  className="flex gap-2 items-center text-sm "
+                  htmlFor="price"
+                >
+                  Price:{" "}
+                  <input
+                    className="max-w-20"
+                    type="number"
+                    value={product.price ?? ""}
+                    onChange={(e) =>
+                      setProducts((prev) =>
+                        prev.map((p) =>
+                          p.id === product.id
+                            ? { ...p, price: parseFloat(e.target.value) || 0 }
+                            : p
+                        )
+                      )
+                    }
+                  />
+                </label>
                 <div className="flex gap-2 items-center max-w-6/12">
                   <div className="amount-btn flex gap-4 items-center px-2 ">
                     <button onClick={() => handleDecrement(product.id)}>
