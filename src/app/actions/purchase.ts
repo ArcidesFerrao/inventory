@@ -15,6 +15,7 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
                     total,
                     paymentType: "CASH",
                     serviceId,
+                    sourceType: "DIRECT",
                 PurchaseItem: {
                     create: purchaseItems.map((item) => ({
                         productId: item.id,

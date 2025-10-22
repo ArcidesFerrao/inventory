@@ -248,6 +248,8 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     serviceId,
                     total,
                     paymentType: "CASH",
+                    sourceType: "ORDER",
+                    sourceId: orderId,
                     PurchaseItem: {
                         create: delivery.deliveryItems.map((item) => ({
                             supplierProductId: item.orderItem.supplierProductId,
