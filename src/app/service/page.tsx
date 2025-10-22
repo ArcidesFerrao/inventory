@@ -60,7 +60,13 @@ export default async function ServicePage() {
             </div>
             <div>
               <h3 className="text-lg font-normal">Net Position</h3>
-              <h4 className="text-lg py-1 whitespace-nowrap font-bold">
+              <h4
+                className={`text-lg py-1 whitespace-nowrap font-bold ${
+                  Number(stats.balance.toFixed(2)) <= 0
+                    ? "text-red-300"
+                    : "text-green-300"
+                }`}
+              >
                 MZN {stats.balance.toFixed(2)}
               </h4>
             </div>

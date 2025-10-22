@@ -242,6 +242,7 @@ nav {
   background-color: var(--dash-bg);
   height: 75vh;
   overflow: auto;
+  border-radius: 0.8rem;
 }
 
 .items-list,

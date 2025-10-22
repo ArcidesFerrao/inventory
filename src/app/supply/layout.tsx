@@ -9,8 +9,9 @@ export default function DashboardLayout({
   return (
     <main className="dashboard-main flex gap-5">
       <SupplyNav />
-      <section className="dash-section flex w-full rounded p-8">
+      <section className="dash-section flex flex-col w-full p-8 ">
         {children}
+        <span className="h-4 w-full dash-footer"></span>
       </section>
     </main>
   );
