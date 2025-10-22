@@ -32,21 +32,22 @@ model Product {
   unitQty       Int
   stock         Int?
   price         Float?
+  critical      Int?            @default(0)
   status        ProductStatus   @default(ACTIVE)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   categoryId    String?
   unitId        String?
+  serviceId     String
   type          ProductType     @default(STOCK)
-  Category      Category?       @relation(fields: [categoryId], references: [id])
-  Unit          Unit?           @relation(fields: [unitId], references: [id])
   MenuItems     RecipeItem[]    @relation("MenuItems")
   StockItems    RecipeItem[]    @relation("StockItems")
-  SaleItem      SaleItem[]
-  stockMovement StockMovement[]
+  Unit          Unit?           @relation(fields: [unitId], references: [id])
+  Category      Category?       @relation(fields: [categoryId], references: [id])
   Service       Service         @relation(fields: [serviceId], references: [id])
-  serviceId     String
+  SaleItem      SaleItem[]
   PurchaseItem  PurchaseItem[]
+  stockMovement StockMovement[]
 }
 
 model RecipeItem {
@@ -168,7 +169,9 @@ model Purchase {
   id           String         @id @default(ulid())
   date         DateTime       @default(now())
   total        Float
+  sourceType   String         @default("DIRECT") // "DIRECT" | "ORDER"
   paymentType  String
+  sourceId     String?
   PurchaseItem PurchaseItem[]
   Service      Service?       @relation(fields: [serviceId], references: [id])
   serviceId    String?
