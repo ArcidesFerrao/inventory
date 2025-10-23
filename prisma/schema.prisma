@@ -80,7 +80,8 @@ model Supplier {
   SupplierOrder   SupplierOrder[]
   ActivityLog     ActivityLog[]
 
-  Sale Sale[]
+  Sale     Sale[]
+  Category Category[]
 }
 
 model SupplierProduct {
@@ -102,6 +103,7 @@ model SupplierProduct {
   OrderItem     OrderItem[]
   StockMovement StockMovement[]
   SaleItem      SaleItem[]
+  Category      Category[]
 
   @@index([supplierId]) // list products per supplier
   @@index([status]) // filter by active/inactive
@@ -136,6 +138,7 @@ model Service {
   orders            Order[]
   supplierCustomers SupplierCustomer[]
   user              User               @relation(fields: [userId], references: [id])
+  Category          Category[]
 
   @@unique([businessName, location])
 }
@@ -296,10 +299,21 @@ model StockMovement {
 }
 
 model Category {
-  id       String       @id @default(ulid())
-  name     String       @unique
-  type     CategoryType
-  products Product[]
+  id   String       @id @default(ulid())
+  name String       @unique
+  type CategoryType
+
+  description String?
+
+  supplierId String?
+  serviceId  String?
+
+  supplier          Supplier?        @relation(fields: [supplierId], references: [id])
+  service           Service?         @relation(fields: [serviceId], references: [id])
+  products          Product[]
+  SupplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
+  supplierProductId String?
+  createdAt         DateTime         @default(now())
 }
 
 model Unit {
