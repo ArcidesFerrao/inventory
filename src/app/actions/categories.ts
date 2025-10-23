@@ -33,7 +33,7 @@ export async function getSupplierCategories(supplierId: string) {
       where: {
         OR: [
           {supplierId},
-          {supplierId: null},
+          {type: "SUPPLIER"},
         ]
       }
     });

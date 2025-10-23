@@ -533,3 +533,7 @@ nav {
 .search-term {
   background-color: var(--background);
 }
+
+.form-second-row input {
+  max-width: 8rem;
+}

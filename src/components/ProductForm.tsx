@@ -1,6 +1,6 @@
 "use client";
 
-import { getCategories } from "@/app/actions/categories";
+import { getCategories, getSupplierCategories } from "@/app/actions/categories";
 import {
   createProduct,
   createSupplierProduct,
@@ -12,7 +12,7 @@ import { getUnits } from "@/app/actions/units";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { $Enums, Product, SupplierProduct } from "@prisma/client";
+import { $Enums, Category, Product, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -396,6 +396,7 @@ export const SupplierProductForm = ({
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
   const [unitId, setUnitId] = useState(supplierProduct?.unitId || "");
   const [price, setPrice] = useState(supplierProduct?.price || 0);
+  const [categories, setCategories] = useState<Category[]>();
 
   useEffect(() => {
     if (supplierProduct?.unitId) {
@@ -417,8 +418,13 @@ export const SupplierProductForm = ({
       setUnits(await getUnits());
     };
 
+    const fetchCategories = async () => {
+      setCategories(await getSupplierCategories(supplierId));
+    };
+
     fetchUnits();
-  }, [state, supplierProduct, router]);
+    fetchCategories();
+  }, [state, supplierProduct, router, supplierId]);
 
   return (
     <form
@@ -497,50 +503,62 @@ export const SupplierProductForm = ({
             </div>
           </div>
         </div>
-        <div className="flex gap-2 w-full justify-between">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              name="price"
-              id="price"
-              onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-              value={price}
-              required
-            />
-            {price > 0 && (
-              <p className="text-sm font-extralight">MZN {price.toFixed(2)}</p>
-            )}
-            {fields.price.errors && (
-              <p className="text-xs font-light">{fields.price.errors}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="stock">Stock</label>
-            <input
-              type="number"
-              name="stock"
-              id="stock"
-              min={0}
-              defaultValue={supplierProduct?.stock || 0}
-            />
-            {fields.stock.errors && (
-              <p className="text-xs font-light">{fields.stock.errors}</p>
-            )}
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="cost">Cost</label>
-            <input
-              type="number"
-              name="cost"
-              id="cost"
-              defaultValue={supplierProduct?.cost || 0}
-            />
+        <div className="form-second-row flex gap-2 w-full justify-between items-center">
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="price">Price</label>
+              <input
+                type="number"
+                name="price"
+                id="price"
+                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+                value={price}
+                required
+              />
+              {price > 0 && (
+                <p className="text-sm font-extralight">
+                  MZN {price.toFixed(2)}
+                </p>
+              )}
+              {fields.price.errors && (
+                <p className="text-xs font-light">{fields.price.errors}</p>
+              )}
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="stock">Stock</label>
+              <input
+                type="number"
+                name="stock"
+                id="stock"
+                min={0}
+                defaultValue={supplierProduct?.stock || 0}
+              />
+              {fields.stock.errors && (
+                <p className="text-xs font-light">{fields.stock.errors}</p>
+              )}
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="cost">Cost</label>
+              <input
+                type="number"
+                name="cost"
+                id="cost"
+                defaultValue={supplierProduct?.cost || 0}
+              />
 
-            {fields.cost.errors && (
-              <p className="text-xs font-light">{fields.cost.errors}</p>
-            )}
+              {fields.cost.errors && (
+                <p className="text-xs font-light">{fields.cost.errors}</p>
+              )}
+            </div>
           </div>
+          <select name="categoryId" id="categoryId" className="h-fit">
+            <option value="">Select or create category</option>
+            {categories?.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="description">Description</label>
