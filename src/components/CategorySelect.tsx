@@ -6,14 +6,17 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export function CategorySelect({
+  categoryId,
   categories,
   supplierId,
 }: {
+  categoryId?: string;
   categories: Category[];
   supplierId: string;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [cId, setCId] = useState(categoryId || "");
   const router = useRouter();
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -38,7 +41,12 @@ export function CategorySelect({
     <div className="self-start flex flex-col gap-1">
       <label htmlFor="categoryId">Category</label>
       <div className="flex gap-2">
-        <select name="categoryId" id="categoryId">
+        <select
+          name="categoryId"
+          id="categoryId"
+          value={cId}
+          onChange={(e) => setCId(e.target.value)}
+        >
           <option value="">Select or create category</option>
           {categories?.map((c: { id: string; name: string }) => (
             <option key={c.id} value={c.id}>

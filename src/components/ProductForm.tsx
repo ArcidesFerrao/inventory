@@ -24,6 +24,10 @@ type SupplierProductWithUnit = SupplierProduct & {
     id: string;
     description: string | null;
   } | null;
+  Category: {
+    id: string;
+    name: string;
+  } | null;
   type: "SUPPLY" | "STOCK" | "SERVICE";
   quantity: number;
 };
@@ -396,6 +400,7 @@ export const SupplierProductForm = ({
 
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
   const [unitId, setUnitId] = useState(supplierProduct?.unitId || "");
+
   const [price, setPrice] = useState(supplierProduct?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
 
@@ -553,7 +558,11 @@ export const SupplierProductForm = ({
             </div>
           </div>
           {categories && (
-            <CategorySelect categories={categories} supplierId={supplierId} />
+            <CategorySelect
+              categoryId={supplierProduct?.Category?.id}
+              categories={categories}
+              supplierId={supplierId}
+            />
           )}
         </div>
         <div className="flex flex-col gap-1">

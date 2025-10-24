@@ -33,7 +33,7 @@ export default async function ProductPage(props: { params: Params }) {
         </div>
       </div>
       <div className="flex justify-between w-full">
-        <div className="flex">
+        <div className="flex flex-col gap-4">
           <div className="flex gap-5">
             <div className="flex flex-col gap-2">
               <p>Quantity</p>

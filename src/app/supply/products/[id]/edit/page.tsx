@@ -15,6 +15,7 @@ export default async function EditSupplierProductPage(props: {
     },
     include: {
       Unit: true,
+      Category: true,
     },
   });
   if (!product) return <div>Product not found</div>;
@@ -42,6 +43,11 @@ export default async function EditSupplierProductPage(props: {
                 description: product.Unit.description,
               }
             : null,
+
+          Category: {
+            id: product.Category?.id || "",
+            name: product.Category?.name || "",
+          },
         }}
         supplierId={product.supplierId}
       />

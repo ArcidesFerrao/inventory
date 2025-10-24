@@ -187,7 +187,7 @@ export async function editSupplierProduct(prevState: unknown, formData: FormData
         });
     if (submission.status !== "success") return submission.reply();
 
-    console.log(session);
+    // console.log(session);
     try {
         const values = submission.value;
 
@@ -201,6 +201,7 @@ export async function editSupplierProduct(prevState: unknown, formData: FormData
                 description: values.description,
                 price: values.price,
                 unitQty: values.unitQty,
+                categoryId: values.categoryId,
                 unitId: values.unitId,
                 stock: values.stock,
                 cost: values.cost,
