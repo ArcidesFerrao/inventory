@@ -163,6 +163,7 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
                 price: values.price,
                 unitQty: values.unitQty,
                 unitId: values.unitId,
+                categoryId: values.categoryId,
                 cost: values.cost,
                 stock: values.stock,
                 status: "ACTIVE",
