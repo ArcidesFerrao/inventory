@@ -44,25 +44,33 @@ export async function getSupplierCategories(supplierId: string) {
   }
 }
 
-export async function createNewSupplierCategory({newCategory, supplierId, }:{newCategory: string; supplierId: string}) {
-  
-  const existing = await db.category.findFirst({
-    where: {
-      name: newCategory,
+export async function createNewSupplierCategory({newCategoryName, supplierId, }:{newCategoryName: string; supplierId: string}) {
+  console.log("creating category", newCategoryName)
+  try{
+
+    const existing = await db.category.findFirst({
+      where: {
+      name: newCategoryName,
       OR: [
         {supplierId},
         {supplierId: null},
       ]
     }
   })
-
+  
   if (!existing) {
-    await db.category.create({
+    const category = await db.category.create({
       data: {
-        name: newCategory,
+        name: newCategoryName,
         supplierId,
         type: "SUPPLIER"
       }
     })
+    
+    return {success: true, category}
   }
+} catch (error) {
+  console.error("Error creating category")
+  return {success: false, error}
+}
 }

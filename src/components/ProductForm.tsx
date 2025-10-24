@@ -16,6 +16,7 @@ import { $Enums, Category, Product, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { CategorySelect } from "./CategorySelect";
 
 type SupplierProductWithUnit = SupplierProduct & {
   Unit: {
@@ -551,14 +552,9 @@ export const SupplierProductForm = ({
               )}
             </div>
           </div>
-          <select name="categoryId" id="categoryId" className="h-fit">
-            <option value="">Select or create category</option>
-            {categories?.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          {categories && (
+            <CategorySelect categories={categories} supplierId={supplierId} />
+          )}
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="description">Description</label>
