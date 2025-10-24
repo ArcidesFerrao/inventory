@@ -12,6 +12,7 @@ export default async function ProductPage(props: { params: Params }) {
     },
     include: {
       Unit: true,
+      Category: true,
     },
   });
   return (
@@ -32,18 +33,24 @@ export default async function ProductPage(props: { params: Params }) {
         </div>
       </div>
       <div className="flex justify-between w-full">
-        <div className="flex gap-5">
-          <div className="flex flex-col gap-2">
-            <p>Quantity</p>
-            <h2 className="font-bold text-xl">{product?.unitQty}</h2>
+        <div className="flex">
+          <div className="flex gap-5">
+            <div className="flex flex-col gap-2">
+              <p>Quantity</p>
+              <h2 className="font-bold text-xl">{product?.unitQty}</h2>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p>Unit</p>
+              <h2 className="font-bold text-xl">{product?.Unit?.name}</h2>
+            </div>
+            <div className="flex flex-col gap-2">
+              <p>Stock</p>
+              <h2 className="font-bold text-xl">{product?.stock}</h2>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
-            <p>Unit</p>
-            <h2 className="font-bold text-xl">{product?.Unit?.name}</h2>
-          </div>
-          <div className="flex flex-col gap-2">
-            <p>Stock</p>
-            <h2 className="font-bold text-xl">{product?.stock}</h2>
+            <p>Category</p>
+            <h2 className="font-bold text-xl">{product?.Category?.name}</h2>
           </div>
         </div>
         <div className="flex flex-col gap-2">
