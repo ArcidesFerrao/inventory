@@ -33,7 +33,7 @@ export default async function AdminPage() {
                 <div className="flex flex-col gap-1">
                   <p className="text-lg font-normal">Total</p>
                   <h4 className="text-xl py-1 whitespace-nowrap font-bold">
-                    {stats.users}
+                    {stats.totals.totalUsers}
                   </h4>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -46,13 +46,13 @@ export default async function AdminPage() {
               <div className="flex flex-col gap-1">
                 <p className="text-lg font-normal">Services</p>
                 <h4 className="text-xl py-1 whitespace-nowrap font-bold">
-                  {stats.services}
+                  {stats.totals.totalServices}
                 </h4>
               </div>
               <div className="flex flex-col gap-1">
                 <p className="text-lg font-normal">Suppliers</p>
                 <h4 className="text-xl py-1 whitespace-nowrap font-bold">
-                  {stats.suppliers}
+                  {stats.totals.totalSuppliers}
                 </h4>
               </div>
             </div>
@@ -64,7 +64,7 @@ export default async function AdminPage() {
             <div className="flex flex-col gap-1">
               <p className="text-lg font-normal">Total</p>
               <h4 className="text-xl py-1 whitespace-nowrap font-bold">
-                {stats.orders}
+                {stats.totals.totalOrders}
               </h4>
             </div>
             <div className="flex flex-col gap-1">
@@ -79,14 +79,40 @@ export default async function AdminPage() {
             <div className="flex flex-col gap-1">
               <p className="text-lg font-normal">Total</p>
               <h4 className="text-xl py-1 whitespace-nowrap font-bold">
-                {stats.products}
+                {stats.totals.totalProducts}
               </h4>
             </div>
             <div className="flex flex-col gap-1">
               <p className="text-lg font-normal">Sales</p>
-              <h4 className="text-xl py-1 whitespace-nowrap font-bold"></h4>
+              <h4 className="text-xl py-1 whitespace-nowrap font-bold">
+                {stats.totals.totalSales}
+              </h4>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="top-stats flex justify-between gap-4">
+        <div className="top-suppliers flex flex-col gap-2">
+          <h2>Top Suppliers</h2>
+          <ul>
+            {stats.topSuppliers.map((s) => (
+              <li key={s.id}>
+                <h3>{s.name}</h3>
+                <p>{s.totalOrders} Orders</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="top-services flex flex-col gap-2">
+          <h2>Top Services</h2>
+          <ul>
+            {stats.topServices.map((s) => (
+              <li key={s.id}>
+                <h3>{s.name}</h3>
+                <p>{s.totalOrders} Orders</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </>

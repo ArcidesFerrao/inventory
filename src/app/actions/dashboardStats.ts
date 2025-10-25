@@ -226,26 +226,78 @@ export async function getAdminStats() {
 
     if (!session?.user.isAdmin) return null 
 
-    const usersData = db.user.findMany();
+    const [
+        totalUsers,
+        totalOrders,
+        totalProducts,
+        totalServices,
+        totalSuppliers,
+        totalSales
+    ] = await Promise.all([
+        db.user.count(),
+        db.order.count(),
+        db.product.count(),
+        db.service.count(),
+        db.supplier.count(),
+        db.sale.count()
+    ])
 
-    const ordersData = db.order.findMany();
+    const topSuppliers = await db.supplierOrder.groupBy({
+        by: ["supplierId"],
+        _count: { id: true},
+        orderBy: { _count: {
+            id: "desc"
+        }},
+        take: 5
+    })
 
-    const productsData = db.product.findMany();
+    const supplierDetails = await Promise.all(
+        topSuppliers.map(async (s) => {
+            const supplier = await db.supplier.findUnique({
+                where: { id: s.supplierId},
+                select: { id: true, name: true}
+            });
+            return {
+                id: supplier?.id,
+                name: supplier?.name || "Unknown",
+                totalOrders: s._count.id
+            }
+        })
+    )
 
-    const supplierProductsData = db.supplierProduct.findMany();
+    const topServices = await db.order.groupBy({
+        by: ["serviceId"],
+        _count: { id: true},
+        orderBy: { _count: {
+            id: "desc"
+        }},
+        take: 5
+    })
 
-    const servicesData = db.service.findMany();
-
-    const suppliersData = db.supplier.findMany()
-
-    const users = (await usersData).length
-    const orders = (await ordersData).length
-    const products = (await productsData).length
-    const supplierProducts = (await supplierProductsData).length
-    const suppliers = (await suppliersData).length
-    const services = (await servicesData).length
+    const serviceDetails = await Promise.all(
+        topServices.map(async (s) => {
+            const service = await db.service.findUnique({
+                where: { id: s.serviceId ?? undefined},
+                select: { id: true, businessName: true}
+            });
+            return {
+                id: service?.id,
+                name: service?.businessName || "Unknown",
+                totalOrders: s._count.id
+            }
+        })
+    )
 
     return {
-        users, orders, products, supplierProducts, services, suppliers
+        totals: {
+            totalUsers,
+        totalOrders,
+        totalProducts,
+        totalServices,
+        totalSuppliers,
+        totalSales
+        },
+        topSuppliers: supplierDetails,
+        topServices: serviceDetails,
     }
 }
