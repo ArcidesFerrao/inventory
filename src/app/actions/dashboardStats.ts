@@ -219,3 +219,33 @@ export async function getSupplierDashBoardStats() {
         topProducts 
     };
 }
+
+
+export async function getAdminStats() {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user.isAdmin) return null 
+
+    const usersData = db.user.findMany();
+
+    const ordersData = db.order.findMany();
+
+    const productsData = db.product.findMany();
+
+    const supplierProductsData = db.supplierProduct.findMany();
+
+    const servicesData = db.service.findMany();
+
+    const suppliersData = db.supplier.findMany()
+
+    const users = (await usersData).length
+    const orders = (await ordersData).length
+    const products = (await productsData).length
+    const supplierProducts = (await supplierProductsData).length
+    const suppliers = (await suppliersData).length
+    const services = (await servicesData).length
+
+    return {
+        users, orders, products, supplierProducts, services, suppliers
+    }
+}
