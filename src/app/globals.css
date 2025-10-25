@@ -223,6 +223,12 @@ li a {
   border-radius: 0.4rem;
 }
 
+.listing-stock-item {
+  border-radius: 0.4rem;
+
+  background-color: var(--input-bg);
+}
+
 .supplier-item {
   background-color: var(--input-bg);
   border-radius: 0.4rem;
