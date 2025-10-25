@@ -13,7 +13,7 @@ export default async function Home() {
       {session?.user ? (
         <>
           <p className="font-extralight text-sm">Pick a dashboard</p>
-          <DashMenu />
+          <DashMenu isAdmin={session.user.isAdmin ?? false} />
         </>
       ) : (
         <div className=" flex flex-col text-center gap-4  py-2">

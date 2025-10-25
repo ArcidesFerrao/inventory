@@ -8,5 +8,9 @@ export default async function authCheck() {
   if (!session) {
     return null;
   }
+
+  
+
+
     return session;
 }

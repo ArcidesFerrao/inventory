@@ -102,3 +102,37 @@ export const SupplyNav = () => {
     </nav>
   );
 };
+
+export const AdminNav = () => {
+  return (
+    <nav className="navigator">
+      <ul className="flex flex-col gap-2">
+        <HomeNavLink
+          href="/admin"
+          label="Dashboard"
+          icon={<span className="mage--dashboard-fill"></span>}
+        />
+        <NavLink
+          href="/admin/users"
+          label="Users"
+          icon={<span className="ant-design--product-filled"></span>}
+        />
+        <NavLink
+          href="/admin/orders"
+          label="Orders"
+          icon={<span className="carbon--sales-ops"></span>}
+        />
+        <NavLink
+          href="/admin/logs"
+          label="Logs"
+          icon={<span className="lucide--logs"></span>}
+        />
+        <NavLink
+          href="/admin/settings"
+          label="Settings"
+          icon={<span className="icon-park-outline--setting-one"></span>}
+        />
+      </ul>
+    </nav>
+  );
+};

@@ -69,13 +69,17 @@ export const authOptions: AuthOptions = {
                     },
                 }
             })
+
+            const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
+
             return {
                 ...session,
                 user: {
                     ...session.user,
                     phoneNumber: userData?.phoneNumber,
                     serviceId: userData?.Service?.id, 
-                    supplierId: userData?.Supplier?.id 
+                    supplierId: userData?.Supplier?.id, 
+                    isAdmin
                 }
             }
         }

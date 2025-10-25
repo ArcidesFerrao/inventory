@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import React from "react";
 
-export default function DashMenu() {
+export default function DashMenu(isAdmin: { isAdmin: boolean }) {
   return (
     <section className="dash-menu flex gap-5 py-5">
       {/* <button className="p-4" onClick={() => redirect("/stock")}>
@@ -18,6 +18,12 @@ export default function DashMenu() {
         <span className="solar--delivery-bold"></span>
         <p>Supplier Management</p>
       </button>
+      {isAdmin && (
+        <button className="p-4" onClick={() => redirect("/admin")}>
+          <span className="eos-icons--admin-outlined"></span>
+          <p>Admin</p>
+        </button>
+      )}
     </section>
   );
 }

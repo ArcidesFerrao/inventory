@@ -12,6 +12,7 @@ declare module "next-auth" {
       phoneNumber: string | null
       serviceId?: string | null
       supplierId?: string | null
+      isAdmin?: boolean | null
     }
   }
 
