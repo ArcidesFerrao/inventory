@@ -445,6 +445,10 @@ nav {
   border-radius: 0.4rem;
 }
 
+.profile-details button {
+  padding: 0.4rem 0.8rem;
+}
+
 .profile-sections button {
   background: none;
   color: var(--divider);

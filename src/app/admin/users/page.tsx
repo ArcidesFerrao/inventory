@@ -2,6 +2,7 @@ import { getAdminStats } from "@/app/actions/dashboardStats";
 import { Card } from "@/components/Card";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -43,7 +44,9 @@ export default async function UsersAdminPage() {
           <tbody>
             {stats.users.usersData.map((s) => (
               <tr key={s.id}>
-                <td>{s.name}</td>
+                <Link href={`users/${s.id}`}>
+                  <td>{s.name}</td>
+                </Link>
                 <td>{s.role}</td>
                 <td>{s.profileStatus}</td>
                 <td>{s.createdAt.toLocaleDateString()}</td>
