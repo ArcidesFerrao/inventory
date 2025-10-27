@@ -21,34 +21,36 @@ export default async function UsersAdminPage() {
   return (
     <>
       <div className="admin-header">
-        <h1 className="text-4xl font-medium">Admin Dashboard</h1>
+        <h1 className="text-4xl font-medium underline">Users</h1>
       </div>
-      <div className="flex justify-between">
+      <div className="py-4 flex justify-between">
         <Card title="Total Users" value={stats.users.totalUsers} />
         <Card title="Active Users" value={stats.users.activeUsers} />
         <Card title="Suspended Users" value={stats.users.suspendedUsers} />
         <Card title="Pending Users" value={stats.users.pendingUsers} />
       </div>
-      <div className="top-services flex flex-col gap-5">
-        <h2>Users List</h2>
-        <ul className="top-list-admin flex flex-col gap-2 p-4">
-          <li className="flex justify-between">
-            <h3>User</h3>
-            <p>Role</p>
-            <p>Status</p>
-            <p>Created At</p>
-          </li>
-          <div>
+      <div className="admin-users flex flex-col gap-5">
+        <h2 className="text-lg font-bold">Users List</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
             {stats.users.usersData.map((s) => (
-              <li key={s.id} className="flex justify-between py-1">
-                <h3>{s.name}</h3>
-                <p>{s.role}</p>
-                <p>{s.profileStatus}</p>
-                <p>{s.createdAt.toLocaleDateString()}</p>
-              </li>
+              <tr key={s.id}>
+                <td>{s.name}</td>
+                <td>{s.role}</td>
+                <td>{s.profileStatus}</td>
+                <td>{s.createdAt.toLocaleDateString()}</td>
+              </tr>
             ))}
-          </div>
-        </ul>
+          </tbody>
+        </table>
       </div>
     </>
   );

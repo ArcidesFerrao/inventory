@@ -300,6 +300,32 @@ export async function getAdminStats() {
         db.user.count({where: {profileStatus: "PENDING"}}),
     ])
 
+    const [ordersData, delivered, confirmed, cancelled] = await Promise.all([
+        db.order.findMany({
+            include: {
+                Service: true,
+                supplierCustomer: {
+                    include: {
+                        supplier: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
+            take: 20
+        }),
+        db.order.count({where: {
+            status: "DELIVERED"
+        }}),
+        db.order.count({where: {
+            status: "CONFIRMED"
+        }}),
+        db.order.count({where: {
+            status: "CANCELLED"
+        }}),
+    ])
+
     return {
         totals: {
             totalOrders,
@@ -316,6 +342,12 @@ export async function getAdminStats() {
             activeUsers,
             suspendedUsers,
             pendingUsers
+        },
+        orders: {
+            ordersData,
+            delivered,
+            confirmed,
+            cancelled
         }
     }
 }

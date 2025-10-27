@@ -565,7 +565,13 @@ nav {
   min-width: 150px;
 }
 
-.top-list-admin {
+.top-lists li {
+  border-bottom: 1px solid var(--hover-bg);
+}
+
+.admin-orders table,
+.top-stats ul,
+.admin-users table {
   background-color: var(--accent);
   border-radius: 0.4rem;
 }

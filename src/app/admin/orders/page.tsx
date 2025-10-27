@@ -1,0 +1,59 @@
+import { getAdminStats } from "@/app/actions/dashboardStats";
+import { Card } from "@/components/Card";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import React from "react";
+
+export default async function OrdersPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user.isAdmin) {
+    redirect("/");
+  }
+
+  const stats = await getAdminStats();
+
+  if (!stats) {
+    redirect("/login");
+  }
+
+  return (
+    <>
+      <div className="admin-header">
+        <h1 className="text-4xl font-medium underline">Orders</h1>
+      </div>
+      <div className="py-4 flex justify-between">
+        <Card title="Total Orders" value={stats.totals.totalOrders} />
+        <Card title="Delivered Orders" value={stats.orders.delivered} />
+        <Card title="Confirmed Orders" value={stats.orders.confirmed} />
+        <Card title="Cancelled Orders" value={stats.orders.cancelled} />
+      </div>
+      <div className="admin-orders flex flex-col gap-5">
+        <h2 className="text-lg font-bold">Orders List</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Service</th>
+              <th>Supplier</th>
+              <th>Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stats.orders.ordersData.map((s) => (
+              <tr key={s.id}>
+                <td>{s.id.slice(0, 5)}...</td>
+                <td>{s.Service?.businessName}</td>
+                <td>{s.supplierCustomer?.supplier.name}</td>
+                <td>{s.status}</td>
+                <td>MZN {s.total.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
