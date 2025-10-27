@@ -123,7 +123,7 @@ export const AdminNav = () => {
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
-          href="/admin/logs"
+          href="/admin/activity"
           label="Logs"
           icon={<span className="lucide--logs"></span>}
         />

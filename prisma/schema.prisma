@@ -23,6 +23,7 @@ model User {
 
   Supplier Supplier?
   Service  Service?
+  AuditLog AuditLog[]
 }
 
 model Product {
@@ -323,6 +324,19 @@ model Unit {
   description      String?
   products         Product[]
   supplierProducts SupplierProduct[]
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String
+  entityName String
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
 }
 
 enum StockChange {
