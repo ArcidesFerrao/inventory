@@ -564,3 +564,8 @@ nav {
   border-radius: 0.4rem;
   min-width: 150px;
 }
+
+.top-list-admin {
+  background-color: var(--accent);
+  border-radius: 0.4rem;
+}

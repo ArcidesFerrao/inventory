@@ -288,16 +288,34 @@ export async function getAdminStats() {
         })
     )
 
+    const [usersData, activeUsers, suspendedUsers, pendingUsers] = await Promise.all([
+        db.user.findMany({
+            orderBy: {
+                createdAt: "desc"
+            },
+            take: 5
+        }),
+        db.user.count({where: {profileStatus: "ACTIVE"}}),
+        db.user.count({where: {profileStatus: "SUSPENDED"}}),
+        db.user.count({where: {profileStatus: "PENDING"}}),
+    ])
+
     return {
         totals: {
-            totalUsers,
-        totalOrders,
-        totalProducts,
-        totalServices,
-        totalSuppliers,
-        totalSales
+            totalOrders,
+            totalProducts,
+            totalServices,
+            totalSuppliers,
+            totalSales
         },
         topSuppliers: supplierDetails,
         topServices: serviceDetails,
+        users: {
+            usersData,
+            totalUsers,
+            activeUsers,
+            suspendedUsers,
+            pendingUsers
+        }
     }
 }

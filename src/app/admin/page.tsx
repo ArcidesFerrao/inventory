@@ -26,7 +26,7 @@ export default async function AdminPage() {
         <h1 className="text-4xl font-medium">Admin Dashboard</h1>
       </div>
       <div className="flex justify-between">
-        <Card title="Total Suppliers" value={stats.totals.totalUsers} />
+        <Card title="Total Suppliers" value={stats.users.totalUsers} />
         <Card title="Total Services" value={stats.totals.totalServices} />
         <Card title="Total Orders" value={stats.totals.totalOrders} />
         <Card title="Total Sales" value={stats.totals.totalSales} />
@@ -41,7 +41,7 @@ export default async function AdminPage() {
             </li>
             <div>
               {stats.topSuppliers.map((s) => (
-                <li key={s.id} className="flex justify-between">
+                <li key={s.id} className="flex justify-between py-1">
                   <h3>{s.name}</h3>
                   <p>{s.totalOrders}</p>
                 </li>
@@ -58,7 +58,7 @@ export default async function AdminPage() {
             </li>
             <div>
               {stats.topServices.map((s) => (
-                <li key={s.id} className="flex justify-between">
+                <li key={s.id} className="flex justify-between py-1">
                   <h3>{s.name}</h3>
                   <p>{s.totalOrders}</p>
                 </li>
