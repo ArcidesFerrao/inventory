@@ -40,12 +40,12 @@ export default async function SupplyPage() {
         <div className="stats p-4 flex flex-col gap-2 min-w-52">
           <h2 className="text-2xl font-semibold underline">Financials</h2>
           {/* <div className="flex flex-col stats-container gap-1"> */}
-          <div>
+          {/* <div>
             <h3 className="text-lg font-normal">Total Revenue</h3>
             <h4 className="text-xl py-1 whitespace-nowrap font-medium">
               MZN {stats.revenue.toFixed(2)}
             </h4>
-          </div>
+          </div> */}
 
           <div>
             <h3 className="text-lg font-normal">Gross Profit</h3>

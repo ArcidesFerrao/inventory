@@ -404,6 +404,24 @@ export const SupplierProductForm = ({
   const [price, setPrice] = useState(supplierProduct?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [name, setName] = useState(supplierProduct?.name || "");
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (name.length < 2) return setSuggestions([]);
+
+      const res = await fetch(
+        `api/products/search?q=${encodeURIComponent(name)}`
+      );
+      const data = await res.json();
+      setSuggestions(data);
+    };
+
+    const timeout = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timeout);
+  }, [name]);
+
   useEffect(() => {
     if (supplierProduct?.unitId) {
       setUnitId(supplierProduct.unitId);
@@ -466,6 +484,22 @@ export const SupplierProductForm = ({
             />
             {fields.name.errors && (
               <p className="text-xs font-light">{fields.name.errors}</p>
+            )}
+
+            {suggestions.length > 0 && (
+              <ul>
+                {suggestions.map((s, i) => (
+                  <li
+                    key={i}
+                    onClick={() => {
+                      setName(s);
+                      setSuggestions([]);
+                    }}
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
           <div className="flex gap-2">
