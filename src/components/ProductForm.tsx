@@ -304,30 +304,32 @@ export const ProductForm = ({
             )}
           </div>
           {type === "SERVICE" && (
-            <div className="flex flex-col gap-1">
-              <label htmlFor="price">Price</label>
-              <input
-                type="number"
-                name="price"
-                id="price"
-                defaultValue={product?.price || 0}
-              />
+            <div className="flex gap-4 text-sm">
+              <div className="flex flex-col gap-1">
+                <label htmlFor="price">Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  id="price"
+                  defaultValue={product?.price || 0}
+                />
 
-              {fields.price.errors && (
-                <p className="text-xs font-light">{fields.price.errors}</p>
-              )}
+                {fields.price.errors && (
+                  <p className="text-xs font-light">{fields.price.errors}</p>
+                )}
+              </div>
+              <ProductsCategorySelect
+                categories={categories}
+                serviceId={serviceId}
+                categoryId={category}
+                state={state as string}
+              />
             </div>
           )}
         </div>
         {type === "SERVICE" && (
           <div className="flex flex-col gap-4">
-            <ProductsCategorySelect
-              categories={categories}
-              serviceId={serviceId}
-              categoryId={category}
-              state={state as string}
-            />
-            <div className="flex flex-col gap-1">
+            {/* <div className="flex flex-col gap-1">
               <label htmlFor="categoryId">Category</label>
               <select
                 name="categoryId"
@@ -348,7 +350,7 @@ export const ProductForm = ({
               {fields.categoryId.errors && (
                 <p className="text-xs font-light">{fields.categoryId.errors}</p>
               )}
-            </div>
+            </div> */}
             <fieldset className="flex flex-col gap-4 p-4">
               <legend className="font-semibold">Recipe Items</legend>
               {recipeItems.map((item, index) => (
