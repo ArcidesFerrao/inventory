@@ -44,9 +44,9 @@ export default async function UsersAdminPage() {
           <tbody>
             {stats.users.usersData.map((s) => (
               <tr key={s.id}>
-                <Link href={`users/${s.id}`}>
-                  <td>{s.name}</td>
-                </Link>
+                <td>
+                  <Link href={`users/${s.id}`}>{s.name}</Link>
+                </td>
                 <td>{s.role}</td>
                 <td>{s.profileStatus}</td>
                 <td>{s.createdAt.toLocaleDateString()}</td>

@@ -290,6 +290,11 @@ export async function getAdminStats() {
 
     const [usersData, activeUsers, suspendedUsers, pendingUsers] = await Promise.all([
         db.user.findMany({
+            where: {
+                role: {
+                    not: "ADMIN"
+                }
+            },
             orderBy: {
                 createdAt: "desc"
             },

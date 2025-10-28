@@ -578,4 +578,5 @@ nav {
 .admin-users table {
   background-color: var(--accent);
   border-radius: 0.4rem;
+  border: 2px solid var(--accent);
 }
