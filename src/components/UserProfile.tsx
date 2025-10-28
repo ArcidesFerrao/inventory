@@ -221,14 +221,24 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <p>Email Address</p>
+            <div className="flex gap-5">
+              <p>Email Address</p>
+              <button className="text-xs font-extralight border px-2 py-1">
+                Verify
+              </button>
+            </div>
             <div className="flex items-center gap-2">
               <span className="ic--round-mail"></span>
               <h4>{user.email}</h4>
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <p>Phone Number</p>
+            <div className="flex gap-5">
+              <p>Phone Number</p>
+              <button className="text-xs font-extralight border px-2 py-1">
+                Verify
+              </button>
+            </div>
             <div className="flex items-center gap-2">
               <span className="solar--phone-bold"></span>
               <h4>{user.phoneNumber}</h4>
@@ -262,7 +272,12 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
           {user.Supplier && (
             <div className="details-section flex flex-col gap-2">
               <div className="flex flex-col gap-2">
-                <p>Company Name</p>
+                <div className="flex gap-5">
+                  <p>Company Name</p>
+                  <button className="text-xs font-extralight border px-2 py-1">
+                    Approve
+                  </button>
+                </div>
                 <div className="flex items-center gap-2">
                   <span className="mdi--company"></span>
                   <h4>{user.Supplier.name}</h4>

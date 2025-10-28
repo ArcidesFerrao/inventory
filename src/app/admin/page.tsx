@@ -26,7 +26,7 @@ export default async function AdminPage() {
         <h1 className="text-4xl font-medium">Admin Dashboard</h1>
       </div>
       <div className="flex justify-between py-4">
-        <Card title="Total Suppliers" value={stats.users.totalUsers} />
+        <Card title="Total Suppliers" value={stats.totals.totalSuppliers} />
         <Card title="Total Services" value={stats.totals.totalServices} />
         <Card title="Total Orders" value={stats.totals.totalOrders} />
         <Card title="Total Sales" value={stats.totals.totalSales} />

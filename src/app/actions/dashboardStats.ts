@@ -287,6 +287,24 @@ export async function getAdminStats() {
             }
         })
     )
+    
+    return {
+        totals: {
+            totalUsers,
+            totalOrders,
+            totalProducts,
+            totalServices,
+            totalSuppliers,
+            totalSales
+        },
+        topSuppliers: supplierDetails,
+        topServices: serviceDetails,
+    }
+}
+
+
+export async function getAdminUsersStats() {
+
 
     const [usersData, activeUsers, suspendedUsers, pendingUsers] = await Promise.all([
         db.user.findMany({
@@ -305,7 +323,16 @@ export async function getAdminStats() {
         db.user.count({where: {profileStatus: "PENDING"}}),
     ])
 
-    const [ordersData, delivered, confirmed, cancelled] = await Promise.all([
+    return {users: {
+            usersData,
+            totalUsers: usersData.length,
+            activeUsers,
+            suspendedUsers,
+            pendingUsers
+        },}
+}
+    export async function getAdminOrdersStats() {
+    const [ordersData, delivered, confirmed, cancelled,         totalOrders] = await Promise.all([
         db.order.findMany({
             include: {
                 Service: true,
@@ -329,9 +356,20 @@ export async function getAdminStats() {
         db.order.count({where: {
             status: "CANCELLED"
         }}),
+                db.order.count(),
     ])
 
+    return {orders: {
+            ordersData,
+            delivered,
+            confirmed,
+            cancelled,
+            totalOrders
+        },}
+}
 
+export async function getAdminProductsStats() {
+    
     const [productsData, activeProducts, inactiveProducts, supplierProductsData ] = await Promise.all([
         db.product.findMany({
             include: {
@@ -352,35 +390,12 @@ export async function getAdminStats() {
             }
         })
     ])
-
-    return {
-        totals: {
-            totalOrders,
-            totalProducts,
-            totalServices,
-            totalSuppliers,
-            totalSales
-        },
-        topSuppliers: supplierDetails,
-        topServices: serviceDetails,
-        users: {
-            usersData,
-            totalUsers,
-            activeUsers,
-            suspendedUsers,
-            pendingUsers
-        },
-        orders: {
-            ordersData,
-            delivered,
-            confirmed,
-            cancelled
-        },
-        products: {
-            productsData,
-            activeProducts,
-            inactiveProducts,
-            supplierProductsData
-        }
-    }
+    
+    
+   return {products: {
+        productsData,
+        activeProducts,
+        inactiveProducts,
+        supplierProductsData
+    }}
 }

@@ -1,4 +1,4 @@
-import { getAdminStats } from "@/app/actions/dashboardStats";
+import { getAdminProductsStats } from "@/app/actions/dashboardStats";
 import { Card } from "@/components/Card";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
@@ -12,7 +12,7 @@ export default async function AdminProductsPage() {
     redirect("/");
   }
 
-  const stats = await getAdminStats();
+  const stats = await getAdminProductsStats();
 
   if (!stats) {
     redirect("/login");

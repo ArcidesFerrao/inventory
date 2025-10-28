@@ -1,4 +1,4 @@
-import { getAdminStats } from "@/app/actions/dashboardStats";
+import { getAdminOrdersStats } from "@/app/actions/dashboardStats";
 import { Card } from "@/components/Card";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
@@ -12,7 +12,7 @@ export default async function OrdersPage() {
     redirect("/");
   }
 
-  const stats = await getAdminStats();
+  const stats = await getAdminOrdersStats();
 
   if (!stats) {
     redirect("/login");
@@ -24,7 +24,7 @@ export default async function OrdersPage() {
         <h1 className="text-4xl font-medium underline">Orders</h1>
       </div>
       <div className="py-4 flex justify-between">
-        <Card title="Total Orders" value={stats.totals.totalOrders} />
+        <Card title="Total Orders" value={stats.orders.totalOrders} />
         <Card title="Delivered Orders" value={stats.orders.delivered} />
         <Card title="Confirmed Orders" value={stats.orders.confirmed} />
         <Card title="Cancelled Orders" value={stats.orders.cancelled} />
