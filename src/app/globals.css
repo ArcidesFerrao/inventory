@@ -165,7 +165,7 @@ fieldset legend {
   padding: 0.4rem;
   /* border: 1px solid var(--border-list); */
   border-radius: 0.4rem;
-  background-color: var(--input-bg);
+  background-color: var(--background);
 }
 
 fieldset div {
@@ -307,6 +307,9 @@ nav {
   padding: 0 0.6rem;
 }
 
+.amount-btn:hover {
+  border-color: var(--divider);
+}
 .amount-btn {
   /* background-color: var(--input-bg); */
   border-radius: 0.4rem;
@@ -589,4 +592,8 @@ nav {
 
 .suggestions-list li:hover {
   background-color: var(--admin-card);
+}
+
+.products-selection li:hover {
+  background-color: var(--list-bg);
 }

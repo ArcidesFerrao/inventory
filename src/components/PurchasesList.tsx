@@ -71,46 +71,45 @@ export const PurchasesList = ({
   return (
     <>
       <div className="products-selection flex flex-col gap-4 w-full">
-        <div className="items p-4">
-          <h2 className="text-xl font-medium">Items</h2>
+        <div className="items">
+          <h2 className="text-xl font-medium  p-4">Items</h2>
           <ul>
             {products.map((product) => (
-              <li
-                key={product.id}
-                className="flex justify-between items-center py-2"
-              >
-                <h3>{product.name}</h3>
-                <label
-                  className="flex gap-2 items-center text-sm "
-                  htmlFor="price"
-                >
-                  Price:{" "}
-                  <input
-                    className="max-w-20"
-                    type="number"
-                    value={product.price ?? ""}
-                    onChange={(e) =>
-                      setProducts((prev) =>
-                        prev.map((p) =>
-                          p.id === product.id
-                            ? { ...p, price: parseFloat(e.target.value) || 0 }
-                            : p
+              <li key={product.id} className=" flex justify-between px-4 py-2">
+                <div className="flex flex-col gap-2">
+                  <h3>{product.name}</h3>
+                  <label
+                    className="flex gap-2 text-sm items-center"
+                    htmlFor="price"
+                  >
+                    Price:{" "}
+                    <input
+                      className="max-w-20 text-xs"
+                      type="number"
+                      value={product.price ?? ""}
+                      onChange={(e) =>
+                        setProducts((prev) =>
+                          prev.map((p) =>
+                            p.id === product.id
+                              ? { ...p, price: parseFloat(e.target.value) || 0 }
+                              : p
+                          )
                         )
-                      )
-                    }
-                  />
-                </label>
-                <div className="flex gap-2 items-center max-w-6/12">
-                  <div className="amount-btn flex gap-4 items-center px-2 ">
+                      }
+                    />
+                  </label>
+                </div>
+                <div className="flex flex-col gap-2 items-center text-sm">
+                  <div className="amount-btn flex gap-4  px-2 ">
                     <button onClick={() => handleDecrement(product.id)}>
                       -
                     </button>
-                    <span className="w-12 text-center">{product.quantity}</span>
+                    <span className="w-10 text-center">{product.quantity}</span>
                     <button onClick={() => handleIncrement(product.id)}>
                       +
                     </button>
                   </div>
-                  <span className="min-w-32">
+                  <span className="self-end">
                     <p>
                       {((product.price ?? 0) * product.quantity).toFixed(2)} MZN
                     </p>

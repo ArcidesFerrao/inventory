@@ -1,6 +1,10 @@
 "use client";
 
-import { getCategories, getSupplierCategories } from "@/app/actions/categories";
+import {
+  // getCategories,
+  getServiceCategories,
+  getSupplierCategories,
+} from "@/app/actions/categories";
 import {
   createProduct,
   createSupplierProduct,
@@ -17,7 +21,7 @@ import { $Enums, Category, Product, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { CategorySelect } from "./CategorySelect";
+import { CategorySelect, ProductsCategorySelect } from "./CategorySelect";
 
 type SupplierProductWithUnit = SupplierProduct & {
   Unit: {
@@ -127,7 +131,7 @@ export const ProductForm = ({
     }
 
     const fetchCategories = async () => {
-      setCategories(await getCategories());
+      setCategories(await getServiceCategories(serviceId));
     };
     const fetchUnits = async () => {
       setUnits(await getUnits());
@@ -135,7 +139,7 @@ export const ProductForm = ({
 
     fetchCategories();
     fetchUnits();
-  }, [state, product, router]);
+  }, [state, product, router, serviceId]);
 
   return (
     <form
@@ -317,6 +321,12 @@ export const ProductForm = ({
         </div>
         {type === "SERVICE" && (
           <div className="flex flex-col gap-4">
+            <ProductsCategorySelect
+              categories={categories}
+              serviceId={serviceId}
+              categoryId={category}
+              state={state as string}
+            />
             <div className="flex flex-col gap-1">
               <label htmlFor="categoryId">Category</label>
               <select
@@ -635,6 +645,7 @@ export const SupplierProductForm = ({
               categoryId={supplierProduct?.Category?.id}
               categories={categories}
               supplierId={supplierId}
+              state={fields.categoryId.errors}
             />
           )}
         </div>

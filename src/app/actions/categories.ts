@@ -11,13 +11,14 @@ export async function getCategories() {
     return [];
   }
 }
+
 export async function getServiceCategories(serviceId: string) {
   try {
     const categories = await db.category.findMany({
       where: {
         OR: [
           {serviceId},
-          {serviceId: null},
+          {type: "SERVICE"},
         ]
       }
     });
@@ -63,6 +64,36 @@ export async function createNewSupplierCategory({newCategoryName, supplierId, }:
       data: {
         name: newCategoryName,
         supplierId,
+        type: "SUPPLIER"
+      }
+    })
+    
+    return {success: true, category}
+  }
+} catch (error) {
+  console.error("Error creating category")
+  return {success: false, error}
+}
+}
+export async function createNewCategory({newCategoryName, serviceId, }:{newCategoryName: string; serviceId: string}) {
+  console.log("creating category", newCategoryName)
+  try{
+
+    const existing = await db.category.findFirst({
+      where: {
+      name: newCategoryName,
+      OR: [
+        {serviceId},
+        {serviceId: null},
+      ]
+    }
+  })
+  
+  if (!existing) {
+    const category = await db.category.create({
+      data: {
+        name: newCategoryName,
+        serviceId,
         type: "SUPPLIER"
       }
     })

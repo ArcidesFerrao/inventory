@@ -16,13 +16,13 @@ export async function createPurchase(purchaseItems: { id: string; name: string; 
                     paymentType: "CASH",
                     serviceId,
                     sourceType: "DIRECT",
-                PurchaseItem: {
-                    create: purchaseItems.map((item) => ({
-                        productId: item.id,
-                        stock: item.quantity,
-                        price: item.price ?? 0,
-                        unitCost: item.price ?? 0,
-                        totalCost: (item.price ?? 0) * item.quantity,
+                    PurchaseItem: {
+                        create: purchaseItems.map((item) => ({
+                            productId: item.id,
+                            stock: item.quantity,
+                            price: item.price ?? 0,
+                            unitCost: item.price ?? 0,
+                            totalCost: (item.price ?? 0) * item.quantity,
                         })),
                     },
                 },

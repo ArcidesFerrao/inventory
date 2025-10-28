@@ -38,23 +38,14 @@ export const ListStockItem = ({
 }: ProductsStockProps) => {
   return (
     <li key={id} className="listing-stock-item flex p-4 justify-between">
-      <div className="flex items-center gap-4 justify-between ">
+      <div className="flex  gap-4 justify-between ">
         <Link href={`/service/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
-        <p className="text-sm font-light">Quantity: {stock}</p>
       </div>
-      <div className="flex flex-col items-end gap-2">
+      <div className="flex flex-col items-end gap-1">
         <h2 className="text-lg font-bold  text-nowrap">MZN {price},00</h2>
-        {/* <div className="flex gap-2">
-          <DeleteButton productId={id} />
-          <Link
-            className="edit-button p-2 flex "
-            href={`/supply/products/${id}/edit`}
-          >
-            <span className="mdi--edit"></span>
-          </Link>
-        </div> */}
+        <p className="text-sm font-light">Quantity: {stock}</p>
       </div>
     </li>
   );
