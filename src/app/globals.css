@@ -573,6 +573,7 @@ nav {
   border-bottom: 1px solid var(--hover-bg);
 }
 
+.admin-products table,
 .admin-orders table,
 .top-stats ul,
 .admin-users table {

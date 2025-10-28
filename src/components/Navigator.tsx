@@ -118,6 +118,11 @@ export const AdminNav = () => {
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
+          href="/admin/products"
+          label="Products"
+          icon={<span className="carbon--sales-ops"></span>}
+        />
+        <NavLink
           href="/admin/orders"
           label="Orders"
           icon={<span className="carbon--sales-ops"></span>}

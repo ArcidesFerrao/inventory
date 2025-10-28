@@ -331,6 +331,28 @@ export async function getAdminStats() {
         }}),
     ])
 
+
+    const [productsData, activeProducts, inactiveProducts, supplierProductsData ] = await Promise.all([
+        db.product.findMany({
+            include: {
+                Unit: true,
+                Category: true,
+            }
+        }),
+        db.product.count({
+            where: { status: "ACTIVE"}
+        }),
+        db.product.count({ where: {
+            status: "DRAFT"
+        }}),
+        db.supplierProduct.findMany({
+            include: {
+                Unit: true,
+                Category: true
+            }
+        })
+    ])
+
     return {
         totals: {
             totalOrders,
@@ -353,6 +375,12 @@ export async function getAdminStats() {
             delivered,
             confirmed,
             cancelled
+        },
+        products: {
+            productsData,
+            activeProducts,
+            inactiveProducts,
+            supplierProductsData
         }
     }
 }
