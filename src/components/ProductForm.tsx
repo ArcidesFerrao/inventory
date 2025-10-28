@@ -6,6 +6,7 @@ import {
   createSupplierProduct,
   editSupplierProduct,
   getProducts,
+  getSupplierProductsNames,
 } from "@/app/actions/product";
 import { editProduct } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
@@ -76,6 +77,24 @@ export const ProductForm = ({
     { productId: string; name: string; unitQty: number }[]
   >([]);
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [name, setName] = useState(product?.name || "");
+
+  useEffect(() => {
+    if (!name || name.trim() === "") {
+      setSuggestions([]);
+      return;
+    }
+
+    const fetchSuggestions = async () => {
+      const results = await getSupplierProductsNames(name);
+      setSuggestions(results);
+    };
+
+    const timeout = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(timeout);
+  }, [name]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       const products = await getProducts(serviceId);
@@ -144,7 +163,7 @@ export const ProductForm = ({
         {fields.id.errors && (
           <p className="text-xs font-light">{fields.id.errors}</p>
         )}
-        <div className="flex w-full flex-col gap-1">
+        <div className="flex w-full flex-col gap-1 relative">
           <label htmlFor="name">Product Name</label>
 
           <input
@@ -152,10 +171,27 @@ export const ProductForm = ({
             name="name"
             id="name"
             placeholder="Product Name"
-            defaultValue={product?.name}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           {fields.name.errors && (
             <p className="text-xs font-light">{fields.name.errors}</p>
+          )}
+          {suggestions.length > 0 && (
+            <ul className="absolute top-full suggestions-list w-full ">
+              {suggestions.map((s, i) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    setName(s);
+                    setSuggestions([]);
+                  }}
+                  className="px-3 py-2 cursor-pointer"
+                >
+                  {s}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
         <div className="flex gap-2 justify-between">
@@ -408,14 +444,14 @@ export const SupplierProductForm = ({
   const [name, setName] = useState(supplierProduct?.name || "");
 
   useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (name.length < 2) return setSuggestions([]);
+    if (!name || name.trim() === "") {
+      setSuggestions([]);
+      return;
+    }
 
-      const res = await fetch(
-        `api/products/search?q=${encodeURIComponent(name)}`
-      );
-      const data = await res.json();
-      setSuggestions(data);
+    const fetchSuggestions = async () => {
+      const results = await getSupplierProductsNames(name);
+      setSuggestions(results);
     };
 
     const timeout = setTimeout(fetchSuggestions, 300);
@@ -471,8 +507,8 @@ export const SupplierProductForm = ({
           id="supplierId"
           value={supplierId}
         />
-        <div className="flex gap-2 items-end">
-          <div className="flex w-full flex-col gap-1">
+        <div className="flex gap-2 items-end ">
+          <div className="flex w-full flex-col gap-1 relative">
             <label htmlFor="name">Product Name</label>
 
             <input
@@ -480,14 +516,16 @@ export const SupplierProductForm = ({
               name="name"
               id="name"
               placeholder="Product Name"
-              defaultValue={supplierProduct?.name}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              // defaultValue={supplierProduct?.name}
             />
             {fields.name.errors && (
               <p className="text-xs font-light">{fields.name.errors}</p>
             )}
 
             {suggestions.length > 0 && (
-              <ul>
+              <ul className="absolute top-full suggestions-list w-full ">
                 {suggestions.map((s, i) => (
                   <li
                     key={i}
@@ -495,6 +533,7 @@ export const SupplierProductForm = ({
                       setName(s);
                       setSuggestions([]);
                     }}
+                    className="px-3 py-2 cursor-pointer"
                   >
                     {s}
                   </li>

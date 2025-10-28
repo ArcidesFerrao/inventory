@@ -240,3 +240,28 @@ export async function deleteSupplierProduct(supplierProductId: string) {
     }
 
 }
+
+
+export async function getSupplierProductsNames(q: string) {
+  try {
+    const products = await db.supplierProduct.findMany({
+      where: {
+        // type: "STOCK",
+        name: {
+            contains: q,
+            mode: "insensitive"
+        },
+        status: "ACTIVE"
+      },
+      select: {
+        name: true
+      }
+    });
+
+    const uniqueNames = [...new Set(products.map((p) => p.name))]
+    return uniqueNames;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return [];
+  }
+}

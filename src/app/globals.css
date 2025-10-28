@@ -581,3 +581,12 @@ nav {
   border-radius: 0.4rem;
   border: 2px solid var(--accent);
 }
+
+.suggestions-list {
+  border-radius: 0.4rem;
+  background-color: var(--background);
+}
+
+.suggestions-list li:hover {
+  background-color: var(--admin-card);
+}
