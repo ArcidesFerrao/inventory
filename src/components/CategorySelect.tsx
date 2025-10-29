@@ -98,11 +98,19 @@ export function ProductsCategorySelect({
   categories,
   serviceId,
   state,
-}: {
-  categoryId?: string;
+  field,
+}: // onChange,
+{
+  categoryId?: string | null;
   categories: { id: string; name: string }[];
   serviceId: string;
   state: string;
+  field: {
+    name: string;
+    value?: string;
+    errors?: string[];
+  };
+  // onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -127,15 +135,20 @@ export function ProductsCategorySelect({
     setNewCategoryName("");
     setIsModalOpen(false);
   };
+
   return (
     <div className="self-start flex flex-col gap-1">
       <label htmlFor="categoryId">Category</label>
       <div className="flex gap-2">
         <select
-          name="categoryId"
-          id="categoryId"
-          value={cId}
+          {...field}
+          value={field.value || cId || ""}
           onChange={(e) => setCId(e.target.value)}
+          id="categoryId"
+          // onChange={field.onChange}
+          // id={field.name}
+          // name="categoryId"
+          // value={cId}
         >
           <option value="">Select or create category</option>
           {categories?.map((c: { id: string; name: string }) => (

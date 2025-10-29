@@ -17,7 +17,7 @@ import { getUnits } from "@/app/actions/units";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { $Enums, Category, Product, SupplierProduct } from "@prisma/client";
+import { Category, Product, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -46,7 +46,7 @@ type ProductWithUnit = Product & {
   Category: {
     name: string;
     id: string;
-    type: $Enums.CategoryType;
+    // type: $Enums.CategoryType;
   } | null;
 };
 
@@ -70,7 +70,7 @@ export const ProductForm = ({
   });
   const router = useRouter();
   const [type, setType] = useState(product ? product.type : "STOCK");
-  const [category, setCategory] = useState("Lanche");
+  // const [category, setCategory] = useState("Lanche");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
@@ -321,36 +321,16 @@ export const ProductForm = ({
               <ProductsCategorySelect
                 categories={categories}
                 serviceId={serviceId}
-                categoryId={category}
+                categoryId={product?.categoryId}
+                field={fields.categoryId}
                 state={state as string}
+                // state={fields.categoryId.errors?.[0]}
               />
             </div>
           )}
         </div>
         {type === "SERVICE" && (
           <div className="flex flex-col gap-4">
-            {/* <div className="flex flex-col gap-1">
-              <label htmlFor="categoryId">Category</label>
-              <select
-                name="categoryId"
-                id="categoryId"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-
-              {fields.categoryId.errors && (
-                <p className="text-xs font-light">{fields.categoryId.errors}</p>
-              )}
-            </div> */}
             <fieldset className="flex flex-col gap-4 p-4">
               <legend className="font-semibold">Recipe Items</legend>
               {recipeItems.map((item, index) => (
