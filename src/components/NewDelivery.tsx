@@ -1,6 +1,6 @@
 "use client";
 
-import { createDelivery } from "@/app/actions/deliveries";
+import { createNewDelivery } from "@/app/actions/deliveries";
 import { Order, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -51,7 +51,8 @@ export const SupplierDelivery = ({
       })),
     };
 
-    const delivery = await createDelivery(deliveryData);
+    const delivery = await createNewDelivery(deliveryData);
+    // const delivery = await createDelivery(deliveryData);
 
     if (delivery.success) {
       toast.success("Delivery scheduled successfully!");

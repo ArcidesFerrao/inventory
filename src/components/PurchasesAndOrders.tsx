@@ -161,7 +161,7 @@ export default function PurchasesAndOrders({
                   { value: "DRAFT", label: "Draft" },
                   { value: "SUBMITTED", label: "Submitted" },
                   { value: "IN_PREPARATION", label: "In Preparation" },
-                  { value: "IN_DELIVERY", label: "In Delivery" },
+                  // { value: "IN_DELIVERY", label: "In Delivery" },
                   { value: "DELIVERED", label: "Delivered" },
                   { value: "CONFIRMED", label: "Confirmed" },
                   { value: "CANCELLED", label: "Cancelled" },

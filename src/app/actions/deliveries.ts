@@ -413,3 +413,101 @@ export async function  rateDelivery(deliveryId: string, star: number) {
     }
 
 }
+
+
+export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
+     deliveredQty: number;
+}[]}) {
+
+
+    const session = await getServerSession(authOptions);
+    if (!session?.user.supplierId) redirect("/login");
+
+    if (items.length === 0) 
+        return { success: false, error: "No delivery items"};
+
+    try {
+        const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`);
+
+        const {delivery, updatedOrder, updatedSupplierOrder } = await db.$transaction(
+            async (tx) => {
+                const delivery = await tx.delivery.create({
+                    data: {
+                        orderId,
+                        status: "PENDING",
+                        scheduledAt,
+                        deliveredAt: null,
+                        notes,
+                        deliveryItems: {
+                            create: items.map((i) => ({
+                                orderItemId: i.itemId,
+                                quantity: i.deliveredQty,
+                            }))
+                        }
+                    },
+                    include: {
+                        deliveryItems: {
+                            include: {
+                                orderItem: {
+                                    include: {
+                                        product: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const updatedOrder = await tx.order.update({
+                    where: {
+                        id: orderId
+                    },
+                    data: {
+                        status: "IN_PREPARATION",
+                    },
+                    include: {
+                        supplierOrders: true,
+                    }
+                });
+
+                const updatedSupplierOrder = await tx.supplierOrder.update({
+                    where :{
+                        id: supplierOrderId,
+                    },
+                    data: {
+                        status: "IN_PREPARATION"
+                    }
+                });
+
+                return { delivery, updatedOrder, updatedSupplierOrder}
+            }, 
+            { timeout: 15000 }
+        );
+
+        await logActivity(
+            updatedOrder.serviceId,
+            session.user.supplierId,
+            "CREATE",
+            "Delivery",
+            supplierOrderId,
+            `Scheduled delivery for Order`,
+            {
+                orderId,
+                scheduledAt: delivery.scheduledAt,
+                totalItems: items.length,
+                items: delivery.deliveryItems,
+            },
+            null,
+            'INFO',
+            null
+        );
+
+        return {success: true, delivery, updatedOrder, updatedSupplierOrder};
+
+
+    } catch (error) {
+        console.error("Error creating delivery: ", error);
+        return {success: false, error: "Failed to create delivery"}
+    }
+
+}
