@@ -38,6 +38,10 @@
   .navigator {
     display: none;
   }
+
+  .menu-products {
+    flex-direction: column;
+  }
 }
 @media (min-width: 769px) {
   .header-menu {

@@ -3,10 +3,16 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 export const Header = () => {
   const { data: session, status } = useSession();
+
+  const pathname = usePathname();
+
+  const showMenu =
+    pathname?.startsWith("/supply") || pathname?.startsWith("/service");
 
   return (
     <header className="flex justify-between p-4 items-center">
@@ -28,9 +34,11 @@ export const Header = () => {
           </p>
         )}
       </div>
-      <div className="header-menu flex items-center">
-        <span className="line-md--menu"></span>
-      </div>
+      {showMenu && (
+        <button className="header-menu flex items-center">
+          <span className="line-md--menu"></span>
+        </button>
+      )}
     </header>
   );
 };
