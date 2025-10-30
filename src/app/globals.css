@@ -33,6 +33,18 @@
   }
 } */
 
+@media (max-width: 768px) {
+  .header-greetings,
+  .navigator {
+    display: none;
+  }
+}
+@media (min-width: 769px) {
+  .header-menu {
+    display: none;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

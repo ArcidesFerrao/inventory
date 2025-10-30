@@ -449,7 +449,7 @@ export const SupplierProductForm = ({
       setSuggestions(filtered);
     };
 
-    const timeout = setTimeout(fetchSuggestions, 300);
+    const timeout = setTimeout(fetchSuggestions, 250);
     return () => clearTimeout(timeout);
   }, [name]);
 

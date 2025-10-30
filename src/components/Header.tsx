@@ -16,7 +16,7 @@ export const Header = () => {
           <h1 className="font-bold text-2xl uppercase ">Inventory</h1>
         </div>
       </Link>
-      <div>
+      <div className="header-greetings">
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
         ) : !session?.user ? (
@@ -27,6 +27,9 @@ export const Header = () => {
             <Link href={`/${session?.user.id}`}>{session?.user.name}</Link>
           </p>
         )}
+      </div>
+      <div className="header-menu flex items-center">
+        <span className="line-md--menu"></span>
       </div>
     </header>
   );
