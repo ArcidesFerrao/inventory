@@ -155,15 +155,14 @@ button:active {
 }
 
 select {
-  padding: 0.4rem;
+  padding: 0.4rem 0.8rem;
   background-color: var(--input-bg);
+  appearance: none;
 }
 option {
   background-color: var(--background);
 }
-option:disabled {
-  color: var(--foreground);
-}
+
 form {
   width: 100%;
 }
@@ -612,4 +611,8 @@ nav {
 
 .products-selection li:hover {
   background-color: var(--list-bg);
+}
+
+.header-menu {
+  background-color: var(--foreground);
 }

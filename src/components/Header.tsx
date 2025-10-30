@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { MenuButton } from "./MenuButton";
 
 export const Header = () => {
   const { data: session, status } = useSession();
@@ -35,9 +36,7 @@ export const Header = () => {
         )}
       </div>
       {showMenu && (
-        <button className="header-menu flex items-center">
-          <span className="line-md--menu"></span>
-        </button>
+        <MenuButton userId={session?.user.id} userName={session?.user.name} />
       )}
     </header>
   );

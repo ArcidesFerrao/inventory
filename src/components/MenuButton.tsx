@@ -1,0 +1,136 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
+import { HomeNavLink, NavLink } from "./NavLink";
+
+export const MenuButton = ({
+  userId,
+  userName,
+}: {
+  userId?: string | null;
+  userName?: string | null;
+}) => {
+  const pathname = usePathname();
+
+  const [showMenu, setShowMenu] = useState(false);
+  return (
+    <div className="text-gray-800 absolute top-10 right-4">
+      {!showMenu ? (
+        <button
+          onClick={() => setShowMenu(true)}
+          className="header-menu-btn flex items-center"
+        >
+          <span className="line-md--menu"></span>
+        </button>
+      ) : (
+        <section className="header-menu flex flex-col gap-2">
+          <div className="header-greetings flex justify-between">
+            <p className="header-welcome">
+              Welcome, <Link href={`/${userId}`}>{userName}</Link>
+            </p>
+            <span className="line-md--close"></span>
+          </div>
+          {pathname.startsWith("/supply") && (
+            <ul className="flex flex-col gap-2">
+              <HomeNavLink
+                href="/supply"
+                label="Dashboard"
+                icon={<span className="mage--dashboard-fill"></span>}
+              />
+              <NavLink
+                href="/supply/products"
+                label="Stock"
+                icon={<span className="ant-design--product-filled"></span>}
+              />
+              <NavLink
+                href="/supply/orders"
+                label="Orders"
+                icon={<span className="carbon--sales-ops"></span>}
+              />
+              <NavLink
+                href="/supply/logs"
+                label="Active Logs"
+                icon={<span className="lucide--logs"></span>}
+              />
+              <NavLink
+                href="/supply/settings"
+                label="Settings"
+                icon={<span className="icon-park-outline--setting-one"></span>}
+              />
+            </ul>
+          )}
+          {pathname.startsWith("/service") && (
+            <ul className="flex flex-col gap-2">
+              <HomeNavLink
+                href="/service"
+                label="Dashboard"
+                icon={<span className="mage--dashboard-fill"></span>}
+              />
+              <NavLink
+                href="/service/products"
+                label="Products"
+                icon={<span className="ant-design--product-filled"></span>}
+              />
+              <NavLink
+                href="/service/purchases"
+                label="Purchases"
+                icon={<span className="f7--purchased"></span>}
+              />
+              <NavLink
+                href="/service/sales"
+                label="Sales"
+                icon={<span className="carbon--sales-ops"></span>}
+              />
+              <NavLink
+                href="/service/logs"
+                label="Active Logs"
+                icon={<span className="lucide--logs"></span>}
+              />
+              <NavLink
+                href="/service/settings"
+                label="Settings"
+                icon={<span className="icon-park-outline--setting-one"></span>}
+              />
+            </ul>
+          )}
+          {pathname.startsWith("/admin") && (
+            <ul className="flex flex-col gap-2">
+              <HomeNavLink
+                href="/admin"
+                label="Dashboard"
+                icon={<span className="mage--dashboard-fill"></span>}
+              />
+              <NavLink
+                href="/admin/users"
+                label="Users"
+                icon={<span className="ant-design--product-filled"></span>}
+              />
+              <NavLink
+                href="/admin/products"
+                label="Products"
+                icon={<span className="carbon--sales-ops"></span>}
+              />
+              <NavLink
+                href="/admin/orders"
+                label="Orders"
+                icon={<span className="carbon--sales-ops"></span>}
+              />
+              <NavLink
+                href="/admin/activity"
+                label="Logs"
+                icon={<span className="lucide--logs"></span>}
+              />
+              <NavLink
+                href="/admin/settings"
+                label="Settings"
+                icon={<span className="icon-park-outline--setting-one"></span>}
+              />
+            </ul>
+          )}
+        </section>
+      )}
+    </div>
+  );
+};
