@@ -141,6 +141,24 @@ export async function getSupplierProducts(supplierId: string) {
     return [];
   }
 }
+export async function getSelectedSupplierProducts(supplierId: string) {
+  try {
+    const products = await db.supplierProduct.findMany({
+        where: {supplierId},
+        select: {
+            id: true,
+            name: true,
+            price: true,
+            stock: true,
+        }
+    }
+);
+    return products;
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    return [];
+  }
+}
 
 
 

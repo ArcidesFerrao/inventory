@@ -131,7 +131,7 @@ export default function OrdersAndSales({
           {sales.length === 0 ? (
             <p>No sales found</p>
           ) : (
-            <ul>
+            <ul className="flex flex-col gap-2">
               {sales.map((sale) => (
                 <SupplierSaleListItem key={sale.id} sale={sale} />
               ))}

@@ -443,7 +443,10 @@ export const SupplierProductForm = ({
 
     const fetchSuggestions = async () => {
       const results = await getSupplierProductsNames(name);
-      setSuggestions(results);
+      const filtered = results.filter(
+        (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim()
+      );
+      setSuggestions(filtered);
     };
 
     const timeout = setTimeout(fetchSuggestions, 300);
@@ -517,7 +520,7 @@ export const SupplierProductForm = ({
             )}
 
             {suggestions.length > 0 && (
-              <ul className="absolute top-full suggestions-list w-full ">
+              <ul className="absolute top-full my-0.5 suggestions-list w-full ">
                 {suggestions.map((s, i) => (
                   <li
                     key={i}
@@ -574,7 +577,7 @@ export const SupplierProductForm = ({
             </div>
           </div>
         </div>
-        <div className="form-second-row flex gap-2 w-full justify-between items-center">
+        <div className="form-second-row flex flex-col gap-2 w-full ">
           <div className="flex gap-2">
             <div className="flex flex-col gap-1">
               <label htmlFor="price">Price</label>

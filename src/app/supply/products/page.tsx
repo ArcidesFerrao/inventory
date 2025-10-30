@@ -1,6 +1,7 @@
+import { getSelectedSupplierProducts } from "@/app/actions/product";
 import { ListSupplierItem } from "@/components/List";
 import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
+// import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -11,11 +12,13 @@ export default async function ProductsPage() {
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
 
-  const products = await db.supplierProduct.findMany({
-    where: {
-      supplierId: session.user.supplierId,
-    },
-  });
+  // const products = await db.supplierProduct.findMany({
+  //   where: {
+  //     supplierId: session.user.supplierId,
+  //   },
+  // });
+
+  const products = await getSelectedSupplierProducts(session.user.supplierId);
 
   const filteredProducts = products.filter(
     (product) => (product.stock || product.stock == 0) && product.stock < 10
