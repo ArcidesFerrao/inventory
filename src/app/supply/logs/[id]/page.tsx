@@ -41,7 +41,7 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
         </Link>
       </div>
       <div className="log-info flex flex-col gap-5">
-        <div className="grid grid-cols-3 gap-4">
+        <section className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <p className="font-extralight text-gray-400 text-sm">Action Type</p>
             <h2>{log?.actionType}</h2>
@@ -54,8 +54,8 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
             <p className="font-extralight text-gray-400 text-sm">Severity</p>
             <h2>{log?.severity}</h2>
           </div>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
+        </section>
+        <section className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <p className="font-extralight text-gray-400 text-sm">Description</p>
             <h2 className="text-sm">{log?.description}</h2>
@@ -68,7 +68,7 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
               {log?.timestamp.toLocaleTimeString()}
             </h2>
           </div>
-        </div>
+        </section>
       </div>
       <div className="log-info-details flex flex-col gap-2">
         <p className="font-extralight text-gray-400 text-sm">Details</p>

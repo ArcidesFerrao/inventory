@@ -33,17 +33,78 @@
   }
 } */
 
+@media (max-width: 640px) {
+  .order-summary {
+    width: 100%;
+  }
+  .sales-amount,
+  .sales-content,
+  .purchase-title-details,
+  .sale-title-details {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .total-sales-title,
+  .purchase-total,
+  .order-items-data,
+  .sale-items-details {
+    display: none;
+  }
+  .log-info section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .supplier-item-title {
+    align-items: start;
+  }
+  .supplier-item-details {
+    align-items: end;
+  }
+  .supplier-item-details,
+  .supplier-item-title,
+  .stats-details-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cash-stats-container,
+  .stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .unit-cost,
+  .orders-approved,
+  .orders-delivered {
+    display: none;
+  }
+}
 @media (max-width: 768px) {
   .header-greetings,
   .navigator {
     display: none;
   }
-
+  .dash-header h1 {
+    font-size: xx-large;
+  }
   .menu-products {
     flex-direction: column;
   }
 }
+@media (max-width: 980px) {
+  .supply-stats,
+  .service-stats {
+    flex-direction: column;
+  }
+  .cash-stats-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
 @media (min-width: 769px) {
+  .nav-menu-btn,
   .header-menu {
     display: none;
   }
@@ -191,6 +252,8 @@ fieldset div {
 .dash-menu button:hover {
   border: var(--foreground) 1px solid;
 }
+
+.header-menu a:hover,
 .dash-menu button:hover,
 .login-button:hover,
 .navigator a:hover {
@@ -204,6 +267,7 @@ fieldset div {
   background-color: #f4f5fa;
   color: #2f2f2f;
 }
+.header-menu a,
 .navigator a {
   border-radius: 0.2rem;
 }
@@ -333,6 +397,7 @@ nav {
 }
 
 .products-selection {
+  transition: all ease 500ms;
   border: solid 1px var(--border-list);
   border-radius: 0.5rem;
 }
@@ -611,8 +676,12 @@ nav {
 
 .products-selection li:hover {
   background-color: var(--list-bg);
+  border-radius: 0.4rem;
 }
 
 .header-menu {
-  background-color: var(--foreground);
+  background-color: var(--background);
+  border: 2px solid var(--hover-bg);
+  border-radius: 0.4rem;
+  min-height: 80vh;
 }

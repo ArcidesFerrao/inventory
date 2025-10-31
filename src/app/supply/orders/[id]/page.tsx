@@ -133,8 +133,8 @@ export default async function OrderPage(props: { params: Params }) {
             <tr>
               <th>Product</th>
               <th>Ordered</th>
-              <th>Delivered</th>
-              <th>Remaining</th>
+              <th className="order-items-data">Delivered</th>
+              <th className="order-items-data">Remaining</th>
               <th>Price (MZN)</th>
               <th>Total (MZN)</th>
             </tr>
@@ -144,8 +144,10 @@ export default async function OrderPage(props: { params: Params }) {
               <tr key={item.id}>
                 <td>{item.product.name}</td>
                 <td>{item.orderedQty}</td>
-                <td>{item.deliveredQty}</td>
-                <td>{item.orderedQty - item.deliveredQty}</td>
+                <td className="order-items-data">{item.deliveredQty}</td>
+                <td className="order-items-data">
+                  {item.orderedQty - item.deliveredQty}
+                </td>
                 <td>{item.price.toFixed(2)}</td>
                 <td>{(item.price * item.orderedQty).toFixed(2)}</td>
               </tr>

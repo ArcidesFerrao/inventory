@@ -37,7 +37,7 @@ export default async function SalesPage() {
         </Link>
       </div>
       <div className="flex justify-between">
-        <div className="flex flex-col gap-2">
+        <div className="total-sales-title flex flex-col gap-2">
           <p>Total Sales</p>
           <h2 className="text-xl font-bold">{sales.length}</h2>
         </div>
@@ -47,7 +47,7 @@ export default async function SalesPage() {
             MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
           </h2>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="total-sales-title flex flex-col gap-2">
           <p>Cogs</p>
           <h2 className="text-xl font-bold">
             MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0)}.00

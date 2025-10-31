@@ -68,11 +68,11 @@ export default function OrdersAndSales({
               <p>Pending</p>
               <h2 className="text-xl font-bold">{pendingOrders.length}</h2>
             </div>
-            <div className="flex flex-col  gap-1">
+            <div className="orders-approved flex flex-col  gap-1">
               <p>Approved</p>
               <h2 className="text-xl font-bold">{approvedOrders.length}</h2>
             </div>
-            <div className="flex flex-col  gap-1">
+            <div className="orders-delivered flex flex-col  gap-1">
               <p>Delivered</p>
               <h2 className="text-xl font-bold">{deliveredOrders.length}</h2>
             </div>

@@ -91,13 +91,13 @@ export const ListSupplierItem = ({
 }: SupplierProductsProps) => {
   return (
     <li key={id} className="supplier-item flex p-4 justify-between">
-      <div className="flex gap-4 justify-between items-center ">
+      <div className="supplier-item-title flex gap-4 justify-between items-center ">
         <Link href={`/supply/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
         <span className="text-sm font-light">Qty: {qty}</span>
       </div>
-      <div className="flex items-center gap-5">
+      <div className="supplier-item-details flex items-center gap-5">
         <h2 className="text-xl font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
           <SupplierProductDeleteButton supplierProductId={id} />
@@ -131,7 +131,7 @@ export const PurchaseListItem = ({
               #{purchases.id.slice(0, 6)}...
             </p>
           </h3>
-          <div className="title-details flex gap-4">
+          <div className="purchase-title-details flex gap-4">
             <div className="flex gap-2">
               <span className="flex items-center">
                 <span className="formkit--date"></span>
@@ -168,7 +168,7 @@ export const PurchaseListItem = ({
           <tr>
             <th>Quantity</th>
             <th>Product</th>
-            <th>Unit Cost</th>
+            <th className="unit-cost">Unit Cost</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -177,7 +177,7 @@ export const PurchaseListItem = ({
             <tr key={i.id}>
               <td>{i.stock}</td>
               <td>{i.supplierProduct?.name ?? i.product?.name}</td>
-              <td>MZN {i.price}.00</td>
+              <td className="unit-cost">MZN {i.price}.00</td>
               <td>MZN {i.totalCost}.00</td>
             </tr>
           ))}
@@ -312,7 +312,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
             Sale
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
-          <div className="title-details flex gap-4">
+          <div className="sale-title-details flex gap-4">
             <div className="flex gap-2">
               <span className="flex items-center">
                 <span className="formkit--date"></span>
@@ -347,9 +347,9 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
       <table>
         <thead>
           <tr>
-            <th>Quantity</th>
+            <th>Qty</th>
             <th>Product</th>
-            <th>Unit Cost</th>
+            <th className="unit-cost">Unit Cost</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -358,7 +358,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
             <tr key={i.id}>
               <td>{i.quantity}</td>
               <td>{i.product?.name}</td>
-              <td>MZN {i.price}.00</td>
+              <td className="unit-cost">MZN {i.price}.00</td>
               <td>MZN {i.quantity * i.price}.00</td>
             </tr>
           ))}
@@ -387,7 +387,7 @@ export const SupplierSaleListItem = ({
             Sale
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
-          <div className="title-details flex gap-4">
+          <div className="sale-title-details flex gap-4">
             <div className="flex gap-2">
               <span className="flex items-center">
                 <span className="formkit--date"></span>
@@ -398,7 +398,7 @@ export const SupplierSaleListItem = ({
               </p>
             </div>
             {sale.SaleItem.length > 1 && (
-              <div className="flex items-center gap-2">
+              <div className="sale-items-details flex  items-center gap-2">
                 <span className="flex items-center">
                   <span className="fluent--box-16-regular"></span>
                 </span>
@@ -421,18 +421,18 @@ export const SupplierSaleListItem = ({
       <table>
         <thead>
           <tr>
-            <th>Quantity</th>
             <th>Product</th>
-            <th>Unit Cost</th>
+            <th>Qty</th>
+            <th className="unit-cost">Unit Cost</th>
             <th>Total</th>
           </tr>
         </thead>
         <tbody>
           {sale.SaleItem.map((i) => (
             <tr key={i.id}>
-              <td>{i.quantity}</td>
               <td>{i.supplierProduct?.name}</td>
-              <td>MZN {i.price}.00</td>
+              <td>{i.quantity}</td>
+              <td className="unit-cost">MZN {i.price}.00</td>
               <td>MZN {i.quantity * i.price}.00</td>
             </tr>
           ))}

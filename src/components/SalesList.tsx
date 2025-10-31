@@ -104,7 +104,7 @@ export const SalesList = ({
                   >
                     <h3>{product.name}</h3>
 
-                    <div className="flex gap-4 items-center max-w-6/12">
+                    <div className="sales-amount flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
                         <button onClick={() => handleDecrement(product.id)}>
                           -
@@ -140,7 +140,7 @@ export const SalesList = ({
                   >
                     <h3>{product.name}</h3>
 
-                    <div className="flex gap-4 items-center max-w-6/12">
+                    <div className=" sales-amount flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
                         <button onClick={() => handleDecrement(product.id)}>
                           -
@@ -178,7 +178,7 @@ export const SalesList = ({
                       <h3>{product.name}</h3>
                     </div>
 
-                    <div className="flex gap-4 items-center max-w-6/12">
+                    <div className="sales-amount flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
                         <button onClick={() => handleDecrement(product.id)}>
                           -

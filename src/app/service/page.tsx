@@ -44,10 +44,10 @@ export default async function ServicePage() {
         </div>
       </div>
 
-      <div className=" flex gap-4 my-8">
-        <div className="stats p-4 h-fit flex flex-col gap-2 min-w-52">
+      <div className="service-stats flex gap-4 my-8">
+        <div className="stats profit-stats p-4 h-fit flex flex-col gap-2 min-w-52">
           <h2 className="text-2xl font-bold underline">Cash Flow</h2>
-          <div className="flex flex-col stats-container gap-1">
+          <div className="flex flex-col cash-stats-container gap-1">
             <div>
               <h3 className="text-lg font-normal">Revenue</h3>
               <h4 className="text-lg py-1 whitespace-nowrap font-bold">
@@ -74,12 +74,12 @@ export default async function ServicePage() {
             </div>
           </div>
         </div>
-        <div className="stats flex w-full flex-col p-4 justify-between">
+        <div className="stats stats-details flex w-full flex-col p-4 justify-between">
           <div className="stats-header flex flex-col gap-2">
             <h2 className="text-2xl font-bold underline">Statistics</h2>
             <p className="font-thin">stats of products, sales and earnings</p>
           </div>
-          <div className="stats-container flex justify-between">
+          <div className="stats-details-container flex justify-between">
             <div className=" flex flex-col gap-2">
               <h2 className="text-lg font-semibold underline ">
                 Profitability
@@ -122,8 +122,8 @@ export default async function ServicePage() {
 
             <div className=" flex flex-col gap-2">
               <h2 className="text-lg font-semibold underline">Sales</h2>
-              <div>
-                <div className="stats-container flex flex-col">
+              <div className="stats-container flex flex-col">
+                <div>
                   <h3 className="text-lg font-normal">Total Sales</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     {stats.salesCount}

@@ -16,7 +16,7 @@ export const MenuButton = ({
 
   const [showMenu, setShowMenu] = useState(false);
   return (
-    <div className="text-gray-800 absolute top-10 right-4">
+    <div className="nav-menu-btn absolute top-8 right-4">
       {!showMenu ? (
         <button
           onClick={() => setShowMenu(true)}
@@ -25,12 +25,17 @@ export const MenuButton = ({
           <span className="line-md--menu"></span>
         </button>
       ) : (
-        <section className="header-menu flex flex-col gap-2">
-          <div className="header-greetings flex justify-between">
-            <p className="header-welcome">
+        <section className="header-menu flex flex-col gap-5 px-4 py-2">
+          <div className="header-navigator flex items-center gap-5">
+            <p className="header-welcome ">
               Welcome, <Link href={`/${userId}`}>{userName}</Link>
             </p>
-            <span className="line-md--close"></span>
+            <button
+              onClick={() => setShowMenu(false)}
+              className="flex items-center"
+            >
+              <span className="line-md--close"></span>
+            </button>
           </div>
           {pathname.startsWith("/supply") && (
             <ul className="flex flex-col gap-2">

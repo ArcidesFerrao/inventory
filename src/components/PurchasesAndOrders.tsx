@@ -106,7 +106,7 @@ export default function PurchasesAndOrders({
       {view === "purchases" && (
         <div className="purchase-list flex flex-col gap-5">
           <div className="purchases-data flex justify-between w-full">
-            <div>
+            <div className="purchase-total">
               <p>Total Purchases</p>
               <h2 className="text-2xl font-semibold">{purchases.length}</h2>
             </div>
