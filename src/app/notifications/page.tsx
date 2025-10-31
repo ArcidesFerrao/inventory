@@ -17,8 +17,8 @@ export default async function NotificationsPage() {
   });
 
   return (
-    <div className="notifications-page p-4">
-      <h1 className="text-xl tonf-semibold mb-4">Notifications</h1>
+    <div className="notifications-page flex flex-col items-center p-4">
+      <h1 className="text-xl font-semibold mb-4">Notifications</h1>
       <ul className="flex flex-col gap-2">
         {notifications.map((n) => (
           <li key={n.id}>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { MenuButton } from "./MenuButton";
+import { NotificationBell } from "./Bell";
 
 export const Header = () => {
   const { data: session, status } = useSession();
@@ -23,7 +24,8 @@ export const Header = () => {
           <h1 className="font-bold text-2xl uppercase ">Inventory</h1>
         </div>
       </Link>
-      <div className="header-greetings">
+      <div className="header-greetings flex items-center gap-4">
+        {session?.user.id && <NotificationBell userId={session.user.id} />}
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
         ) : !session?.user ? (

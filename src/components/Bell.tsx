@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-export const NotificationBell = (userId: string) => {
+export const NotificationBell = ({ userId }: { userId: string }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export const NotificationBell = (userId: string) => {
   return (
     <Link href="/notifications" className="relative">
       <svg
-        className="w-6 h-6 text-gray-700"
+        className="w-6 h-6 text-gray-100"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -31,7 +31,7 @@ export const NotificationBell = (userId: string) => {
         />
       </svg>
       {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
+        <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs px-1 rounded-full">
           {count}
         </span>
       )}
