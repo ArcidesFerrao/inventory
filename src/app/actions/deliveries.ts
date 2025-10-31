@@ -135,6 +135,9 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     }, 
                     data: {
                         status: "COMPLETED",
+                    },
+                    include: {
+                        supplier: true
                     }
                 }),
                 tx.order.update({
@@ -144,6 +147,9 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     data: {
                         status: "DELIVERED",
                     },
+                    include: {
+                        Service: true
+                    }
                 })
             ])
 
@@ -291,6 +297,14 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             null
         )
 
+        await createNotification({
+            userId: supplierOrder.supplier.userId ?? "",
+            type: "DELIVERY",
+            title: "Delivery Confirmed",
+            message: `${order.Service?.businessName} confirmed delivery!`,
+            link: `/supply/orders/${supplierOrderId}`
+        })
+
         return { success: true, delivery, supplierOrder, order };
         
     } catch (error) {
@@ -312,6 +326,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             null
         )
             
+
         return {success: false, error: "Error confirming delivery"}
     }
 }

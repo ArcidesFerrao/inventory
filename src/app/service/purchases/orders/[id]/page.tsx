@@ -1,4 +1,5 @@
 import { RateButtons } from "@/components/ActionButton";
+import { ConfirmDeliveryButton } from "@/components/CompleteDeliveryButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import React from "react";
@@ -93,6 +94,17 @@ export default async function OrderPage(props: { params: Params }) {
           >
             {order?.status}
           </button>
+          {order?.status === "DELIVERED" ||
+            (order?.status === "IN_DELIVERY" && (
+              <ConfirmDeliveryButton
+                deliveryId={order.confirmedDeliveries[0]?.id || ""}
+                orderId={order.id}
+                supplierOrderId={order.supplierOrders[0]?.id || ""}
+                serviceId={order.serviceId || ""}
+                status={order.confirmedDeliveries[0]?.status || ""}
+                role="SERVICE"
+              />
+            ))}
         </div>
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
@@ -161,7 +173,7 @@ export default async function OrderPage(props: { params: Params }) {
                         <span
                           key={star}
                           className={
-                            star <= (d.rating ?? 0)
+                            star <= Number(d.rating)
                               ? "text-yellow-400"
                               : "text-gray-300"
                           }

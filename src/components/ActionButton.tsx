@@ -96,7 +96,7 @@ export const RateButtons = ({ deliveryId }: { deliveryId: string }) => {
         <button
           key={star}
           disabled={loading}
-          className="text-yellow-400"
+          // className="text-yellow-400"
           onClick={() => handleRateDelivery(star)}
         >
           ★
