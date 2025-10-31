@@ -116,7 +116,7 @@ export const OrdersList = ({
                 <h3>{product.name}</h3>
               </div>
 
-              <div className="flex gap-4 items-center max-w-6/12">
+              <div className="amount-input flex gap-4 items-center max-w-6/12">
                 <div className="amount-btn flex gap-2 items-center px-2">
                   <button onClick={() => handleDecrement(product.id)}>-</button>
                   <span className="w-12 text-center text-sm">

@@ -25,7 +25,7 @@ export const Header = () => {
         </div>
       </Link>
       <div className="header-greetings flex items-center gap-4">
-        {session?.user.id && <NotificationBell userId={session.user.id} />}
+        {session?.user.id && <NotificationBell />}
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
         ) : !session?.user ? (

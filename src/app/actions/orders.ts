@@ -5,6 +5,7 @@ import { logActivity } from "./logs";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
+import { createNotification } from "./notifications";
 
 
 type GroupedItems = {
@@ -64,33 +65,47 @@ export async function createOrder(
                     }))
                 }
             },
+            include: {
+                supplierOrders: {
+                    include: {
+                        supplier: true
+                    }
+                }
+            }
         });
 
         await logActivity(
-                    order.serviceId,
-                    null,
-                    "CREATE",
-                    "Order",
-                    order.id,
-                    `Order totaling MZN ${total.toFixed(2)} created`,
-                    {
-                        total,
-                        groupedItems: groupedItems.map(i => ({
-                            supplierId: i.supplierId,
-                            items: i.items.map((item) => ({
-                                name: item.name,
-                                productId: item.productId,
-                                orderedQty: item.quantity,
-                                price: item.price
-                            }))
-                        }))
-                    },
-                    null,
-                    'INFO',
-                    null
-                );
+            order.serviceId,
+            null,
+            "CREATE",
+            "Order",
+            order.id,
+            `Order totaling MZN ${total.toFixed(2)} created`,
+            {
+                total,
+                groupedItems: groupedItems.map(i => ({
+                    supplierId: i.supplierId,
+                    items: i.items.map((item) => ({
+                        name: item.name,
+                        productId: item.productId,
+                        orderedQty: item.quantity,
+                        price: item.price
+                    }))
+                }))
+            },
+            null,
+            'INFO',
+            null
+        );
         
-
+        const notification = await createNotification({
+            userId: order.supplierOrders[0].supplier.userId,
+            type: "ORDER",
+            title: "New Order",
+            message: `${session.user.name} placed a new order.`,
+            link: `/supply/orders/${order.supplierOrders[0].id}`
+        })
+        console.log("Created notification: ", notification)
         return { success: true, order};
     } catch (error) {
         console.error("Error creating order:", error);

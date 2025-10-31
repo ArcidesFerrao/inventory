@@ -2,9 +2,9 @@ import { db } from "@/lib/db";
 
 
 
-export async function createNotification({userId, type, title, message, link}: {userId: string; type: string; title: string; message: string; link?: string}) {
+export async function createNotification({userId,  type, title, message, link}: {userId: string;  type: string; title: string; message: string; link?: string}) {
 
-    await db.notification.create({
+    return await db.notification.create({
         data: {
             userId,
             type,
@@ -35,4 +35,11 @@ export async function markAsRead(notificationId: string) {
             read: true
         }
     })
+}
+
+export async function getUnreadNotificationCount(userId:string) {
+    const unread = await db.notification.count({
+        where: { userId, read: false },
+    });
+    return unread
 }

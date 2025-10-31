@@ -1,19 +1,20 @@
-import { db } from "@/lib/db";
+"use client";
+
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-export const NotificationBell = ({ userId }: { userId: string }) => {
+export const NotificationBell = () => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     async function fetchCount() {
-      const unread = await db.notification.count({
-        where: { userId, read: false },
-      });
-      setCount(unread);
+      const res = await fetch("/api/notifications/unread-count");
+      const data = await res.json();
+      setCount(data.unread);
     }
+
     fetchCount();
-  }, [userId]);
+  }, []);
 
   return (
     <Link href="/notifications" className="relative">
@@ -31,7 +32,7 @@ export const NotificationBell = ({ userId }: { userId: string }) => {
         />
       </svg>
       {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs px-1 rounded-full">
+        <span className="absolute -top-1 -right-1 bg-blue-800 text-white text-xs px-1 rounded-full">
           {count}
         </span>
       )}

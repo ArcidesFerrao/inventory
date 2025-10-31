@@ -8,11 +8,9 @@ export default async function NotificationsPage() {
 
   if (!session?.user.id) redirect("/login");
 
-  const userId = session?.user.id;
-
   const notifications = await db.notification.findMany({
     where: {
-      userId,
+      userId: session.user.id,
     },
   });
 
@@ -22,9 +20,12 @@ export default async function NotificationsPage() {
       <ul className="flex flex-col gap-2">
         {notifications.map((n) => (
           <li key={n.id}>
-            <a href={n.link ?? "#"}>
+            <a
+              href={n.link ?? "#"}
+              className="flex justify-between items-center gap-4"
+            >
               <p className="font-medium">{n.title}</p>
-              <p className="text-sm text-gray-400">{n.title}</p>
+              <p className="text-sm text-gray-400">{n.message}</p>
               <p className="text-sm text-gray-400">
                 {n.createdAt.toLocaleDateString()}
               </p>
