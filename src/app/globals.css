@@ -714,3 +714,15 @@ nav {
   align-self: end;
   justify-self: last baseline;
 }
+
+.notifications-page {
+  background-color: var(--dash-bg);
+  border-radius: 0.4rem;
+}
+.notifications-page li {
+  border-bottom: 2px solid var(--list-bg);
+}
+
+.notifications-page li:hover {
+  background-color: var(--input-bg);
+}

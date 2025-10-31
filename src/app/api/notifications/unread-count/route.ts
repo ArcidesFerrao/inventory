@@ -10,7 +10,8 @@ export async function GET() {
 
     const unread = await db.notification.count({
         where: {
-            userId: session.user.id
+            userId: session.user.id,
+            read: false
         }
     })
 

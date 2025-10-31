@@ -1,0 +1,33 @@
+"use client";
+import { useRouter } from "next/navigation";
+import { Notification } from "@prisma/client";
+
+export const NotificationListItem = ({ n }: { n: Notification }) => {
+  const router = useRouter();
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    await fetch("/api/notifications/read", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ notificationId: n.id }),
+    });
+
+    router.push(n.link ?? "#");
+  };
+  return (
+    <li key={n.id} className="p-2">
+      <a
+        href={n.link ?? "#"}
+        onClick={handleClick}
+        className="flex justify-between items-center gap-4"
+      >
+        <p className={n.read ? "font-thin" : "font-medium"}>{n.title}</p>
+        <p className="text-sm text-gray-400">{n.message}</p>
+        <p className="text-sm text-gray-400">
+          {n.createdAt.toLocaleDateString()}
+        </p>
+      </a>
+    </li>
+  );
+};

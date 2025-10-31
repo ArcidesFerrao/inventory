@@ -1,3 +1,4 @@
+import { NotificationListItem } from "@/components/NotificationItem";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
@@ -19,18 +20,7 @@ export default async function NotificationsPage() {
       <h1 className="text-xl font-semibold mb-4">Notifications</h1>
       <ul className="flex flex-col gap-2">
         {notifications.map((n) => (
-          <li key={n.id}>
-            <a
-              href={n.link ?? "#"}
-              className="flex justify-between items-center gap-4"
-            >
-              <p className="font-medium">{n.title}</p>
-              <p className="text-sm text-gray-400">{n.message}</p>
-              <p className="text-sm text-gray-400">
-                {n.createdAt.toLocaleDateString()}
-              </p>
-            </a>
-          </li>
+          <NotificationListItem key={n.id} n={n} />
         ))}
       </ul>
     </div>
