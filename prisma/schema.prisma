@@ -21,9 +21,10 @@ model User {
   hashedPassword      String?
   profileStatus       ProfileStatus @default(PENDING)
 
-  Supplier Supplier?
-  Service  Service?
-  AuditLog AuditLog[]
+  Supplier     Supplier?
+  Service      Service?
+  AuditLog     AuditLog[]
+  Notification Notification[]
 }
 
 model Product {
@@ -337,6 +338,21 @@ model AuditLog {
   createdAt  DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  supplierId String?
+  serviceId  String?
+  type       String
+  title      String
+  message    String
+  link       String?
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 enum StockChange {
