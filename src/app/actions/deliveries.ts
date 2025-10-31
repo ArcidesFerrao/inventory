@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
+import { createNotification } from "./notifications";
 
 export async function createDelivery({ supplierOrderId, orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
@@ -326,6 +327,9 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
                 data: {
                     status: "IN_DELIVERY",
                 },
+                include: {
+                    Service: true
+                }
             }),
             db.delivery.update({
                 where: {
@@ -344,6 +348,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
                     status: "COMPLETED",
                 },
                 include: {
+                    supplier: true,
                     items: {
                         include: {
                             product: true
@@ -371,6 +376,14 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
             "INFO",
             null
         )
+
+        await createNotification({
+            userId: order.Service?.userId ?? "",
+            type: "DELIVERY",
+            title: "Delivery Arrived",
+            message: `${supplierOrder.supplier?.name} awaiting confirmation!`,
+            link: `/service/purchases/orders/${order.id}`
+        })
 
         return { success: true, order, delivery, supplierOrder };
     } catch (error) {
@@ -467,6 +480,7 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
                     },
                     include: {
                         supplierOrders: true,
+                        Service: true,
                     }
                 });
 
@@ -476,6 +490,9 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
                     },
                     data: {
                         status: "IN_PREPARATION"
+                    },
+                    include: {
+                        supplier: true
                     }
                 });
 
@@ -501,6 +518,15 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
             'INFO',
             null
         );
+
+        await createNotification(
+            {
+                userId: updatedOrder.Service?.userId ?? "",
+            type: "DELIVERY",
+            title: "New Delivery Scheduled",
+            message: `${updatedSupplierOrder.supplier?.name} scheduled a delivery`,
+            link: `/service/purchases/orders/${updatedOrder.id}`}
+        )
 
         return {success: true, delivery, updatedOrder, updatedSupplierOrder};
 
