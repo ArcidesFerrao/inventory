@@ -166,27 +166,31 @@ export default async function OrderPage(props: { params: Params }) {
                     </p>
                   )}
                 </div>
-                {d.rating !== null ? (
-                  <div className="delivery-rating self-end">
-                    <div className="rate-buttons flex items-center gap-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <span
-                          key={star}
-                          className={
-                            star <= Number(d.rating)
-                              ? "text-yellow-400"
-                              : "text-gray-300"
-                          }
-                        >
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="delivery-rating">
-                    <p>Rate this delivery:</p>
-                    <RateButtons deliveryId={d.id} />
+                {d.status === "COMPLETED" && (
+                  <div>
+                    {d.rating !== null ? (
+                      <div className="delivery-rating self-end">
+                        <div className="rate-buttons flex items-center gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                              key={star}
+                              className={
+                                star <= Number(d.rating)
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="delivery-rating">
+                        <p>Rate this delivery:</p>
+                        <RateButtons deliveryId={d.id} />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
