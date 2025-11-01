@@ -99,6 +99,9 @@
   .menu-products {
     flex-direction: column;
   }
+  .products-selection li {
+    padding: 1rem !important;
+  }
 }
 @media (max-width: 980px) {
   .amount-input,

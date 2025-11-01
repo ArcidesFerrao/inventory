@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { HomeNavLink, NavLink } from "./NavLink";
+import { NotificationBell } from "./Bell";
 
 export const MenuButton = ({
   userId,
@@ -18,12 +19,15 @@ export const MenuButton = ({
   return (
     <div className="nav-menu-btn absolute z-10 top-8  right-4">
       {!showMenu ? (
-        <button
-          onClick={() => setShowMenu(true)}
-          className="header-menu-btn flex items-center"
-        >
-          <span className="line-md--menu"></span>
-        </button>
+        <div className="flex gap-2">
+          <NotificationBell />
+          <button
+            onClick={() => setShowMenu(true)}
+            className="header-menu-btn flex items-center"
+          >
+            <span className="line-md--menu"></span>
+          </button>
+        </div>
       ) : (
         <section className="header-menu flex flex-col justify-between gap-5 p-4 h-full">
           <div className="flex flex-col gap-5 ">

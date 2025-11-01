@@ -17,7 +17,10 @@ export const NotificationBell = () => {
   }, []);
 
   return (
-    <Link href="/notifications" className="relative">
+    <Link
+      href="/notifications"
+      className="relative opacity-70 hover:opacity-100 "
+    >
       <svg
         className="w-6 h-6 text-gray-100"
         fill="none"

@@ -76,8 +76,8 @@ export const PurchasesList = ({
           <ul>
             {products.map((product) => (
               <li key={product.id} className=" flex justify-between px-4 py-2">
-                <div className="flex flex-col gap-2">
-                  <h3>{product.name}</h3>
+                <div className="flex flex-col justify-between gap-2">
+                  <h3 className="font-semibold ">{product.name}</h3>
                   <label
                     className="flex gap-2 text-sm items-center"
                     htmlFor="price"
