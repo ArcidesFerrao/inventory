@@ -447,7 +447,6 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
      deliveredQty: number;
 }[]}) {
 
-
     const session = await getServerSession(authOptions);
     if (!session?.user.supplierId) redirect("/login");
 
@@ -534,9 +533,8 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
             null
         );
 
-        await createNotification(
-            {
-                userId: updatedOrder.Service?.userId ?? "",
+        await createNotification({
+            userId: updatedOrder.Service?.userId ?? "",
             type: "DELIVERY",
             title: "New Delivery Scheduled",
             message: `${updatedSupplierOrder.supplier?.name} scheduled a delivery`,

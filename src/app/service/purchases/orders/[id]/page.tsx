@@ -194,6 +194,7 @@ export default async function OrderPage(props: { params: Params }) {
           ))}
         </div>
       )}
+      {order?.confirmedDeliveries.length === 0 && <p>No deliveries yet...</p>}
     </div>
   );
 }

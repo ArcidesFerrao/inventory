@@ -127,6 +127,9 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                     },
                     data: {
                         status: "SUBMITTED"
+                    },
+                    include: {
+                        Service: true
                     }
                 }),
                 tx.supplierOrder.update({
@@ -135,6 +138,9 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                     },
                     data: {
                         status: "APPROVED"
+                    },
+                    include: {
+                        supplier: true
                     }
                 })
             ])
@@ -171,27 +177,36 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                 
             };
             
-            await logActivity(
-                    order.serviceId,
-                    supplierOrder.supplierId,
-                    "UPDATE",
-                    "Order",
-                    order.id,
-                    `Order accepted by supplier`,
-                    {
-                        supplierOrderId,
-                        update: `Order status to "Submitted" and Supplier Order to "Approved"`
-                    },
-                    null,
-                    'INFO',
-                    null
-                );
-
+            
+            
             return {order, supplierOrder}
+        }, {timeout: 15000 })
+
+        await logActivity(
+            result.order.serviceId,
+            result.supplierOrder.supplierId,
+            "UPDATE",
+            "Order",
+            result.order.id,
+            `Order accepted by supplier`,
+            {
+                supplierOrderId,
+                update: `Order status to "Submitted" and Supplier Order to "Approved"`
+            },
+            null,
+            'INFO',
+            null
+        );
+
+        await createNotification({
+            userId: result.order.Service?.userId ?? "",
+            type: "ORDER",
+            title: "Order Accepted",
+            message: `${result.supplierOrder.supplier.name} accepteded the order.`,
+            link: `/service/purchases/orders/${result.order.id}`
         })
-        
+            
         return { success: true, ...result};
-        
         
     } catch (error) {
         console.error("Error accepting order", error);

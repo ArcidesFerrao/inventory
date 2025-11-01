@@ -1,19 +1,15 @@
 import { NotificationListItem } from "@/components/NotificationItem";
 import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getUserNotification } from "../actions/notifications";
 
 export default async function NotificationsPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user.id) redirect("/login");
 
-  const notifications = await db.notification.findMany({
-    where: {
-      userId: session.user.id,
-    },
-  });
+  const notifications = await getUserNotification(session.user.id);
 
   return (
     <div className="notifications-page flex flex-col items-center p-4">
