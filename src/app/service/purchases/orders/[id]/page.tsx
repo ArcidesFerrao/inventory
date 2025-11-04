@@ -30,6 +30,11 @@ export default async function OrderPage(props: { params: Params }) {
 
       supplierOrders: {
         include: {
+          items: {
+            include: {
+              product: true,
+            },
+          },
           supplier: true,
         },
       },
@@ -111,6 +116,24 @@ export default async function OrderPage(props: { params: Params }) {
         <h2 className="text-xl font-semibold">
           Supplier {order?.supplierOrders?.[0].supplier.name}
         </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order?.supplierOrders?.[0].items.map((i) => (
+              <tr key={i.id}>
+                <td>{i.product.name}</td>
+                <td>{i.orderedQty}</td>
+                <td>MZN {i.price.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       {order?.confirmedDeliveries && order.confirmedDeliveries.length > 0 && (
         <div className="deliveries-details flex flex-col gap-2 w-full">
