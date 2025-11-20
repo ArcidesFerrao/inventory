@@ -10,11 +10,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     const operation = body.operation;
     const quantity = body.quantity;
 
-    const product = await db.product.findUnique({ where: { id: params.id } });
+    const { id } = params
+    const product = await db.product.findUnique({ where: { id } });
     if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     const newStock = operation === "decrement"
-      ? product.stock - quantity
+      ? (product.stock ?? 0)- quantity
       : product.stock + quantity;
 
     const updated = await db.product.update({
