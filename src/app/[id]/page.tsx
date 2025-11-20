@@ -26,7 +26,7 @@ export default async function UserPage(props: { params: Params }) {
 
   if (!user) {
     return (
-      <section className="user-page flex flex-col items-center w-full">
+      <section className="user-page flex flex-col items-center">
         <p>User not found</p>
       </section>
     );
