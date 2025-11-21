@@ -1,6 +1,6 @@
 "use client";
+import { Notification } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
-import { Notification } from "@prisma/client";
 
 export const NotificationListItem = ({ n }: { n: Notification }) => {
   const router = useRouter();

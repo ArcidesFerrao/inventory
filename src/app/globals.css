@@ -96,6 +96,7 @@ body {
 }
 
 @media (max-width: 768px) {
+  .add-product-dash,
   .header-greetings,
   .navigator {
     display: none;
@@ -246,13 +247,13 @@ select {
   padding: 0.4rem 0.8rem;
   background-color: var(--input-bg);
   appearance: none;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 1);
+  box-shadow: 0px 1px 40px rgba(28, 28, 28, 0.5);
 }
 option {
   background-color: var(--background);
 }
 select option {
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 1);
+  box-shadow: 0px 1px 40px rgba(28, 28, 28, 0.2);
 }
 form {
   width: 100%;

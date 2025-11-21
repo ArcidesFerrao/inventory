@@ -45,7 +45,7 @@ export default async function ServicePage() {
       <div className="service-stats flex gap-4 my-8">
         <div className="stats profit-stats p-4 h-fit flex flex-col gap-2 min-w-52">
           <h2 className="text-2xl font-bold underline">Cash Flow</h2>
-          <div className="flex flex-col cash-stats-container gap-1">
+          <div className="flex flex-col cash-stats-container gap-2">
             <div>
               <h3 className="text-lg font-normal">Revenue</h3>
               <h4 className="text-lg py-1 whitespace-nowrap font-bold">

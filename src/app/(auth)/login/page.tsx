@@ -27,7 +27,7 @@ export default function LoginPage() {
       loginValue,
       password,
     });
-    console.log(loginValue, password);
+    // console.log(loginValue, password);
 
     if (res?.error) {
       setError(`Invalid credentials: ${res.error}`);
@@ -65,7 +65,7 @@ export default function LoginPage() {
         />
       </div>
       <input type="submit" value="Sign In" />
-      {error && <p>{error}</p>}
+      {error && error !== "CredentialsSignIn" && <p>{error}</p>}
       <p>
         Dont have an account? <Link href="/signup">Create an account</Link>
       </p>

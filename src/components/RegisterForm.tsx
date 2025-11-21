@@ -4,9 +4,8 @@ import { registerService, registerSupplier } from "@/app/actions/register";
 import { serviceSchema, supplierSchema } from "@/schemas/roleSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export const ServiceRegisterForm = () => {
@@ -206,7 +205,7 @@ export const SupplierRegisterForm = () => {
     if (state?.status === "success") {
       toast.success("Supplier Registered Successfully!");
 
-      signIn("credentials", { redirect: false });
+      // signIn("credentials", { redirect: false });
 
       router.push("/supply");
     }
@@ -318,6 +317,8 @@ export const SupplierRegisterForm = () => {
             type="number"
             name="establishedYear"
             id="establishedYear"
+            min={1990}
+            max={new Date().getFullYear()}
             value={establishedYear}
             onChange={(e) => setEstablishedYear(e.target.value)}
             required

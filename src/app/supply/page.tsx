@@ -29,7 +29,10 @@ export default async function SupplyPage() {
         <h1 className="text-4xl font-semibold">
           {stats.supplier}&apos;s Dashboard
         </h1>
-        <Link href="/supply/products/new" className="add-product flex gap-2">
+        <Link
+          href="/supply/products/new"
+          className="add-product add-product-dash flex gap-2"
+        >
           <span>+</span>
           <span className="text-md">Product</span>
         </Link>
