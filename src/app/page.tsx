@@ -16,9 +16,14 @@ export default async function Home() {
       ) : (
         <div className=" flex flex-col text-center gap-4  py-2">
           <p>Please login/sign up to continue!</p>
-          <Link className="login-button" href="/api/auth/signin">
-            Login
-          </Link>
+          <div className="flex gap-5 p-5">
+            <Link className="login-button w-32 border" href="/api/auth/signin">
+              Login
+            </Link>
+            <Link className="login-button w-32 border" href="/signup">
+              Sign up
+            </Link>
+          </div>
         </div>
       )}
     </main>
