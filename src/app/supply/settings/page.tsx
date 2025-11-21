@@ -1,11 +1,9 @@
 import { SupplierExportSelection } from "@/components/ExportPdf";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
-import React from "react";
 
 export default async function SettingsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const supplierId = session?.user.supplierId;
 
   if (!supplierId) return <p>Access Denied</p>;

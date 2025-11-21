@@ -1,13 +1,11 @@
 import { getSelectedSupplierProducts } from "@/app/actions/product";
 import { ListSupplierItem } from "@/components/List";
-import { authOptions } from "@/lib/auth";
-// import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function ProductsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");

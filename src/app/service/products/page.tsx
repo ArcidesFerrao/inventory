@@ -1,11 +1,11 @@
 import MenuAndStock from "@/components/MenuAndStock";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
+
 import { redirect } from "next/navigation";
 
 export default async function ProductsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user.serviceId) redirect("/login");
 

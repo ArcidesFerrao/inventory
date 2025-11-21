@@ -1,9 +1,9 @@
 'use server'
 
 
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
+
 import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
 import { createNotification } from "./notifications";
@@ -11,7 +11,7 @@ import { createNotification } from "./notifications";
 export async function createDelivery({ supplierOrderId, orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
 }[]}) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     
     if (!session?.user.supplierId) redirect("/login");
 
@@ -101,7 +101,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
 }
 
 export async function completeDelivery({serviceId, deliveryId, orderId, supplierOrderId}:{serviceId:string, deliveryId:string, orderId:string, supplierOrderId: string}) {
-  const session = await getServerSession(authOptions);
+  const session = await auth()
     
     if (!session?.user) redirect("/login");
 
@@ -332,7 +332,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
 }
 
 export async function arrivedDelivery(orderId: string, deliveryId: string, supplierOrderId: string) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session?.user) redirect("/login");
 
     try {
@@ -447,7 +447,7 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
      deliveredQty: number;
 }[]}) {
 
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session?.user.supplierId) redirect("/login");
 
     if (items.length === 0) 

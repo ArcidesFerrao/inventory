@@ -1,9 +1,8 @@
-import { authOptions } from "@/lib/auth";
+import { auth} from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getServerSession } from "next-auth";
 
 export async function getServiceDashBoardStats() {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
 
     if (!session?.user) return null;
 
@@ -118,7 +117,7 @@ export async function getServiceDashBoardStats() {
 
 
 export async function getSupplierDashBoardStats() {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
 
     if (!session?.user) return null 
     
@@ -222,7 +221,7 @@ export async function getSupplierDashBoardStats() {
 
 
 export async function getAdminStats() {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
 
     if (!session?.user.isAdmin) return null 
 

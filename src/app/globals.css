@@ -18,6 +18,14 @@
   --dash-bg: #4e475f70;
   /* --input-bg: rgba(32, 32, 32, 0.7); */
   --input-bg: #13111aa9;
+
+  --font-family: var(--font-sansation-sans);
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+  font-family: var(--font-sansation-sans), var(--default-font-family);
 }
 
 /* @theme inline {

@@ -1,14 +1,13 @@
 import { SalesList } from "@/components/SalesList";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { SaleProductWithMenuItems } from "@/types/types";
-import { getServerSession } from "next-auth";
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function NewSale() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user.serviceId) redirect("/login");
 

@@ -11,10 +11,13 @@ CREATE TYPE "ProductStatus" AS ENUM ('ACTIVE', 'DRAFT', 'OUT_OF_STOCK');
 CREATE TYPE "ProductType" AS ENUM ('SERVICE', 'STOCK', 'SUPPLY');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'CONFIRMED', 'IN_DELIVERY', 'DELIVERED', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'CONFIRMED', 'IN_PREPARATION', 'IN_DELIVERY', 'DELIVERED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "SupplierOrderStatus" AS ENUM ('PENDING', 'APPROVED', 'PARTIAL', 'REJECTED', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "SupplierOrderStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'PARTIAL', 'IN_PREPARATION', 'COMPLETED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "DeliveryStatus" AS ENUM ('PENDING', 'IN_TRANSIT', 'ARRIVED', 'COMPLETED', 'FAILED', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "PaymentType" AS ENUM ('CASH', 'CREDIT', 'DEBIT', 'MOBILE_MONEY');
@@ -54,13 +57,14 @@ CREATE TABLE "Product" (
     "unitQty" INTEGER NOT NULL,
     "stock" INTEGER,
     "price" DOUBLE PRECISION,
+    "critical" INTEGER DEFAULT 0,
     "status" "ProductStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "categoryId" TEXT,
     "unitId" TEXT,
-    "type" "ProductType" NOT NULL DEFAULT 'STOCK',
     "serviceId" TEXT NOT NULL,
+    "type" "ProductType" NOT NULL DEFAULT 'STOCK',
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -85,7 +89,9 @@ CREATE TABLE "Supplier" (
     "businessReg" TEXT,
     "description" TEXT,
     "website" TEXT,
-    "establishedYear" TIMESTAMP(3),
+    "establishedYear" INTEGER,
+    "specialization" TEXT,
+    "badge" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
@@ -107,6 +113,7 @@ CREATE TABLE "SupplierProduct" (
     "status" "ProductStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "categoryId" TEXT,
 
     CONSTRAINT "SupplierProduct_pkey" PRIMARY KEY ("id")
 );
@@ -141,6 +148,7 @@ CREATE TABLE "Sale" (
     "total" DOUBLE PRECISION NOT NULL,
     "cogs" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "paymentType" TEXT NOT NULL,
+    "supplierId" TEXT,
     "serviceId" TEXT,
 
     CONSTRAINT "Sale_pkey" PRIMARY KEY ("id")
@@ -150,7 +158,8 @@ CREATE TABLE "Sale" (
 CREATE TABLE "SaleItem" (
     "id" TEXT NOT NULL,
     "saleId" TEXT NOT NULL,
-    "productId" TEXT NOT NULL,
+    "productId" TEXT,
+    "supplierProductId" TEXT,
     "quantity" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
 
@@ -162,8 +171,9 @@ CREATE TABLE "Purchase" (
     "id" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "total" DOUBLE PRECISION NOT NULL,
+    "sourceType" TEXT NOT NULL DEFAULT 'DIRECT',
     "paymentType" TEXT NOT NULL,
-    "supplierCustomerId" TEXT NOT NULL,
+    "sourceId" TEXT,
     "serviceId" TEXT,
 
     CONSTRAINT "Purchase_pkey" PRIMARY KEY ("id")
@@ -172,6 +182,7 @@ CREATE TABLE "Purchase" (
 -- CreateTable
 CREATE TABLE "PurchaseItem" (
     "id" TEXT NOT NULL,
+    "productId" TEXT,
     "purchaseId" TEXT NOT NULL,
     "supplierProductId" TEXT,
     "stock" INTEGER NOT NULL,
@@ -229,7 +240,7 @@ CREATE TABLE "Delivery" (
     "scheduledAt" TIMESTAMP(3) NOT NULL,
     "deliveredAt" TIMESTAMP(3),
     "notes" TEXT,
-    "status" TEXT NOT NULL,
+    "status" "DeliveryStatus" NOT NULL DEFAULT 'PENDING',
     "accepted" BOOLEAN,
     "reason" TEXT,
     "rating" INTEGER,
@@ -250,7 +261,6 @@ CREATE TABLE "DeliveryItem" (
 -- CreateTable
 CREATE TABLE "ActivityLog" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
     "actionType" TEXT NOT NULL,
     "entityType" TEXT NOT NULL,
     "entityId" TEXT,
@@ -260,6 +270,7 @@ CREATE TABLE "ActivityLog" (
     "device" TEXT,
     "severity" TEXT NOT NULL DEFAULT 'INFO',
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "supplierId" TEXT,
     "serviceId" TEXT,
 
     CONSTRAINT "ActivityLog_pkey" PRIMARY KEY ("id")
@@ -268,7 +279,8 @@ CREATE TABLE "ActivityLog" (
 -- CreateTable
 CREATE TABLE "StockMovement" (
     "id" TEXT NOT NULL,
-    "productId" TEXT NOT NULL,
+    "productId" TEXT,
+    "supplierProductId" TEXT,
     "changeType" "StockChange" NOT NULL,
     "quantity" INTEGER NOT NULL,
     "referenceId" TEXT,
@@ -283,6 +295,11 @@ CREATE TABLE "Category" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type" "CategoryType" NOT NULL,
+    "description" TEXT,
+    "supplierId" TEXT,
+    "serviceId" TEXT,
+    "supplierProductId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );
@@ -294,6 +311,36 @@ CREATE TABLE "Unit" (
     "description" TEXT,
 
     CONSTRAINT "Unit_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "AuditLog" (
+    "id" SERIAL NOT NULL,
+    "userId" TEXT,
+    "action" TEXT NOT NULL,
+    "entityType" TEXT NOT NULL,
+    "entityId" TEXT NOT NULL,
+    "entityName" TEXT NOT NULL,
+    "details" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "AuditLog_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Notification" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "supplierId" TEXT,
+    "serviceId" TEXT,
+    "type" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "link" TEXT,
+    "read" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -360,10 +407,10 @@ CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 CREATE UNIQUE INDEX "Unit_name_key" ON "Unit"("name");
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_unitId_fkey" FOREIGN KEY ("unitId") REFERENCES "Unit"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_unitId_fkey" FOREIGN KEY ("unitId") REFERENCES "Unit"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -384,6 +431,9 @@ ALTER TABLE "SupplierProduct" ADD CONSTRAINT "SupplierProduct_unitId_fkey" FOREI
 ALTER TABLE "SupplierProduct" ADD CONSTRAINT "SupplierProduct_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "SupplierProduct" ADD CONSTRAINT "SupplierProduct_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "SupplierCustomer" ADD CONSTRAINT "SupplierCustomer_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -396,16 +446,22 @@ ALTER TABLE "Service" ADD CONSTRAINT "Service_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SaleItem" ADD CONSTRAINT "SaleItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Sale" ADD CONSTRAINT "Sale_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SaleItem" ADD CONSTRAINT "SaleItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SaleItem" ADD CONSTRAINT "SaleItem_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "Sale"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_supplierCustomerId_fkey" FOREIGN KEY ("supplierCustomerId") REFERENCES "SupplierCustomer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "SaleItem" ADD CONSTRAINT "SaleItem_supplierProductId_fkey" FOREIGN KEY ("supplierProductId") REFERENCES "SupplierProduct"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PurchaseItem" ADD CONSTRAINT "PurchaseItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PurchaseItem" ADD CONSTRAINT "PurchaseItem_supplierProductId_fkey" FOREIGN KEY ("supplierProductId") REFERENCES "SupplierProduct"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -444,4 +500,22 @@ ALTER TABLE "DeliveryItem" ADD CONSTRAINT "DeliveryItem_deliveryId_fkey" FOREIGN
 ALTER TABLE "ActivityLog" ADD CONSTRAINT "ActivityLog_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StockMovement" ADD CONSTRAINT "StockMovement_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ActivityLog" ADD CONSTRAINT "ActivityLog_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StockMovement" ADD CONSTRAINT "StockMovement_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StockMovement" ADD CONSTRAINT "StockMovement_supplierProductId_fkey" FOREIGN KEY ("supplierProductId") REFERENCES "SupplierProduct"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Category" ADD CONSTRAINT "Category_supplierId_fkey" FOREIGN KEY ("supplierId") REFERENCES "Supplier"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Category" ADD CONSTRAINT "Category_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "AuditLog" ADD CONSTRAINT "AuditLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

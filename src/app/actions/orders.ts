@@ -3,8 +3,7 @@
 import { db } from "@/lib/db";
 import { logActivity } from "./logs";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { auth} from "@/lib/auth";
 import { createNotification } from "./notifications";
 
 
@@ -24,7 +23,7 @@ export async function createOrder(
     endDate: string,
     notes?: string
 ) {    
-    const session = await getServerSession(authOptions);
+    const session = await auth()
 
     if (!session?.user) redirect("/login");
 

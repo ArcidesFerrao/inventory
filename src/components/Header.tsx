@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 import { MenuButton } from "./MenuButton";
 import { NotificationBell } from "./Bell";
 
@@ -21,7 +20,7 @@ export const Header = () => {
       <Link href="/">
         <div className="innovante flex gap-2 items-center ">
           <Image src="/logo.png" width={22} height={22} alt="Innovante" />
-          <h1 className="font-bold text-2xl uppercase ">Inventory</h1>
+          <h1 className="font-bold text-2xl uppercase ">CONTELA</h1>
         </div>
       </Link>
       <div className="header-greetings flex items-center gap-4">

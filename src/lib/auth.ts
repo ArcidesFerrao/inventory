@@ -1,11 +1,12 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { AuthOptions } from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth, { NextAuthConfig } from "next-auth";
+// import { type AuthOptions } from "next-auth/core/types";
 import { db } from "./db";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcrypt"
 
 
-export const authOptions: AuthOptions = {
+export const authOptions: NextAuthConfig = {
     adapter: PrismaAdapter(db),
     providers: [
         Credentials({
@@ -15,26 +16,33 @@ export const authOptions: AuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.loginValue || !credentials.password) return null
+                if (
+                    !credentials ||
+                    typeof credentials.loginValue !== "string" ||
+                    typeof credentials.password !== "string"
+                ) {
+                    return null;
+                }
+
+                const { loginValue, password } = credentials;
 
                 const user = await db.user.findFirst({
                     where: {
-                        OR: [{ email: credentials.loginValue.toLowerCase() },
-                            { phoneNumber: credentials.loginValue}
-                        ]}
-                })
+                        OR: [
+                            { email: loginValue },
+                            { phoneNumber: loginValue },
+                        ]
+                    }
+                });
 
-                if (!user || !user.hashedPassword) return null
+                if (!user || !user.hashedPassword) return null;
 
-                const isValid = await bcrypt.compare(
-                    credentials.password, 
-                    user.hashedPassword
-                );
+                const isValid = await bcrypt.compare(password, user.hashedPassword);
+                if (!isValid) return null;
 
-                if (!isValid) return null
+                return user;
+            }
 
-                return user
-            },
         })
     ],
     session: {
@@ -86,3 +94,6 @@ export const authOptions: AuthOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET
 }
+
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);

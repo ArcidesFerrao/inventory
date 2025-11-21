@@ -1,16 +1,15 @@
 'use server'
 
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { parseWithZod } from "@conform-to/zod";
 import { SubmissionResult } from "@conform-to/react";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { serviceSchema, supplierSchema } from "@/schemas/roleSchema";
 
 
 export async function registerService(prevState: unknown, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: serviceSchema });
@@ -44,7 +43,7 @@ export async function registerService(prevState: unknown, formData: FormData) {
     }
 }
 export async function registerSupplier(prevState: unknown, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     
     if (!session?.user) redirect("/login");
     

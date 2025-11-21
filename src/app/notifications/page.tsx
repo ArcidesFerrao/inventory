@@ -1,11 +1,10 @@
 import { NotificationListItem } from "@/components/NotificationItem";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getUserNotification } from "../actions/notifications";
 
 export default async function NotificationsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user.id) redirect("/login");
 

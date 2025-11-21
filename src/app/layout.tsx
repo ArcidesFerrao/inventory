@@ -1,18 +1,57 @@
 import type { Metadata } from "next";
-import { Sansation } from "next/font/google";
 import "./globals.css";
 import "./icons.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import ProviderWrapper from "@/components/ProviderWrapper";
 import { Toaster } from "react-hot-toast";
+import localFont from "next/font/local";
 
-const sansationSans = Sansation({
+const sansationSans = localFont({
+  src: [
+    {
+      path: "../utils/fonts/Sansation/Sansation-Light.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../utils/fonts/Sansation/Sansation-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../utils/fonts/Sansation/Sansation-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../utils/fonts/Sansation/Sansation-LightItalic.ttf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../utils/fonts/Sansation/Sansation-Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../utils/fonts/Sansation/Sansation-BoldItalic.ttf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
   variable: "--font-sansation-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  display: "auto",
+  display: "swap",
+  fallback: ["sans-serif"],
 });
+
+// Sansation({
+//   variable: "--font-sansation-sans",
+//   subsets: ["latin"],
+//   weight: ["300", "400", "700"],
+//   display: "swap",
+//   fallback: ["sans-serif"],
+// });
 
 export const metadata: Metadata = {
   title: "Inventory App",

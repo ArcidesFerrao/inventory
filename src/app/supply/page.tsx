@@ -3,11 +3,10 @@ import React from "react";
 import { getSupplierDashBoardStats } from "../actions/dashboardStats";
 import { getSupplierProducts } from "../actions/product";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 export default async function SupplyPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session) {
     redirect("/login");

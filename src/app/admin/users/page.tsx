@@ -1,13 +1,12 @@
 import { getAdminUsersStats } from "@/app/actions/dashboardStats";
 import { Card } from "@/components/Card";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth";
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React from "react";
 
 export default async function UsersAdminPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user.isAdmin) {
     redirect("/");

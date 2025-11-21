@@ -1,15 +1,14 @@
 'use server'
 
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 export async function createProduct(prevState: unknown, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: productSchema });
     if (submission.status !== "success") return submission.reply();
@@ -52,7 +51,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
 }
 
 export async function editProduct(prevState: unknown, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: productSchema });
     if (submission.status !== "success") return submission.reply();
@@ -163,7 +162,7 @@ export async function getSelectedSupplierProducts(supplierId: string) {
 
 
 export async function createSupplierProduct(prevState: unknown, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session?.user) redirect("/login");
     // if (!session?.user.supplyId) redirect("/register/supplier");
     const submission = parseWithZod(formData, { schema: supplierProductSchema });
@@ -200,7 +199,7 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
 }
 
 export async function editSupplierProduct(prevState: unknown, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: supplierProductSchema
         });
