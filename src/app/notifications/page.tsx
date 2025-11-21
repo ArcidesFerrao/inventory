@@ -13,11 +13,15 @@ export default async function NotificationsPage() {
   return (
     <div className="notifications-page flex flex-col items-center p-4">
       <h1 className="text-xl font-semibold mb-4">Notifications</h1>
-      <ul className="flex flex-col gap-2">
-        {notifications.map((n) => (
-          <NotificationListItem key={n.id} n={n} />
-        ))}
-      </ul>
+      {notifications.length === 0 ? (
+        <p className="text-gray-400">No notifications available.</p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {notifications.map((n) => (
+            <NotificationListItem key={n.id} n={n} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

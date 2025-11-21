@@ -11,10 +11,11 @@ export default function MenuAndStock({
   products: ProductWithCategory[];
 }) {
   const [view, setView] = useState<"menu" | "stock">("menu");
-
+  console.log(products);
   if (products.length === 0) {
-    <section>
+    <section className="flex gap-2">
       <p>No products found...</p>
+      <p>Click on &quot;New Product&quot; to add on.</p>
     </section>;
   }
   const menuProducts = products.filter((p) => p.type === "SERVICE");
@@ -56,7 +57,12 @@ export default function MenuAndStock({
       {view === "menu" && (
         <>
           {products.length === 0 ? (
-            <p>No products found...</p>
+            <section className="flex flex-col gap-2">
+              <p>No products found...</p>
+              <p className="font-thin text-sm">
+                Click on &quot;New Product&quot; to add one.
+              </p>
+            </section>
           ) : (
             <div className="menu-products flex justify-between gap-8">
               <div className="flex flex-col gap-4">
@@ -108,19 +114,30 @@ export default function MenuAndStock({
         </>
       )}
       {view === "stock" && (
-        <section>
-          <ul className="flex flex-col gap-4">
-            {stockProducts.map((p) => (
-              <ListStockItem
-                id={p.id}
-                name={p.name}
-                price={p.price || 0}
-                stock={p.stock || 0}
-                key={p.id}
-              />
-            ))}
-          </ul>
-        </section>
+        <>
+          {stockProducts.length === 0 ? (
+            <section className="flex flex-col gap-2">
+              <p>No products found...</p>
+              <p className="font-thin text-sm">
+                Click on &quot;New Product&quot; to add one.
+              </p>
+            </section>
+          ) : (
+            <section>
+              <ul className="flex flex-col gap-4">
+                {stockProducts.map((p) => (
+                  <ListStockItem
+                    id={p.id}
+                    name={p.name}
+                    price={p.price || 0}
+                    stock={p.stock || 0}
+                    key={p.id}
+                  />
+                ))}
+              </ul>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

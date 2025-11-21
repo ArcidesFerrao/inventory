@@ -182,10 +182,15 @@ table {
 }
 .dash-menu button,
 .login-button,
-.user-page button,
+.user-page button {
+  background-color: var(--input-bg);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.2rem;
+}
+
 textarea,
 input {
-  background-color: var(--input-bg);
+  background-color: var(--dash-bg);
   padding: 0.4rem 0.8rem;
   border-radius: 0.2rem;
 }
@@ -199,10 +204,13 @@ input {
   border-radius: 0.2rem;
 }
 
+.register-form {
+  max-width: fit-content;
+}
 .dash-menu button {
   padding: 2rem;
   max-width: 12rem;
-  border: 1px solid var(--border-list);
+  border: 1px solid var(--dash-bg);
 }
 
 /* input:read-only, */

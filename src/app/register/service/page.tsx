@@ -1,5 +1,4 @@
 import { ServiceRegisterForm } from "@/components/RegisterForm";
-import React from "react";
 
 export default function ServiceRegisterPage() {
   return (

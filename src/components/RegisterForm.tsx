@@ -51,7 +51,7 @@ export const ServiceRegisterForm = () => {
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col gap-2 min-w-96"
+      className="register-form flex flex-col gap-2 min-w-96"
     >
       <div className="flex flex-col gap-2 w-full">
         <div className="flex justify-between items-center">
