@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  // getCategories,
   getServiceCategories,
   getSupplierCategories,
 } from "@/app/actions/categories";
@@ -17,11 +16,11 @@ import { getUnits } from "@/app/actions/units";
 import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { Category, Product, SupplierProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React, { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CategorySelect, ProductsCategorySelect } from "./CategorySelect";
+import { SupplierProduct, Category, Product } from "@/generated/prisma/client";
 
 type SupplierProductWithUnit = SupplierProduct & {
   Unit: {
@@ -585,6 +584,7 @@ export const SupplierProductForm = ({
                 type="number"
                 name="price"
                 id="price"
+                min={0}
                 onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
                 value={price}
                 required
@@ -617,6 +617,7 @@ export const SupplierProductForm = ({
                 type="number"
                 name="cost"
                 id="cost"
+                min={0}
                 defaultValue={supplierProduct?.cost || 0}
               />
 
