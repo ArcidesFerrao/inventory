@@ -2,8 +2,6 @@ import { ExportSelection } from "@/components/ExportPdf";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-import React from "react";
-
 export default async function SettingsPage() {
   const session = await auth();
 
