@@ -4,9 +4,9 @@ import {
 } from "@/app/actions/categories";
 import React, { useState } from "react";
 import { Modal } from "./Modal";
-import { Category } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Category } from "@/generated/prisma/client";
 
 export function CategorySelect({
   categoryId,

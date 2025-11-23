@@ -23,7 +23,7 @@ export default function EntityForm({
       const response = await fetch(`/api/admin/${type}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, description }),
       });
 
       if (!response.ok) {
@@ -48,7 +48,7 @@ export default function EntityForm({
           {type.charAt(0).toUpperCase() + type.slice(1)} Name
         </label>
         <input
-          className="no-wrap"
+          className="no-wrap text-gray-800"
           type="text"
           name="name"
           value={name}
@@ -63,7 +63,7 @@ export default function EntityForm({
           {type.charAt(0).toUpperCase() + type.slice(1)} Description
         </label>
         <input
-          className="no-wrap"
+          className="no-wrap text-gray-800"
           type="text"
           value={description}
           name="description"

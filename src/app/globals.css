@@ -673,7 +673,7 @@ nav {
 
 .modal-category input {
   max-width: 100%;
-  color: var(--foreground);
+  /* color: var(--foreground); */
 }
 
 .dash-card-admin {

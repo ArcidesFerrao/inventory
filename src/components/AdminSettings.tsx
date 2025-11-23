@@ -18,8 +18,8 @@ export default function AdminSettings({
   return (
     <>
       <section className="manage flex flex-wrap gap-5">
-        <div className="border p-2 rounded-sm">
-          <div className="flex justify-between">
+        <div className="border p-2 rounded-sm flex flex-col gap-2 ">
+          <div className="flex justify-between ">
             <h3>Unit</h3>
             <button onClick={() => setUnitModalOpen(true)} className="px-2">
               +
@@ -29,9 +29,12 @@ export default function AdminSettings({
             {units.length !== 0 ? (
               <ul>
                 {units.map((u) => (
-                  <li key={u.id} className="flex justify-between  gap-5">
+                  <li
+                    key={u.id}
+                    className="flex justify-between  gap-8 hover:underline"
+                  >
                     <p>{u.name}</p>
-                    <p>{u.description}</p>
+                    <p className="text-sm font-thin">{u.description}</p>
                   </li>
                 ))}
               </ul>
@@ -40,7 +43,7 @@ export default function AdminSettings({
             )}
           </div>
         </div>
-        <div className="border p-2 rounded-sm">
+        <div className="border p-2 rounded-sm flex flex-col gap-2 ">
           <div className="flex justify-between">
             <h3>Category</h3>
             <button onClick={() => setCategoryModalOpen(true)} className="px-2">

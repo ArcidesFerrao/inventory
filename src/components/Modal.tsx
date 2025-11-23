@@ -10,7 +10,7 @@ interface ModalProps {
 export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   if (!isOpen) return null;
   return (
-    <div className="modal-category fixed inset-0 z-50 flex items-center justify-center">
+    <div className="modal-category modal fixed inset-0 z-50 flex items-center justify-center">
       <div className="w-full p-4 flex flex-col gap-2 relative">
         {title && <h2 className="text-lg font-semibold">{title}</h2>}
         {children}
