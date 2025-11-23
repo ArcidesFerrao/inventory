@@ -1,7 +1,7 @@
 import { SupplierProductDeleteButton } from "@/components/DeleteButton";
+import StatusToggle from "@/components/StatusToggle";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import React from "react";
 type Params = Promise<{ id: string }>;
 
 export default async function ProductPage(props: { params: Params }) {
@@ -19,7 +19,13 @@ export default async function ProductPage(props: { params: Params }) {
     <div className="flex flex-col gap-5 items-start w-full">
       <div className="flex justify-between w-full">
         <div>
-          <h2 className="text-2xl font-semibold">{product?.name}</h2>
+          <div className="flex gap-5 items-center">
+            <h2 className="text-2xl font-semibold">{product?.name}</h2>
+            <StatusToggle
+              productId={id}
+              initialStatus={product?.status ?? "ACTIVE"}
+            />
+          </div>
           <p className="text-xs font-thin">Id: {product?.id}</p>
         </div>
         <div className="flex gap-2 items-center">
