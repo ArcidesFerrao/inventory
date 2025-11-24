@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
         const limit = parseInt(searchParams.get("limit") || "20");
         const category = searchParams.get("category");
         
-        const where = category ? { category } : {};
+        const where = category ? { categoryId: category } : {};
         // console.log("🔍 Running db.product.findMany with:", { where, skip: (page - 1) * limit, take: limit });
 
         const [data, total] = await Promise.all([
@@ -38,15 +38,17 @@ export async function POST(req: NextRequest) {
     try {
         verifyToken(req);
         const body = await req.json();
-        const { name, description, price, stock, category, userId } = body;
+        const { name, description, price, stock, categoryId, unitId, unitQty, serviceId } = body;
         const product = await db.product.create({
             data: {
                 name,
                 description,
                 price,
                 stock,
-                category,
-                userId,
+                categoryId,
+                unitId,
+                unitQty,
+                serviceId,
                 status: 'ACTIVE',
             }
         })

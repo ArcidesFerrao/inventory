@@ -8,10 +8,10 @@ import {
   Purchase,
   Sale,
   SupplierProduct,
-} from "@prisma/client";
-import React, { useState } from "react";
-import { JsonValue } from "@prisma/client/runtime/library";
+} from "@/generated/prisma/client";
+import { useState } from "react";
 import { SupplierSaleWithItems } from "@/types/types";
+import { JsonValue } from "@prisma/client/runtime/client";
 
 type ExportProps = {
   stock: SupplierProduct[];

@@ -1,7 +1,7 @@
 "use client";
 
 import { createNewDelivery } from "@/app/actions/deliveries";
-import { Order, SupplierProduct } from "@prisma/client";
+import { Order, SupplierProduct } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";

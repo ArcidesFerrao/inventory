@@ -3,7 +3,7 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-export default async function Get(req: Request) {
+export async function GET(req: Request) {
 
     const {searchParams} = new URL(req.url);
     const q = searchParams.get("q") || "";
