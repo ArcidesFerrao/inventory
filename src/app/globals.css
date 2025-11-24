@@ -746,3 +746,17 @@ nav {
 .notifications-page li:hover {
   background-color: var(--input-bg);
 }
+
+.status-toggle .status-btn-active {
+  background-color: var(--dash-bg);
+}
+
+.status-toggle .status-btn:hover,
+.status-toggle .status-btn-active:hover {
+  background-color: var(--accent);
+}
+
+.status-menu {
+  background-color: var(--input-bg);
+  overflow: hidden;
+}

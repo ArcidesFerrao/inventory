@@ -18,15 +18,15 @@ export default async function ProductPage(props: { params: Params }) {
   return (
     <div className="flex flex-col gap-5 items-start w-full">
       <div className="flex justify-between w-full">
-        <div>
-          <div className="flex gap-5 items-center">
+        <div className="flex gap-5 items-center">
+          <div className="flex flex-col gap-1">
             <h2 className="text-2xl font-semibold">{product?.name}</h2>
-            <StatusToggle
-              productId={id}
-              initialStatus={product?.status ?? "ACTIVE"}
-            />
+            <p className="text-xs font-thin">Id: {product?.id}</p>
           </div>
-          <p className="text-xs font-thin">Id: {product?.id}</p>
+          <StatusToggle
+            productId={id}
+            initialStatus={product?.status ?? "ACTIVE"}
+          />
         </div>
         <div className="flex gap-2 items-center">
           <SupplierProductDeleteButton supplierProductId={id} />

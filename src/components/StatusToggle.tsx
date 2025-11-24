@@ -39,7 +39,6 @@ export default function StatusToggle({
       }
 
       setStatus(newStatus);
-      //   router.refresh();
     } catch (error) {
       console.error("Error updating status: ", error);
       toast.error("Failed to update product status");
@@ -49,18 +48,23 @@ export default function StatusToggle({
     }
   };
   return (
-    <div className="relative">
-      <button onClick={() => setShowMenu(!showMenu)} disabled={loading}>
+    <div className="relative status-toggle">
+      <button
+        className="status-btn-active px-3 py-1 rounded-xl text-sm font-medium transition-colors"
+        onClick={() => setShowMenu(!showMenu)}
+        disabled={loading}
+      >
         {loading ? "..." : statusConfig[status].label}
       </button>
 
       {showMenu && !loading && (
         <>
-          <div onClick={() => setShowMenu(false)}>
-            <div className="flex flex-col gap-2">
+          <div className="inset-0 z-10" onClick={() => setShowMenu(false)}>
+            <div className="status-menu absolute top-full left-0  rounded-md shadow-xl z-20">
               {(Object.keys(statusConfig) as ProductStatus[]).map(
                 (statusOption) => (
                   <button
+                    className="status-btn w-full text-nowrap text-left px-3 py-2 text-sm "
                     key={statusOption}
                     onClick={() => updateStatus(statusOption)}
                   >

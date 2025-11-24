@@ -10,12 +10,6 @@ export default async function ProductsPage() {
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
 
-  // const products = await db.supplierProduct.findMany({
-  //   where: {
-  //     supplierId: session.user.supplierId,
-  //   },
-  // });
-
   const products = await getSelectedSupplierProducts(session.user.supplierId);
 
   const filteredProducts = products.filter(
