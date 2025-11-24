@@ -1,5 +1,6 @@
 import { SupplierProductDeleteButton } from "@/components/DeleteButton";
 import StatusToggle from "@/components/StatusToggle";
+import StockManagementButton from "@/components/StockManagementButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
 type Params = Promise<{ id: string }>;
@@ -51,7 +52,13 @@ export default async function ProductPage(props: { params: Params }) {
             </div>
             <div className="flex flex-col gap-2">
               <p>Stock</p>
-              <h2 className="font-bold text-xl">{product?.stock}</h2>
+              <div>
+                <h2 className="font-bold text-xl">{product?.stock}</h2>
+                <StockManagementButton
+                  supplierProductId={id}
+                  currentStock={product?.stock ?? 0}
+                />
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-2">
