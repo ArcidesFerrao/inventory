@@ -105,20 +105,20 @@ export function StockMovementModal({
   if (!isOpen) return null;
 
   return (
-    <div>
-      <div>
-        <div>
+    <div className=" stock-modal fixed left-4 inset-0 z-50 max-w-100 ">
+      <div className="rounded-sm w-full p-5">
+        <div className="flex justify-between items-center">
           <h2>Record Stock Movement</h2>
           <button onClick={onClose}>x</button>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="py-2 flex justify-between">
             <label htmlFor="currentStock">Current Stock</label>
             <span>{currentStock}</span>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-2 py-2">
             <label htmlFor="changeType">ChangeType</label>
             <div className="grid grid-cols-2 gap-2">
               {(Object.keys(stockChangeConfig) as StockChange[]).map((type) => (
@@ -126,18 +126,22 @@ export function StockMovementModal({
                   key={type}
                   type="button"
                   onClick={() => setChangeType(type)}
-                  className=""
+                  className={` flex items-center justify-center gap-2 px-2 py-1 border rounded-sm text-sm ${
+                    changeType === type
+                      ? "border-blue-500 bg-blue-100 text-gray-800"
+                      : "border-gray-300  hover:bg-gray-50 hover:text-gray-800 "
+                  }`}
                 >
                   <span className={stockChangeConfig[type].color}>
                     {stockChangeConfig[type].symbol}
                   </span>
-                  {stockChangeConfig[type].label}
+                  <p>{stockChangeConfig[type].label}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          <div>
+          <div className=" flex items-center text-sm justify-between py-2">
             <label htmlFor="typeChange">
               {changeType === "RECONCILIATION" ? "New Stock Level" : "Quantity"}
             </label>
@@ -155,13 +159,13 @@ export function StockMovementModal({
           </div>
 
           {changeType !== "RECONCILIATION" && (
-            <div>
+            <div className="flex  justify-between py-2">
               <h3>New Stock will be: </h3>
               <span>{calculateNewStock()}</span>
             </div>
           )}
 
-          <div>
+          <div className=" flex flex-col gap-2">
             <label htmlFor="notes">Notes (optional)</label>
             <textarea
               name="notes"
@@ -177,11 +181,17 @@ export function StockMovementModal({
 
           {error && <p>{error}</p>}
 
-          <div>
-            <button onClick={onClose} disabled={loading}>
+          <div className="grid grid-cols-2 py-2 gap-2 ">
+            <button
+              className="px-4 py-2 border rounded hover:text-gray-800 hover:bg-gray-100"
+              onClick={onClose}
+              disabled={loading}
+            >
               Cancel
             </button>
-            <button>{loading ? "Recording..." : "Record Movement"}</button>
+            <button className="px-4 py-2 border rounded  hover:text-gray-800 hover:bg-gray-100">
+              {loading ? "Recording..." : "Record Movement"}
+            </button>
           </div>
         </form>
       </div>

@@ -747,10 +747,12 @@ nav {
   background-color: var(--input-bg);
 }
 
-.status-toggle .status-btn-active {
+.status-toggle .status-btn-active,
+.stock-btn {
   background-color: var(--dash-bg);
 }
 
+.stock-btn:hover,
 .status-toggle .status-btn:hover,
 .status-toggle .status-btn-active:hover {
   background-color: var(--accent);
@@ -759,4 +761,8 @@ nav {
 .status-menu {
   background-color: var(--input-bg);
   overflow: hidden;
+}
+
+.stock-modal {
+  background-color: var(--background);
 }

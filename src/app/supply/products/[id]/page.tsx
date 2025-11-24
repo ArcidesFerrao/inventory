@@ -52,7 +52,7 @@ export default async function ProductPage(props: { params: Params }) {
             </div>
             <div className="flex flex-col gap-2">
               <p>Stock</p>
-              <div>
+              <div className="flex items-center gap-2">
                 <h2 className="font-bold text-xl">{product?.stock}</h2>
                 <StockManagementButton
                   supplierProductId={id}
