@@ -1,6 +1,7 @@
 import { StockChange } from "@/generated/prisma/enums";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 interface ModalProps {
   isOpen: boolean;
@@ -63,7 +64,7 @@ export function StockMovementModal({
     setError("");
 
     try {
-      const response = await fetch("/api/stock-movements", {
+      const response = await fetch("/api/stock-movement", {
         method: "POST",
         headers: {
           "Content-Type": "apprication/json",
@@ -84,6 +85,7 @@ export function StockMovementModal({
       setQuantity(0);
       setNotes("");
       onClose();
+      toast.success("Stock Recorder Successfully!");
       router.refresh();
     } catch (error) {
       setError(

@@ -1,5 +1,6 @@
 import { SupplierProductDeleteButton } from "@/components/DeleteButton";
 import StatusToggle from "@/components/StatusToggle";
+import StockHistory from "@/components/StockHistory";
 import StockManagementButton from "@/components/StockManagementButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
@@ -98,6 +99,7 @@ export default async function ProductPage(props: { params: Params }) {
           </p>
         </div>
       </div>
+      <StockHistory supplierProductId={id} />
     </div>
   );
 }
