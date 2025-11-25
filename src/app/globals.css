@@ -312,9 +312,9 @@ fieldset div {
   height: fit-content;
 }
 
+/* .delete-button:hover, */
 .user-header a:hover,
 .complete-btn:hover,
-.delete-button:hover,
 .edit-button:hover,
 .submit-button:hover,
 .add-product:hover {
@@ -381,7 +381,7 @@ nav {
   background-color: var(--divider);
 }
 
-.delete-button,
+/* .delete-button, */
 .edit-button {
   background-color: var(--dash-bg);
   border-radius: 0.4rem;
@@ -393,10 +393,9 @@ nav {
   text-decoration: underline;
 }
 
-.delivery-header a,
-.user-page button:hover {
+/* .user-page button:hover {
   background-color: rgba(220, 20, 60, 0.7);
-}
+} */
 
 .user-page {
   border-radius: 0.4rem;
@@ -765,4 +764,45 @@ nav {
 
 .stock-modal {
   background-color: var(--background);
+}
+
+.cancel-btn-modal {
+  padding: 0.4rem 1rem;
+  border-radius: 0.2rem;
+  border: solid 1px var(--dash-bg);
+  background-color: var(--dash-bg);
+  height: fit-content;
+}
+
+.edit-button,
+.delete-button,
+.cancel-btn,
+.logout-button button,
+.delivery-header a {
+  padding: 0.4rem 1rem;
+  border-radius: 0.2rem;
+  border: solid 1px var(--input-bg);
+  /* background-color: var(--input-bg); */
+  /* background-color: rgba(220, 20, 60, 0.7); */
+  background-color: var(--input-bg);
+  height: fit-content;
+}
+
+.close-modal:hover,
+.cancel-btn-modal:hover,
+.cancel-btn:hover,
+.delete-button:hover,
+.logout-button button:hover,
+.delivery-header a:hover {
+  translate: 0 -2px;
+  border-radius: 0;
+  border: solid 1px var(--foreground);
+  background-color: rgba(220, 20, 60, 0.7);
+}
+
+.close-modal {
+  padding: 0.3rem 0.7rem;
+  background-color: var(--dash-bg);
+  border: solid 1px var(--input-bg);
+  border-radius: 50%;
 }

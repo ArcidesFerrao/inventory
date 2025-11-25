@@ -37,7 +37,10 @@ export default async function NewDeliveryPage(props: { params: Params }) {
             </p>
           </div>
         </div>
-        <Link className="px-4 py-1 rounded-sm" href={`/supply/orders/${id}`}>
+        <Link
+          className="cancel-btn px-4 py-1 rounded-sm"
+          href={`/supply/orders/${id}`}
+        >
           Cancel
         </Link>
       </div>

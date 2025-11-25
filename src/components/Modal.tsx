@@ -111,7 +111,9 @@ export function StockMovementModal({
       <div className="rounded-sm w-full p-5">
         <div className="flex justify-between items-center">
           <h2>Record Stock Movement</h2>
-          <button onClick={onClose}>x</button>
+          <button className="close-modal" onClick={onClose}>
+            x
+          </button>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -185,13 +187,13 @@ export function StockMovementModal({
 
           <div className="grid grid-cols-2 py-2 gap-2 ">
             <button
-              className="px-4 py-2 border rounded hover:text-gray-800 hover:bg-gray-100"
+              className="cancel-btn-modal"
               onClick={onClose}
               disabled={loading}
             >
               Cancel
             </button>
-            <button className="px-4 py-2 border rounded  hover:text-gray-800 hover:bg-gray-100">
+            <button className="px-4 py-1 border rounded-sm  hover:text-gray-800 hover:bg-gray-100">
               {loading ? "Recording..." : "Record Movement"}
             </button>
           </div>
