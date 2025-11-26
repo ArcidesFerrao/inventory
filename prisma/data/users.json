@@ -1,0 +1,29 @@
+[
+    {
+        "id": "c05864e2-c993-496a-961f-186bca6b6ba5",
+        "email": "cidesferrao@gmail.com",
+        "name": "Arcides Henriques Ferrao",
+        "hashedPassword": "$2b$12$C8EwmYftgjHivg8XaaZpPuuL9esBTPkfu203O6QXg05q2Jy3B388i",
+        "phonenumber": "258852740554",
+        "role": "ADMIN",
+        "createdAt": "2025-11-22T18:57:40.746Z"
+    },
+    {
+        "id": "d063a735-35ff-4584-8a73-5676389274a9",
+        "email": "sara@test.com",
+        "name": "Sara Test",
+        "hashedPassword": "$2b$12$BwKtskfzVScLQQt3wq99reC7QCbJpM5YJF/PBhLJef0onoPaNR3fK",
+        "phonenumber": "258801472583",
+        "role": "SERVICE",
+        "createdAt": "2025-11-21T12:52:13.921Z"
+    },
+    {
+        "id": "949851cc-b869-40b4-92e4-801cee6f11f0",
+        "email": "peter@jim.com",
+        "name": "Peter Jim",
+        "hashedPassword": "$2b$12$8VDumnet1yQ4YjXvxbkHkOQjnPLybGNse4AyEebD5V7WdAlPLV6JK",
+        "phonenumber": "258803692581",
+        "role": "SUPPLIER",
+        "createdAt": "2025-11-21T13:48:13.502Z"
+    }
+]

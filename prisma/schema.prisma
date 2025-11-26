@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -20,7 +17,7 @@ model User {
   emailVerified       DateTime?
   phoneNumber         String?       @unique
   phoneNumberVerified Boolean       @default(false)
-  role                UserRole?
+  role                UserRole
   image               String?
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
@@ -33,45 +30,84 @@ model User {
   Notification Notification[]
 }
 
-model Product {
-  id            String          @id @default(cuid())
-  name          String
-  description   String?
-  unitQty       Int
-  stock         Int?
-  price         Float?
-  critical      Int?            @default(0)
-  status        ProductStatus   @default(ACTIVE)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  categoryId    String?
-  unitId        String?
-  serviceId     String
-  type          ProductType     @default(STOCK)
-  MenuItems     RecipeItem[]    @relation("MenuItems")
-  StockItems    RecipeItem[]    @relation("StockItems")
-  Unit          Unit?           @relation(fields: [unitId], references: [id])
-  Category      Category?       @relation(fields: [categoryId], references: [id])
-  Service       Service         @relation(fields: [serviceId], references: [id])
-  SaleItem      SaleItem[]
-  PurchaseItem  PurchaseItem[]
-  stockMovement StockMovement[]
+model Item {
+  id             String          @id @default(cuid())
+  name           String
+  description    String?
+  unitQty        Int
+  stock          Int?
+  price          Float?
+  critical       Int?            @default(0)
+  status         ItemStatus      @default(ACTIVE)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  categoryId     String?
+  unitId         String?
+  serviceId      String
+  type           ItemType        @default(SERVICE)
+  SaleItem       SaleItem[]
+  PurchaseItem   PurchaseItem[]
+  stockMovement  StockMovement[]
+  CatalogItems   RecipeItem[]    @relation("CatalogItems")
+  unit           Unit?           @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  service        Service         @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  deletedAt      DateTime?
+  priceHistories PriceHistory[]
+
+  @@index([deletedAt])
+  @@index([serviceId, status])
+}
+
+model StockItem {
+  id             String          @id @default(cuid())
+  name           String
+  description    String?
+  unitQty        Int
+  stock          Int?
+  price          Float?
+  cost           Float?
+  supplierId     String
+  unitId         String?
+  categoryId     String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+  status         ItemStatus      @default(ACTIVE)
+  PurchaseItem   PurchaseItem[]
+  OrderItem      OrderItem[]
+  StockMovement  StockMovement[]
+  SaleItem       SaleItem[]
+  priceHistories PriceHistory[]
+  StockItems     RecipeItem[]    @relation("StockItems")
+  unit           Unit?           @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  supplier       Supplier        @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@index([deletedAt])
+  @@index([supplierId]) // list products per supplier
+  @@index([status]) // filter by active/inactive
+  @@index([name]) // search/autocomplete
+  @@index([unitId])
 }
 
 model RecipeItem {
-  id       String  @id @default(cuid())
-  menuId   String
-  stockId  String
-  quantity Int
-  menu     Product @relation("MenuItems", fields: [menuId], references: [id])
-  stock    Product @relation("StockItems", fields: [stockId], references: [id], onDelete: Cascade)
+  id          String     @id @default(cuid())
+  quantity    Int
+  itemId      String
+  stockItemId String
+  catalogItem Item?      @relation("CatalogItems", fields: [itemId], references: [id], onDelete: Cascade)
+  stockItem   StockItem? @relation("StockItems", fields: [stockItemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
+  @@index([stockItemId])
 }
 
 model Supplier {
   id              String             @id @default(cuid())
-  name            String // company name
+  businessName    String // company name
   email           String?            @unique
-  phone           String?            @unique
+  phoneNumber     String?            @unique
   address         String?
   businessReg     String?            @unique //Business registration number
   description     String?
@@ -83,50 +119,24 @@ model Supplier {
   updatedAt       DateTime           @updatedAt
   userId          String             @unique
   user            User               @relation(fields: [userId], references: [id])
-  products        SupplierProduct[]
-  customers       SupplierCustomer[]
-  SupplierOrder   SupplierOrder[]
+  StockItems      StockItem[]
+  Customers       SupplierCustomer[]
   ActivityLog     ActivityLog[]
 
-  Sale     Sale[]
-  Category Category[]
-}
-
-model SupplierProduct {
-  id            String          @id @default(cuid())
-  name          String
-  description   String?
-  unitQty       Int
-  stock         Int?
-  price         Float?
-  cost          Float?
-  supplierId    String
-  unitId        String?
-  status        ProductStatus   @default(ACTIVE)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  Unit          Unit?           @relation(fields: [unitId], references: [id])
-  supplier      Supplier        @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  PurchaseItem  PurchaseItem[]
-  OrderItem     OrderItem[]
-  StockMovement StockMovement[]
-  SaleItem      SaleItem[]
-  Category      Category?       @relation(fields: [categoryId], references: [id])
-  categoryId    String?
-
-  @@index([supplierId]) // list products per supplier
-  @@index([status]) // filter by active/inactive
-  @@index([name]) // search/autocomplete
-  @@index([unitId])
+  Sale          Sale[]
+  Category      Category[]
+  orders        Order[]
+  notifications Notification[]
 }
 
 model SupplierCustomer {
   id         String   @id @default(cuid())
   supplierId String
   serviceId  String
-  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
   Order      Order[]
-  Service    Service  @relation(fields: [serviceId], references: [id])
+  service    Service  @relation(fields: [serviceId], references: [id])
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
 
   @@unique([supplierId, serviceId])
 }
@@ -135,51 +145,55 @@ model Service {
   id                String             @id @default(cuid())
   userId            String             @unique
   businessName      String
+  phoneNumber       String             @unique
   location          String
-  businessType      BusinessType
   description       String?
   operationHours    String?
   website           String
-  ActivityLog       ActivityLog[]
-  products          Product[]
-  purchases         Purchase[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  businessType      BusinessType
+  items             Item[]
   sales             Sale[]
   orders            Order[]
-  supplierCustomers SupplierCustomer[]
-  user              User               @relation(fields: [userId], references: [id])
+  purchases         Purchase[]
   Category          Category[]
+  ActivityLog       ActivityLog[]
+  supplierCustomers SupplierCustomer[]
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications     Notification[]
 
   @@unique([businessName, location])
 }
 
 model Sale {
   id          String     @id @default(ulid())
-  date        DateTime   @default(now())
+  timestamp   DateTime   @default(now())
   total       Float
   cogs        Float      @default(0)
   paymentType String
   supplierId  String?
   serviceId   String?
   SaleItem    SaleItem[]
-  Service     Service?   @relation(fields: [serviceId], references: [id])
-  Supplier    Supplier?  @relation(fields: [supplierId], references: [id])
+  Service     Service?   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  Supplier    Supplier?  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
 }
 
 model SaleItem {
-  id                String           @id @default(ulid())
-  saleId            String
-  productId         String?
-  supplierProductId String?
-  quantity          Int
-  price             Float
-  product           Product?         @relation(fields: [productId], references: [id])
-  sale              Sale             @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  supplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
+  id          String     @id @default(ulid())
+  saleId      String
+  itemId      String?
+  stockItemId String?
+  quantity    Int
+  price       Float
+  item        Item?      @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  sale        Sale       @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  stockItem   StockItem? @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
 }
 
 model Purchase {
   id           String         @id @default(ulid())
-  date         DateTime       @default(now())
+  timestamp    DateTime       @default(now())
   total        Float
   sourceType   String         @default("DIRECT") // "DIRECT" | "ORDER"
   paymentType  String
@@ -190,70 +204,62 @@ model Purchase {
 }
 
 model PurchaseItem {
-  id                String           @id @default(ulid())
-  productId         String?
-  purchaseId        String
-  supplierProductId String?
-  stock             Int
-  price             Float
-  quantity          Int              @default(1)
-  unitCost          Float            @default(0)
-  totalCost         Float            @default(0)
-  product           Product?         @relation(fields: [productId], references: [id])
-  supplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
-  purchase          Purchase         @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  id          String     @id @default(ulid())
+  itemId      String?
+  purchaseId  String
+  stockItemId String?
+  stock       Int
+  price       Float
+  quantity    Int        @default(1)
+  unitCost    Float      @default(0)
+  totalCost   Float      @default(0)
+  stockItem   StockItem? @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+  purchase    Purchase   @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  item        Item?      @relation(fields: [itemId], references: [id], onDelete: SetNull)
 }
 
 model Order {
-  id                  String            @id @default(ulid())
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-  requestedStartDate  DateTime
-  requestedEndDate    DateTime
-  notes               String?
-  total               Float
-  status              OrderStatus       @default(DRAFT)
-  paymentType         String
-  supplierCustomerId  String?
-  serviceId           String?
-  confirmedDeliveries Delivery[]
-  supplierCustomer    SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
-  supplierOrders      SupplierOrder[]
-  Service             Service?          @relation(fields: [serviceId], references: [id])
+  id                 String            @id @default(ulid())
+  timestamp          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  requestedStartDate DateTime
+  requestedEndDate   DateTime
+  notes              String?
+  total              Float             @default(0)
+  status             OrderStatus       @default(DRAFT)
+  paymentType        String
+  supplierCustomerId String?
+  serviceId          String?
+  supplierId         String
+  supplier           Supplier          @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  delivery           Delivery?
+  supplierCustomer   SupplierCustomer? @relation(fields: [supplierCustomerId], references: [id])
+  Service            Service?          @relation(fields: [serviceId], references: [id])
+  orderItems         OrderItem[]
 
   @@index([supplierCustomerId])
-  @@index([status])
-}
-
-model SupplierOrder {
-  id         String              @id @default(ulid())
-  orderId    String
-  supplierId String
-  status     SupplierOrderStatus @default(PENDING)
-  items      OrderItem[]
-  order      Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  supplier   Supplier            @relation(fields: [supplierId], references: [id])
-
-  @@unique([orderId, supplierId])
+  @@index([supplierId, status])
+  @@index([serviceId, timestamp])
 }
 
 model OrderItem {
-  id                String          @id @default(ulid())
-  supplierOrderId   String
-  supplierProductId String
-  orderedQty        Int
-  deliveredQty      Int
-  price             Float
-  product           SupplierProduct @relation(fields: [supplierProductId], references: [id])
-  supplierOrder     SupplierOrder   @relation(fields: [supplierOrderId], references: [id], onDelete: Cascade)
-  deliveries        DeliveryItem[]
+  id           String         @id @default(ulid())
+  orderId      String
+  stockItemId  String
+  orderedQty   Int
+  deliveredQty Int
+  price        Float
+  stockItem    StockItem      @relation(fields: [stockItemId], references: [id], onDelete: Restrict)
+  order        Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  deliveries   DeliveryItem[]
 }
 
 model Delivery {
   id            String         @id @default(ulid())
-  orderId       String
+  orderId       String         @unique
   scheduledAt   DateTime
   deliveredAt   DateTime?
+  createdAt     DateTime       @default(now())
   notes         String?
   status        DeliveryStatus @default(PENDING)
   accepted      Boolean?
@@ -295,16 +301,32 @@ model ActivityLog {
 }
 
 model StockMovement {
-  id                String           @id @default(cuid())
-  productId         String?
-  supplierProductId String?
-  changeType        StockChange
-  quantity          Int
-  referenceId       String?
-  notes             String?
-  timestamp         DateTime         @default(now())
-  product           Product?         @relation(fields: [productId], references: [id])
-  supplierProduct   SupplierProduct? @relation(fields: [supplierProductId], references: [id])
+  id          String      @id @default(cuid())
+  itemId      String?
+  stockItemId String?
+  changeType  StockChange
+  quantity    Int
+  referenceId String?
+  notes       String?
+  timestamp   DateTime    @default(now())
+  item        Item?       @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  stockItem   StockItem?  @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+}
+
+model PriceHistory {
+  id          String   @id @default(cuid())
+  itemId      String?
+  stockItemId String?
+  oldPrice    Float
+  newPrice    Float
+  timestamp   DateTime @default(now())
+  reason      String?
+
+  item      Item?      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  stockItem StockItem? @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, timestamp])
+  @@index([stockItemId, timestamp])
 }
 
 model Category {
@@ -317,20 +339,19 @@ model Category {
   supplierId String?
   serviceId  String?
 
-  supplier          Supplier?         @relation(fields: [supplierId], references: [id])
-  service           Service?          @relation(fields: [serviceId], references: [id])
-  products          Product[]
-  SupplierProduct   SupplierProduct[]
-  supplierProductId String?
-  createdAt         DateTime          @default(now())
+  supplier  Supplier?   @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  service   Service?    @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  Item      Item[]
+  StockItem StockItem[]
+  createdAt DateTime    @default(now())
 }
 
 model Unit {
-  id               String            @id @default(ulid())
-  name             String            @unique
-  description      String?
-  products         Product[]
-  supplierProducts SupplierProduct[]
+  id          String      @id @default(ulid())
+  name        String      @unique
+  description String?
+  items       Item[]
+  stockItems  StockItem[]
 }
 
 model AuditLog {
@@ -358,7 +379,9 @@ model Notification {
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id])
+  service  Service?  @relation(fields: [serviceId], references: [id])
+  supplier Supplier? @relation(fields: [supplierId], references: [id])
 }
 
 enum StockChange {
@@ -378,16 +401,14 @@ enum ProfileStatus {
   ELITE
 }
 
-enum ProductStatus {
+enum ItemStatus {
   ACTIVE
-  DRAFT
-  OUT_OF_STOCK
+  INACTIVE
 }
 
-enum ProductType {
+enum ItemType {
   SERVICE
   STOCK
-  SUPPLY
 }
 
 enum OrderStatus {
@@ -398,16 +419,6 @@ enum OrderStatus {
   IN_DELIVERY // out for delivery
   DELIVERED // completed successfully
   CANCELLED // cancelled at any stage
-}
-
-enum SupplierOrderStatus {
-  PENDING // waiting for review
-  APPROVED // accepted by supplier
-  REJECTED // rejected by supplier
-  PARTIAL // only part can be fulfilled
-  IN_PREPARATION // preparing goods
-  COMPLETED // fulfilled and sent
-  CANCELLED // cancelled by supplier or system
 }
 
 enum DeliveryStatus {

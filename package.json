@@ -41,5 +41,9 @@
     "prisma": "^7.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "type": "module",
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.js"
   }
 }

@@ -782,8 +782,6 @@ nav {
   padding: 0.4rem 1rem;
   border-radius: 0.2rem;
   border: solid 1px var(--input-bg);
-  /* background-color: var(--input-bg); */
-  /* background-color: rgba(220, 20, 60, 0.7); */
   background-color: var(--input-bg);
   height: fit-content;
 }

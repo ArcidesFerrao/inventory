@@ -1,0 +1,27 @@
+[
+    {
+        "id": "01KASD40S7WVEW28WMSMB8GH72",
+        "name": "unit",
+        "description": "pcs"
+    },
+    {
+        "id": "01KASDDA5AW2BBP279SAP11K53",
+        "name": "kg",
+        "description": "Kilograms"
+    },
+    {
+        "id": "01KASDDSFDK64YC79VM8XA8SB5",
+        "name": "L",
+        "description": "Liters"
+    },
+    {
+        "id": "01KASDEE2RE06Y4D2XQN1DCG0P",
+        "name": "ml",
+        "description": "milliliters"
+    },
+    {
+        "id": "01KASDEP5S74KK5T5XX8SMCW52",
+        "name": "g",
+        "description": "grams"
+    }
+]

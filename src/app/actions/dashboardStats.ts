@@ -12,8 +12,8 @@ export async function getServiceDashBoardStats() {
         }
     })
 
-    const productCount = await db.product.count({
-        where: {serviceId: service?.id, type: "STOCK"}
+    const itemCount = await db.item.count({
+        where: {serviceId: service?.id, type: "SERVICE"}
     })
 
     const salesCount = await db.sale.count({
@@ -39,11 +39,11 @@ export async function getServiceDashBoardStats() {
             }
         },
         include: {
-            product: {
+            item: {
                 include: {
-                    MenuItems: {
+                CatalogItems: {
                         include:{
-                            stock: true,
+                            catalogItem: true,
                         }
                     }
                 }
@@ -53,21 +53,21 @@ export async function getServiceDashBoardStats() {
 
     let totalCogs = 0
     // calculate cogs
-    for (const item of sales) {
+    for (const saleItem of sales) {
         let cogsForItem = 0
-        if (item.product) {
+        if (saleItem.item) {
 
-            if (item.product?.MenuItems || item.product.MenuItems.length > 0) {
-                for (const recipe of item.product.MenuItems) {
-                    cogsForItem += recipe.quantity * (recipe.stock.price || 0);
+            if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
+                for (const recipe of saleItem.item.CatalogItems) {
+                    cogsForItem += recipe.quantity * (recipe.catalogItem?.price || 0);
                 }
             } else {
-                cogsForItem += item.product.price || 0;
+                cogsForItem += saleItem.item.price || 0;
             }
         } else {
-            console.warn(`SaleItem ${item.id} has no menu items`)
+            console.warn(`SaleItem ${saleItem.id} has no menu items`)
         }
-        cogsForItem *= item.quantity;
+        cogsForItem *= saleItem.quantity;
         totalCogs += cogsForItem;
     }
     const earnings = totalEarnings._sum.total || 0;
@@ -83,8 +83,8 @@ export async function getServiceDashBoardStats() {
     const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
     const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases) * 100 : 0;
     
-    const mostBoughtProducts = await db.saleItem.groupBy({
-        by: ['productId'],
+    const mostPaidItems = await db.saleItem.groupBy({
+        by: ['itemId'],
         where: {
             sale: { serviceId: service?.id }
         },
@@ -99,20 +99,20 @@ export async function getServiceDashBoardStats() {
         take: 3
     })
 
-    const topProducts = await Promise.all(mostBoughtProducts.map(async (item) => {
-        if (!item.productId) return
+    const topItems = await Promise.all(mostPaidItems.map(async (i) => {
+        if (!i.itemId) return
 
-        const product = await db.product.findUnique({
-            where: { id: item.productId }
+        const item = await db.item.findUnique({
+            where: { id: i.itemId }
         })
         return {
-            ...product,
-            quantity: item._sum.quantity
+            ...item,
+            quantity: i._sum.quantity
         }
     }))
     
 
-    return { service: service?.businessName, productCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topProducts };
+    return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems };
 }
 
 
@@ -127,7 +127,7 @@ export async function getSupplierDashBoardStats() {
         },
         select: {
             id: true,
-            name: true,
+            businessName: true,
         },
     });
     
@@ -135,7 +135,7 @@ export async function getSupplierDashBoardStats() {
     if (!supplier?.id) return null
     const supplierId = supplier.id;
 
-    const productCount = await db.supplierProduct.count({
+    const stockItemCount = await db.stockItem.count({
         where: { supplierId }
     })
 
@@ -143,17 +143,13 @@ export async function getSupplierDashBoardStats() {
         where: { supplierId }
     })
 
-    const orderCount = await db.supplierOrder.count({
+    const orderCount = await db.order.count({
         where: { supplierId }
     })
 
     const totalRevenue = await db.order.aggregate({
         where: {
-            supplierOrders: {
-                some: {
-                    supplierId 
-                }
-            }
+                supplierId 
         },
         _sum: {
             total: true,
@@ -170,10 +166,10 @@ export async function getSupplierDashBoardStats() {
     const averageOrderValue = orderCount > 0 ? earnings / orderCount : 0;
     const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
 
-    const mostOrderedProducts = await db.orderItem.groupBy({
-        by: ['supplierProductId'],
+    const mostOrderedItems = await db.orderItem.groupBy({
+        by: ['stockItemId'],
         where: {
-            supplierOrder: {
+            order: {
                 supplierId
             }
         },
@@ -188,10 +184,10 @@ export async function getSupplierDashBoardStats() {
         take: 3
     })
 
-    const topProducts = await Promise.all(mostOrderedProducts.map(async (item) => {
-        const product = await db.supplierProduct.findUnique({
+    const topitems = await Promise.all(mostOrderedItems.map(async (item) => {
+        const stockItem = await db.stockItem.findUnique({
             where: {
-                id: item.supplierProductId!
+                id: item.stockItemId!
             },
             select: {
                 id: true,
@@ -201,21 +197,21 @@ export async function getSupplierDashBoardStats() {
         });
 
         return {
-            ...product,
-            quantity: item._sum.orderedQty
+            ...stockItem,
+            quantity: item._sum?.orderedQty ?? 0
         }
     }))
 
     return { 
-        supplier: supplier.name,
-        productCount, 
+        supplier: supplier.businessName,
+        stockItemCount, 
         customerCount, 
         orderCount, 
         revenue: earnings, 
         profit, 
         averageOrderValue, 
         grossMargin, 
-        topProducts 
+        topitems 
     };
 }
 
@@ -228,20 +224,20 @@ export async function getAdminStats() {
     const [
         totalUsers,
         totalOrders,
-        totalProducts,
+        totalItems,
         totalServices,
         totalSuppliers,
         totalSales
     ] = await Promise.all([
         db.user.count(),
         db.order.count(),
-        db.product.count(),
+        db.item.count(),
         db.service.count(),
         db.supplier.count(),
         db.sale.count()
     ])
 
-    const topSuppliers = await db.supplierOrder.groupBy({
+    const topSuppliers = await db.order.groupBy({
         by: ["supplierId"],
         _count: { id: true},
         orderBy: { _count: {
@@ -254,11 +250,11 @@ export async function getAdminStats() {
         topSuppliers.map(async (s) => {
             const supplier = await db.supplier.findUnique({
                 where: { id: s.supplierId},
-                select: { id: true, name: true}
+                select: { id: true, businessName: true}
             });
             return {
                 id: supplier?.id,
-                name: supplier?.name || "Unknown",
+                name: supplier?.businessName || "Unknown",
                 totalOrders: s._count.id
             }
         })
@@ -291,7 +287,7 @@ export async function getAdminStats() {
         totals: {
             totalUsers,
             totalOrders,
-            totalProducts,
+            totalItems,
             totalServices,
             totalSuppliers,
             totalSales
@@ -342,7 +338,7 @@ export async function getAdminUsersStats() {
                 }
             },
             orderBy: {
-                createdAt: "desc"
+                timestamp: "desc"
             },
             take: 20
         }),
@@ -367,34 +363,34 @@ export async function getAdminUsersStats() {
         },}
 }
 
-export async function getAdminProductsStats() {
+export async function getAdminItemsStats() {
     
-    const [productsData, activeProducts, inactiveProducts, supplierProductsData ] = await Promise.all([
-        db.product.findMany({
+    const [itemsData, activeItems, inactiveItems, stockItemsData ] = await Promise.all([
+        db.item.findMany({
             include: {
-                Unit: true,
-                Category: true,
+                unit: true,
+                category: true,
             }
         }),
-        db.product.count({
+        db.item.count({
             where: { status: "ACTIVE"}
         }),
-        db.product.count({ where: {
-            status: "DRAFT"
+        db.item.count({ where: {
+            status: "INACTIVE"
         }}),
-        db.supplierProduct.findMany({
+        db.stockItem.findMany({
             include: {
-                Unit: true,
-                Category: true
+                unit: true,
+                category: true
             }
         })
     ])
     
     
-   return {products: {
-        productsData,
-        activeProducts,
-        inactiveProducts,
-        supplierProductsData
+   return {items: {
+        itemsData,
+        activeItems,
+        inactiveItems,
+        stockItemsData
     }}
 }
