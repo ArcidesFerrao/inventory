@@ -19,7 +19,7 @@ export async function registerService(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
         
-        console.log("User id: ",session.user.id)
+        // console.log("User id: ",session.user.id)
         await db.service.create({
             data: {
                 userId: session.user.id,
@@ -58,11 +58,11 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
         await db.supplier.create({
             data: {
                 userId: session.user.id,
-                businessName: values.name,
+                businessName: values.businessName,
                 description: values.description,
                 specialization: values.specialization,
                 email: values.email,
-                phoneNumber: values.phone,
+                phoneNumber: values.phoneNumber,
                 address: values.address,
                 website: values.website || "",
                 establishedYear: Number(values.establishedYear),

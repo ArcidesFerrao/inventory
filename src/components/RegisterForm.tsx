@@ -22,6 +22,7 @@ export const ServiceRegisterForm = () => {
 
   const [businessName, setBusinessName] = useState("");
   const [location, setLocation] = useState("");
+  const [phone, setPhone] = useState("");
   const [description, setDescription] = useState("");
   const [website, setWebsite] = useState("");
   const [operationStart, setOperationStart] = useState("");
@@ -80,6 +81,19 @@ export const ServiceRegisterForm = () => {
         </div>
         {fields.location.allErrors && <p>{fields.location.errors}</p>}
       </div>
+      <div className="flex flex-col gap-2 w-full">
+        <div className="flex justify-between gap-2">
+          <label>Phone Number</label>
+          <input
+            type="text"
+            name="phoneNumber"
+            id="phoneNumber"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+        {fields.phoneNumber.allErrors && <p>{fields.phoneNumber.errors}</p>}
+      </div>
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <label>Description</label>
@@ -101,6 +115,9 @@ export const ServiceRegisterForm = () => {
             value={businessType}
             onChange={(e) => setBusinessType(e.target.value as BusinessType)}
           >
+            <option value="" disabled>
+              Choose type
+            </option>
             <option value="RESTAURANT">Restaurant</option>
             <option value="SHOP">Shop</option>
             <option value="STORE">Store</option>
@@ -230,7 +247,7 @@ export const SupplierRegisterForm = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        {fields.name.allErrors && <p>{fields.name.errors}</p>}
+        {fields.businessName.allErrors && <p>{fields.businessName.errors}</p>}
       </div>
       <div className="flex flex-col gap-2 w-full">
         <div className="flex flex-col gap-2">
@@ -256,7 +273,7 @@ export const SupplierRegisterForm = () => {
             onChange={(e) => setPhone(e.target.value)}
           />
         </div>
-        {fields.phone.allErrors && <p>{fields.phone.errors}</p>}
+        {fields.phoneNumber.allErrors && <p>{fields.phoneNumber.errors}</p>}
       </div>
       <div className="flex flex-col gap-2 w-full">
         <div className="flex flex-col gap-2">

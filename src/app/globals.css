@@ -189,8 +189,10 @@ table {
   border-radius: 0.2rem;
 }
 
+.register-form select,
 textarea,
-input {
+input,
+select {
   background-color: var(--dash-bg);
   padding: 0.4rem 0.8rem;
   border-radius: 0.2rem;
@@ -199,6 +201,7 @@ input {
 .reg-form textarea,
 .reg-form input,
 .signup-form input,
+.signup-form select,
 .login-form input {
   background-color: var(--accent);
   padding: 0.4rem 0.8rem;

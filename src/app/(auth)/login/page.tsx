@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
-
+  const [loading, setLoading] = useState(false);
   const [loginValue, setLoginValue] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     const res = await signIn("credentials", {
       redirect: false,
       loginValue,
@@ -33,14 +33,21 @@ export default function LoginPage() {
     });
     // console.log(loginValue, password);
 
-    if (res?.error) {
-      setError(`Invalid credentials: ${res.error}`);
+    if (res?.error !== null) {
+      console.error(res.error);
+      setError(res?.error ?? "");
+      setLoading(false);
     } else {
       setError("");
       if (session?.user.role === "SERVICE") {
+        setLoading(false);
         router.push("/service");
-      } else {
+      } else if (session?.user.role === "SUPPLIER") {
+        setLoading(false);
         router.push("/supplier");
+      } else {
+        setLoading(false);
+        router.push("/");
       }
     }
   };
@@ -72,8 +79,17 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <input type="submit" value="Sign In" />
-      {error && error !== "CredentialsSignIn" && <p>{error}</p>}
+      <input type="submit" value={loading ? "Signing in..." : "Sign In"} />
+      {error && (
+        <>
+          {error === "CredentialsSignin" ? (
+            // {error === "CredentialsSignIn" ? (
+            <p className="text-red-500">Invalid Password or Email.</p>
+          ) : (
+            <p>{error}</p>
+          )}
+        </>
+      )}
       <p>
         Dont have an account? <Link href="/signup">Create an account</Link>
       </p>
