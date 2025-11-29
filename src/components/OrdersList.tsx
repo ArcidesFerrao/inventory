@@ -63,7 +63,7 @@ export const OrdersList = ({
       }, 300);
     }
 
-    console.log(result.error ? result.error : `Order placed: ${result.order}`);
+    // console.log(result.error ? result.error : `Order placed: ${result.order}`);
   };
 
   const handleIncrement = (id: string) => {

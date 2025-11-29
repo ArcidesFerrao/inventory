@@ -184,7 +184,9 @@ model ServiceStockItem {
   status      ItemStatus   @default(ACTIVE)
   service     Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   stockItem   StockItem    @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
 
+  @@unique([serviceId, stockItemId])
   @@index([serviceId, status])
   @@index([stockItemId])
 }
@@ -266,15 +268,17 @@ model Order {
 }
 
 model OrderItem {
-  id           String         @id @default(ulid())
-  orderId      String
-  stockItemId  String
-  orderedQty   Int
-  deliveredQty Int
-  price        Float
-  stockItem    StockItem      @relation(fields: [stockItemId], references: [id], onDelete: Restrict)
-  order        Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  deliveries   DeliveryItem[]
+  id                 String           @id @default(ulid())
+  orderId            String
+  stockItemId        String
+  serviceStockItemId String
+  orderedQty         Int
+  deliveredQty       Int
+  price              Float
+  stockItem          StockItem        @relation(fields: [stockItemId], references: [id], onDelete: Restrict)
+  serviceStockItem   ServiceStockItem @relation(fields: [serviceStockItemId], references: [id], onDelete: Restrict)
+  order              Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  deliveries         DeliveryItem[]
 }
 
 model Delivery {

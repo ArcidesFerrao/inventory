@@ -1,8 +1,14 @@
 import { ServiceOrder } from "@/components/ServiceOrder";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function NewOrder() {
+  const session = await auth();
+
+  if (!session?.user.serviceId) redirect("/login");
+
   const suppliers = await db.supplier.findMany({
     include: {
       StockItems: {
@@ -27,7 +33,10 @@ export default async function NewOrder() {
           </Link>
         </div>
         {suppliers.length > 0 ? (
-          <ServiceOrder suppliers={suppliers} />
+          <ServiceOrder
+            serviceId={session.user.serviceId}
+            suppliers={suppliers}
+          />
         ) : (
           <p>No suppliers found...</p>
         )}

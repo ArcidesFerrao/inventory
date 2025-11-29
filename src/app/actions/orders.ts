@@ -46,6 +46,48 @@ export async function createOrder(
         
 
     try {
+
+        const serviceStockItems = await Promise.all(
+            items.map(async (item) => {
+                const existingByName = await db.serviceStockItem.findFirst({
+                    where: {
+                        serviceId,
+                        stockItem: {
+                            name: item.name
+                        }
+                    },
+                    include: {
+                        stockItem: true
+                    }
+                })
+
+                if (existingByName) {
+                    return existingByName
+                }
+
+                return await db.serviceStockItem.upsert({
+                    where: {
+                        serviceId_stockItemId: {
+                            serviceId,
+                            stockItemId: item.id
+                        }
+                    },
+                    update: {
+                        updatedAt: new Date()
+                    },
+                    create: {
+                        serviceId,
+                        stockItemId: item.id,
+                        stock: 0,
+                        cost: item.cost || item.price || 0,
+                        status: "ACTIVE"
+                    },
+                    include: {
+                        stockItem: true
+                    }
+                });
+            })
+        )
         const order = await db.order.create({
             data: {
                 total,
@@ -57,12 +99,14 @@ export async function createOrder(
                 status: "DRAFT",
                 paymentType: "CASH",
                 orderItems: {
-                    create: items.map((so) => ({
+                    create: items.map((so, index) => ({
                         orderedQty: so.quantity,
                         price: so.price || 0,
                         deliveredQty: 0,
                         stockItemId: so.id,
-                        stockItem: so,
+                        serviceStockItemId: serviceStockItems[index].id
+                        // stockItem: so,
+
                     }))
                 },
             },
@@ -90,7 +134,8 @@ export async function createOrder(
             `Order totaling MZN ${total.toFixed(2)} created`,
             {
                 total,
-                items:  items.map((item) => ({
+                timeStamp: order.timestamp,
+                items:  items.map((item: StockItem & {quantity: number}) => ({
                         name: item.name,
                         stockItemId: item.id,
                         orderedQty: item.quantity,
@@ -117,6 +162,99 @@ export async function createOrder(
         return { success: false, error: "Failed to create order" };
     }
 }
+// export async function createOrder(
+//     items: (StockItem & {
+//         quantity: number
+//     })[], 
+//     serviceId: string,
+//     supplierId: string,
+//     startDate: string,
+//     endDate: string,
+//     notes?: string
+// ) {    
+//     const session = await auth()
+
+//     if (!session?.user) redirect("/login");
+
+//     if (items.length === 0) return {success: false, error: "No order items"}
+
+//     const total = items.reduce(
+//             (sub, item) => sub + ((item.price ?? 0) * item.quantity), 0
+//         );
+        
+
+//     try {
+//         const order = await db.order.create({
+//             data: {
+//                 total,
+//                 notes: notes || "",
+//                 serviceId,
+//                 supplierId,
+//                 requestedEndDate: new Date (endDate),
+//                 requestedStartDate: new Date (startDate),
+//                 status: "DRAFT",
+//                 paymentType: "CASH",
+//                 orderItems: {
+//                     create: items.map((so) => ({
+//                         orderedQty: so.quantity,
+//                         price: so.price || 0,
+//                         deliveredQty: 0,
+//                         stockItemId: so.id,
+//                         stockItem: so,
+//                     }))
+//                 },
+//             },
+//             include: {
+//                 supplier: {
+//                     select: {
+//                         userId: true
+//                     }
+//                 },
+//                 Service: {
+//                     select: {
+//                         businessName: true
+//                     }
+//                 }
+
+//             }
+//         });
+
+//         await logActivity(
+//             order.serviceId,
+//             null,
+//             "CREATE",
+//             "Order",
+//             order.id,
+//             `Order totaling MZN ${total.toFixed(2)} created`,
+//             {
+//                 total,
+//                 items:  items.map((item) => ({
+//                         name: item.name,
+//                         stockItemId: item.id,
+//                         orderedQty: item.quantity,
+//                         price: item.price
+//                     }))
+                
+//             },
+//             null,
+//             'INFO',
+//             null
+//         );
+        
+//         const notification = await createNotification({
+//             userId: order.supplier.userId,
+//             type: "ORDER",
+//             title: "New Order",
+//             message: `${order.Service?.businessName} placed a new order.`,
+//             link: `/supply/orders/${order.id}`
+//         })
+//         console.log("Created notification: ", notification)
+//         return { success: true, order};
+//     } catch (error) {
+//         console.error("Error creating order:", error);
+//         return { success: false, error: "Failed to create order" };
+//     }
+// }
 
 
 export async function acceptOrder({ orderId}: { orderId: string;}) {

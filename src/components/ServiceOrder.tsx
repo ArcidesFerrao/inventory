@@ -5,15 +5,20 @@ import { useState } from "react";
 import { OrdersList } from "./OrdersList";
 
 export const ServiceOrder = ({
+  serviceId,
   suppliers,
 }: {
+  serviceId: string;
   suppliers: SupplierWithItems[];
 }) => {
   const [toggleSupplier, setToggleSupplier] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const openSupplier = (supplierId: string) => {
-    setToggleSupplier(supplierId);
+    const supplier = suppliers.find((s) => s.id === supplierId);
+    if (supplier && supplier.StockItems.length > 0) {
+      setToggleSupplier(supplierId);
+    }
   };
 
   const closeSupplier = () => {
@@ -84,7 +89,7 @@ export const ServiceOrder = ({
               key={supplier.id}
               initialItems={supplier.StockItems}
               supplierId={supplier.id}
-              serviceId=""
+              serviceId={serviceId}
             />
           )}
         </div>

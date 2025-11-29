@@ -102,7 +102,7 @@ export function StockMovementModal({
     if (changeType === "PURCHASE" || changeType === "ADJUSTMENT") {
       return currentStock + Math.abs(quantity);
     }
-    return currentStock + Math.abs(quantity);
+    return currentStock - Math.abs(quantity);
   };
 
   if (!isOpen) return null;

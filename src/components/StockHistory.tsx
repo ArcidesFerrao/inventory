@@ -8,7 +8,7 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/stock-movement?supplierProductId=${stockItemId}`)
+    fetch(`/api/stock-movement?stockItemId=${stockItemId}`)
       .then((res) => res.json())
       .then((data) => {
         setMovements(data);

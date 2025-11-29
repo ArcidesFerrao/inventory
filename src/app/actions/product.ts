@@ -165,7 +165,7 @@ export async function createStockItem(prevState: unknown, formData: FormData) {
     const submission = parseWithZod(formData, { schema: stockItemSchema });
     if (submission.status !== "success") return submission.reply();
  
-    console.log(session);
+    // console.log(session);
     
     try {
         const values = submission.value;
