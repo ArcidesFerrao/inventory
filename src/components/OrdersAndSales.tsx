@@ -1,30 +1,23 @@
 "use client";
 
-import {
-  SupplierSaleWithItems,
-  // SupplierOrderWithOrderAndItems,
-  SupplierOrderWithOrderAndDeliveries,
-} from "@/types/types";
-import React, { useState } from "react";
+import { OrderWithStockItems, SupplierSaleWithItems } from "@/types/types";
+import { useState } from "react";
 import { SupplierSaleListItem, SupplierOrderListItem } from "./List";
+// import { Delivery, Order, OrderItem, Service } from "@/generated/prisma/client";
 
 export default function OrdersAndSales({
-  supplierOrders,
+  orders,
   sales,
 }: {
+  orders: OrderWithStockItems[];
   sales: SupplierSaleWithItems[];
-  supplierOrders: SupplierOrderWithOrderAndDeliveries[];
 }) {
   const [view, setView] = useState<"sales" | "orders">("orders");
 
-  const pendingOrders = supplierOrders.filter(
-    (order) => order.status === "PENDING"
-  );
-  const approvedOrders = supplierOrders.filter(
-    (order) => order.status === "APPROVED"
-  );
-  const deliveredOrders = supplierOrders.filter(
-    (order) => order.status === "COMPLETED"
+  const pendingOrders = orders.filter((order) => order.status === "DRAFT");
+  const approvedOrders = orders.filter((order) => order.status === "SUBMITTED");
+  const deliveredOrders = orders.filter(
+    (order) => order.status === "DELIVERED"
   );
 
   // const totalOrderedItems = supplierOrders.reduce((acc, supplierOrder) => {
@@ -62,7 +55,7 @@ export default function OrdersAndSales({
           <div className="orders-data flex justify-between">
             <div className="flex flex-col gap-1">
               <p>Total Orders</p>
-              <h2 className="text-xl font-bold">{supplierOrders.length}</h2>
+              <h2 className="text-xl font-bold">{orders.length}</h2>
             </div>
             <div className="flex flex-col  gap-1">
               <p>Pending</p>
@@ -80,26 +73,19 @@ export default function OrdersAndSales({
               <p>Total Value</p>
               <h2 className="text-xl font-bold">
                 MZN{" "}
-                {supplierOrders
-                  .filter((so) => so.status !== "REJECTED")
-                  .reduce(
-                    (acc, supplierOrder) =>
-                      acc + (supplierOrder.order?.total ?? 0),
-                    0
-                  )}
+                {orders
+                  .filter((so) => so.status !== "CANCELLED")
+                  .reduce((acc, order) => acc + (order.total ?? 0), 0)}
                 .00
               </h2>
             </div>
           </div>
-          {supplierOrders.length === 0 ? (
+          {orders.length === 0 ? (
             <p>No orders found...</p>
           ) : (
             <ul className="flex flex-col gap-2">
-              {supplierOrders.map((supplierOrder) => (
-                <SupplierOrderListItem
-                  key={supplierOrder.id}
-                  supplierOrder={supplierOrder}
-                />
+              {orders.map((order) => (
+                <SupplierOrderListItem key={order.id} order={order} />
               ))}
             </ul>
           )}

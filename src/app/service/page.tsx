@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getServiceDashBoardStats } from "../actions/dashboardStats";
-import { getProducts } from "../actions/product";
+import { getItems } from "../actions/product";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
@@ -16,7 +16,7 @@ export default async function ServicePage() {
   }
 
   const stats = await getServiceDashBoardStats();
-  const stockProducts = await getProducts(session.user.serviceId);
+  const stockProducts = await getItems(session.user.serviceId);
   const filteredProducts = stockProducts.filter(
     (product) =>
       (product.stock || product.stock == 0) &&
@@ -153,11 +153,11 @@ export default async function ServicePage() {
             </ul>
           </div>
         )}
-        {stats.topProducts.length > 0 && (
+        {stats.topItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-xl font-bold">Top Products</h2>
+            <h2 className="text-xl font-bold">Top Items</h2>
             <ul className="flex flex-col gap-1">
-              {stats.topProducts.map(
+              {stats.topItems.map(
                 (item) =>
                   item && (
                     <li key={item.id} className="flex justify-between w-60">

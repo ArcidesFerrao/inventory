@@ -5,20 +5,31 @@ import { logActivity } from "./logs";
 import { redirect } from "next/navigation";
 import { auth} from "@/lib/auth";
 import { createNotification } from "./notifications";
+import { StockItem } from "@/generated/prisma/client";
 
 
-type GroupedItems = {
-    supplierId: string;
-    items: {
-        productId: string;
-        name: string;
-        price: number;
-        quantity: number;
-    }[]
-}[];
+// type GroupedItems = {
+//     supplierId: string;
+//     items: {
+//         itemId: string;
+//         name: string;
+//         price: number;
+//         quantity: number;
+//     }[]
+// }[];
+// type Items = {
+//         id: string;
+//         name: string;
+//         price: number;
+//         quantity: number;
+// }[];
 
 export async function createOrder(
-    groupedItems: GroupedItems, 
+    items: (StockItem & {
+        quantity: number
+    })[], 
+    serviceId: string,
+    supplierId: string,
     startDate: string,
     endDate: string,
     notes?: string
@@ -27,49 +38,46 @@ export async function createOrder(
 
     if (!session?.user) redirect("/login");
 
-    if (groupedItems.length === 0) return {success: false, error: "No order items"}
+    if (items.length === 0) return {success: false, error: "No order items"}
 
-    const total = groupedItems.reduce((sum, supplierOrder) => {
-        const supplierTotal = supplierOrder.items.reduce(
-            (sub, product) => sub + (product.price * product.quantity), 0
+    const total = items.reduce(
+            (sub, item) => sub + ((item.price ?? 0) * item.quantity), 0
         );
-        return sum + supplierTotal;
-    }, 0)
+        
 
     try {
         const order = await db.order.create({
             data: {
                 total,
                 notes: notes || "",
-                serviceId: session.user.serviceId,
+                serviceId,
+                supplierId,
                 requestedEndDate: new Date (endDate),
                 requestedStartDate: new Date (startDate),
                 status: "DRAFT",
                 paymentType: "CASH",
-                supplierOrders: {
-                    create: groupedItems.map((so) => ({
-                        supplier: { 
-                            connect: { 
-                                id: so.supplierId
-                            }
-                        },
-                        items: {
-                            create: so.items.map((item) => ({
-                                supplierProductId: item.productId,
-                                orderedQty: item.quantity,
-                                price: item.price,
-                                deliveredQty: 0,
-                            }))
-                        }
+                orderItems: {
+                    create: items.map((so) => ({
+                        orderedQty: so.quantity,
+                        price: so.price || 0,
+                        deliveredQty: 0,
+                        stockItemId: so.id,
+                        stockItem: so,
                     }))
-                }
+                },
             },
             include: {
-                supplierOrders: {
-                    include: {
-                        supplier: true
+                supplier: {
+                    select: {
+                        userId: true
+                    }
+                },
+                Service: {
+                    select: {
+                        businessName: true
                     }
                 }
+
             }
         });
 
@@ -82,15 +90,13 @@ export async function createOrder(
             `Order totaling MZN ${total.toFixed(2)} created`,
             {
                 total,
-                groupedItems: groupedItems.map(i => ({
-                    supplierId: i.supplierId,
-                    items: i.items.map((item) => ({
+                items:  items.map((item) => ({
                         name: item.name,
-                        productId: item.productId,
+                        stockItemId: item.id,
                         orderedQty: item.quantity,
                         price: item.price
                     }))
-                }))
+                
             },
             null,
             'INFO',
@@ -98,29 +104,26 @@ export async function createOrder(
         );
         
         const notification = await createNotification({
-            userId: order.supplierOrders[0].supplier.userId,
+            userId: order.supplier.userId,
             type: "ORDER",
             title: "New Order",
-            message: `${session.user.name} placed a new order.`,
-            link: `/supply/orders/${order.supplierOrders[0].id}`
+            message: `${order.Service?.businessName} placed a new order.`,
+            link: `/supply/orders/${order.id}`
         })
         console.log("Created notification: ", notification)
         return { success: true, order};
     } catch (error) {
         console.error("Error creating order:", error);
         return { success: false, error: "Failed to create order" };
-        throw new Error("Failed to create order");
     }
 }
 
 
-export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: string; orderId: string;}) {
+export async function acceptOrder({ orderId}: { orderId: string;}) {
 
     try {
         const result = await db.$transaction(async (tx) => {
-            const [order, supplierOrder] = await Promise.all([
-
-                tx.order.update({
+            const order = await tx.order.update({
                     where: {
                         id: orderId
                     },
@@ -128,28 +131,18 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                         status: "SUBMITTED"
                     },
                     include: {
-                        Service: true
-                    }
-                }),
-                tx.supplierOrder.update({
-                    where: {
-                        id: supplierOrderId
-                    },
-                    data: {
-                        status: "APPROVED"
-                    },
-                    include: {
-                        supplier: true
+                        Service: true,
+                        supplier: true,
                     }
                 })
-            ])
+                
             
             if (order.serviceId) {
                 
                 await tx.supplierCustomer.upsert({
                     where: {
                         supplierId_serviceId: {
-                            supplierId: supplierOrder.supplierId,
+                            supplierId: order.supplierId,
                             serviceId: order.serviceId,
                         }
                         
@@ -163,7 +156,7 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
                     },
                     create: {
                         serviceId: order.serviceId,
-                        supplierId: supplierOrder.supplierId,
+                        supplierId: order.supplierId,
                         Order: {
                             connect: [{
                                 id: orderId
@@ -178,19 +171,19 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
             
             
             
-            return {order, supplierOrder}
+            return {order}
         }, {timeout: 15000 })
 
         await logActivity(
             result.order.serviceId,
-            result.supplierOrder.supplierId,
+            result.order.supplierId,
             "UPDATE",
             "Order",
             result.order.id,
             `Order accepted by supplier`,
             {
-                supplierOrderId,
-                update: `Order status to "Submitted" and Supplier Order to "Approved"`
+                orderId,
+                update: `Order status to "Submitted"`
             },
             null,
             'INFO',
@@ -201,7 +194,7 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
             userId: result.order.Service?.userId ?? "",
             type: "ORDER",
             title: "Order Accepted",
-            message: `${result.supplierOrder.supplier.name} accepteded the order.`,
+            message: `${result.order.supplier.businessName} accepteded the order.`,
             link: `/service/purchases/orders/${result.order.id}`
         })
             
@@ -213,37 +206,29 @@ export async function acceptOrder({supplierOrderId, orderId}: {supplierOrderId: 
     }
 }
 
-export async function denyOrder({supplierOrderId, orderId}: {supplierOrderId: string; orderId: string;}) {
+export async function denyOrder({orderId}: { orderId: string;}) {
     
     try {
         const result = await db.$transaction(async (tx) => {
-            const [order, supplierOrder] = await Promise.all([
-                tx.order.update({
+            const order = await tx.order.update({
                     where: {
                         id: orderId
                     },
                     data: {
                         status: "CANCELLED"
                     }
-                }),
-                tx.supplierOrder.update({
-                    where: {
-                        id: supplierOrderId
-                    },
-                    data: {
-                        status: "REJECTED"
-                    }
-                })
-            ])
+                });
+                
+            
             await logActivity(
                     order.serviceId,
-                    supplierOrder.supplierId,
+                    order.supplierId,
                     "UPDATE",
                     "Order",
                     order.id,
                     `Supplier denied the order`,
                     {
-                        supplierOrderId,
+                        orderId,
                         update: `Order status to "REJECTED" by the Supplier`
                     },
                     null,
@@ -251,7 +236,7 @@ export async function denyOrder({supplierOrderId, orderId}: {supplierOrderId: st
                     null
                 );
         
-            return {order, supplierOrder}
+            return {order}
         })
 
         return {success: true, ...result}

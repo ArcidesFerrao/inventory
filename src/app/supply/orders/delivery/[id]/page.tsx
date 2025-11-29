@@ -26,8 +26,7 @@ export default async function DeliveryPage(props: { params: Params }) {
         include: {
           orderItem: {
             include: {
-              supplierOrder: true,
-              product: true,
+              stockItem: true,
             },
           },
         },
@@ -101,7 +100,7 @@ export default async function DeliveryPage(props: { params: Params }) {
           {delivery?.deliveryItems.map((item) => (
             <li key={item.id}>
               <p className="text-sm font-extralight">
-                - {item.orderItem.product.name} - Qty: {item.quantity}
+                - {item.orderItem.stockItem.name} - Qty: {item.quantity}
               </p>
             </li>
           ))}
@@ -119,21 +118,9 @@ export default async function DeliveryPage(props: { params: Params }) {
           status={delivery?.status || ""}
           serviceId={delivery?.order.Service?.id || ""}
           orderId={delivery?.orderId || ""}
-          supplierOrderId={
-            delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
-          }
           role="SUPPLIER"
         />
       )}
-      {/* <CompleteDeliveryButton
-        deliveryId={delivery?.id || ""}
-        deliveryStatus={delivery?.status || ""}
-        serviceId={delivery?.order.Service?.id || ""}
-        orderId={delivery?.orderId || ""}
-        supplierOrderId={
-          delivery?.deliveryItems[0].orderItem.supplierOrderId || ""
-        }
-      /> */}
     </div>
   );
 }

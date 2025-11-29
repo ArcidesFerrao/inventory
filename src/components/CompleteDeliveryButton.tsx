@@ -10,13 +10,11 @@ export const CompleteDeliveryButton = ({
   serviceId,
   deliveryId,
   orderId,
-  supplierOrderId,
 }: {
   deliveryStatus: string;
   serviceId: string;
   deliveryId: string;
   orderId: string;
-  supplierOrderId: string;
 }) => {
   return (
     <button
@@ -25,7 +23,6 @@ export const CompleteDeliveryButton = ({
           serviceId,
           deliveryId,
           orderId,
-          supplierOrderId,
         });
       }}
       className={
@@ -40,14 +37,12 @@ export const CompleteDeliveryButton = ({
 export const ConfirmDeliveryButton = ({
   deliveryId,
   orderId,
-  supplierOrderId,
   serviceId,
   status,
   role,
 }: {
   deliveryId: string;
   orderId: string;
-  supplierOrderId: string;
   serviceId: string;
   status: string;
   role: string;
@@ -66,8 +61,7 @@ export const ConfirmDeliveryButton = ({
         ) {
           const arrivingConfirmation = await arrivedDelivery(
             orderId,
-            deliveryId,
-            supplierOrderId
+            deliveryId
           );
           if (arrivingConfirmation.success) {
             toast.success("Delivery marked as arrived.");
@@ -86,7 +80,6 @@ export const ConfirmDeliveryButton = ({
             deliveryId,
             orderId,
             serviceId,
-            supplierOrderId,
           });
 
           if (confirmation.success) {

@@ -1,97 +1,106 @@
-import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Order, OrderItem, Product, Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier,  SupplierOrder, SupplierProduct, User} from "@/generated/prisma/client";
+import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Item, StockItem, Order, OrderItem,  Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier, User, ServiceStockItem} from "@/generated/prisma/client";
 
 
-export type SaleProductWithMenuItems = Product & {
+export type SaleItemWithCatalogItems = Item & {
   quantity: number;
-  MenuItems: (RecipeItem & {
-    stock: Product
-  })[] ;
-  Category: Category | null;
+  CatalogItems: (RecipeItem & {serviceStockItem: ServiceStockItem & {
+    stockItem: StockItem
+  }})[] ;
+  category: Category | null;
 };
-export type ProductWithMenuItems = Product & {
+export type ItemWithCatalogItems = Item & {
   quantity: number;
-  MenuItems: RecipeItem[] ;
+  catalogItems: RecipeItem[] ;
   Category: Category | null;
 };
 export interface SaleProductsProps {
-  initialProducts: SaleProductWithMenuItems[];
+  initialItems: SaleItemWithCatalogItems[];
   serviceId: string;
 };
 export interface ProductsProps {
-  initialProducts: ProductWithMenuItems[];
+  initialProducts: ItemWithCatalogItems[];
   serviceId: string;
 };
 export interface FilteredProductsProps {
   initialProducts: {
-    refeicao: ProductWithMenuItems[];
-    lanche: ProductWithMenuItems[];
-    bebidas: ProductWithMenuItems[];
+    refeicao: ItemWithCatalogItems[];
+    lanche: ItemWithCatalogItems[];
+    bebidas: ItemWithCatalogItems[];
   };
   userId: string;
 };
 
-export type StockProduct = Product & {
+export type StockProduct = StockItem & {
   quantity: number;
 }
+export type ServiceStockProduct = ServiceStockItem & {
+  stockItem: StockItem;
+  quantity: number;
+  price: number
+}
 
+// export interface PurchasesProps {
+//   initialStockItems: StockProduct[];
+//   serviceId: string;
+// }
 export interface PurchasesProps {
-  initialProducts: StockProduct[];
+  initialStockItems: ServiceStockProduct[];
   serviceId: string;
 }
 
 
 export type PurchaseWithProduct = PurchaseItem & {
-  product: Product | null
-  supplierProduct: SupplierProduct | null
+  item: Item | null
+  stockItem: StockItem | null
 }
 
 export type PurchaseWithItems = Purchase & {
   PurchaseItem: PurchaseWithProduct[]
 }
 
-export type OrderWithSupplierOrders = Order & {
-  supplierOrders: SupplierOrderWithItems[]
+export type OrderWithStockItems = Order & {
+  orderItems: OrderItem[];
+  delivery: Delivery;
+  Service: Service;
+}
+export type OrderWithDelivery = Order & {
   confirmedDeliveries: Delivery[]
 }
 
-export type SupplierOrderWithItems = SupplierOrder & {
-  items: OrderItem[]
-}
-export type SupplierOrderWithOrderAndItems = SupplierOrder & {
-  order: Order & {
+
+export type OrderWithItems = Order & {
     Service: Service | null;
   } | null;
-  items: OrderItem[]
-}
-export type SupplierOrderWithOrderAndDeliveries = SupplierOrder & {
-  order: Order & {
+  
+
+export type OrderWithDeliveries = Order & {
+   
     Service: Service | null;
     confirmedDeliveries: Delivery[]
-  } | null;
-  items: OrderItem[]
-}
+  } 
+  
 
-export type ProductWithCategory = Product & {
-  Category: Category | null
+export type ItemWithCategory = Item & {
+  category: Category | null
 }
 
 export type SaleWithItems = Sale & {
   SaleItem : SaleItemWithProducts[]
 }
 export type SupplierSaleWithItems = Sale & {
-  SaleItem : SaleItemWithSupplierProducts[]
+  SaleItem : SaleItemWithStockItems[]
 }
 
 export type SaleItemWithProducts = SaleItem & {
-  product: Product | null
+  item: Item | null
 }
-export type SaleItemWithSupplierProducts = SaleItem & {
-  supplierProduct: SupplierProduct | null
+export type SaleItemWithStockItems = SaleItem & {
+  stockItem: StockItem | null
 }
 
 export type ActivityLogsWithSupplier = ActivityLog & {
   Supplier: {
-    id: string; name: string; phone: string | null;
+    id: string; businessName: string; phoneNumber: string | null;
   } | null
 }
 export type ActivityLogsWithService = ActivityLog & {
@@ -105,29 +114,29 @@ export type UserProfile = User & {
   Supplier: Supplier | null;
 }
 
-export type SupplierWithProducts = Supplier & {
-  products: SupplierProductsWithUnit[]
+export type StockItems = Supplier & {
+  products: StockItemsWithUnit[]
 }
 
-export type SupplierProductsWithUnit = SupplierProduct & {
+export type StockItemsWithUnit = StockItem & {
   supplier: Supplier
 }
 
 export type SupplierDeliveryItemsWithOrderItem = DeliveryItem & {
   orderItem: OrderItem & {
-    product: Product;
+    item: Item;
   };
 };
 export type DeliveryItemsWithOrderItem = DeliveryItem & {
   orderItem: OrderItem & {
-    product: Product;
+    stockItem: StockItem;
   };
 };
 
 export type ConfirmedDeliveryLogs = {
   deliveryId: string;
   orderId: string;
-  supplierOrderId: string;
+  stockItemId: string;
   totalItems: number;
   deliveryItems: DeliveryItemsWithOrderItem[];
 };
@@ -136,7 +145,7 @@ export type ArrivedDeliveryLogs = {
   supplierOrderId: string;
   deliveredAt: Date;
   deliveryItems: OrderItem & {
-   product: Product 
+   stockItem: StockItem 
   }[];
   
 };
@@ -165,7 +174,7 @@ export type CreateOrderLogs = {
     supplierId: string;
     items: {
       name: string,
-      productId: string,
+      itemId: string,
       orderedQty: number,
       price: number
     }[]
@@ -181,3 +190,9 @@ export type CreateSaleLogs = {
     price: number
   }[]
 }
+
+export type SupplierWithItems = Supplier & {
+  StockItems: StockItem[]
+}
+
+export type SupplierStockItems = StockItem

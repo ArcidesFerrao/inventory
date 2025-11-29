@@ -7,17 +7,17 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const AcceptButton = ({
-  supplierOrderId,
+  // supplierOrderId,
   orderId,
 }: {
-  supplierOrderId: string;
+  // supplierOrderId: string;
   orderId: string;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const handleOnClick = async () => {
     setLoading(true);
-    const acceptedOrder = await acceptOrder({ supplierOrderId, orderId });
+    const acceptedOrder = await acceptOrder({ orderId });
     if (acceptedOrder?.success) {
       toast.success("Order accepted successfully");
       router.refresh();
@@ -39,18 +39,12 @@ export const AcceptButton = ({
     </button>
   );
 };
-export const DenyButton = ({
-  supplierOrderId,
-  orderId,
-}: {
-  supplierOrderId: string;
-  orderId: string;
-}) => {
+export const DenyButton = ({ orderId }: { orderId: string }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const handleOnClick = async () => {
     setLoading(true);
-    const deniedOrder = await denyOrder({ supplierOrderId, orderId });
+    const deniedOrder = await denyOrder({ orderId });
     if (deniedOrder?.success) {
       toast.success("Order denied successfully");
       router.refresh();

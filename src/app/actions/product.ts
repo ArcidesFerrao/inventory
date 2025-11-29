@@ -2,15 +2,15 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
+import { itemSchema, stockItemSchema } from "@/schemas/schema";
 import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 
-export async function createProduct(prevState: unknown, formData: FormData) {
+export async function createItem(prevState: unknown, formData: FormData) {
     const session = await auth()
     if (!session?.user) redirect("/login");
-    const submission = parseWithZod(formData, { schema: productSchema });
+    const submission = parseWithZod(formData, { schema: itemSchema });
     if (submission.status !== "success") return submission.reply();
 
     console.log(session);
@@ -18,7 +18,7 @@ export async function createProduct(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
 
-        await db.product.create({
+        await db.item.create({
             data: {
                 name: values.name,
                 description: values.description,
@@ -30,11 +30,10 @@ export async function createProduct(prevState: unknown, formData: FormData) {
                 stock: values.stock,
                 status: "ACTIVE",
                 serviceId: values.serviceId,
-                MenuItems: {
+                CatalogItems: {
                     create: values.recipe?.map((r) => ({
                         quantity: r.quantity,
-                        stockId: r.stockId,
-                        // productId: r.stockId,
+                        serviceStockItemId: r.serviceStockItemId,
                     })) || [],
                 }
             }
@@ -42,18 +41,18 @@ export async function createProduct(prevState: unknown, formData: FormData) {
 
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
-        console.error("Failed to create Product", error);
+        console.error("Failed to create Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to create Product"]}
+            error: { general: ["Failed to create Item"]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
-export async function editProduct(prevState: unknown, formData: FormData) {
+export async function editItem(prevState: unknown, formData: FormData) {
     const session = await auth()
     if (!session?.user) redirect("/login");
-    const submission = parseWithZod(formData, { schema: productSchema });
+    const submission = parseWithZod(formData, { schema: itemSchema });
     if (submission.status !== "success") return submission.reply();
 
     console.log(session);
@@ -61,7 +60,7 @@ export async function editProduct(prevState: unknown, formData: FormData) {
         const values = submission.value;
 
 
-        await db.product.update({
+        await db.item.update({
             where: {
                 id: submission.value.id,
             },
@@ -75,13 +74,12 @@ export async function editProduct(prevState: unknown, formData: FormData) {
                 type: values.type,
                 stock: values.stock,
                 status: "ACTIVE",
-                // serviceId: session.user.serviceId,
-                MenuItems: {
+                CatalogItems: {
                     deleteMany: {},
                     create: values.recipe?.map((r) => ({
                         quantity: r.quantity,
-                        stockId: r.stockId,
-                        // productId: r.stockId,
+                        serviceStockItemId: r.serviceStockItemId,
+
                     })) || [],
                 }
             }
@@ -89,60 +87,59 @@ export async function editProduct(prevState: unknown, formData: FormData) {
 
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
-        console.error("Failed to update Product", error);
+        console.error("Failed to update Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to update Product"]}
+            error: { general: ["Failed to update Item"]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
 
-export async function getProducts(serviceId: string) {
+export async function getItems(serviceId: string) {
   try {
-    const products = await db.product.findMany(
-        {where: {
-            serviceId,
-            type: "STOCK",
+    const items = await db.item.findMany({
+            where: {
+                serviceId,
         }}
     );
-    return products;
+    return items;
   } catch (error) {
-    console.error("Failed to fetch product:", error);
+    console.error("Failed to fetch items:", error);
     return [];
   }
 }
 
 
 
-export async function getProduct({id}: {id: string}) {
+export async function getItem({id}: {id: string}) {
   try {
-    const product = await db.product.findUnique(
+    const item = await db.item.findUnique(
         {where: {
             id,
         }}
     );
-    return product;
+    return item;
   } catch (error) {
-    console.error("Failed to fetch product:", error);
+    console.error("Failed to fetch item:", error);
     return [];
   }
 }
 
-export async function getSupplierProducts(supplierId: string) {
+export async function getStockItems(supplierId: string) {
   try {
-    const products = await db.supplierProduct.findMany({
+    const stockItems = await db.stockItem.findMany({
         where: {supplierId}
     });
-    return products;
+    return stockItems;
   } catch (error) {
-    console.error("Failed to fetch product:", error);
+    console.error("Failed to fetch items:", error);
     return [];
   }
 }
-export async function getSelectedSupplierProducts(supplierId: string) {
+export async function getSelectedStockItems(supplierId: string) {
   try {
-    const products = await db.supplierProduct.findMany({
+    const stockItems = await db.stockItem.findMany({
         where: {supplierId},
         select: {
             id: true,
@@ -152,20 +149,20 @@ export async function getSelectedSupplierProducts(supplierId: string) {
         }
     }
 );
-    return products;
+    return stockItems;
   } catch (error) {
-    console.error("Failed to fetch product:", error);
+    console.error("Failed to fetch stockItems:", error);
     return [];
   }
 }
 
 
 
-export async function createSupplierProduct(prevState: unknown, formData: FormData) {
+export async function createStockItem(prevState: unknown, formData: FormData) {
     const session = await auth()
     if (!session?.user) redirect("/login");
     // if (!session?.user.supplyId) redirect("/register/supplier");
-    const submission = parseWithZod(formData, { schema: supplierProductSchema });
+    const submission = parseWithZod(formData, { schema: stockItemSchema });
     if (submission.status !== "success") return submission.reply();
  
     console.log(session);
@@ -173,7 +170,7 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
     try {
         const values = submission.value;
 
-        await db.supplierProduct.create({
+        await db.stockItem.create({
             data: {
                 name: values.name,
                 description: values.description,
@@ -190,18 +187,18 @@ export async function createSupplierProduct(prevState: unknown, formData: FormDa
 
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
-        console.error("Failed to create Supplier Product", error);
+        console.error("Failed to create Stock Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to create Supplier Product"]}
+            error: { general: ["Failed to create Stock Item"]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
-export async function editSupplierProduct(prevState: unknown, formData: FormData) {
+export async function editStockItem(prevState: unknown, formData: FormData) {
     const session = await auth()
     if (!session?.user) redirect("/login");
-    const submission = parseWithZod(formData, { schema: supplierProductSchema
+    const submission = parseWithZod(formData, { schema: stockItemSchema
         });
     if (submission.status !== "success") return submission.reply();
 
@@ -210,7 +207,7 @@ export async function editSupplierProduct(prevState: unknown, formData: FormData
         const values = submission.value;
 
 
-        await db.supplierProduct.update({
+        await db.stockItem.update({
             where: {
                 id: submission.value.id,
             },
@@ -230,38 +227,38 @@ export async function editSupplierProduct(prevState: unknown, formData: FormData
 
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
-        console.error("Failed to update Supplier Product", error);
+        console.error("Failed to update Stock Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to update Supplier Product"]}
+            error: { general: ["Failed to update Stock Item"]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
-export async function deleteSupplierProduct(supplierProductId: string) {
+export async function deleteStockItem(stockItemId: string) {
 
     try {
-        await db.supplierProduct.delete({
+        await db.stockItem.delete({
             where: {
-                id: supplierProductId,
+                id: stockItemId,
             }
         });
 
         return {status: "success"}
     } catch (error) {
-        console.error("Failed to delete Supplier Product", error);
+        console.error("Failed to delete Stock Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to delete Supplier Product"]}
+            error: { general: ["Failed to delete Stock Item"]}
         } satisfies SubmissionResult<string[]>
     }
 
 }
 
 
-export async function getSupplierProductsNames(q: string) {
+export async function getStockItemsNames(q: string) {
   try {
-    const products = await db.supplierProduct.findMany({
+    const stockItems = await db.stockItem.findMany({
       where: {
         // type: "STOCK",
         name: {
@@ -275,10 +272,10 @@ export async function getSupplierProductsNames(q: string) {
       }
     });
 
-    const uniqueNames = [...new Set(products.map((p) => p.name))]
+    const uniqueNames = [...new Set(stockItems.map((p) => p.name))]
     return uniqueNames;
   } catch (error) {
-    console.error("Failed to fetch products:", error);
+    console.error("Failed to fetch stockItems:", error);
     return [];
   }
 }

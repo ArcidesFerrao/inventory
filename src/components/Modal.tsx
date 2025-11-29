@@ -1,4 +1,5 @@
-import { StockChange } from "@/generated/prisma/enums";
+// import { StockChange } from "@/generated/prisma/enums";
+import { StockChange } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
@@ -31,12 +32,12 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 export function StockMovementModal({
   isOpen,
   onClose,
-  supplierProductId,
+  stockItemId,
   currentStock,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  supplierProductId: string;
+  stockItemId: string;
   currentStock: number;
 }) {
   const [changeType, setChangeType] = useState<StockChange>("ADJUSTMENT");
@@ -70,7 +71,7 @@ export function StockMovementModal({
           "Content-Type": "apprication/json",
         },
         body: JSON.stringify({
-          supplierProductId,
+          stockItemId,
           changeType,
           quantity,
           notes,

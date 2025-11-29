@@ -1,5 +1,6 @@
 "use client";
 
+import { UserRole } from "@/generated/prisma";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 // import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ export default function SignUpPage() {
   const [phonenumber, setPhonenumber] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole | "">("");
   const [error, setError] = useState("");
   //   const router = useRouter();
 
@@ -22,7 +24,7 @@ export default function SignUpPage() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_SECRET_TOKEN}`,
       },
-      body: JSON.stringify({ name, email, password, phonenumber }),
+      body: JSON.stringify({ name, email, password, phonenumber, role }),
     });
 
     if (res.ok) {
@@ -50,6 +52,18 @@ export default function SignUpPage() {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
+      <select
+        name="role"
+        id="role"
+        value={role}
+        onChange={(e) => setRole(e.target.value as UserRole)}
+      >
+        <option value=""></option>
+        <option value="SERVICE">Service</option>
+        <option value="SUPPLIER">Supplier</option>
+        <option value="MANAGER">Manager</option>
+      </select>
+
       <input
         type="email"
         name="email"

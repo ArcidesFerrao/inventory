@@ -65,6 +65,7 @@ export const authOptions: NextAuthConfig = {
                 select: {
                     id: true,
                     phoneNumber: true,
+                    role: true,
                     Service: {
                         select: {
                             id: true
@@ -87,7 +88,8 @@ export const authOptions: NextAuthConfig = {
                     phoneNumber: userData?.phoneNumber,
                     serviceId: userData?.Service?.id, 
                     supplierId: userData?.Supplier?.id, 
-                    isAdmin
+                    isAdmin,
+                    role: userData?.role
                 }
             }
         }

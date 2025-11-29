@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 
 import { redirect } from "next/navigation";
 
-export default async function AdminProductsPage() {
+export default async function AdminItemsPage() {
   const session = await auth();
 
   if (!session?.user.isAdmin) {
@@ -19,19 +19,19 @@ export default async function AdminProductsPage() {
   return (
     <>
       <div className="admin-header">
-        <h1 className="text-4xl font-medium underline">Products</h1>
+        <h1 className="text-4xl font-medium underline">Items</h1>
       </div>
       <div className="py-4 flex justify-between">
-        <Card title="Total Products" value={stats.items.itemsData.length} />
+        <Card title="Total Items" value={stats.items.itemsData.length} />
         <Card title="Inactive" value={stats.items.activeItems} />
         <Card title="Actice" value={stats.items.inactiveItems} />
       </div>
       <div className="admin-products flex flex-col gap-5">
-        <h2 className="text-lg font-bold">Products List</h2>
+        <h2 className="text-lg font-bold">Items List</h2>
         <table>
           <thead>
             <tr>
-              <th>items</th>
+              <th>Items</th>
               <th>Type</th>
               <th>Category</th>
               <th>Status</th>

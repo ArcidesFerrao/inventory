@@ -4,10 +4,10 @@ import { useState } from "react";
 import { StockMovementModal } from "./Modal";
 
 export default function StockManagementButton({
-  supplierProductId,
+  stockItemId,
   currentStock,
 }: {
-  supplierProductId: string;
+  stockItemId: string;
   currentStock: number;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -22,7 +22,7 @@ export default function StockManagementButton({
       <StockMovementModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        supplierProductId={supplierProductId}
+        stockItemId={stockItemId}
         currentStock={currentStock}
       />
     </>

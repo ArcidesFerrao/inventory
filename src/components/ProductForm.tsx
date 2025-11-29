@@ -5,24 +5,24 @@ import {
   getSupplierCategories,
 } from "@/app/actions/categories";
 import {
-  createProduct,
-  createSupplierProduct,
-  editSupplierProduct,
-  getProducts,
-  getSupplierProductsNames,
+  createItem,
+  createStockItem,
+  editStockItem,
+  getItems,
+  getStockItemsNames,
 } from "@/app/actions/product";
-import { editProduct } from "@/app/actions/product";
+import { editItem } from "@/app/actions/product";
 import { getUnits } from "@/app/actions/units";
-import { productSchema, supplierProductSchema } from "@/schemas/productSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CategorySelect, ProductsCategorySelect } from "./CategorySelect";
-import { SupplierProduct, Category, Product } from "@/generated/prisma/client";
+import { StockItem, Category, Item } from "@/generated/prisma/client";
+import { itemSchema, stockItemSchema } from "@/schemas/schema";
 
-type SupplierProductWithUnit = SupplierProduct & {
+type StockItemWithUnit = StockItem & {
   Unit: {
     name: string;
     id: string;
@@ -36,7 +36,7 @@ type SupplierProductWithUnit = SupplierProduct & {
   quantity: number;
 };
 
-type ProductWithUnit = Product & {
+type ItemWithUnit = Item & {
   Unit: {
     name: string;
     id: string;
@@ -50,26 +50,25 @@ type ProductWithUnit = Product & {
 };
 
 export const ProductForm = ({
-  product,
+  item,
   serviceId,
 }: {
-  product?: ProductWithUnit;
+  item?: ItemWithUnit;
   serviceId: string;
 }) => {
-  const actionFn = product ? editProduct : createProduct;
+  const actionFn = item ? editItem : createItem;
   // console.log(actionFn);
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: productSchema });
+      return parseWithZod(formData, { schema: itemSchema });
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onSubmit",
-    defaultValue: product,
+    defaultValue: item,
   });
   const router = useRouter();
-  const [type, setType] = useState(product ? product.type : "STOCK");
-  // const [category, setCategory] = useState("Lanche");
+  const [type, setType] = useState(item ? item.type : "STOCK");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
@@ -77,11 +76,11 @@ export const ProductForm = ({
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
   const [recipeItems, setRecipeItems] = useState<
-    { productId: string; name: string; unitQty: number }[]
+    { itemId: string; name: string; unitQty: number }[]
   >([]);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [name, setName] = useState(product?.name || "");
+  const [name, setName] = useState(item?.name || "");
 
   useEffect(() => {
     if (!name || name.trim() === "") {
@@ -90,7 +89,7 @@ export const ProductForm = ({
     }
 
     const fetchSuggestions = async () => {
-      const results = await getSupplierProductsNames(name);
+      const results = await getStockItemsNames(name);
       setSuggestions(results);
     };
 
@@ -99,34 +98,30 @@ export const ProductForm = ({
   }, [name]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const products = await getProducts(serviceId);
+    const fetchItems = async () => {
+      const items = await getItems(serviceId);
 
       setRecipeItems(
-        products.map((p) => ({
-          productId: p.id,
+        items.map((p) => ({
+          itemId: p.id,
           name: p.name,
           unitQty: 0,
         }))
       );
     };
 
-    fetchProducts();
+    fetchItems();
   }, [serviceId]);
 
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
-        product
-          ? "Product edited successfully!"
-          : "Product created successfully!"
+        item ? "Item edited successfully!" : "Item created successfully!"
       );
       router.push("/service/products");
     }
     if (state?.status === "error") {
-      toast.error(
-        product ? "Failed to edit Product" : "Failed to add Product!"
-      );
+      toast.error(item ? "Failed to edit Item" : "Failed to add Item!");
     }
 
     const fetchCategories = async () => {
@@ -138,7 +133,7 @@ export const ProductForm = ({
 
     fetchCategories();
     fetchUnits();
-  }, [state, product, router, serviceId]);
+  }, [state, item, router, serviceId]);
 
   return (
     <form
@@ -148,7 +143,7 @@ export const ProductForm = ({
       className="flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
-        Fill the form to {product ? "edit the" : "create a new"} Product
+        Fill the form to {item ? "edit the" : "create a new"} Item
       </h2>
       <section className="flex flex-col gap-4">
         <input
@@ -160,20 +155,18 @@ export const ProductForm = ({
         {fields.serviceId.errors && (
           <p className="text-xs font-light">{fields.serviceId.errors}</p>
         )}
-        {product && (
-          <input type="hidden" name="id" id="id" value={product.id} />
-        )}
+        {item && <input type="hidden" name="id" id="id" value={item.id} />}
         {fields.id.errors && (
           <p className="text-xs font-light">{fields.id.errors}</p>
         )}
         <div className="flex w-full flex-col gap-1 relative">
-          <label htmlFor="name">Product Name</label>
+          <label htmlFor="name">Item Name</label>
 
           <input
             type="text"
             name="name"
             id="name"
-            placeholder="Product Name"
+            placeholder="Item Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -236,7 +229,7 @@ export const ProductForm = ({
                   type="number"
                   name="unitQty"
                   id="unitQty"
-                  defaultValue={product?.unitQty ?? 1}
+                  defaultValue={item?.unitQty ?? 1}
                 />
               </div>
             )}
@@ -295,7 +288,7 @@ export const ProductForm = ({
               name="stock"
               id="stock"
               min={0}
-              defaultValue={product?.stock || 0}
+              defaultValue={item?.stock || 0}
               readOnly={type === "SERVICE"}
             />
             {fields.stock.errors && (
@@ -310,7 +303,7 @@ export const ProductForm = ({
                   type="number"
                   name="price"
                   id="price"
-                  defaultValue={product?.price || 0}
+                  defaultValue={item?.price || 0}
                 />
 
                 {fields.price.errors && (
@@ -320,7 +313,7 @@ export const ProductForm = ({
               <ProductsCategorySelect
                 categories={categories}
                 serviceId={serviceId}
-                categoryId={product?.categoryId}
+                categoryId={item?.categoryId}
                 field={fields.categoryId}
                 state={state as string}
                 // state={fields.categoryId.errors?.[0]}
@@ -332,28 +325,28 @@ export const ProductForm = ({
           <div className="flex flex-col gap-4">
             <fieldset className="flex flex-col gap-4 p-4">
               <legend className="font-semibold">Recipe Items</legend>
-              {recipeItems.map((item, index) => (
+              {recipeItems.map((stockItem, index) => (
                 <div
-                  key={item.productId}
+                  key={stockItem.itemId}
                   className="flex items-center justify-between"
                 >
                   <label
                     className="pl-2 py-1 font-light "
                     htmlFor={`recipe[${index}].quantity`}
                   >
-                    {item.name}
+                    {stockItem.name}
                   </label>
                   <input
                     type="number"
                     className="max-w-1/3 text-sm"
                     min={0}
                     name={`recipe[${index}].quantity`}
-                    value={item.unitQty}
+                    value={stockItem.unitQty}
                     onChange={(e) => {
                       const newQuantity = Number(e.target.value);
                       setRecipeItems((prev) =>
                         prev.map((ri) =>
-                          ri.productId === item.productId
+                          ri.itemId === stockItem.itemId
                             ? {
                                 ...ri,
                                 unitQty: newQuantity,
@@ -365,8 +358,8 @@ export const ProductForm = ({
                   />
                   <input
                     type="hidden"
-                    name={`recipe[${index}].stockId`}
-                    value={item.productId}
+                    name={`recipe[${index}].serviceStockItemId`}
+                    value={stockItem.itemId}
                   />
                 </div>
               ))}
@@ -380,7 +373,7 @@ export const ProductForm = ({
             name="description"
             id="description"
             placeholder="Description"
-            defaultValue={product?.description || ""}
+            defaultValue={item?.description || ""}
             className="min-w-80 min-h-40"
           />
           {fields.description.errors && (
@@ -397,7 +390,7 @@ export const ProductForm = ({
       <input
         type="submit"
         disabled={isPending}
-        value={isPending ? "..." : product ? "Edit Product" : "Add Product"}
+        value={isPending ? "..." : item ? "Edit Item" : "Add Item"}
         className="submit-button"
       />
     </form>
@@ -405,34 +398,32 @@ export const ProductForm = ({
 };
 
 export const SupplierProductForm = ({
-  supplierProduct,
+  stockItem,
   supplierId,
 }: {
-  supplierProduct?: SupplierProductWithUnit | null;
+  stockItem?: StockItemWithUnit | null;
   supplierId: string;
 }) => {
-  const actionFn = supplierProduct
-    ? editSupplierProduct
-    : createSupplierProduct;
+  const actionFn = stockItem ? editStockItem : createStockItem;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: supplierProductSchema });
+      return parseWithZod(formData, { schema: stockItemSchema });
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onSubmit",
-    defaultValue: supplierProduct,
+    defaultValue: stockItem,
   });
   const router = useRouter();
 
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
-  const [unitId, setUnitId] = useState(supplierProduct?.unitId || "");
+  const [unitId, setUnitId] = useState(stockItem?.unitId || "");
 
-  const [price, setPrice] = useState(supplierProduct?.price || 0);
+  const [price, setPrice] = useState(stockItem?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [name, setName] = useState(supplierProduct?.name || "");
+  const [name, setName] = useState(stockItem?.name || "");
 
   useEffect(() => {
     if (!name || name.trim() === "") {
@@ -441,7 +432,7 @@ export const SupplierProductForm = ({
     }
 
     const fetchSuggestions = async () => {
-      const results = await getSupplierProductsNames(name);
+      const results = await getStockItemsNames(name);
       const filtered = results.filter(
         (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim()
       );
@@ -453,17 +444,17 @@ export const SupplierProductForm = ({
   }, [name]);
 
   useEffect(() => {
-    if (supplierProduct?.unitId) {
-      setUnitId(supplierProduct.unitId);
+    if (stockItem?.unitId) {
+      setUnitId(stockItem.unitId);
     }
-  }, [supplierProduct]);
+  }, [stockItem]);
 
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
-        supplierProduct
-          ? "Product edited successfully!"
-          : "Product created successfully!"
+        stockItem
+          ? "Stock Item edited successfully!"
+          : "Stock Item created successfully!"
       );
       router.push("/supply/products");
     }
@@ -478,7 +469,7 @@ export const SupplierProductForm = ({
 
     fetchUnits();
     fetchCategories();
-  }, [state, supplierProduct, router, supplierId]);
+  }, [state, stockItem, router, supplierId]);
 
   return (
     <form
@@ -488,12 +479,11 @@ export const SupplierProductForm = ({
       className="flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
-        Fill the form to {supplierProduct ? "edit the" : "create a new"}{" "}
-        Supplier Product
+        Fill the form to {stockItem ? "edit the" : "create a new"} Stock Item
       </h2>
       <section className="flex flex-col gap-4">
-        {supplierProduct && (
-          <input type="hidden" name="id" id="id" value={supplierProduct.id} />
+        {stockItem && (
+          <input type="hidden" name="id" id="id" value={stockItem.id} />
         )}
         <input
           type="hidden"
@@ -503,16 +493,15 @@ export const SupplierProductForm = ({
         />
         <section className="form-name-unit flex gap-2 items-end ">
           <div className="flex w-full flex-col gap-1 relative">
-            <label htmlFor="name">Product Name</label>
+            <label htmlFor="name">Stock Item Name</label>
 
             <input
               type="text"
               name="name"
               id="name"
-              placeholder="Product Name"
+              placeholder="Stock Item Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              // defaultValue={supplierProduct?.name}
             />
             {fields.name.errors && (
               <p className="text-xs font-light">{fields.name.errors}</p>
@@ -543,7 +532,7 @@ export const SupplierProductForm = ({
                 name="unitQty"
                 id="unitQty"
                 className="max-w-32"
-                defaultValue={supplierProduct?.unitQty ?? 1}
+                defaultValue={stockItem?.unitQty ?? 1}
               />
               {fields.unitQty.errors && (
                 <p className="text-xs font-light">{fields.unitQty.errors}</p>
@@ -561,11 +550,7 @@ export const SupplierProductForm = ({
                   Select a unit
                 </option>
                 {units.map((unit) => (
-                  <option
-                    key={unit.id}
-                    value={unit.id}
-                    // defaultChecked={unit.id === supplierProduct?.unitId}
-                  >
+                  <option key={unit.id} value={unit.id}>
                     {unit.name}
                   </option>
                 ))}
@@ -605,7 +590,7 @@ export const SupplierProductForm = ({
                 name="stock"
                 id="stock"
                 min={0}
-                defaultValue={supplierProduct?.stock || 0}
+                defaultValue={stockItem?.stock || 0}
               />
               {fields.stock.errors && (
                 <p className="text-xs font-light">{fields.stock.errors}</p>
@@ -618,7 +603,7 @@ export const SupplierProductForm = ({
                 name="cost"
                 id="cost"
                 min={0}
-                defaultValue={supplierProduct?.cost || 0}
+                defaultValue={stockItem?.cost || 0}
               />
 
               {fields.cost.errors && (
@@ -628,7 +613,7 @@ export const SupplierProductForm = ({
           </div>
           {categories && (
             <CategorySelect
-              categoryId={supplierProduct?.Category?.id}
+              categoryId={stockItem?.Category?.id}
               categories={categories}
               supplierId={supplierId}
               state={fields.categoryId.errors}
@@ -642,7 +627,7 @@ export const SupplierProductForm = ({
             name="description"
             id="description"
             placeholder="Description"
-            defaultValue={supplierProduct?.description || ""}
+            defaultValue={stockItem?.description || ""}
             className="min-w-80 min-h-40"
           />
           {fields.description.errors && (
@@ -659,9 +644,7 @@ export const SupplierProductForm = ({
       <input
         type="submit"
         disabled={isPending}
-        value={
-          isPending ? "..." : supplierProduct ? "Edit Product" : "Add Product"
-        }
+        value={isPending ? "..." : stockItem ? "Edit Item" : "Add Item"}
         className="submit-button"
       />
     </form>

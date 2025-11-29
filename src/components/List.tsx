@@ -1,15 +1,12 @@
 import Link from "next/link";
-import React from "react";
-import { SupplierProductDeleteButton } from "./DeleteButton";
+import { StockItemDeleteButton } from "./DeleteButton";
 import {
-  OrderWithSupplierOrders,
+  OrderWithStockItems,
   PurchaseWithItems,
   SaleWithItems,
-  SupplierOrderWithOrderAndDeliveries,
-  // SupplierOrderWithOrderAndItems,
   SupplierSaleWithItems,
 } from "@/types/types";
-import { ConfirmDeliveryButton } from "./CompleteDeliveryButton";
+import { Order, OrderItem } from "@/generated/prisma/client";
 
 type ProductsStockProps = {
   id: string;
@@ -60,15 +57,6 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
       </div>
       <div className="flex flex-col items-end gap-2">
         <h2 className="text-lg font-bold text-nowrap ">MZN {price},00</h2>
-        {/* <div className="flex gap-2">
-          <DeleteButton productId={id} />
-          <Link
-            className="edit-button p-2 flex "
-            href={`/supply/products/${id}/edit`}
-          >
-            <span className="mdi--edit"></span>
-          </Link>
-        </div> */}
       </div>
     </li>
   );
@@ -100,7 +88,7 @@ export const ListSupplierItem = ({
       <div className="supplier-item-details flex items-center gap-5">
         <h2 className="text-xl font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
-          <SupplierProductDeleteButton supplierProductId={id} />
+          <StockItemDeleteButton stockItemId={id} />
           <Link
             className="edit-button p-2 flex "
             href={`/supply/products/${id}/edit`}
@@ -137,8 +125,8 @@ export const PurchaseListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {purchases.date.toLocaleDateString()} ,{" "}
-                {purchases.date.toLocaleTimeString()}
+                {purchases.timestamp.toLocaleDateString()} ,{" "}
+                {purchases.timestamp.toLocaleTimeString()}
               </p>
             </div>
             {purchases.PurchaseItem.length > 1 && (
@@ -167,7 +155,7 @@ export const PurchaseListItem = ({
         <thead>
           <tr>
             <th>Quantity</th>
-            <th>Product</th>
+            <th>Item</th>
             <th className="unit-cost">Unit Cost</th>
             <th>Total</th>
           </tr>
@@ -176,7 +164,7 @@ export const PurchaseListItem = ({
           {purchases.PurchaseItem.map((i) => (
             <tr key={i.id}>
               <td>{i.stock}</td>
-              <td>{i.supplierProduct?.name ?? i.product?.name}</td>
+              <td>{i.stockItem?.name ?? i.item?.name}</td>
               <td className="unit-cost">MZN {i.price}.00</td>
               <td>MZN {i.totalCost}.00</td>
             </tr>
@@ -190,20 +178,15 @@ export const PurchaseListItem = ({
 export const OrderListItem = ({
   order,
 }: {
-  order: OrderWithSupplierOrders;
+  order: Order & {
+    orderItems: OrderItem[];
+  };
 }) => {
-  const totalItemsOrdered = order.supplierOrders.reduce(
-    (supplierAcc, supplierOrder) => {
-      return (
-        supplierAcc +
-        supplierOrder.items.reduce(
-          (itemAcc, item) => itemAcc + item.orderedQty,
-          0
-        )
-      );
-    },
+  const totalItemsOrdered = order.orderItems.reduce(
+    (itemAcc, item) => itemAcc + item.orderedQty,
     0
   );
+
   return (
     <li key={order.id} className="list-orders flex justify-between">
       <div className="flex flex-col gap-5">
@@ -220,8 +203,8 @@ export const OrderListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {order.createdAt.toLocaleDateString()},{" "}
-                {order.createdAt.toLocaleTimeString()}
+                {order.timestamp.toLocaleDateString()},{" "}
+                {order.timestamp.toLocaleTimeString()}
               </p>
             </div>
           </div>
@@ -241,7 +224,7 @@ export const OrderListItem = ({
               </div>
             </div>
           ))}
-        {order.status === "DELIVERED" ||
+        {/* {order.status === "DELIVERED" ||
           (order.status === "IN_DELIVERY" && (
             <div className="confirm-delivery flex flex-col gap-2">
               <div className="text-xs font-extralight flex flex-col gap-2">
@@ -269,7 +252,7 @@ export const OrderListItem = ({
                 role="SERVICE"
               />
             </div>
-          ))}
+          ))} */}
       </div>
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">
@@ -318,8 +301,8 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {sale.date.toLocaleDateString()} ,{" "}
-                {sale.date.toLocaleTimeString()}
+                {sale.timestamp.toLocaleDateString()} ,{" "}
+                {sale.timestamp.toLocaleTimeString()}
               </p>
             </div>
             {sale.SaleItem.length > 1 && (
@@ -348,7 +331,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
         <thead>
           <tr>
             <th>Qty</th>
-            <th>Product</th>
+            <th>Item</th>
             <th className="unit-cost">Unit Cost</th>
             <th>Total</th>
           </tr>
@@ -357,7 +340,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
           {sale.SaleItem.map((i) => (
             <tr key={i.id}>
               <td>{i.quantity}</td>
-              <td>{i.product?.name}</td>
+              <td>{i.item?.name}</td>
               <td className="unit-cost">MZN {i.price}.00</td>
               <td>MZN {i.quantity * i.price}.00</td>
             </tr>
@@ -367,6 +350,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
     </li>
   );
 };
+
 export const SupplierSaleListItem = ({
   sale,
 }: {
@@ -393,8 +377,8 @@ export const SupplierSaleListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {sale.date.toLocaleDateString()} ,{" "}
-                {sale.date.toLocaleTimeString()}
+                {sale.timestamp.toLocaleDateString()} ,{" "}
+                {sale.timestamp.toLocaleTimeString()}
               </p>
             </div>
             {sale.SaleItem.length > 1 && (
@@ -403,7 +387,7 @@ export const SupplierSaleListItem = ({
                   <span className="fluent--box-16-regular"></span>
                 </span>
                 <p className="text-sm font-light">
-                  {sale.SaleItem.length} products
+                  {sale.SaleItem.length} items
                 </p>
               </div>
             )}
@@ -421,7 +405,7 @@ export const SupplierSaleListItem = ({
       <table>
         <thead>
           <tr>
-            <th>Product</th>
+            <th>Item</th>
             <th>Qty</th>
             <th className="unit-cost">Unit Cost</th>
             <th>Total</th>
@@ -430,7 +414,7 @@ export const SupplierSaleListItem = ({
         <tbody>
           {sale.SaleItem.map((i) => (
             <tr key={i.id}>
-              <td>{i.supplierProduct?.name}</td>
+              <td>{i.stockItem?.name}</td>
               <td>{i.quantity}</td>
               <td className="unit-cost">MZN {i.price}.00</td>
               <td>MZN {i.quantity * i.price}.00</td>
@@ -530,29 +514,28 @@ export function SupplierLogListItem({
 }
 
 export const SupplierOrderListItem = ({
-  supplierOrder,
+  order,
 }: {
-  supplierOrder: SupplierOrderWithOrderAndDeliveries;
+  // order: SupplierOrderWithOrderAndDeliveries;
+  order: OrderWithStockItems;
   // supplierOrder: SupplierOrderWithOrderAndItems;
 }) => {
-  const totalItemsOrdered = supplierOrder.items.reduce(
+  const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
     0
   );
-  const delivery = supplierOrder.order?.confirmedDeliveries?.[0];
+  const delivery = order?.delivery;
   // console.log(delivery);
   return (
-    <li key={supplierOrder.id} className="list-orders flex justify-between">
+    <li key={order.id} className="list-orders flex justify-between">
       <div className="flex flex-col gap-5">
         <div className="order-header flex flex-col gap-2">
           <Link
-            href={`/supply/orders/${supplierOrder.id}`}
+            href={`/supply/orders/${order.id}`}
             className="flex items-center gap-2"
           >
             <h3 className="order-title  text-xl font-medium">Order</h3>
-            <p className="text-xs font-light">
-              #{supplierOrder.id.slice(0, 6)}...
-            </p>
+            <p className="text-xs font-light">#{order.id.slice(0, 6)}...</p>
           </Link>
           <div className="order-info flex items-center gap-4">
             <div className="flex gap-2 items-center">
@@ -560,49 +543,43 @@ export const SupplierOrderListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {supplierOrder.order?.createdAt.toLocaleDateString()},{" "}
-                {supplierOrder.order?.createdAt.toLocaleTimeString()}
+                {order?.timestamp.toLocaleDateString()},{" "}
+                {order?.timestamp.toLocaleTimeString()}
               </p>
             </div>
           </div>
         </div>
-        {supplierOrder.order?.status === "DELIVERED" ? (
+        {order?.status === "DELIVERED" ? (
           <div>
-            <p>{supplierOrder.order.Service?.businessName}</p>
+            <p>{order.Service?.businessName}</p>
             <div className="flex">
               <p className="text-sm font-light text-green-400">
-                {supplierOrder.order.status}
+                {order.status}
               </p>
             </div>
           </div>
-        ) : supplierOrder.status === "COMPLETED" && delivery ? (
+        ) : order.status === "CONFIRMED" && delivery ? (
           <div className="text-md font-medium">
             <p className="text-sm font-light">Delivered at: </p>
             <div className="flex gap-1 text-md font-medium">
-              <p>
-                {supplierOrder.order?.confirmedDeliveries[0].deliveredAt?.toLocaleDateString()}
-                ,
-              </p>
-              <p>
-                {supplierOrder.order?.confirmedDeliveries[0].deliveredAt?.toLocaleTimeString()}
-              </p>
+              <p>{order?.delivery.deliveredAt?.toLocaleDateString()},</p>
+              <p>{order?.delivery.deliveredAt?.toLocaleTimeString()}</p>
             </div>
           </div>
-        ) : supplierOrder.status === "REJECTED" ? (
+        ) : order.status === "CANCELLED" ? (
           ""
         ) : (
           <div className="delivery-window flex flex-col gap-2">
             <p className="text-sm font-light">
-              {supplierOrder.order?.Service?.businessName} - Requested Delivery
-              Window
+              {order?.Service?.businessName} - Requested Delivery Window
             </p>
             <div className=" flex gap-2">
               <p className="text-md font-medium">
-                {supplierOrder.order?.requestedStartDate.toLocaleDateString()}
+                {order?.requestedStartDate.toLocaleDateString()}
               </p>
               -
               <p className="text-md font-medium">
-                {supplierOrder.order?.requestedEndDate.toLocaleDateString()}
+                {order?.requestedEndDate.toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -611,7 +588,7 @@ export const SupplierOrderListItem = ({
       <div className="order-status flex flex-col justify-between">
         <div className="flex flex-col gap-2 items-end">
           <button disabled className="text-xs">
-            {supplierOrder.status}
+            {order.status}
           </button>
           <div className="flex items-center gap-2 text-sm font-light">
             <span className="flex items-center">
@@ -624,7 +601,7 @@ export const SupplierOrderListItem = ({
         <div className="order-amount text-end">
           <p className="text-sm ">Order Total</p>
           <h2 className="text-lg font-bold  text-nowrap">
-            MZN {supplierOrder.order?.total.toFixed(2)}
+            MZN {order?.total.toFixed(2)}
           </h2>
         </div>
       </div>

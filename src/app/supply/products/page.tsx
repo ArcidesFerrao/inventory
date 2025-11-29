@@ -1,4 +1,4 @@
-import { getSelectedSupplierProducts } from "@/app/actions/product";
+import { getSelectedStockItems } from "@/app/actions/product";
 import { ListSupplierItem } from "@/components/List";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
@@ -10,19 +10,19 @@ export default async function ProductsPage() {
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
 
-  const products = await getSelectedSupplierProducts(session.user.supplierId);
+  const items = await getSelectedStockItems(session.user.supplierId);
 
-  const filteredProducts = products.filter(
-    (product) => (product.stock || product.stock == 0) && product.stock < 10
+  const filteredItems = items.filter(
+    (item) => (item.stock || item.stock == 0) && item.stock < 10
   );
 
   return (
     <div className="products-list flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
         <div className="list-title">
-          <h2 className="text-2xl font-medium">Products</h2>
+          <h2 className="text-2xl font-medium">Items</h2>
           <p className="text-md font-extralight">
-            Manage your product catalog and inventory
+            Manage your item catalog and inventory
           </p>
         </div>
         <Link href="/supply/products/new" className="add-product flex gap-1">
@@ -32,23 +32,23 @@ export default async function ProductsPage() {
       </div>
       <div className="state-products flex justify-between w-full">
         <div>
-          <p>Total Products</p>
-          <h2 className="text-2xl font-medium">{products.length}</h2>
+          <p>Total Items</p>
+          <h2 className="text-2xl font-medium">{items.length}</h2>
         </div>
         <div>
           <p>Low Stock</p>
-          <h2 className="text-2xl font-medium">{filteredProducts.length}</h2>
+          <h2 className="text-2xl font-medium">{filteredItems.length}</h2>
         </div>
         <div>
           <p>Out of Stock</p>
           <h2 className="text-2xl font-medium">0</h2>
         </div>
       </div>
-      {products.length === 0 ? (
-        <p>No products found...</p>
+      {items.length === 0 ? (
+        <p>No items found...</p>
       ) : (
         <ul className="flex flex-col gap-4 w-full">
-          {products.map((item) => (
+          {items.map((item) => (
             <ListSupplierItem
               id={item.id}
               name={item.name}

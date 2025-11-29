@@ -9,10 +9,13 @@ export default async function NewPurchase() {
 
   if (!session?.user.serviceId) redirect("/login");
 
-  const products = await db.product.findMany({
+  const stockItems = await db.serviceStockItem.findMany({
     where: {
       serviceId: session.user.serviceId,
-      type: "STOCK",
+      // type: "STOCK",
+    },
+    include: {
+      stockItem: true,
     },
   });
 
@@ -25,13 +28,13 @@ export default async function NewPurchase() {
         </Link>
       </div>
       <div className="sales-content flex justify-between gap-4">
-        {products.length === 0 ? (
-          <p>No products found...</p>
+        {stockItems.length === 0 ? (
+          <p>No items found...</p>
         ) : (
           <PurchasesList
-            initialProducts={products.map((product) => ({
-              ...product,
-              price: product.price ?? 0,
+            initialStockItems={stockItems.map((item) => ({
+              ...item,
+              price: item.stockItem.price ?? 0,
               quantity: 0,
             }))}
             serviceId={session.user.serviceId}

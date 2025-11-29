@@ -1,7 +1,6 @@
 import Link from "next/link";
-import React from "react";
 import { getSupplierDashBoardStats } from "../actions/dashboardStats";
-import { getSupplierProducts } from "../actions/product";
+import { getStockItems } from "../actions/product";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
@@ -17,9 +16,9 @@ export default async function SupplyPage() {
   }
 
   const stats = await getSupplierDashBoardStats();
-  const stockProducts = await getSupplierProducts(session.user.supplierId);
-  const filteredProducts = stockProducts.filter(
-    (product) => (product.stock || product.stock == 0) && product.stock < 10
+  const stockItems = await getStockItems(session.user.supplierId);
+  const filteredItems = stockItems.filter(
+    (item) => (item.stock || item.stock == 0) && item.stock < 10
   );
 
   if (!stats) return <p>Please login to see the dashboard</p>;
@@ -34,7 +33,7 @@ export default async function SupplyPage() {
           className="add-product add-product-dash flex gap-2"
         >
           <span>+</span>
-          <span className="text-md">Product</span>
+          <span className="text-md">Item</span>
         </Link>
       </div>
 
@@ -104,18 +103,18 @@ export default async function SupplyPage() {
             <span className="divider"></span>
 
             <div className=" flex flex-col gap-2">
-              <h2 className="text-lg font-medium underline">Products</h2>
+              <h2 className="text-lg font-medium underline">Items</h2>
               <div className="stats-container flex flex-col">
                 <div>
-                  <h3 className="text-lg font-normal">Products Offered</h3>
+                  <h3 className="text-lg font-normal">Items Offered</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                    {stats.productCount}
+                    {stats.stockItemCount}
                   </h4>
                 </div>
                 <div>
                   <h3 className="text-lg font-normal">Low Stock</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                    {filteredProducts.length}
+                    {filteredItems.length}
                   </h4>
                 </div>
               </div>
@@ -125,11 +124,11 @@ export default async function SupplyPage() {
       </div>
 
       <div className="flex  w-fit gap-4">
-        {filteredProducts.length > 0 && (
+        {filteredItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
             <h2 className="text-2xl font-bold">Low Stock Items</h2>
             <ul className="flex flex-col gap-1">
-              {filteredProducts.map((item) => (
+              {filteredItems.map((item) => (
                 <li key={item.id} className="flex justify-between w-60">
                   <span>{item.name}</span>
                   <span className="font-medium">{item.stock}</span>
@@ -138,11 +137,11 @@ export default async function SupplyPage() {
             </ul>
           </div>
         )}
-        {stats.topProducts.length > 0 && (
+        {stats.topItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-2xl font-bold">Top Ordered Products</h2>
+            <h2 className="text-2xl font-bold">Top Ordered Items</h2>
             <ul className="flex flex-col gap-1">
-              {stats.topProducts.map((item) => (
+              {stats.topItems.map((item) => (
                 <li key={item.id} className="flex justify-between w-60">
                   <span>{item.name}</span>
                   <span className="font-medium">{item.quantity}</span>

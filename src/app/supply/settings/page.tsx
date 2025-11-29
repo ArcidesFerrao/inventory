@@ -15,16 +15,16 @@ export default async function SettingsPage() {
     include: {
       SaleItem: {
         include: {
-          supplierProduct: true,
+          stockItem: true,
         },
       },
     },
     orderBy: {
-      date: "desc",
+      timestamp: "desc",
     },
   });
 
-  const stockProducts = await db.supplierProduct.findMany({
+  const stockProducts = await db.stockItem.findMany({
     where: {
       supplierId,
     },
@@ -56,7 +56,7 @@ export default async function SettingsPage() {
           <p>{session.user.phoneNumber}</p>
         </div>
         <SupplierExportSelection
-          stock={stockProducts}
+          stockItem={stockProducts}
           sales={sales}
           logs={logs}
         />

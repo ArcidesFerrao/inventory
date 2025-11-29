@@ -1,6 +1,7 @@
 import OrdersAndSales from "@/components/OrdersAndSales";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { OrderWithStockItems } from "@/types/types";
 import { redirect } from "next/navigation";
 
 export default async function OrdersPage() {
@@ -9,21 +10,15 @@ export default async function OrdersPage() {
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
 
-  const supplierOrders = await db.supplierOrder.findMany({
+  const orders = await db.order.findMany({
     where: { supplierId: session.user.supplierId },
     include: {
-      items: true,
-      order: {
-        include: {
-          Service: true,
-          confirmedDeliveries: true,
-        },
-      },
+      orderItems: true,
+      delivery: true,
+      Service: true,
     },
     orderBy: {
-      order: {
-        createdAt: "desc",
-      },
+      timestamp: "desc",
     },
   });
 
@@ -32,12 +27,12 @@ export default async function OrdersPage() {
     include: {
       SaleItem: {
         include: {
-          supplierProduct: true,
+          stockItem: true,
         },
       },
     },
     orderBy: {
-      date: "desc",
+      timestamp: "desc",
     },
   });
 
@@ -51,7 +46,10 @@ export default async function OrdersPage() {
           </p>
         </div>
       </div>
-      <OrdersAndSales sales={supplierSales} supplierOrders={supplierOrders} />
+      <OrdersAndSales
+        sales={supplierSales}
+        orders={orders as OrderWithStockItems[]}
+      />
     </div>
   );
 }

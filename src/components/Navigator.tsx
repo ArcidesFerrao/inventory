@@ -12,7 +12,7 @@ export const Navigator = () => {
         />
         <NavLink
           href="/stock/products"
-          label="Products"
+          label="Items"
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
@@ -41,7 +41,7 @@ export const ServiceNav = () => {
         />
         <NavLink
           href="/service/products"
-          label="Products"
+          label="Items"
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
@@ -119,7 +119,7 @@ export const AdminNav = () => {
         />
         <NavLink
           href="/admin/products"
-          label="Products"
+          label="Items"
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink

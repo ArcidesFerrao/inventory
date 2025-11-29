@@ -14,6 +14,7 @@ export const supplierSchema = z.object({
 
 export const serviceSchema = z.object({
     id: z.string().optional(),
+    phoneNumber: z.string().regex(/^\+?\d{7,15}$/, "Phone number must be valid"),
     businessName: z.string().min(2, "Business Name is required").max(100, "Name too long"),
     description: z.string().max(500).optional(),
     location: z.string().min(2, "Location is required"),

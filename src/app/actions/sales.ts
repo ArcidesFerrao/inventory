@@ -1,11 +1,11 @@
 "use server";
 
 import { db } from "@/lib/db";
-import {  SaleProductWithMenuItems } from "@/types/types";
+import {  SaleItemWithCatalogItems } from "@/types/types";
 import { logActivity } from "./logs";
 
 export async function createSale(
-    saleItems: SaleProductWithMenuItems[], serviceId: string
+    saleItems: SaleItemWithCatalogItems[], serviceId: string
 ) {    
     if (saleItems.length === 0) return {success: false, message: "No sale items"}
 
@@ -19,9 +19,9 @@ export async function createSale(
             const stockUsage: Record<string, number> = {};
 
             const stockIds = saleItems.flatMap(item => 
-                ( item.MenuItems ?? []).map(recipe => recipe.stock.id) 
+                ( item.CatalogItems ?? []).map(recipe => recipe.serviceStockItem.id) 
             );
-            const stocks = await tx.product.findMany({
+            const stocks = await tx.item.findMany({
                 where: {
                     id: { in: stockIds}
                 },
@@ -30,24 +30,22 @@ export async function createSale(
 
             for (const saleItem of saleItems) {
                 // console.log("Processing saleItem:", saleItem.name);
-                const productRecipes = saleItem.MenuItems || [];
+                const itemRecipes = saleItem.CatalogItems || [];
                 
-                for (const recipeItem of productRecipes) {
-                    const stockProduct = stocks.find(s => s.id === recipeItem.stock.id)
+                for (const recipeItem of itemRecipes) {
+                    const stockProduct = stocks.find(s => s.id === recipeItem.id)
                     if (!stockProduct) continue;
-
-                    // console.log("Found stockProduct:", stockProduct.name);
                         
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
 
-                    stockUsage[recipeItem.stock.id] = (stockUsage[recipeItem.stock.id] ?? 0) + qtyUsed;
+                    stockUsage[recipeItem.id] = (stockUsage[recipeItem.id] ?? 0) + qtyUsed;
                     cogs += qtyUsed * (stockProduct.price ?? 0);
                     // console.log(` - Using ${qtyUsed} of ${stockProduct.name} at cost ${(stockProduct.price ?? 0)} each, total ${qtyUsed * (stockProduct.price ?? 0)}`);
                 }
             }
 
             for (const [stockId, totalQty] of Object.entries(stockUsage)) {
-                await tx.product.update({
+                await tx.item.update({
                     where: { id: stockId },
                     data: {
                         stock: {
@@ -66,7 +64,7 @@ export async function createSale(
                     cogs,
                     SaleItem: {
                         create: saleItems.map((item) => ({
-                            productId: item.id,
+                            itemId: item.id,
                             quantity: item.quantity,
                             price: item.price ?? 0,
                         })),
@@ -79,7 +77,7 @@ export async function createSale(
 
             await tx.stockMovement.createMany({
                 data: Object.entries(stockUsage).map(([stockId, qty]) => ({
-                    productId: stockId,
+                    stockItemId: stockId,
                     quantity: qty,
                     changeType: "SALE",
                     referenceId: newSale.id,

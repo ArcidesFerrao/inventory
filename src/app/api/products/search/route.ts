@@ -10,7 +10,7 @@ export async function GET(req: Request) {
 
     if (!q || q.length < 2) return NextResponse.json([]);
     
-    const results = await db.product.findMany({
+    const results = await db.item.findMany({
         where: {
             name: {
                 contains: q,

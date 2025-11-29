@@ -4,17 +4,17 @@ import { db } from "@/lib/db";
 
 import { redirect } from "next/navigation";
 
-export default async function ProductsPage() {
+export default async function ItemsPage() {
   const session = await auth();
 
   if (!session?.user.serviceId) redirect("/login");
 
-  const products = await db.product.findMany({
+  const items = await db.item.findMany({
     where: {
       serviceId: session.user.serviceId,
     },
     include: {
-      Category: true,
+      category: true,
     },
   });
 
@@ -28,7 +28,7 @@ export default async function ProductsPage() {
           </p>
         </div>
       </div>
-      <MenuAndStock products={products} />
+      <MenuAndStock items={items} />
     </div>
   );
 }

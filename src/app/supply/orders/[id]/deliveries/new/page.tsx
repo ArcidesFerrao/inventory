@@ -1,27 +1,25 @@
 import { SupplierDelivery } from "@/components/NewDelivery";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import React from "react";
 
 type Params = Promise<{ id: string }>;
 
 export default async function NewDeliveryPage(props: { params: Params }) {
   const { id } = await props.params;
-  const supplierOrder = await db.supplierOrder.findUnique({
+  const order = await db.order.findUnique({
     where: {
       id,
     },
     include: {
-      order: true,
-      items: {
+      orderItems: {
         include: {
-          product: true,
+          stockItem: true,
         },
       },
     },
   });
 
-  if (!supplierOrder) return <div>Order not found</div>;
+  if (!order) return <div>Order not found</div>;
 
   return (
     <div className="flex flex-col gap-5 items-center w-full">
@@ -33,7 +31,7 @@ export default async function NewDeliveryPage(props: { params: Params }) {
           <div>
             <h2 className="text-2xl font-bold">Schedule New Delivery</h2>
             <p className="text-xs font-extralight">
-              Order #{supplierOrder.order.id.slice(0, 8)}...
+              Order #{order.id.slice(0, 8)}...
             </p>
           </div>
         </div>
@@ -44,11 +42,7 @@ export default async function NewDeliveryPage(props: { params: Params }) {
           Cancel
         </Link>
       </div>
-      <SupplierDelivery
-        supplierOrderId={id}
-        order={supplierOrder.order}
-        items={supplierOrder.items}
-      />
+      <SupplierDelivery order={order} items={order.orderItems} />
     </div>
   );
 }

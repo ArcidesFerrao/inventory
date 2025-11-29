@@ -107,7 +107,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 <p>Company Name</p>
                 <div className="flex items-center gap-2">
                   <span className="mdi--company"></span>
-                  <h4>{user.Supplier.name}</h4>
+                  <h4>{user.Supplier.businessName}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
@@ -128,7 +128,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 <p>Company Phone Number</p>
                 <div className="flex items-center gap-2">
                   <span className="solar--phone-bold"></span>
-                  <h4>{user.Supplier.phone}</h4>
+                  <h4>{user.Supplier.phoneNumber}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
@@ -280,7 +280,7 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="mdi--company"></span>
-                  <h4>{user.Supplier.name}</h4>
+                  <h4>{user.Supplier.businessName}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
@@ -301,7 +301,7 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
                 <p>Company Phone Number</p>
                 <div className="flex items-center gap-2">
                   <span className="solar--phone-bold"></span>
-                  <h4>{user.Supplier.phone}</h4>
+                  <h4>{user.Supplier.phoneNumber}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">

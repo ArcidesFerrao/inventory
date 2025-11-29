@@ -13,21 +13,20 @@ export default async function PurchasesPage() {
     include: {
       PurchaseItem: {
         include: {
-          supplierProduct: true,
-          product: true,
+          stockItem: true,
+          item: true,
         },
       },
     },
-    orderBy: { date: "desc" },
+    orderBy: { timestamp: "desc" },
   });
 
   const orders = await db.order.findMany({
     where: { serviceId: session.user.serviceId },
     include: {
-      supplierOrders: { include: { items: true } },
-      confirmedDeliveries: true,
+      orderItems: true,
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { timestamp: "desc" },
   });
 
   return (

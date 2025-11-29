@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
         // console.log("🔍 Running db.product.findMany with:", { where, skip: (page - 1) * limit, take: limit });
 
         const [data, total] = await Promise.all([
-            db.product.findMany({
+            db.item.findMany({
                 where,
                 skip: (page - 1) * limit,
                 take: limit,
             }),
-            db.product.count({where})
+            db.item.count({where})
         ]);
         
         // console.log("✅ GET /products got promise complete");
@@ -29,8 +29,8 @@ export async function GET(req: NextRequest) {
             pagination: { page, limit, total },
         });
     } catch (err) {
-        console.error('❌ Error in GET /api/products:', err);
-        return NextResponse.json({ error: `Error fetching products: ${err}`}, { status: 500})
+        console.error('❌ Error in GET /api/items:', err);
+        return NextResponse.json({ error: `Error fetching items: ${err}`}, { status: 500})
     }
 }
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         verifyToken(req);
         const body = await req.json();
         const { name, description, price, stock, categoryId, unitId, unitQty, serviceId } = body;
-        const product = await db.product.create({
+        const item = await db.item.create({
             data: {
                 name,
                 description,
@@ -53,10 +53,10 @@ export async function POST(req: NextRequest) {
             }
         })
         return NextResponse.json({
-            message: "Product created successfully.",
-            productId: product.id,
+            message: "Item created successfully.",
+            itemId: item.id,
         })
     } catch (err) {
-        return NextResponse.json({ error: `Failed to create product: ${err}` }, { status: 500 })
+        return NextResponse.json({ error: `Failed to create item: ${err}` }, { status: 500 })
     }
 }

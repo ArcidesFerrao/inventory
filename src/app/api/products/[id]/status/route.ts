@@ -15,16 +15,16 @@ export async function PATCH(request: Request, { params}: {params: Promise<{ id: 
     const { status  } = await request.json();
 
     try {
-        const product = await db.supplierProduct.update({
+        const stockItem = await db.stockItem.update({
             where: { id },
             data: { status },
         })
 
-        return NextResponse.json(product);
+        return NextResponse.json(stockItem);
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ error: "Failed to update product status"},
+        return NextResponse.json({ error: "Failed to update item status"},
             {status: 500 }
         )
     }

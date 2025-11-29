@@ -1,29 +1,25 @@
 "use client";
 
-import { ProductWithCategory } from "@/types/types";
+import { ItemWithCategory } from "@/types/types";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ListDrinkItem, ListItem, ListStockItem } from "./List";
 
-export default function MenuAndStock({
-  products,
-}: {
-  products: ProductWithCategory[];
-}) {
+export default function MenuAndStock({ items }: { items: ItemWithCategory[] }) {
   const [view, setView] = useState<"menu" | "stock">("menu");
-  console.log(products);
-  if (products.length === 0) {
+  console.log(items);
+  if (items.length === 0) {
     <section className="flex gap-2">
-      <p>No products found...</p>
-      <p>Click on &quot;New Product&quot; to add on.</p>
+      <p>No items found...</p>
+      <p>Click on &quot;New Item&quot; to add on.</p>
     </section>;
   }
-  const menuProducts = products.filter((p) => p.type === "SERVICE");
-  const stockProducts = products.filter((p) => p.type === "STOCK");
+  const menuProducts = items.filter((p) => p.type === "SERVICE");
+  const stockProducts = items.filter((p) => p.type === "STOCK");
 
-  const lanche = menuProducts.filter((p) => p.Category?.name === "Lunch");
-  const bebidas = menuProducts.filter((p) => p.Category?.name === "Drink");
-  const refeicao = menuProducts.filter((p) => p.Category?.name === "Meal");
+  const lanche = menuProducts.filter((p) => p.category?.name === "Lunch");
+  const bebidas = menuProducts.filter((p) => p.category?.name === "Drink");
+  const refeicao = menuProducts.filter((p) => p.category?.name === "Meal");
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -49,18 +45,18 @@ export default function MenuAndStock({
         <div className="flex gap-2 items-center">
           <Link href="/service/products/new" className="add-product flex gap-1">
             <span className="text-md px-2 flex items-center gap-2">
-              New Product
+              New Item
             </span>
           </Link>
         </div>
       </div>
       {view === "menu" && (
         <>
-          {products.length === 0 ? (
+          {items.length === 0 ? (
             <section className="flex flex-col gap-2">
-              <p>No products found...</p>
+              <p>No items found...</p>
               <p className="font-thin text-sm">
-                Click on &quot;New Product&quot; to add one.
+                Click on &quot;New Item&quot; to add one.
               </p>
             </section>
           ) : (
@@ -117,7 +113,7 @@ export default function MenuAndStock({
         <>
           {stockProducts.length === 0 ? (
             <section className="flex flex-col gap-2">
-              <p>No products found...</p>
+              <p>No items found...</p>
               <p className="font-thin text-sm">
                 Click on &quot;New Product&quot; to add one.
               </p>

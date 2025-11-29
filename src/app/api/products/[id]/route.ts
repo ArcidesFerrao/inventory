@@ -8,9 +8,9 @@ export async function GET(req: NextRequest, props:{ params: Params}) {
   try {
     verifyToken(req);
     const {id} = await props.params;
-    const product = await db.product.findUnique({ where: { id } });
-    if (!product) NextResponse.json({ error: "Product not found" }, { status: 404})
-      return NextResponse.json(product)
+    const item = await db.item.findUnique({ where: { id } });
+    if (!item) NextResponse.json({ error: "Item not found" }, { status: 404})
+      return NextResponse.json(item)
 
   } catch (error) {
     return NextResponse.json(
@@ -26,11 +26,11 @@ export async function PUT(req: NextRequest,  props:{ params: Params}) {
     const { id } = await props.params;
     const body = await req.json();
 
-    await db.product.update({
+    await db.item.update({
       where: { id },
       data: body,
     });
-    return NextResponse.json({ message: "Product updated successfully." });
+    return NextResponse.json({ message: "Item updated successfully." });
   } catch (error) {
     return NextResponse.json({ error: `Update failed: ${error}` }, { status: 500 });
   }
@@ -41,8 +41,8 @@ export async function DELETE(req: NextRequest,  props:{ params: Params}) {
     verifyToken(req);
     const { id } = await props.params;
 
-    await db.product.delete({ where: { id } });
-    return NextResponse.json({ message: "Product deleted successfully." });
+    await db.item.delete({ where: { id } });
+    return NextResponse.json({ message: "Item deleted successfully." });
   } catch {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }

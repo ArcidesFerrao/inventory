@@ -1,34 +1,33 @@
 "use client";
 
-import { ProductStatus } from "@/generated/prisma/enums";
-// import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { ItemStatus } from "@/generated/prisma/client";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function StatusToggle({
-  productId,
+  itemId,
   initialStatus,
 }: {
-  productId: string;
-  initialStatus: ProductStatus;
+  itemId: string;
+  initialStatus: ItemStatus;
 }) {
-  const [status, setStatus] = useState<ProductStatus>(initialStatus);
+  const [status, setStatus] = useState<ItemStatus>(initialStatus);
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   //   const router = useRouter();
 
   const statusConfig = {
     ACTIVE: { label: "Active", color: "bg-green-100 text-green-800" },
-    DRAFT: { label: "Draft", color: "bg-yellow-100 text-yellow-800" },
-    OUT_OF_STOCK: { label: "Out of Stock", color: "bg-red-100 text-red-800" },
+    INACTIVE: { label: "Inactive", color: "bg-yellow-100 text-yellow-800" },
+    // OUT_OF_STOCK: { label: "Out of Stock", color: "bg-red-100 text-red-800" },
   };
 
-  const updateStatus = async (newStatus: ProductStatus) => {
+  const updateStatus = async (newStatus: ItemStatus) => {
     setLoading(true);
     setShowMenu(false);
 
     try {
-      const response = await fetch(`/api/products/${productId}/status`, {
+      const response = await fetch(`/api/products/${itemId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -41,7 +40,7 @@ export default function StatusToggle({
       setStatus(newStatus);
     } catch (error) {
       console.error("Error updating status: ", error);
-      toast.error("Failed to update product status");
+      toast.error("Failed to update item status");
       setStatus(status);
     } finally {
       setLoading(false);
@@ -61,7 +60,7 @@ export default function StatusToggle({
         <>
           <div className="inset-0 z-10" onClick={() => setShowMenu(false)}>
             <div className="status-menu absolute top-full left-0  rounded-md shadow-xl z-20">
-              {(Object.keys(statusConfig) as ProductStatus[]).map(
+              {(Object.keys(statusConfig) as ItemStatus[]).map(
                 (statusOption) => (
                   <button
                     className="status-btn w-full text-nowrap text-left px-3 py-2 text-sm "

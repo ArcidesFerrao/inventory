@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
 import { createNotification } from "./notifications";
 
-export async function createDelivery({ supplierOrderId, orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
+export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
 }[]}) {
     const session = await auth()
@@ -20,7 +20,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
     try {
         const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`)
         const {delivery, updatedOrder} = await db.$transaction(async (tx) => {
-            const [delivery, updatedOrder, updatedSupplierOrder] = await Promise.all([
+            const [delivery, updatedOrder] = await Promise.all([
                 tx.delivery.create({
                     data: {
                         orderId,
@@ -40,7 +40,7 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
                             include: {
                                 orderItem: {
                                     include: {
-                                        product: true
+                                        stockItem: true
                                     }
                                 }
                             }
@@ -56,30 +56,24 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
                         status: "IN_PREPARATION"
                     },
                     include: {
-                        supplierOrders: true
+                        supplier: true
+                        ,Service: true
                     }
                 }),
 
-                tx.supplierOrder.update({
-                    where: {
-                        id: supplierOrderId
-                    },
-                    data: {
-                        status: "IN_PREPARATION"
-                    }
-                })
+                
             ])
 
-            return {delivery, updatedOrder, updatedSupplierOrder}
+            return {delivery, updatedOrder}
         })
 
 
         await logActivity(
             updatedOrder.serviceId,
-            session.user.supplierId,
+            updatedOrder.supplierId,
             "CREATE",
             "Delivery",
-            supplierOrderId,
+            orderId,
             `Scheduled delivery for Order`,
             {
                 orderId,
@@ -100,15 +94,15 @@ export async function createDelivery({ supplierOrderId, orderId, deliveryDate, d
     }
 }
 
-export async function completeDelivery({serviceId, deliveryId, orderId, supplierOrderId}:{serviceId:string, deliveryId:string, orderId:string, supplierOrderId: string}) {
+export async function completeDelivery({serviceId, deliveryId, orderId}:{serviceId:string, deliveryId:string, orderId:string}) {
   const session = await auth()
     
     if (!session?.user) redirect("/login");
 
     try {
-        const { delivery, supplierOrder, order } =  await db.$transaction(async (tx) => {
+        const { delivery,  order } =  await db.$transaction(async (tx) => {
             // Update delivery, supplierOrder and order 
-            const [delivery, supplierOrder, order] = await Promise.all([
+            const [delivery,  order] = await Promise.all([
                 tx.delivery.update({
                     where: {
                         id: deliveryId,
@@ -122,24 +116,14 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                             include: {
                                 orderItem: {
                                     include: {
-                                        product: true,
+                                        stockItem: true
                                     }
-                                }
+                                },
                             }
                         }
                     }
                 }),
-                tx.supplierOrder.update({
-                    where: {
-                        id: supplierOrderId,
-                    }, 
-                    data: {
-                        status: "COMPLETED",
-                    },
-                    include: {
-                        supplier: true
-                    }
-                }),
+                
                 tx.order.update({
                     where: {
                         id: orderId,
@@ -148,21 +132,22 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                         status: "DELIVERED",
                     },
                     include: {
-                        Service: true
+                        Service: true,
+                        supplier: true,
                     }
                 })
             ])
 
             //Handle stock updates
 
-            const updatedProducts = await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
-                const supplierProduct = deliveryItem.orderItem.product;
+            const updatedItems = await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
+                const stockItem = deliveryItem.orderItem.stockItem;
                 const quantity = deliveryItem.quantity;
 
 
-                const updatedSupplierProduct = await tx.supplierProduct.update({
+                const updatedStockItem = await tx.stockItem.update({
                     where: {
-                        id: supplierProduct.id,
+                        id: stockItem.id,
                     }, 
                     data: {
                         stock: {
@@ -173,7 +158,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
 
                 await tx.stockMovement.create({
                     data: {
-                        supplierProductId: supplierProduct.id,
+                        stockItemId: stockItem.id,
                         changeType: "SALE",
                         quantity,
                         referenceId: deliveryItem.id,
@@ -181,45 +166,45 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     }
                 })
 
-                let serviceProduct = await tx.product.findFirst({
+                let serviceProduct = await tx.item.findFirst({
                     where: {
                         serviceId,
                         name: {
-                            equals: supplierProduct.name,
+                            equals: stockItem.name,
                             mode: "insensitive",
                         }
                     }
                 });
 
                 if (serviceProduct) {
-                    await tx.product.update({
+                    await tx.item.update({
                         where: {
                             id: serviceProduct.id,
                         },
                         data: {
-                            price: supplierProduct.price,
+                            price: stockItem.price,
                             stock: {
                                 increment: quantity,
                             }
                         }
                     })
                 } else {
-                    serviceProduct = await tx.product.create({
+                    serviceProduct = await tx.item.create({
                         data: {
-                            name: supplierProduct.name,
-                            description: supplierProduct.description,
-                            unitQty: supplierProduct.unitQty,
-                            unitId: supplierProduct.unitId,
+                            name: stockItem.name,
+                            description: stockItem.description,
+                            unitQty: stockItem.unitQty,
+                            unitId: stockItem.unitId,
                             stock: quantity,
                             serviceId,
-                            price: supplierProduct.price,
+                            price: stockItem.price,
                         }
                     })
                 } 
                 
                 await tx.stockMovement.create({
                     data: {
-                        productId: serviceProduct?.id,
+                        itemId: serviceProduct?.id,
                         changeType: "PURCHASE",
                         quantity,
                         referenceId: deliveryItem.id,
@@ -227,7 +212,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     }
                 });
 
-                return { serviceId, supplierId: updatedSupplierProduct.supplierId, deliveryId}
+                return { serviceId, supplierId: updatedStockItem.supplierId, deliveryId}
             }));
 
             // Create Sale + purchase with their items
@@ -235,14 +220,13 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
 
             const supplierSale = await tx.sale.create({
                 data: {
-                    supplierId: supplierOrder.supplierId,
+                    supplierId: order.supplierId,
                     total,
                     cogs: 0,
                     paymentType: "CASH",
                     SaleItem: {
                         create: delivery.deliveryItems.map((item) => ({
-                            supplierProductId: item.orderItem.supplierProductId,
-                            // productId: item.orderItem.product.id,
+                            stockItemId: item.orderItem.stockItemId,
                             quantity: item.quantity,
                             price: item.orderItem.price
                         }))
@@ -259,8 +243,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                     sourceId: orderId,
                     PurchaseItem: {
                         create: delivery.deliveryItems.map((item) => ({
-                            supplierProductId: item.orderItem.supplierProductId,
-                            // productId: item.orderItem.product.id,
+                            stockItemId: item.orderItem.stockItemId,
                             stock: item.quantity,
                             price: item.orderItem.price,
                             quantity: item.quantity,
@@ -273,13 +256,13 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
                 }
             })
 
-            return { delivery, supplierOrder, order, updatedProducts, supplierSale, servicePurchase};
+            return { delivery,  order, updatedItems, supplierSale, servicePurchase};
 
         }, { timeout: 20000});
 
         logActivity(
             serviceId,
-            supplierOrder.supplierId,
+            order.supplierId,
             "DELIVERY_CONFIRMED",
             "Delivery",
             delivery.id,
@@ -287,7 +270,6 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             {
                 deliveryId,
                 orderId,
-                supplierOrderId,
                 totalItems: delivery.deliveryItems.length,
                 deliveryItems: delivery.deliveryItems,
                 
@@ -298,14 +280,14 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
         )
 
         await createNotification({
-            userId: supplierOrder.supplier.userId ?? "",
+            userId: order.supplier.userId ?? "",
             type: "DELIVERY",
             title: "Delivery Confirmed",
             message: `${order.Service?.businessName} confirmed delivery!`,
-            link: `/supply/orders/${supplierOrderId}`
+            link: `/supply/orders/${orderId}`
         })
 
-        return { success: true, delivery, supplierOrder, order };
+        return { success: true, delivery, order };
         
     } catch (error) {
         console.error("Error completing delivery:", error);
@@ -318,7 +300,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
             `Error while completing delivery`,
             {
                 serviceId,
-                supplierOrderId,
+                orderId,
                 error: error instanceof Error ? error.message : String(error),
             },
             null,
@@ -331,19 +313,21 @@ export async function completeDelivery({serviceId, deliveryId, orderId, supplier
     }
 }
 
-export async function arrivedDelivery(orderId: string, deliveryId: string, supplierOrderId: string) {
+export async function arrivedDelivery(orderId: string, deliveryId: string,) {
     const session = await auth()
     if (!session?.user) redirect("/login");
 
     try {
-        const [order, delivery, supplierOrder] = await Promise.all([
+        const [order, delivery] = await Promise.all([
             db.order.update({
                 where: { id: orderId },
                 data: {
                     status: "IN_DELIVERY",
                 },
                 include: {
-                    Service: true
+                    Service: true,
+                    orderItems: true,
+                    supplier: true
                 }
             }),
             db.delivery.update({
@@ -356,26 +340,12 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
                 },
                 
             }),
-            db.supplierOrder.update({
-                where: {
-                    id: supplierOrderId},
-                data: {
-                    status: "COMPLETED",
-                },
-                include: {
-                    supplier: true,
-                    items: {
-                        include: {
-                            product: true
-                        }
-                    }
-                }
-            })
+            
         ])
 
         await logActivity(
             null,
-            supplierOrder.supplierId,
+            order.supplierId,
             "DELIVERY_ARRIVED",
             "Delivery",
             delivery.id,
@@ -383,9 +353,9 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
             {
                 
                 deliveryId,
-                supplierOrderId,
+                orderId,
                 deliveredAt: delivery.deliveredAt,
-                deliveryItems: supplierOrder.items
+                deliveryItems: order.orderItems
             },
             null,
             "INFO",
@@ -396,11 +366,11 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
             userId: order.Service?.userId ?? "",
             type: "DELIVERY",
             title: "Delivery Arrived",
-            message: `${supplierOrder.supplier?.name} awaiting confirmation!`,
+            message: `${order.supplier?.businessName} awaiting confirmation!`,
             link: `/service/purchases/orders/${order.id}`
         })
 
-        return { success: true, order, delivery, supplierOrder };
+        return { success: true, order, delivery };
     } catch (error) {
         console.error("Error marking delivery as arrived:", error);
         await logActivity(
@@ -411,7 +381,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string, suppl
             deliveryId,
             `Error while completing delivery`,
             {
-                supplierOrderId,
+                orderId,
                 error: error instanceof Error ? error.message : String(error),
             },
             null,
@@ -443,7 +413,7 @@ export async function  rateDelivery(deliveryId: string, star: number) {
 }
 
 
-export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
+export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
 }[]}) {
 
@@ -456,7 +426,7 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
     try {
         const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`);
 
-        const {delivery, updatedOrder, updatedSupplierOrder } = await db.$transaction(
+        const {delivery, updatedOrder,  } = await db.$transaction(
             async (tx) => {
                 const delivery = await tx.delivery.create({
                     data: {
@@ -475,11 +445,7 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
                     include: {
                         deliveryItems: {
                             include: {
-                                orderItem: {
-                                    include: {
-                                        product: true,
-                                    }
-                                }
+                                orderItem: true
                             }
                         }
                     }
@@ -493,24 +459,13 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
                         status: "IN_PREPARATION",
                     },
                     include: {
-                        supplierOrders: true,
                         Service: true,
+                        supplier: true,
                     }
                 });
 
-                const updatedSupplierOrder = await tx.supplierOrder.update({
-                    where :{
-                        id: supplierOrderId,
-                    },
-                    data: {
-                        status: "IN_PREPARATION"
-                    },
-                    include: {
-                        supplier: true
-                    }
-                });
 
-                return { delivery, updatedOrder, updatedSupplierOrder}
+                return { delivery, updatedOrder}
             }, 
             { timeout: 15000 }
         );
@@ -520,7 +475,7 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
             session.user.supplierId,
             "CREATE",
             "Delivery",
-            supplierOrderId,
+            orderId,
             `Scheduled delivery for Order`,
             {
                 orderId,
@@ -537,11 +492,11 @@ export async function createNewDelivery({ supplierOrderId, orderId, deliveryDate
             userId: updatedOrder.Service?.userId ?? "",
             type: "DELIVERY",
             title: "New Delivery Scheduled",
-            message: `${updatedSupplierOrder.supplier?.name} scheduled a delivery`,
+            message: `${updatedOrder.supplier?.businessName} scheduled a delivery`,
             link: `/service/purchases/orders/${updatedOrder.id}`}
         )
 
-        return {success: true, delivery, updatedOrder, updatedSupplierOrder};
+        return {success: true, delivery, updatedOrder};
 
 
     } catch (error) {

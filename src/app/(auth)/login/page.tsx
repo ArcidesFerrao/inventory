@@ -15,7 +15,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (session?.user && status === "authenticated") {
-      router.push(`/${session.user.id}`);
+      if (session?.user.role === "SERVICE") {
+        router.push("/service");
+      } else {
+        router.push("/supply");
+      }
     }
   }, [session, status, router]);
 
@@ -33,7 +37,11 @@ export default function LoginPage() {
       setError(`Invalid credentials: ${res.error}`);
     } else {
       setError("");
-      router.push("/");
+      if (session?.user.role === "SERVICE") {
+        router.push("/service");
+      } else {
+        router.push("/supplier");
+      }
     }
   };
 

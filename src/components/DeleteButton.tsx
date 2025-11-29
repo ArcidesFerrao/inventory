@@ -1,30 +1,30 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import ConfirmDialog from "./ConfirmDialog";
-import { deleteSupplierProduct } from "@/app/actions/product";
+import { deleteStockItem } from "@/app/actions/product";
 import { useRouter } from "next/navigation";
 
-export const SupplierProductDeleteButton = ({
-  supplierProductId,
+export const StockItemDeleteButton = ({
+  stockItemId,
 }: {
-  supplierProductId: string;
+  stockItemId: string;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
   const handleDelete = () => {
     startTransition(async () => {
-      const res = await deleteSupplierProduct(supplierProductId);
+      const res = await deleteStockItem(stockItemId);
 
       if (res.status === "success") {
-        toast.success("Supplier Product deleted successfully");
+        toast.success("Stock Item deleted successfully");
         router.push("/supply/products");
       } else {
         const error = await res.error;
         toast.error("something went wrong!");
-        console.log("Error deleting product: ", error);
+        console.log("Error deleting item: ", error);
       }
     });
   };
@@ -35,7 +35,7 @@ export const SupplierProductDeleteButton = ({
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title="Delete this product?"
+        title="Delete this item?"
         description="This cannot be undone."
       />
       <button
@@ -48,14 +48,15 @@ export const SupplierProductDeleteButton = ({
     </>
   );
 };
-export const DeleteButton = ({ productId }: { productId: string }) => {
+
+export const DeleteButton = ({ itemId }: { itemId: string }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
 
   const handleDelete = () => {
     startTransition(async () => {
-      const res = await fetch(`/api/products/${productId}`, {
+      const res = await fetch(`/api/products/${itemId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -64,12 +65,12 @@ export const DeleteButton = ({ productId }: { productId: string }) => {
       });
 
       if (res.ok) {
-        toast.success("Product deleted successfully");
+        toast.success("Item deleted successfully");
         router.push("/service/products");
       } else {
         const { error } = await res.json();
         toast.error("something went wrong!");
-        console.log("Error deleting product: ", error);
+        console.log("Error deleting item: ", error);
       }
     });
   };
@@ -80,7 +81,7 @@ export const DeleteButton = ({ productId }: { productId: string }) => {
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title="Delete this product?"
+        title="Delete this item?"
         description="This cannot be undone."
       />
       <button
@@ -108,12 +109,12 @@ export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
       });
 
       if (res.ok) {
-        toast.success("Product deleted successfully");
+        toast.success("Order deleted successfully");
         router.push("/service/orders");
       } else {
         const { error } = await res.json();
         toast.error("something went wrong!");
-        console.log("Error deleting product: ", error);
+        console.log("Error deleting order: ", error);
       }
     });
   };
@@ -124,7 +125,7 @@ export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title="Delete this product?"
+        title="Delete this order?"
         description="This cannot be undone."
       />
       <button

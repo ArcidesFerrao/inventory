@@ -14,11 +14,11 @@ export default async function SalesPage() {
     include: {
       SaleItem: {
         include: {
-          product: true,
+          item: true,
         },
       },
     },
-    orderBy: { date: "desc" },
+    orderBy: { timestamp: "desc" },
   });
 
   return (

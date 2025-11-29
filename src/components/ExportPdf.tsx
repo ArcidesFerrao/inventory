@@ -4,22 +4,23 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import {
   ActivityLog,
-  Product,
+  Item,
   Purchase,
   Sale,
-  SupplierProduct,
+  ServiceStockItem,
+  StockItem,
 } from "@/generated/prisma/client";
 import { useState } from "react";
 import { SupplierSaleWithItems } from "@/types/types";
 import { JsonValue } from "@prisma/client/runtime/client";
 
 type ExportProps = {
-  stock: SupplierProduct[];
+  stockItem: StockItem[];
   sales: SupplierSaleWithItems[];
   logs: LogWithItems[];
 };
 type Props = {
-  stock: Product[];
+  stockItems: (ServiceStockItem & { stockItem: StockItem })[];
   purchases: PurchaseWithItems[];
   sales: SaleWithItems[];
   logs: LogWithItems[];
@@ -31,8 +32,8 @@ type PurchaseWithItems = Purchase & {
     price: number;
     quantity: number;
     purchaseId: string;
-    supplierProduct: SupplierProduct | null;
-    product: Product | null;
+    stockItem: StockItem | null;
+    item: Item | null;
   }[];
 };
 
@@ -42,8 +43,8 @@ type SaleWithItems = Sale & {
     price: number;
     quantity: number;
     saleId: string;
-    productId: string | null;
-    product: Product | null;
+    itemId: string | null;
+    item: Item | null;
   }[];
 };
 
@@ -78,7 +79,7 @@ export const ExportSalesPdf = ({ sales }: { sales: SaleWithItems[] }) => {
       startY: 30,
       head: [["Date", "Total Amount (MZN)", "Cost of Goods Sold (MZN)"]],
       body: sales.map((sale) => [
-        new Date(sale.date).toLocaleDateString(),
+        new Date(sale.timestamp).toLocaleDateString(),
         sale.total.toFixed(2),
         sale.cogs.toFixed(2),
       ]),
@@ -90,18 +91,18 @@ export const ExportSalesPdf = ({ sales }: { sales: SaleWithItems[] }) => {
 
       doc.setFontSize(14);
       doc.text(
-        `Products for sale on ${new Date(sale.date).toLocaleDateString()}`,
+        `Items for sale on ${new Date(sale.timestamp).toLocaleDateString()}`,
         14,
         startY
       );
 
       autoTable(doc, {
         startY: startY + 5,
-        head: [["Product", "Quantity", "Price (MZN)"]],
-        body: sale.SaleItem.map((item) => [
-          item.product?.name || "Unknown",
-          item.quantity,
-          item.price.toFixed(2),
+        head: [["Item", "Quantity", "Price (MZN)"]],
+        body: sale.SaleItem.map((i) => [
+          i.item?.name || "Unknown",
+          i.quantity,
+          i.price.toFixed(2),
         ]),
       });
     });
@@ -124,7 +125,7 @@ export const ExportSupplierSalesPdf = ({
       startY: 30,
       head: [["Date", "Total Amount (MZN)", "Cost of Goods Sold (MZN)"]],
       body: sales.map((sale) => [
-        new Date(sale.date).toLocaleDateString(),
+        new Date(sale.timestamp).toLocaleDateString(),
         sale.total.toFixed(2),
         sale.cogs.toFixed(2),
       ]),
@@ -136,18 +137,18 @@ export const ExportSupplierSalesPdf = ({
 
       doc.setFontSize(14);
       doc.text(
-        `Products for sale on ${new Date(sale.date).toLocaleDateString()}`,
+        `Items for sale on ${new Date(sale.timestamp).toLocaleDateString()}`,
         14,
         startY
       );
 
       autoTable(doc, {
         startY: startY + 5,
-        head: [["Product", "Quantity", "Price (MZN)"]],
-        body: sale.SaleItem.map((item) => [
-          item.supplierProduct?.name || "Unknown",
-          item.quantity,
-          item.price.toFixed(2),
+        head: [["Item", "Quantity", "Price (MZN)"]],
+        body: sale.SaleItem.map((i) => [
+          i.stockItem?.name || "Unknown",
+          i.quantity,
+          i.price.toFixed(2),
         ]),
       });
     });
@@ -171,7 +172,7 @@ export const ExportPurchasesPdf = ({
       startY: 30,
       head: [["Date", "Total Amount (MZN)"]],
       body: purchases.map((purchase) => [
-        new Date(purchase.date).toLocaleDateString(),
+        new Date(purchase.timestamp).toLocaleDateString(),
         purchase.total.toFixed(2),
       ]),
     });
@@ -182,20 +183,20 @@ export const ExportPurchasesPdf = ({
 
       doc.setFontSize(14);
       doc.text(
-        `Products for sale on ${new Date(purchase.date).toLocaleDateString()}`,
+        `Items for sale on ${new Date(
+          purchase.timestamp
+        ).toLocaleDateString()}`,
         14,
         startY
       );
 
       autoTable(doc, {
         startY: startY + 5,
-        head: [["Product", "Quantity", "Cost (MZN)"]],
-        body: purchase.PurchaseItem.map((item) => [
-          item.supplierProduct?.name || item.product?.name || "Unknown",
-          item.quantity,
-          item.supplierProduct?.price?.toFixed(2) ||
-            item.product?.price ||
-            "0.00",
+        head: [["Item", "Quantity", "Cost (MZN)"]],
+        body: purchase.PurchaseItem.map((i) => [
+          i.stockItem?.name || i.item?.name || "Unknown",
+          i.quantity,
+          i.stockItem?.price?.toFixed(2) || i.item?.price || "0.00",
         ]),
       });
     });
@@ -204,26 +205,12 @@ export const ExportPurchasesPdf = ({
   return <button onClick={handleExport}>Purchases Report</button>;
 };
 
-export const ExportStockPdf = ({ stock }: { stock: Product[] }) => {
-  const handleExport = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.text("Stock Report", 14, 20);
-
-    autoTable(doc, {
-      startY: 30,
-      head: [["Product", "Quantity", "Cost (MZN)"]],
-      body: stock.map((s) => [s.name, s.stock, s.price?.toFixed(2) || "0.00"]),
-    });
-    doc.save("stock_report.pdf");
-  };
-  return <button onClick={handleExport}>Stock Report</button>;
-};
-export const ExportSupplierStockPdf = ({
-  stock,
+export const ExportStockPdf = ({
+  stockItem,
 }: {
-  stock: SupplierProduct[];
+  stockItem: (ServiceStockItem & {
+    stockItem: StockItem;
+  })[];
 }) => {
   const handleExport = () => {
     const doc = new jsPDF();
@@ -233,7 +220,27 @@ export const ExportSupplierStockPdf = ({
 
     autoTable(doc, {
       startY: 30,
-      head: [["Product", "Quantity", "Cost (MZN)"]],
+      head: [["Item", "Quantity", "Cost (MZN)"]],
+      body: stockItem.map((s) => [
+        s.stockItem.name,
+        s.stock,
+        s.stockItem.price?.toFixed(2) || "0.00",
+      ]),
+    });
+    doc.save("stock_report.pdf");
+  };
+  return <button onClick={handleExport}>Stock Report</button>;
+};
+export const ExportSupplierStockPdf = ({ stock }: { stock: StockItem[] }) => {
+  const handleExport = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Stock Report", 14, 20);
+
+    autoTable(doc, {
+      startY: 30,
+      head: [["Item", "Quantity", "Cost (MZN)"]],
       body: stock.map((s) => [s.name, s.stock, s.price?.toFixed(2) || "0.00"]),
     });
     doc.save("stock_report.pdf");
@@ -277,20 +284,20 @@ export const ExportLogsPdf = ({ logs }: { logs: LogWithItems[] }) => {
   return <button onClick={handleExport}>Activity Logs Report</button>;
 };
 
-export function ExportSelection({ stock, purchases, sales, logs }: Props) {
+export function ExportSelection({ stockItems, purchases, sales, logs }: Props) {
   const [range, setRange] = useState<"today" | "weekly" | "all">("weekly");
 
-  function filterByRange<T extends { date: Date }>(data: T[]) {
+  function filterByRange<T extends { timestamp: Date }>(data: T[]) {
     const now = new Date();
 
     if (range === "today") {
       return data.filter(
-        (d) => new Date(d.date).toDateString() === now.toDateString()
+        (d) => new Date(d.timestamp).toDateString() === now.toDateString()
       );
     } else if (range === "weekly") {
       const weekAgo = new Date();
       weekAgo.setDate(now.getDate() - 7);
-      return data.filter((d) => new Date(d.date) >= weekAgo);
+      return data.filter((d) => new Date(d.timestamp) >= weekAgo);
     }
 
     return data;
@@ -301,7 +308,7 @@ export function ExportSelection({ stock, purchases, sales, logs }: Props) {
       <div className="export-header flex gap-4 items-center  justify-between">
         <h4 className="font-medium">Export Data</h4>
         <div>
-          <ExportStockPdf stock={stock} />
+          <ExportStockPdf stockItem={stockItems} />
           <ExportLogsPdf logs={logs} />
         </div>
       </div>
@@ -330,20 +337,24 @@ export function ExportSelection({ stock, purchases, sales, logs }: Props) {
     </div>
   );
 }
-export function SupplierExportSelection({ stock, sales, logs }: ExportProps) {
+export function SupplierExportSelection({
+  stockItem,
+  sales,
+  logs,
+}: ExportProps) {
   const [range, setRange] = useState<"today" | "weekly" | "all">("weekly");
 
-  function filterByRange<T extends { date: Date }>(data: T[]) {
+  function filterByRange<T extends { timestamp: Date }>(data: T[]) {
     const now = new Date();
 
     if (range === "today") {
       return data.filter(
-        (d) => new Date(d.date).toDateString() === now.toDateString()
+        (d) => new Date(d.timestamp).toDateString() === now.toDateString()
       );
     } else if (range === "weekly") {
       const weekAgo = new Date();
       weekAgo.setDate(now.getDate() - 7);
-      return data.filter((d) => new Date(d.date) >= weekAgo);
+      return data.filter((d) => new Date(d.timestamp) >= weekAgo);
     }
 
     return data;
@@ -354,7 +365,7 @@ export function SupplierExportSelection({ stock, sales, logs }: ExportProps) {
       <div className="export-header flex gap-4 items-center  justify-between">
         <h4 className="font-medium">Export Data</h4>
         <div>
-          <ExportSupplierStockPdf stock={stock} />
+          <ExportSupplierStockPdf stock={stockItem} />
           <ExportLogsPdf logs={logs} />
         </div>
       </div>

@@ -15,12 +15,12 @@ export default async function SettingsPage() {
     include: {
       SaleItem: {
         include: {
-          product: true,
+          item: true,
         },
       },
     },
     orderBy: {
-      date: "desc",
+      timestamp: "desc",
     },
   });
 
@@ -31,20 +31,23 @@ export default async function SettingsPage() {
     include: {
       PurchaseItem: {
         include: {
-          product: true,
-          supplierProduct: true,
+          item: true,
+          stockItem: true,
         },
       },
     },
     orderBy: {
-      date: "desc",
+      timestamp: "desc",
     },
   });
 
-  const stockProducts = await db.product.findMany({
+  const stockItems = await db.serviceStockItem.findMany({
     where: {
       serviceId,
-      type: "STOCK",
+      // type: "STOCK",
+    },
+    include: {
+      stockItem: true,
     },
   });
 
@@ -74,7 +77,7 @@ export default async function SettingsPage() {
           <p>{session.user.phoneNumber}</p>
         </div>
         <ExportSelection
-          stock={stockProducts}
+          stockItems={stockItems}
           sales={sales}
           purchases={purchases}
           logs={logs}

@@ -1,16 +1,19 @@
 "use client";
 
-import { OrderWithSupplierOrders, PurchaseWithItems } from "@/types/types";
+import { PurchaseWithItems } from "@/types/types";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { OrderListItem, PurchaseListItem } from "./List";
+import { Order, OrderItem } from "@/generated/prisma/client";
 
 export default function PurchasesAndOrders({
   purchases,
   orders,
 }: {
   purchases: PurchaseWithItems[];
-  orders: OrderWithSupplierOrders[];
+  orders: (Order & {
+    orderItems: OrderItem[];
+  })[];
 }) {
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
@@ -46,15 +49,7 @@ export default function PurchasesAndOrders({
     .reduce((acc, order) => {
       return (
         acc +
-        order.supplierOrders.reduce((supplierAcc, supplierOrder) => {
-          return (
-            supplierAcc +
-            supplierOrder.items.reduce(
-              (itemAcc, item) => itemAcc + item.orderedQty,
-              0
-            )
-          );
-        }, 0)
+        order.orderItems.reduce((itemAcc, item) => itemAcc + item.orderedQty, 0)
       );
     }, 0);
 
@@ -161,7 +156,6 @@ export default function PurchasesAndOrders({
                   { value: "DRAFT", label: "Draft" },
                   { value: "SUBMITTED", label: "Submitted" },
                   { value: "IN_PREPARATION", label: "In Preparation" },
-                  // { value: "IN_DELIVERY", label: "In Delivery" },
                   { value: "DELIVERED", label: "Delivered" },
                   { value: "CONFIRMED", label: "Confirmed" },
                   { value: "CANCELLED", label: "Cancelled" },

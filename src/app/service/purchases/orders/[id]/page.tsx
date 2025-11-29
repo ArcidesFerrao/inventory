@@ -2,7 +2,6 @@ import { RateButtons } from "@/components/ActionButton";
 import { ConfirmDeliveryButton } from "@/components/CompleteDeliveryButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import React from "react";
 
 type Params = Promise<{ id: string }>;
 
@@ -14,28 +13,11 @@ export default async function OrderPage(props: { params: Params }) {
       id,
     },
     include: {
-      confirmedDeliveries: {
+      supplier: true,
+      delivery: true,
+      orderItems: {
         include: {
-          deliveryItems: {
-            include: {
-              orderItem: {
-                include: {
-                  product: true,
-                },
-              },
-            },
-          },
-        },
-      },
-
-      supplierOrders: {
-        include: {
-          items: {
-            include: {
-              product: true,
-            },
-          },
-          supplier: true,
+          stockItem: true,
         },
       },
     },
@@ -49,7 +31,7 @@ export default async function OrderPage(props: { params: Params }) {
             Order #{order?.id.slice(0, 5)}...
           </h2>
           <p className="text-xs font-extralight">
-            Created {order?.createdAt.toDateString()}
+            Created {order?.timestamp.toDateString()}
           </p>
         </div>
         <Link href="/service/purchases">
@@ -102,11 +84,10 @@ export default async function OrderPage(props: { params: Params }) {
           {order?.status === "DELIVERED" ||
             (order?.status === "IN_DELIVERY" && (
               <ConfirmDeliveryButton
-                deliveryId={order.confirmedDeliveries[0]?.id || ""}
+                deliveryId={order.delivery?.id || ""}
                 orderId={order.id}
-                supplierOrderId={order.supplierOrders[0]?.id || ""}
                 serviceId={order.serviceId || ""}
-                status={order.confirmedDeliveries[0]?.status || ""}
+                status={order.delivery?.status || ""}
                 role="SERVICE"
               />
             ))}
@@ -114,20 +95,20 @@ export default async function OrderPage(props: { params: Params }) {
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">
-          Supplier {order?.supplierOrders?.[0].supplier.name}
+          Supplier {order?.supplier.businessName}
         </h2>
         <table>
           <thead>
             <tr>
-              <th>Product</th>
+              <th>Item</th>
               <th>Qty</th>
               <th>Total</th>
             </tr>
           </thead>
           <tbody>
-            {order?.supplierOrders?.[0].items.map((i) => (
+            {order?.orderItems.map((i) => (
               <tr key={i.id}>
-                <td>{i.product.name}</td>
+                <td>{i.stockItem.name}</td>
                 <td>{i.orderedQty}</td>
                 <td>MZN {i.price.toFixed(2)}</td>
               </tr>
@@ -135,93 +116,93 @@ export default async function OrderPage(props: { params: Params }) {
           </tbody>
         </table>
       </div>
-      {order?.confirmedDeliveries && order.confirmedDeliveries.length > 0 && (
+      {order?.delivery && (
         <div className="deliveries-details flex flex-col gap-2 w-full">
-          {order.confirmedDeliveries.map((d) => (
-            <div
-              key={d.id}
-              className="p-4 flex justify-between delivery-details"
-            >
-              <div className="flex flex-col gap-2">
-                <h3 className="font-medium">Delivery #{d.id.slice(0, 5)}...</h3>
-                <div className="delivery-info">
-                  <p className="text-sm font-extralight">
-                    Scheduled Date: {d.scheduledAt.toDateString()}
-                  </p>
-                  <p className="text-sm font-extralight">
-                    Scheduled Time:{" "}
-                    {d.scheduledAt.toLocaleTimeString([], {
+          <div
+            key={order.delivery.id}
+            className="p-4 flex justify-between delivery-details"
+          >
+            <div className="flex flex-col gap-2">
+              <h3 className="font-medium">
+                Delivery #{order.delivery.id.slice(0, 5)}...
+              </h3>
+              <div className="delivery-info">
+                <p className="text-sm font-extralight">
+                  Scheduled Date: {order.delivery.scheduledAt.toDateString()}
+                </p>
+                <p className="text-sm font-extralight">
+                  Scheduled Time:{" "}
+                  {order.delivery.scheduledAt.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                </p>
+              </div>
+              <div className="delivery-items px-4 py-2">
+                <h4 className="font-medium">Items:</h4>
+                <ul className="flex flex-col gap-2">
+                  {order.orderItems.map((item) => (
+                    <li key={item.id}>
+                      <p className="text-sm font-extralight">
+                        - {item.stockItem.name} - Qty: {item.orderedQty}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="delivery-settings flex flex-col justify-between">
+              <div className="delivery-status flex flex-col gap-1">
+                <button
+                  disabled
+                  className="text-sm font-light text-center max-h-fit"
+                >
+                  {order.delivery.status}
+                </button>
+                {order.delivery.status === "COMPLETED" && (
+                  <p className="text-xs font-light ">
+                    Delivered Time:{" "}
+                    {order.delivery.deliveredAt?.toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                       hour12: true,
                     })}
                   </p>
-                </div>
-                <div className="delivery-items px-4 py-2">
-                  <h4 className="font-medium">Items:</h4>
-                  <ul className="flex flex-col gap-2">
-                    {d.deliveryItems.map((item) => (
-                      <li key={item.id}>
-                        <p className="text-sm font-extralight">
-                          - {item.orderItem.product.name} - Qty: {item.quantity}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <div className="delivery-settings flex flex-col justify-between">
-                <div className="delivery-status flex flex-col gap-1">
-                  <button
-                    disabled
-                    className="text-sm font-light text-center max-h-fit"
-                  >
-                    {d.status}
-                  </button>
-                  {d.status === "COMPLETED" && (
-                    <p className="text-xs font-light ">
-                      Delivered Time:{" "}
-                      {d.deliveredAt?.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                    </p>
-                  )}
-                </div>
-                {d.status === "COMPLETED" && (
-                  <div>
-                    {d.rating !== null ? (
-                      <div className="delivery-rating self-end">
-                        <div className="rate-buttons flex items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className={
-                                star <= Number(d.rating)
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }
-                            >
-                              ★
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="delivery-rating">
-                        <p>Rate this delivery:</p>
-                        <RateButtons deliveryId={d.id} />
-                      </div>
-                    )}
-                  </div>
                 )}
               </div>
+              {order.delivery.status === "COMPLETED" && (
+                <div>
+                  {order.delivery.rating !== null ? (
+                    <div className="delivery-rating self-end">
+                      <div className="rate-buttons flex items-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span
+                            key={star}
+                            className={
+                              star <= Number(order.delivery?.rating)
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            }
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="delivery-rating">
+                      <p>Rate this delivery:</p>
+                      <RateButtons deliveryId={order.delivery.id} />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          ))}
+          </div>
         </div>
       )}
-      {order?.confirmedDeliveries.length === 0 && <p>No deliveries yet...</p>}
+      {order?.delivery === null && <p>No deliveries yet...</p>}
     </div>
   );
 }

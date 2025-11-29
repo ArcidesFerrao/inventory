@@ -5,9 +5,9 @@ import Link from "next/link";
 export default async function NewOrder() {
   const suppliers = await db.supplier.findMany({
     include: {
-      products: {
+      StockItems: {
         include: {
-          Unit: true,
+          unit: true,
           supplier: true,
         },
       },

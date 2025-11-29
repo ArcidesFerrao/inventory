@@ -43,7 +43,7 @@ export async function getServiceDashBoardStats() {
                 include: {
                 CatalogItems: {
                         include:{
-                            catalogItem: true,
+                            stockItem: true
                         }
                     }
                 }
@@ -59,7 +59,7 @@ export async function getServiceDashBoardStats() {
 
             if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
                 for (const recipe of saleItem.item.CatalogItems) {
-                    cogsForItem += recipe.quantity * (recipe.catalogItem?.price || 0);
+                    cogsForItem += recipe.quantity * (recipe.stockItem?.price || 0);
                 }
             } else {
                 cogsForItem += saleItem.item.price || 0;
@@ -110,6 +110,7 @@ export async function getServiceDashBoardStats() {
             quantity: i._sum.quantity
         }
     }))
+    
     
 
     return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems };
@@ -184,7 +185,7 @@ export async function getSupplierDashBoardStats() {
         take: 3
     })
 
-    const topitems = await Promise.all(mostOrderedItems.map(async (item) => {
+    const topItems = await Promise.all(mostOrderedItems.map(async (item) => {
         const stockItem = await db.stockItem.findUnique({
             where: {
                 id: item.stockItemId!
@@ -211,7 +212,7 @@ export async function getSupplierDashBoardStats() {
         profit, 
         averageOrderValue, 
         grossMargin, 
-        topitems 
+        topItems 
     };
 }
 

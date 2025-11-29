@@ -82,7 +82,7 @@ export const MenuButton = ({
                 />
                 <NavLink
                   href="/service/products"
-                  label="Products"
+                  label="Items"
                   icon={<span className="ant-design--product-filled"></span>}
                 />
                 <NavLink
@@ -123,7 +123,7 @@ export const MenuButton = ({
                 />
                 <NavLink
                   href="/admin/products"
-                  label="Products"
+                  label="Items"
                   icon={<span className="carbon--sales-ops"></span>}
                 />
                 <NavLink

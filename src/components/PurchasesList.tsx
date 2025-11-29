@@ -7,21 +7,21 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 export const PurchasesList = ({
-  initialProducts,
+  initialStockItems,
   serviceId,
 }: PurchasesProps) => {
   const router = useRouter();
-  const [products, setProducts] = useState(initialProducts);
+  const [items, setItems] = useState(initialStockItems);
   const [loading, setLoading] = useState(false);
 
   const handleCompleteSale = async () => {
     setLoading(true);
     console.log("creating purchase");
-    const purchaseItems = products.filter(
-      (product) => product.quantity > 0 && (product.price ?? 0) > 0
+    const purchaseItems = items.filter(
+      (item) => item.quantity > 0 && (item.price ?? 0) > 0
     );
     if (purchaseItems.length === 0) {
-      toast.error("Add at least one product with a valid price.");
+      toast.error("Add at least one item with a valid price.");
       setLoading(false);
       return;
     }
@@ -42,30 +42,30 @@ export const PurchasesList = ({
   };
 
   const handleIncrement = (id: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id
-          ? { ...product, quantity: product.quantity + 1 }
-          : product
+    setItems((prevItems) =>
+      prevItems.map((stockItem) =>
+        stockItem.id === id
+          ? { ...stockItem, quantity: stockItem.quantity + 1 }
+          : stockItem
       )
     );
   };
 
   const handleDecrement = (id: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id && product.quantity > 0
-          ? { ...product, quantity: product.quantity - 1 }
-          : product
+    setItems((prevItems) =>
+      prevItems.map((stockItem) =>
+        stockItem.id === id && stockItem.quantity > 0
+          ? { ...stockItem, quantity: stockItem.quantity - 1 }
+          : stockItem
       )
     );
   };
 
-  const totalItems = products.reduce((sum, product) => {
-    return sum + product.quantity;
+  const totalItems = items.reduce((sum, stockItem) => {
+    return sum + stockItem.quantity;
   }, 0);
-  const totalPrice = products.reduce((sum, product) => {
-    return sum + (product.price ?? 0) * product.quantity;
+  const totalPrice = items.reduce((sum, stockItem) => {
+    return sum + (stockItem.price ?? 0) * stockItem.quantity;
   }, 0);
 
   return (
@@ -74,10 +74,10 @@ export const PurchasesList = ({
         <div className="items">
           <h2 className="text-xl font-medium  p-4">Items</h2>
           <ul>
-            {products.map((product) => (
-              <li key={product.id} className=" flex justify-between px-4 py-2">
+            {items.map((item) => (
+              <li key={item.id} className=" flex justify-between px-4 py-2">
                 <div className="flex flex-col justify-between gap-2">
-                  <h3 className="font-semibold ">{product.name}</h3>
+                  <h3 className="font-semibold ">{item.stockItem.name}</h3>
                   <label
                     className="flex gap-2 text-sm items-center"
                     htmlFor="price"
@@ -86,11 +86,11 @@ export const PurchasesList = ({
                     <input
                       className="max-w-20 text-xs"
                       type="number"
-                      value={product.price ?? ""}
+                      value={item.price ?? ""}
                       onChange={(e) =>
-                        setProducts((prev) =>
+                        setItems((prev) =>
                           prev.map((p) =>
-                            p.id === product.id
+                            p.id === item.id
                               ? { ...p, price: parseFloat(e.target.value) || 0 }
                               : p
                           )
@@ -101,18 +101,12 @@ export const PurchasesList = ({
                 </div>
                 <div className="flex flex-col gap-2 items-center text-sm">
                   <div className="amount-btn flex gap-4  px-2 ">
-                    <button onClick={() => handleDecrement(product.id)}>
-                      -
-                    </button>
-                    <span className="w-10 text-center">{product.quantity}</span>
-                    <button onClick={() => handleIncrement(product.id)}>
-                      +
-                    </button>
+                    <button onClick={() => handleDecrement(item.id)}>-</button>
+                    <span className="w-10 text-center">{item.quantity}</span>
+                    <button onClick={() => handleIncrement(item.id)}>+</button>
                   </div>
                   <span className="self-end">
-                    <p>
-                      {((product.price ?? 0) * product.quantity).toFixed(2)} MZN
-                    </p>
+                    <p>{((item.price ?? 0) * item.quantity).toFixed(2)} MZN</p>
                   </span>
                 </div>
               </li>

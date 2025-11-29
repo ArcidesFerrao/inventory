@@ -1,27 +1,19 @@
 "use client";
 
 import { createNewDelivery } from "@/app/actions/deliveries";
-import { Order, SupplierProduct } from "@/generated/prisma/client";
+import { Order, OrderItem, StockItem } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const SupplierDelivery = ({
-  supplierOrderId,
   order,
   items,
 }: {
-  supplierOrderId: string;
   order: Order;
-  items: {
-    id: string;
-    price: number;
-    supplierOrderId: string;
-    supplierProductId: string;
-    orderedQty: number;
-    deliveredQty: number;
-    product: SupplierProduct;
-  }[];
+  items: (OrderItem & {
+    stockItem: StockItem;
+  })[];
 }) => {
   const [deliveryDate, setDeliveryDate] = useState<string>("");
   const [deliveryTime, setDeliveryTime] = useState<string>("");
@@ -40,7 +32,6 @@ export const SupplierDelivery = ({
     }
 
     const deliveryData = {
-      supplierOrderId,
       orderId: order.id,
       deliveryDate,
       deliveryTime,
@@ -52,7 +43,6 @@ export const SupplierDelivery = ({
     };
 
     const delivery = await createNewDelivery(deliveryData);
-    // const delivery = await createDelivery(deliveryData);
 
     if (delivery.success) {
       toast.success("Delivery scheduled successfully!");
@@ -105,7 +95,7 @@ export const SupplierDelivery = ({
           {items.map((i) => (
             <li key={i.id} className="delivery-item flex justify-between ">
               <div>
-                <h3>{i.product.name}</h3>
+                <h3>{i.stockItem.name}</h3>
                 <p className="font-light text-sm">
                   Quantities: {i.orderedQty} units
                 </p>

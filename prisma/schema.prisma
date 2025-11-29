@@ -60,29 +60,30 @@ model Item {
 }
 
 model StockItem {
-  id             String          @id @default(cuid())
-  name           String
-  description    String?
-  unitQty        Int
-  stock          Int?
-  price          Float?
-  cost           Float?
-  supplierId     String
-  unitId         String?
-  categoryId     String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  deletedAt      DateTime?
-  status         ItemStatus      @default(ACTIVE)
-  PurchaseItem   PurchaseItem[]
-  OrderItem      OrderItem[]
-  StockMovement  StockMovement[]
-  SaleItem       SaleItem[]
-  priceHistories PriceHistory[]
-  StockItems     RecipeItem[]    @relation("StockItems")
-  unit           Unit?           @relation(fields: [unitId], references: [id], onDelete: SetNull)
-  category       Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  supplier       Supplier        @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  id                String             @id @default(cuid())
+  name              String
+  description       String?
+  unitQty           Int
+  stock             Int?
+  price             Float?
+  cost              Float?
+  supplierId        String
+  unitId            String?
+  categoryId        String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  status            ItemStatus         @default(ACTIVE)
+  PurchaseItem      PurchaseItem[]
+  OrderItem         OrderItem[]
+  StockMovement     StockMovement[]
+  SaleItem          SaleItem[]
+  priceHistories    PriceHistory[]
+  StockItems        RecipeItem[]       @relation("StockItems")
+  unit              Unit?              @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  category          Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  supplier          Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  serviceStockItems ServiceStockItem[]
 
   @@index([deletedAt])
   @@index([supplierId]) // list products per supplier
@@ -92,15 +93,18 @@ model StockItem {
 }
 
 model RecipeItem {
-  id          String     @id @default(cuid())
-  quantity    Int
-  itemId      String
-  stockItemId String
-  catalogItem Item?      @relation("CatalogItems", fields: [itemId], references: [id], onDelete: Cascade)
-  stockItem   StockItem? @relation("StockItems", fields: [stockItemId], references: [id], onDelete: Cascade)
+  id                 String           @id @default(cuid())
+  quantity           Int
+  itemId             String
+  serviceStockItemId String
+  catalogItem        Item             @relation("CatalogItems", fields: [itemId], references: [id], onDelete: Cascade)
+  serviceStockItem   ServiceStockItem @relation("ServiceStockItems", fields: [serviceStockItemId], references: [id], onDelete: Cascade)
+  stockItem          StockItem?       @relation("StockItems", fields: [stockItemId], references: [id])
+  stockItemId        String?
+  // serviceStockItem   ServiceStockItem @relation(fields: [serviceStockItemId], references: [id])
 
   @@index([itemId])
-  @@index([stockItemId])
+  @@index([serviceStockItemId])
 }
 
 model Supplier {
@@ -154,6 +158,7 @@ model Service {
   updatedAt         DateTime           @updatedAt
   businessType      BusinessType
   items             Item[]
+  serviceStockItems ServiceStockItem[]
   sales             Sale[]
   orders            Order[]
   purchases         Purchase[]
@@ -164,6 +169,24 @@ model Service {
   notifications     Notification[]
 
   @@unique([businessName, location])
+}
+
+model ServiceStockItem {
+  id          String       @id @default(cuid())
+  stock       Int?
+  cost        Float?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+  serviceId   String
+  stockItemId String
+  RecipeItems RecipeItem[] @relation("ServiceStockItems")
+  status      ItemStatus   @default(ACTIVE)
+  service     Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  stockItem   StockItem    @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, status])
+  @@index([stockItemId])
 }
 
 model Sale {

@@ -9,28 +9,24 @@ type Params = Promise<{ id: string }>;
 export default async function OrderPage(props: { params: Params }) {
   const { id } = await props.params;
 
-  const supplierOrder = await db.supplierOrder.findUnique({
+  const order = await db.order.findUnique({
     where: {
       id,
     },
     include: {
-      items: {
+      orderItems: {
         include: {
-          product: true,
+          stockItem: true,
         },
       },
-      order: {
+      Service: true,
+      delivery: {
         include: {
-          Service: true,
-          confirmedDeliveries: {
+          deliveryItems: {
             include: {
-              deliveryItems: {
+              orderItem: {
                 include: {
-                  orderItem: {
-                    include: {
-                      product: true,
-                    },
-                  },
+                  stockItem: true,
                 },
               },
             },
@@ -45,10 +41,10 @@ export default async function OrderPage(props: { params: Params }) {
       <div className="order-header flex justify-between w-full">
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold">
-            Order #{supplierOrder?.id.slice(0, 5)}...
+            Order #{order?.id.slice(0, 5)}...
           </h2>
           <p className="text-xs font-extralight">
-            Created {supplierOrder?.order.createdAt.toDateString()}
+            Created {order?.timestamp.toDateString()}
           </p>
         </div>
         <Link href="/supply/orders">
@@ -64,7 +60,7 @@ export default async function OrderPage(props: { params: Params }) {
             <div>
               <p className="text-md font-extralight">Requested Start</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
-                {supplierOrder?.order.requestedStartDate.toDateString()}
+                {order?.requestedStartDate.toDateString()}
               </h4>
             </div>
           </div>
@@ -75,7 +71,7 @@ export default async function OrderPage(props: { params: Params }) {
             <div>
               <p className="text-md font-extralight">Requested End</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
-                {supplierOrder?.order.requestedEndDate.toDateString()}
+                {order?.requestedEndDate.toDateString()}
               </h4>
             </div>
           </div>
@@ -86,7 +82,7 @@ export default async function OrderPage(props: { params: Params }) {
             <div>
               <p className="text-md font-extralight">Total Amount</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
-                MZN {supplierOrder?.order.total.toFixed(2)}
+                MZN {order?.total.toFixed(2)}
               </h4>
             </div>
           </div>
@@ -96,26 +92,20 @@ export default async function OrderPage(props: { params: Params }) {
             disabled
             className="text-sm font-light text-center px-4 py-2 rounded-sm "
           >
-            {supplierOrder?.status}
+            {order?.status}
           </button>
-          {supplierOrder?.status === "PENDING" && (
+          {order?.status === "DRAFT" && (
             <div className="order-buttons flex flex-col gap-4">
-              <AcceptButton
-                supplierOrderId={supplierOrder?.id || ""}
-                orderId={supplierOrder?.orderId || ""}
-              />
-              <DenyButton
-                supplierOrderId={supplierOrder?.id || ""}
-                orderId={supplierOrder?.orderId || ""}
-              />
+              <AcceptButton orderId={order?.id || ""} />
+              <DenyButton orderId={order?.id || ""} />
             </div>
           )}
 
-          {supplierOrder?.status === "APPROVED" && (
+          {order?.status === "SUBMITTED" && (
             <div className="order-buttons flex flex-col ">
               <Link
                 className="delivery-btn bg-blue-600 text-center"
-                href={`/supply/orders/${supplierOrder?.id}/deliveries/new`}
+                href={`/supply/orders/${order?.id}/deliveries/new`}
               >
                 Delivery
               </Link>
@@ -125,13 +115,13 @@ export default async function OrderPage(props: { params: Params }) {
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">
-          Ordered Items by {supplierOrder?.order.Service?.businessName}
+          Ordered Items by {order?.Service?.businessName}
         </h2>
 
         <table>
           <thead>
             <tr>
-              <th>Product</th>
+              <th>Item</th>
               <th>Ordered</th>
               <th className="order-items-data">Delivered</th>
               <th className="order-items-data">Remaining</th>
@@ -140,69 +130,68 @@ export default async function OrderPage(props: { params: Params }) {
             </tr>
           </thead>
           <tbody>
-            {supplierOrder?.items.map((item) => (
-              <tr key={item.id}>
-                <td>{item.product.name}</td>
-                <td>{item.orderedQty}</td>
-                <td className="order-items-data">{item.deliveredQty}</td>
+            {order?.orderItems.map((i) => (
+              <tr key={i.id}>
+                <td>{i.stockItem.name}</td>
+                <td>{i.orderedQty}</td>
+                <td className="order-items-data">{i.deliveredQty}</td>
                 <td className="order-items-data">
-                  {item.orderedQty - item.deliveredQty}
+                  {i.orderedQty - i.deliveredQty}
                 </td>
-                <td>{item.price.toFixed(2)}</td>
-                <td>{(item.price * item.orderedQty).toFixed(2)}</td>
+                <td>{i.price.toFixed(2)}</td>
+                <td>{(i.price * i.orderedQty).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {supplierOrder?.order.confirmedDeliveries &&
-        supplierOrder.order.confirmedDeliveries.length > 0 && (
-          <div className="deliveries-details flex flex-col gap-2 w-full">
-            <h2 className="text-xl font-semibold">Deliveries</h2>
-            {supplierOrder.order.confirmedDeliveries.map((d) => (
-              <div key={d.id} className="p-4 delivery-details">
-                <div className="delivery-header flex justify-between">
-                  <div className="delivery-info">
-                    <Link href={`/supply/orders/delivery/${d.id}`}>
-                      <h3 className="font-medium">
-                        Delivery #{d.id.slice(0, 5)}...
-                      </h3>
-                    </Link>
-                    <p className="text-sm font-extralight">
-                      Scheduled Date: {d.scheduledAt.toDateString()}
-                    </p>
-                    <p className="text-sm font-extralight">
-                      Scheduled Time: {d.scheduledAt.toLocaleTimeString()}
-                    </p>
-                    {d.status === "COMPLETED" && (
-                      <p>
-                        Delivered Time: {d.deliveredAt?.toLocaleTimeString()}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    disabled
-                    className="text-sm font-light text-center max-h-fit"
-                  >
-                    {d.status}
-                  </button>
-                </div>
-                <div className="delivery-items px-4 py-2">
-                  <h4 className="font-medium">Items:</h4>
-                  <ul className="flex flex-col gap-2">
-                    {d.deliveryItems.map((item) => (
-                      <li key={item.id}>
-                        <p className="text-sm font-extralight">
-                          - {item.orderItem.product.name} - Qty: {item.quantity}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+      {order?.delivery && (
+        <div className="deliveries-details flex flex-col gap-2 w-full">
+          <h2 className="text-xl font-semibold">Deliveries</h2>
+          <div className="p-4 delivery-details">
+            <div className="delivery-header flex justify-between">
+              <div className="delivery-info">
+                <Link href={`/supply/orders/delivery/${order?.delivery.id}`}>
+                  <h3 className="font-medium">
+                    Delivery #{order?.delivery.id.slice(0, 5)}...
+                  </h3>
+                </Link>
+                <p className="text-sm font-extralight">
+                  Scheduled Date: {order?.delivery.scheduledAt.toDateString()}
+                </p>
+                <p className="text-sm font-extralight">
+                  Scheduled Time:{" "}
+                  {order?.delivery.scheduledAt.toLocaleTimeString()}
+                </p>
+                {order?.delivery.status === "COMPLETED" && (
+                  <p>
+                    Delivered Time:{" "}
+                    {order?.delivery.deliveredAt?.toLocaleTimeString()}
+                  </p>
+                )}
               </div>
-            ))}
+              <button
+                disabled
+                className="text-sm font-light text-center max-h-fit"
+              >
+                {order?.delivery.status}
+              </button>
+            </div>
+            <div className="delivery-items px-4 py-2">
+              <h4 className="font-medium">Items:</h4>
+              <ul className="flex flex-col gap-2">
+                {order?.delivery.deliveryItems.map((item) => (
+                  <li key={item.id}>
+                    <p className="text-sm font-extralight">
+                      - {item.orderItem.stockItem.name} - Qty: {item.quantity}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }

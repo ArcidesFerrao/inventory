@@ -11,20 +11,20 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Unauthorized"}, { status: 401 });
     }
 
-    const { supplierProductId, changeType, quantity, notes } = await request.json();
+    const { stockItemId, changeType, quantity, notes } = await request.json();
 
     try {
-        const product = await db.supplierProduct.findUnique({
+        const stockItem = await db.stockItem.findUnique({
             where: {
-                id: supplierProductId
+                id: stockItemId
             }
         });
 
-        if (!product) {
-            return NextResponse.json({ error: "Product not found"}, { status: 404})
+        if (!stockItem) {
+            return NextResponse.json({ error: "Stock Item not found"}, { status: 404})
         };
 
-        const currentStock = product.stock ?? 0;
+        const currentStock = stockItem.stock ?? 0;
 
         const stockOperation = {
             PURCHASE: currentStock + quantity,
@@ -36,16 +36,16 @@ export async function POST(request: Request) {
 
         const newStock = stockOperation[changeType as keyof typeof stockOperation]
 
-        const [updatedProduct, movement] = await db.$transaction([
-            db.supplierProduct.update({
+        const [updatedStockItem, movement] = await db.$transaction([
+            db.stockItem.update({
                 where: {
-                    id: supplierProductId
+                    id: stockItemId
                 },
                 data: { stock: newStock},
             }),
             db.stockMovement.create({
                 data: {
-                    supplierProductId,
+                    stockItemId,
                     changeType,
                     quantity,
                     notes
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
             })
         ]);
 
-        return NextResponse.json({ product: updatedProduct, movement})
+        return NextResponse.json({ stockItem: updatedStockItem, movement})
         
 
     } catch (error) {
@@ -73,15 +73,15 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
 
-    const supplierProductId = searchParams.get("supplierProductId");
+    const stockItemId = searchParams.get("stockItemId");
 
-    if (!supplierProductId) {
-        return NextResponse.json({error: "Missing productId"}, { status: 400});
+    if (!stockItemId) {
+        return NextResponse.json({error: "Missing stockItemId"}, { status: 400});
     }
 
     try {
         const movements = await db.stockMovement.findMany({
-            where: {supplierProductId},
+            where: {stockItemId},
             orderBy: { timestamp: "desc"},
             take: 50,
         })

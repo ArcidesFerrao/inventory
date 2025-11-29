@@ -28,7 +28,7 @@ export async function getSupplierActivityLogs(supplierId: string) {
     take: 20,
     include: {
         Supplier: {
-            select: { name: true, phone: true, id: true }
+            select: { businessName: true, phoneNumber: true, id: true }
         }
     }
   });

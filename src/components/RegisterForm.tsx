@@ -1,6 +1,7 @@
 "use client";
 
 import { registerService, registerSupplier } from "@/app/actions/register";
+import { BusinessType } from "@/generated/prisma";
 import { serviceSchema, supplierSchema } from "@/schemas/roleSchema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
@@ -98,7 +99,7 @@ export const ServiceRegisterForm = () => {
             name="businessType"
             id="businessType"
             value={businessType}
-            onChange={(e) => setBusinessType(e.target.value)}
+            onChange={(e) => setBusinessType(e.target.value as BusinessType)}
           >
             <option value="RESTAURANT">Restaurant</option>
             <option value="SHOP">Shop</option>

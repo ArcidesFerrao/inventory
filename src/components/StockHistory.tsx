@@ -3,23 +3,19 @@
 import { StockMovement } from "@/generated/prisma/client";
 import { useEffect, useState } from "react";
 
-export default function StockHistory({
-  supplierProductId,
-}: {
-  supplierProductId: string;
-}) {
+export default function StockHistory({ stockItemId }: { stockItemId: string }) {
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/stock-movement?supplierProductId=${supplierProductId}`)
+    fetch(`/api/stock-movement?supplierProductId=${stockItemId}`)
       .then((res) => res.json())
       .then((data) => {
         setMovements(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [supplierProductId]);
+  }, [stockItemId]);
 
   if (loading) return <p>Loading History...</p>;
 

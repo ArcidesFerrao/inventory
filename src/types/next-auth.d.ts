@@ -13,6 +13,7 @@ declare module "next-auth" {
       serviceId?: string | null
       supplierId?: string | null
       isAdmin?: boolean | null
+      role?: string | null
     }
   }
 

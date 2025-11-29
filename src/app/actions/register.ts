@@ -24,6 +24,7 @@ export async function registerService(prevState: unknown, formData: FormData) {
             data: {
                 userId: session.user.id,
                 businessName: values.businessName,
+                phoneNumber: values.phoneNumber,
                 description: values.description,
                 location: values.location,
                 businessType: values.businessType,
@@ -34,11 +35,11 @@ export async function registerService(prevState: unknown, formData: FormData) {
         
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
-        console.error("Failed to create Product", error);
+        console.error("Failed to create Service", error);
         
         return {
             status: "error",
-            error: { general: ["Failed to create Product"]}
+            error: { general: ["Failed to create Service"]}
         } satisfies SubmissionResult<string[]>
     }
 }
@@ -57,11 +58,11 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
         await db.supplier.create({
             data: {
                 userId: session.user.id,
-                name: values.name,
+                businessName: values.name,
                 description: values.description,
                 specialization: values.specialization,
                 email: values.email,
-                phone: values.phone,
+                phoneNumber: values.phone,
                 address: values.address,
                 website: values.website || "",
                 establishedYear: Number(values.establishedYear),
@@ -70,11 +71,11 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
         });
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
-        console.error("Failed to create Product", error);
+        console.error("Failed to create Supplier", error);
         
         return {
             status: "error",
-            error: { general: ["Failed to create Product"]}
+            error: { general: ["Failed to create Supplier"]}
         } satisfies SubmissionResult<string[]>
     }
 }

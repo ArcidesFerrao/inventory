@@ -3,24 +3,21 @@
 import { createSale } from "@/app/actions/sales";
 import { SaleProductsProps } from "@/types/types";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
-export const SalesList = ({
-  initialProducts,
-  serviceId,
-}: SaleProductsProps) => {
+export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const [products, setProducts] = useState(
-    initialProducts.map((p) => ({ ...p, quantity: 0 }))
+  const [items, setItems] = useState(
+    initialItems.map((p) => ({ ...p, quantity: 0 }))
   );
 
   const handleCompleteSale = async () => {
     // console.log("creating sale");
     setLoading(true);
-    const saleItems = products.filter((product) => product.quantity > 0);
+    const saleItems = items.filter((item) => item.quantity > 0);
     const result = await createSale(saleItems, serviceId);
 
     if (saleItems.length === 0) {
@@ -40,53 +37,53 @@ export const SalesList = ({
   };
 
   const handleIncrement = (id: string) => {
-    setProducts((prevProducts) => {
-      return prevProducts.map((product) => {
-        if (product.id !== id) return product;
-        // console.log(product.stock);
-        const recipe = product.MenuItems ?? [];
+    setItems((prevItems) => {
+      return prevItems.map((item) => {
+        if (item.id !== id) return item;
+        const recipe = item.CatalogItems ?? [];
 
         if (recipe.length === 0) {
-          if ((product.stock ?? 0) <= product.quantity) {
-            toast.error(`Not enough stock of ${product.name}`);
-            return product;
+          if ((item.stock ?? 0) <= item.quantity) {
+            toast.error(`Not enough stock of ${item.name}`);
+            return item;
           }
-          return { ...product, quantity: product.quantity + 1 };
+          return { ...item, quantity: item.quantity + 1 };
         }
 
         for (const recipeItem of recipe) {
-          const ingredientStock = recipeItem.stock?.stock ?? 0;
-          const totalNeeded = (product.quantity + 1) * recipeItem.quantity;
+          const ingredientStock =
+            recipeItem.serviceStockItem.stockItem?.stock ?? 0;
+          const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
 
           if (ingredientStock < totalNeeded) {
             toast.error(
               `Not enough ${
-                recipeItem.stock.name ?? "ingredient"
-              } to make another ${product.name}`
+                recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
+              } to make another ${item.name}`
             );
-            return product;
+            return item;
           }
         }
-        return { ...product, quantity: product.quantity + 1 };
+        return { ...item, quantity: item.quantity + 1 };
       });
     });
   };
 
   const handleDecrement = (id: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id && product.quantity > 0
-          ? { ...product, quantity: product.quantity - 1 }
-          : product
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id && item.quantity > 0
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
       )
     );
   };
 
-  const totalItems = products.reduce((sum, product) => {
-    return sum + product.quantity;
+  const totalItems = items.reduce((sum, item) => {
+    return sum + item.quantity;
   }, 0);
-  const totalPrice = products.reduce((sum, product) => {
-    return sum + (product.price ?? 0) * product.quantity;
+  const totalPrice = items.reduce((sum, item) => {
+    return sum + (item.price ?? 0) * item.quantity;
   }, 0);
 
   return (
@@ -95,31 +92,30 @@ export const SalesList = ({
         <div className="flex flex-col">
           <h3 className="text-md font-medium underline">Refeição</h3>
           <ul>
-            {products.map((product) => {
-              if (product.Category?.name === "Meal")
+            {items.map((item) => {
+              if (item.category?.name === "Meal")
                 return (
                   <li
-                    key={product.id}
+                    key={item.id}
                     className="flex justify-between items-center"
                   >
-                    <h3>{product.name}</h3>
+                    <h3>{item.name}</h3>
 
                     <div className="sales-amount flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(product.id)}>
+                        <button onClick={() => handleDecrement(item.id)}>
                           -
                         </button>
                         <span className="w-12 text-center">
-                          {product.quantity}
+                          {item.quantity}
                         </span>
-                        <button onClick={() => handleIncrement(product.id)}>
+                        <button onClick={() => handleIncrement(item.id)}>
                           +
                         </button>
                       </div>
                       <span className="min-w-28">
                         <p>
-                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
-                          MZN
+                          {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
                         </p>
                       </span>
                     </div>
@@ -131,31 +127,30 @@ export const SalesList = ({
         <div className="flex flex-col">
           <h3 className="text-md font-medium underline">Lanches</h3>
           <ul>
-            {products.map((product) => {
-              if (product.Category?.name === "Lunch")
+            {items.map((item) => {
+              if (item.category?.name === "Lunch")
                 return (
                   <li
-                    key={product.id}
+                    key={item.id}
                     className="flex justify-between items-center"
                   >
-                    <h3>{product.name}</h3>
+                    <h3>{item.name}</h3>
 
                     <div className="sales-amount flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(product.id)}>
+                        <button onClick={() => handleDecrement(item.id)}>
                           -
                         </button>
                         <span className="w-12 text-center">
-                          {product.quantity}
+                          {item.quantity}
                         </span>
-                        <button onClick={() => handleIncrement(product.id)}>
+                        <button onClick={() => handleIncrement(item.id)}>
                           +
                         </button>
                       </div>
                       <span className="min-w-28">
                         <p>
-                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
-                          MZN
+                          {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
                         </p>
                       </span>
                     </div>
@@ -167,33 +162,32 @@ export const SalesList = ({
         <div className="flex flex-col">
           <h3 className="text-md font-medium underline">Bebidas</h3>
           <ul>
-            {products.map((product) => {
-              if (product.Category?.name === "Drink")
+            {items.map((item) => {
+              if (item.category?.name === "Drink")
                 return (
                   <li
-                    key={product.id}
+                    key={item.id}
                     className="flex justify-between items-center "
                   >
                     <div>
-                      <h3>{product.name}</h3>
+                      <h3>{item.name}</h3>
                     </div>
 
                     <div className="sales-amount flex gap-4 items-center max-w-6/12">
                       <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(product.id)}>
+                        <button onClick={() => handleDecrement(item.id)}>
                           -
                         </button>
                         <span className="w-12 text-center">
-                          {product.quantity}
+                          {item.quantity}
                         </span>
-                        <button onClick={() => handleIncrement(product.id)}>
+                        <button onClick={() => handleIncrement(item.id)}>
                           +
                         </button>
                       </div>
                       <span className="min-w-28">
                         <p>
-                          {((product.price ?? 0) * product.quantity).toFixed(2)}{" "}
-                          MZN
+                          {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
                         </p>
                       </span>
                     </div>

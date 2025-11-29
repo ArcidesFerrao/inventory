@@ -21,7 +21,7 @@ export const ConfirmedDeliveryLogDetails = ({
         <ul className="text-sm font-extralight">
           {details.deliveryItems.map((item) => (
             <li key={item.id}>
-              {item.orderItem.product.name} - {item.quantity} x MZN{" "}
+              {item.orderItem.stockItem.name} - {item.quantity} x MZN{" "}
               {item.orderItem.price}
             </li>
           ))}
@@ -43,9 +43,9 @@ export const ArrivedDeliveryLogDetails = ({
       {typeof details === "object" && details ? (
         <ul className="text-sm font-extralight">
           {details.deliveryItems.map((item) => (
-            <li key={item.product.id}>
-              {item.product.name} - {item.product.stock} x MZN{" "}
-              {item.product.price}
+            <li key={item.stockItem.id}>
+              {item.stockItem.name} - {item.stockItem.stock} x MZN{" "}
+              {item.stockItem.price}
             </li>
           ))}
         </ul>
@@ -68,8 +68,8 @@ export const CreateDeliveryLogDetails = ({
         <ul className="text-sm font-extralight">
           {details.items.map((item) => (
             <li key={item.id}>
-              {item.orderItem.product.name} - {item.orderItem.product.stock} x
-              MZN {item.orderItem.product.price}
+              {item.orderItem.stockItem.name} - {item.orderItem.stockItem.stock}{" "}
+              x MZN {item.orderItem.stockItem.price}
             </li>
           ))}
         </ul>
@@ -93,7 +93,7 @@ export const CreateOrderLogDetails = ({
           {details.groupedItems.map((item) => (
             <ul key={item.supplierId} className="text-sm font-extralight">
               {item.items.map((i) => (
-                <li key={i.productId}>
+                <li key={i.itemId}>
                   {i.name} - {i.orderedQty} x MZN {i.price}
                 </li>
               ))}
