@@ -654,6 +654,9 @@ nav {
   text-decoration: underline;
   color: var(--foreground);
 }
+.delivery-info-header a:hover {
+  text-decoration: underline;
+}
 .search-term button {
   padding: 0 0.4rem;
 }

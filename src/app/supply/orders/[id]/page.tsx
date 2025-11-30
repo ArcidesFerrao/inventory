@@ -149,9 +149,12 @@ export default async function OrderPage(props: { params: Params }) {
         <div className="deliveries-details flex flex-col gap-2 w-full">
           <h2 className="text-xl font-semibold">Deliveries</h2>
           <div className="p-4 delivery-details">
-            <div className="delivery-header flex justify-between">
+            <div className="delivery-info-header flex justify-between">
               <div className="delivery-info">
-                <Link href={`/supply/orders/delivery/${order?.delivery.id}`}>
+                <Link
+                  // className="flex"
+                  href={`/supply/orders/delivery/${order?.delivery.id}`}
+                >
                   <h3 className="font-medium">
                     Delivery #{order?.delivery.id.slice(0, 5)}...
                   </h3>
