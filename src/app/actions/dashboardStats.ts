@@ -328,7 +328,7 @@ export async function getAdminUsersStats() {
         },}
 }
     export async function getAdminOrdersStats() {
-    const [ordersData, delivered, confirmed, cancelled,         totalOrders] = await Promise.all([
+    const [ordersData, delivered, confirmed, cancelled, totalOrders] = await Promise.all([
         db.order.findMany({
             include: {
                 Service: true,
@@ -362,11 +362,16 @@ export async function getAdminUsersStats() {
 
 export async function getAdminItemsStats() {
     
-    const [itemsData, activeItems, inactiveItems, stockItemsData ] = await Promise.all([
+    const [itemsData, activeItems, inactiveItems,activeStockItems, inactiveStockItems, stockItemsData ] = await Promise.all([
         db.item.findMany({
             include: {
                 unit: true,
                 category: true,
+                service: {
+                    select: {
+                        businessName: true,
+                    }
+                }
             }
         }),
         db.item.count({
@@ -375,10 +380,21 @@ export async function getAdminItemsStats() {
         db.item.count({ where: {
             status: "INACTIVE"
         }}),
+        db.stockItem.count({
+            where: { status: "ACTIVE"}
+        }),
+        db.stockItem.count({ where: {
+            status: "INACTIVE"
+        }}),
         db.stockItem.findMany({
             include: {
                 unit: true,
-                category: true
+                category: true,
+                supplier: {
+                    select: {
+                        businessName: true
+                    }
+                }
             }
         })
     ])
@@ -388,6 +404,8 @@ export async function getAdminItemsStats() {
         itemsData,
         activeItems,
         inactiveItems,
+        activeStockItems, 
+        inactiveStockItems,
         stockItemsData
     }}
 }

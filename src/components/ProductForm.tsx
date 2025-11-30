@@ -591,6 +591,7 @@ export const SupplierProductForm = ({
                 id="stock"
                 min={0}
                 defaultValue={stockItem?.stock || 0}
+                disabled={stockItem?.stock ? true : false}
               />
               {fields.stock.errors && (
                 <p className="text-xs font-light">{fields.stock.errors}</p>

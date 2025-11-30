@@ -22,9 +22,16 @@ export default async function AdminItemsPage() {
         <h1 className="text-4xl font-medium underline">Items</h1>
       </div>
       <div className="py-4 flex justify-between">
-        <Card title="Total Items" value={stats.items.itemsData.length} />
-        <Card title="Inactive" value={stats.items.activeItems} />
-        <Card title="Actice" value={stats.items.inactiveItems} />
+        <Card title="Items" value={stats.items.itemsData.length} />
+        <Card
+          title="Active"
+          value={stats.items.activeItems + stats.items.activeStockItems}
+        />
+        <Card
+          title="Inactive"
+          value={stats.items.inactiveItems + stats.items.inactiveStockItems}
+        />
+        <Card title="Stock Items" value={stats.items.stockItemsData.length} />
       </div>
       <div className="admin-products flex flex-col gap-5">
         <h2 className="text-lg font-bold">Items List</h2>
@@ -32,7 +39,7 @@ export default async function AdminItemsPage() {
           <thead>
             <tr>
               <th>Items</th>
-              <th>Type</th>
+              <th>From</th>
               <th>Category</th>
               <th>Status</th>
               <th>Created At</th>
@@ -42,7 +49,16 @@ export default async function AdminItemsPage() {
             {stats.items.itemsData.map((p) => (
               <tr key={p.id}>
                 <td>{p.name}</td>
-                <td>{p.type}</td>
+                <td>{p.service.businessName}</td>
+                <td>{p.category?.name}</td>
+                <td>{p.status}</td>
+                <td>{p.createdAt.toLocaleDateString()}</td>
+              </tr>
+            ))}
+            {stats.items.stockItemsData.map((p) => (
+              <tr key={p.id}>
+                <td>{p.name}</td>
+                <td>{p.supplier.businessName}</td>
                 <td>{p.category?.name}</td>
                 <td>{p.status}</td>
                 <td>{p.createdAt.toLocaleDateString()}</td>
