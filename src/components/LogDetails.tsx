@@ -63,13 +63,16 @@ export const CreateDeliveryLogDetails = ({
   return (
     <div className="flex flex-col gap-1">
       <p>Order Id: {details.orderId}</p>
-      <h4>{details.totalItems} Delivery Items:</h4>
+      <h4>
+        {details.totalItems} Delivery{" "}
+        {details.totalItems === 1 ? "Item" : "Items"}:
+      </h4>
       {typeof details === "object" && details ? (
         <ul className="text-sm font-extralight">
           {details.items.map((item) => (
             <li key={item.id}>
-              {item.orderItem.stockItem.name} - {item.orderItem.stockItem.stock}{" "}
-              x MZN {item.orderItem.stockItem.price}
+              {item.stockItem.name} - {item.stockItem.stock} x MZN{" "}
+              {item.stockItem.price}
             </li>
           ))}
         </ul>
@@ -90,13 +93,11 @@ export const CreateOrderLogDetails = ({
       <h4>Order Items:</h4>
       {typeof details === "object" && details ? (
         <div className="flex flex-col gap-1">
-          {details.groupedItems.map((item) => (
-            <ul key={item.supplierId} className="text-sm font-extralight">
-              {item.items.map((i) => (
-                <li key={i.itemId}>
-                  {i.name} - {i.orderedQty} x MZN {i.price}
-                </li>
-              ))}
+          {details.items.map((item) => (
+            <ul key={item.itemId} className="text-sm font-extralight">
+              <li key={item.itemId}>
+                {item.name} - {item.orderedQty} x MZN {item.price}
+              </li>
             </ul>
           ))}
         </div>

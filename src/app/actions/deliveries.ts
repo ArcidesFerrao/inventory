@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
 import { createNotification } from "./notifications";
+import {  OrderItemWithStockItems } from "@/types/types";
 
 export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
@@ -413,8 +414,7 @@ export async function  rateDelivery(deliveryId: string, star: number) {
 }
 
 
-export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { stockItemId: string; stockItemName: string; stockItemPrice: number | null; stockItemCost: number | null;     deliveredQty: number;
-}[]}) {
+export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: OrderItemWithStockItems[]}) {
 
     const session = await auth()
     if (!session?.user.supplierId) redirect("/login");
@@ -436,8 +436,8 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
                         notes,
                         deliveryItems: {
                             create: items.map((i) => ({
-                                orderItemId: i.stockItemId,
-                                quantity: i.deliveredQty,
+                                orderItemId: i.id,
+                                quantity: i.orderedQty,
                             }))
                         }
                     },
@@ -480,7 +480,7 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
                 orderId,
                 scheduledAt: delivery.scheduledAt,
                 totalItems: items.length,
-                items: delivery.deliveryItems,
+                items,
             },
             null,
             'INFO',

@@ -36,13 +36,7 @@ export const SupplierDelivery = ({
       deliveryDate,
       deliveryTime,
       notes,
-      items: items.map((i) => ({
-        stockItemId: i.id,
-        stockItemName: i.stockItem.name,
-        stockItemPrice: i.stockItem.price,
-        stockItemCost: i.stockItem.cost,
-        deliveredQty: i.orderedQty,
-      })),
+      items,
     };
 
     const delivery = await createNewDelivery(deliveryData);
@@ -74,21 +68,25 @@ export const SupplierDelivery = ({
       </div>
       <div className="delivery-schedule flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <h4>Delivery Date *</h4>
+          <h4>Delivery Date*</h4>
           <input
             type="date"
             name="deliveryDate"
             id="deliveryDate"
             value={deliveryDate}
+            min={new Date(order.requestedStartDate).toISOString().split("T")[0]}
+            max={new Date(order.requestedEndDate).toISOString().split("T")[0]}
             onChange={(e) => setDeliveryDate(e.target.value)}
           />
         </div>
         <div className="flex flex-col gap-2">
-          <h4>Delivery Time *</h4>
+          <h4>Delivery Time*</h4>
           <input
             type="time"
             name="deliveryTime"
             id="deliveryTime"
+            min="09:00"
+            max="16:00"
             value={deliveryTime}
             onChange={(e) => setDeliveryTime(e.target.value)}
           />

@@ -133,6 +133,10 @@ export type DeliveryItemsWithOrderItem = DeliveryItem & {
   };
 };
 
+export type OrderItemWithStockItems = OrderItem & {
+    stockItem: StockItem;
+  };
+
 export type ConfirmedDeliveryLogs = {
   deliveryId: string;
   orderId: string;
@@ -153,7 +157,8 @@ export type CreateDeliveryLogs = {
   orderId: string;
   scheduledAt: Date;
   totalItems: number;
-  items: DeliveryItemsWithOrderItem[]
+  items: OrderItemWithStockItems[]
+  // items: DeliveryItemsWithOrderItem[]
   
 };
 
@@ -170,15 +175,12 @@ export type ErrorDeliveryLogs = {
 
 export type CreateOrderLogs = {
   total: number;
-  groupedItems: {
-    supplierId: string;
     items: {
       name: string,
       itemId: string,
       orderedQty: number,
       price: number
-    }[]
-  }[];
+    }[];
 }
 
 export type CreateSaleLogs = {
