@@ -332,11 +332,7 @@ export async function getAdminUsersStats() {
         db.order.findMany({
             include: {
                 Service: true,
-                supplierCustomer: {
-                    include: {
-                        supplier: true
-                    }
-                }
+                supplier: true
             },
             orderBy: {
                 timestamp: "desc"

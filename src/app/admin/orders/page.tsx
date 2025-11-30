@@ -45,7 +45,7 @@ export default async function OrdersPage() {
               <tr key={s.id}>
                 <td>{s.id.slice(0, 5)}...</td>
                 <td>{s.Service?.businessName}</td>
-                <td>{s.supplierCustomer?.supplier.businessName}</td>
+                <td>{s.supplier.businessName}</td>
                 <td>{s.status}</td>
                 <td>MZN {s.total.toFixed(2)}</td>
               </tr>
