@@ -37,7 +37,10 @@ export const SupplierDelivery = ({
       deliveryTime,
       notes,
       items: items.map((i) => ({
-        itemId: i.id,
+        stockItemId: i.id,
+        stockItemName: i.stockItem.name,
+        stockItemPrice: i.stockItem.price,
+        stockItemCost: i.stockItem.cost,
         deliveredQty: i.orderedQty,
       })),
     };

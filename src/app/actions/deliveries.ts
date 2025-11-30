@@ -413,8 +413,7 @@ export async function  rateDelivery(deliveryId: string, star: number) {
 }
 
 
-export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
-     deliveredQty: number;
+export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { stockItemId: string; stockItemName: string; stockItemPrice: number | null; stockItemCost: number | null;     deliveredQty: number;
 }[]}) {
 
     const session = await auth()
@@ -437,7 +436,7 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
                         notes,
                         deliveryItems: {
                             create: items.map((i) => ({
-                                orderItemId: i.itemId,
+                                orderItemId: i.stockItemId,
                                 quantity: i.deliveredQty,
                             }))
                         }
