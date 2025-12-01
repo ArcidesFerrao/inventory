@@ -17,6 +17,14 @@ export default async function ItemsPage() {
       category: true,
     },
   });
+  const serviceStockItems = await db.serviceStockItem.findMany({
+    where: {
+      serviceId: session.user.serviceId,
+    },
+    include: {
+      stockItem: true,
+    },
+  });
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">
@@ -28,7 +36,7 @@ export default async function ItemsPage() {
           </p>
         </div>
       </div>
-      <MenuAndStock items={items} />
+      <MenuAndStock items={items} stockItems={serviceStockItems} />
     </div>
   );
 }

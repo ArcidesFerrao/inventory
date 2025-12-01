@@ -141,12 +141,14 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
 
             //Handle stock updates
 
-            const updatedItems = await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
+            // const updatedItems = 
+            await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
                 const stockItem = deliveryItem.orderItem.stockItem;
                 const quantity = deliveryItem.quantity;
 
 
-                const updatedStockItem = await tx.stockItem.update({
+                // const updatedStockItem = 
+                await tx.stockItem.update({
                     where: {
                         id: stockItem.id,
                     }, 
@@ -167,53 +169,54 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     }
                 })
 
-                let serviceProduct = await tx.item.findFirst({
+                let serviceStockItem = await tx.serviceStockItem.findFirst({
                     where: {
                         serviceId,
-                        name: {
-                            equals: stockItem.name,
-                            mode: "insensitive",
-                        }
+                        stockItemId: stockItem.id 
+                    },
+                    include: {
+                        stockItem: true
                     }
                 });
 
-                if (serviceProduct) {
-                    await tx.item.update({
+                if (serviceStockItem) {
+                    await tx.serviceStockItem.update({
                         where: {
-                            id: serviceProduct.id,
+                            id: serviceStockItem.id,
                         },
                         data: {
-                            price: stockItem.price,
+                            cost: stockItem.price,
                             stock: {
                                 increment: quantity,
                             }
                         }
                     })
                 } else {
-                    serviceProduct = await tx.item.create({
+                    serviceStockItem = await tx.serviceStockItem.create({
                         data: {
-                            name: stockItem.name,
-                            description: stockItem.description,
-                            unitQty: stockItem.unitQty,
-                            unitId: stockItem.unitId,
                             stock: quantity,
-                            serviceId,
-                            price: stockItem.price,
+                            cost: stockItem.price,
+                            stockItemId: stockItem.id,
+                            serviceId
+                        },
+                        include: {
+                            stockItem: true
                         }
+                        
                     })
+                    await tx.stockMovement.create({
+                        data: {
+                            stockItemId: serviceStockItem?.id,
+                            changeType: "PURCHASE",
+                            quantity,
+                            referenceId: deliveryItem.id,
+                            notes: `Delivery #${delivery.id.slice(0,8)}... completed, added to service stock`,
+                        }
+                    });
                 } 
                 
-                await tx.stockMovement.create({
-                    data: {
-                        itemId: serviceProduct?.id,
-                        changeType: "PURCHASE",
-                        quantity,
-                        referenceId: deliveryItem.id,
-                        notes: `Delivery #${delivery.id.slice(0,8)}... completed, added to service stock`,
-                    }
-                });
 
-                return { serviceId, supplierId: updatedStockItem.supplierId, deliveryId}
+                // return { serviceId, supplierId: updatedStockItem.supplierId, deliveryId}
             }));
 
             // Create Sale + purchase with their items
@@ -257,7 +260,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                 }
             })
 
-            return { delivery,  order, updatedItems, supplierSale, servicePurchase};
+            return { delivery,  order, supplierSale, servicePurchase};
 
         }, { timeout: 20000});
 

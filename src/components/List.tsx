@@ -36,7 +36,7 @@ export const ListStockItem = ({
   return (
     <li key={id} className="listing-stock-item flex p-4 justify-between">
       <div className="flex  gap-4 justify-between ">
-        <Link href={`/service/products/${id}`}>
+        <Link href={`/service/products/stock/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
       </div>
