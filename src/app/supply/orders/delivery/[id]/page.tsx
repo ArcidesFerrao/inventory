@@ -80,6 +80,16 @@ export default async function DeliveryPage(props: { params: Params }) {
               {delivery?.scheduledAt.toLocaleTimeString()}
             </h4>
           </div>
+          <div></div>
+          {delivery?.status === "ARRIVED" && delivery.deliveredAt !== null && (
+            <div className="flex flex-col gap-1 py-2">
+              <p className="text-sm font-extralight">Delivered Time</p>
+              <h4>
+                {delivery?.deliveredAt.toLocaleDateString()},{" "}
+                {delivery?.deliveredAt.toLocaleTimeString()}
+              </h4>
+            </div>
+          )}
         </div>
       </div>
       <div className="customer-info">

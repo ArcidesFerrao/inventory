@@ -174,7 +174,8 @@ export default async function OrderPage(props: { params: Params }) {
               {order.delivery.status === "COMPLETED" && (
                 <div>
                   {order.delivery.rating !== null ? (
-                    <div className="delivery-rating self-end">
+                    <div className="delivery-rating flex flex-col">
+                      <h4>Rating</h4>
                       <div className="rate-buttons flex items-center gap-2">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <span

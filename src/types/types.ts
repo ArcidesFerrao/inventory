@@ -148,9 +148,9 @@ export type ArrivedDeliveryLogs = {
   deliveryId: string;
   supplierOrderId: string;
   deliveredAt: Date;
-  deliveryItems: OrderItem & {
-   stockItem: StockItem 
-  }[];
+  // deliveryItems: OrderItem & {
+  //  stockItem: StockItem 
+  // }[];
   
 };
 export type CreateDeliveryLogs = {

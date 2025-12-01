@@ -155,7 +155,7 @@ export default async function OrderPage(props: { params: Params }) {
                   // className="flex"
                   href={`/supply/orders/delivery/${order?.delivery.id}`}
                 >
-                  <h3 className="font-medium">
+                  <h3 className="font-medium py-2">
                     Delivery #{order?.delivery.id.slice(0, 5)}...
                   </h3>
                 </Link>
@@ -173,10 +173,7 @@ export default async function OrderPage(props: { params: Params }) {
                   </p>
                 )}
               </div>
-              <button
-                disabled
-                className="text-sm font-light text-center max-h-fit"
-              >
+              <button disabled className="text-sm font-light text-center">
                 {order?.delivery.status}
               </button>
             </div>

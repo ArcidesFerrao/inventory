@@ -1,5 +1,5 @@
 import {
-  ArrivedDeliveryLogDetails,
+  // ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
   CreateDeliveryLogDetails,
   ErroDeliveryLogDetails,
@@ -7,7 +7,7 @@ import {
 } from "@/components/LogDetails";
 import { db } from "@/lib/db";
 import {
-  ArrivedDeliveryLogs,
+  // ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
   CreateDeliveryLogs,
   ErrorDeliveryLogs,
@@ -81,11 +81,11 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
           {log.actionType === "DELIVERY_CONFIRMED" && (
             <ConfirmedDeliveryLogDetails details={details} />
           )}
-          {log.actionType === "DELIVERY_ARRIVED" && (
+          {/* {log.actionType === "DELIVERY_ARRIVED" && (
             <ArrivedDeliveryLogDetails
               details={parsedDetails as ArrivedDeliveryLogs}
             />
-          )}
+          )} */}
           {log.actionType === "UPDATE" && log.entityType === "Order" && (
             <UpdateOrderLogDetails details={parsedDetails as UpdateOrderLogs} />
           )}

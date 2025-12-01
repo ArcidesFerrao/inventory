@@ -327,7 +327,6 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
                 },
                 include: {
                     Service: true,
-                    orderItems: true,
                     supplier: true
                 }
             }),
@@ -356,7 +355,6 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
                 deliveryId,
                 orderId,
                 deliveredAt: delivery.deliveredAt,
-                deliveryItems: order.orderItems
             },
             null,
             "INFO",

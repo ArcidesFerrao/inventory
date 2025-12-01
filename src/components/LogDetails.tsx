@@ -39,19 +39,11 @@ export const ArrivedDeliveryLogDetails = ({
 }) => {
   return (
     <div className="flex flex-col gap-1">
-      <h4>Delivery Items:</h4>
-      {typeof details === "object" && details ? (
-        <ul className="text-sm font-extralight">
-          {details.deliveryItems.map((item) => (
-            <li key={item.stockItem.id}>
-              {item.stockItem.name} - {item.stockItem.stock} x MZN{" "}
-              {item.stockItem.price}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No extra details</p>
-      )}
+      {/* <h4>Delivered At:</h4>
+      <p>
+        {details.deliveredAt !== null &&
+          details.deliveredAt.toLocaleDateString()}
+      </p> */}
     </div>
   );
 };
