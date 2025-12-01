@@ -19,7 +19,6 @@ export async function registerService(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
         
-        // console.log("User id: ",session.user.id)
         await db.service.create({
             data: {
                 userId: session.user.id,

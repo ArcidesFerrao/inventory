@@ -12,7 +12,6 @@ export default async function NewPurchase() {
   const stockItems = await db.serviceStockItem.findMany({
     where: {
       serviceId: session.user.serviceId,
-      // type: "STOCK",
     },
     include: {
       stockItem: true,

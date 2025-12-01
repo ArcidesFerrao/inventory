@@ -102,3 +102,10 @@ export const stockItemSchema = z.object({
     supplierId: z.string(),
     
 })
+export const serviceStockItemSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1, "Name is required"),
+    stock: z.coerce.number().int().optional(),
+    cost: z.coerce.number().min(0).optional(),
+    serviceId: z.string(), 
+})

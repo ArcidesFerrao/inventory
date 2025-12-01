@@ -37,9 +37,7 @@ export default async function UserPage(props: { params: Params }) {
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
           <h2 className="text-3xl font-semibold">{user.name}</h2>
-          <p className="text-xs font-extralight">
-            User Id: {id.slice(0, 5)}...{" "}
-          </p>
+          <p className="text-xs font-extralight">User Id: {id}... </p>
         </div>
         <LogOutButton />
       </div>

@@ -241,8 +241,8 @@ export const SupplierRegisterForm = () => {
           <label>Name</label>
           <input
             type="text"
-            name="name"
-            id="name"
+            name="businessName"
+            id="businessName"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -267,8 +267,8 @@ export const SupplierRegisterForm = () => {
           <label>Phone Number</label>
           <input
             type="text"
-            name="phone"
-            id="phone"
+            name="phoneNumber"
+            id="phoneNumber"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />

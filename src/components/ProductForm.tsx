@@ -19,7 +19,12 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CategorySelect, ProductsCategorySelect } from "./CategorySelect";
-import { StockItem, Category, Item } from "@/generated/prisma/client";
+import {
+  StockItem,
+  Category,
+  Item,
+  ServiceStockItem,
+} from "@/generated/prisma/client";
 import { itemSchema, stockItemSchema } from "@/schemas/schema";
 
 type StockItemWithUnit = StockItem & {
@@ -33,6 +38,20 @@ type StockItemWithUnit = StockItem & {
     name: string;
   } | null;
   type: "SUPPLY" | "STOCK" | "SERVICE";
+  quantity: number;
+};
+type ServiceStockItemWithUnit = ServiceStockItem & {
+  stockItem: StockItem & {
+    Unit: {
+      name: string;
+      id: string;
+      description: string | null;
+    } | null;
+    Category: {
+      id: string;
+      name: string;
+    } | null;
+  };
   quantity: number;
 };
 
@@ -203,7 +222,7 @@ export const ProductForm = ({
                 Select a type
               </option>
               <option value="STOCK">Stock</option>
-              <option value="SERVICE">Menu</option>
+              <option value="SERVICE">Service</option>
             </select>
             {fields.type.errors && (
               <p className="text-xs font-light">{fields.type.errors}</p>
@@ -634,6 +653,262 @@ export const SupplierProductForm = ({
           {fields.description.errors && (
             <p className="text-xs font-light">{fields.description.errors}</p>
           )}
+        </div>
+      </section>
+      <section className="errors">
+        {state?.status === "error" && (
+          <p className="text-xs font-light">{state.error?.general?.[0]}</p>
+        )}
+      </section>
+
+      <input
+        type="submit"
+        disabled={isPending}
+        value={isPending ? "..." : stockItem ? "Edit Item" : "Add Item"}
+        className="submit-button"
+      />
+    </form>
+  );
+};
+
+export const ServiceStockItemForm = ({
+  stockItem,
+  serviceId,
+}: {
+  stockItem?: ServiceStockItemWithUnit | null;
+  serviceId: string;
+}) => {
+  const actionFn = stockItem ? editStockItem : createStockItem;
+  const [state, action, isPending] = useActionState(actionFn, undefined);
+  const [form, fields] = useForm({
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: stockItemSchema });
+    },
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onSubmit",
+    defaultValue: stockItem,
+  });
+  const router = useRouter();
+
+  const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
+  const [unitId, setUnitId] = useState(stockItem?.stockItem.unitId || "");
+
+  const [price, setPrice] = useState(stockItem?.stockItem.price || 0);
+  const [categories, setCategories] = useState<Category[]>();
+
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [name, setName] = useState(stockItem?.stockItem.name || "");
+  console.log(categories);
+  useEffect(() => {
+    if (!name || name.trim() === "") {
+      setSuggestions([]);
+      return;
+    }
+
+    const fetchSuggestions = async () => {
+      const results = await getStockItemsNames(name);
+      const filtered = results.filter(
+        (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim()
+      );
+      setSuggestions(filtered);
+    };
+
+    const timeout = setTimeout(fetchSuggestions, 250);
+    return () => clearTimeout(timeout);
+  }, [name]);
+
+  useEffect(() => {
+    if (stockItem?.stockItem.unitId) {
+      setUnitId(stockItem.stockItem.unitId);
+    }
+  }, [stockItem]);
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      toast.success(
+        stockItem
+          ? "Stock Item edited successfully!"
+          : "Stock Item created successfully!"
+      );
+      router.push("/supply/products");
+    }
+
+    const fetchUnits = async () => {
+      setUnits(await getUnits());
+    };
+
+    const fetchCategories = async () => {
+      setCategories(await getSupplierCategories(serviceId));
+    };
+
+    fetchUnits();
+    fetchCategories();
+  }, [state, stockItem, router, serviceId]);
+
+  return (
+    <form
+      id={form.id}
+      action={action}
+      onSubmit={form.onSubmit}
+      className="flex flex-col gap-4 min-w-md"
+    >
+      <h2 className="font-extralight">
+        Fill the form to {stockItem ? "edit the" : "create a new"} Stock Item
+      </h2>
+      <section className="flex flex-col gap-4">
+        {stockItem && (
+          <input type="hidden" name="id" id="id" value={stockItem.id} />
+        )}
+        <input
+          type="hidden"
+          name="supplierId"
+          id="supplierId"
+          value={serviceId}
+        />
+        <section className="form-name-unit flex gap-2 items-end ">
+          <div className="flex w-full flex-col gap-1 relative">
+            <label htmlFor="name">Stock Item Name</label>
+
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Stock Item Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {/* {fields.name.errors && (
+              <p className="text-xs font-light">{fields.name.errors}</p>
+            )} */}
+
+            {suggestions.length > 0 && (
+              <ul className="absolute top-full my-0.5 suggestions-list w-full ">
+                {suggestions.map((s, i) => (
+                  <li
+                    key={i}
+                    onClick={() => {
+                      setName(s);
+                      setSuggestions([]);
+                    }}
+                    className="px-3 py-2 cursor-pointer"
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="unitQty">Unit Qty.</label>
+              <input
+                type="number"
+                name="unitQty"
+                id="unitQty"
+                className="max-w-32"
+                defaultValue={stockItem?.stockItem.unitQty ?? 1}
+              />
+              {/* {fields.unitQty.errors && (
+                <p className="text-xs font-light">{fields.unitQty.errors}</p>
+              )} */}
+            </div>
+            <div className="flex flex-col w-1/2 gap-1">
+              <label htmlFor="unit">Unit</label>
+              <select
+                name="unitId"
+                id="unitId"
+                value={unitId}
+                onChange={(e) => setUnitId(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select a unit
+                </option>
+                {units.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
+              {/* {fields.unitId.errors && (
+                <p className="text-xs font-light">{fields.unitId.errors}</p>
+              )} */}
+            </div>
+          </div>
+        </section>
+        <div className="form-second-row flex flex-col gap-2 w-full ">
+          <div className="flex gap-2">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="price">Price</label>
+              <input
+                type="number"
+                name="price"
+                id="price"
+                min={0}
+                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+                value={price}
+                required
+              />
+              {price > 0 && (
+                <p className="text-sm font-extralight">
+                  MZN {price.toFixed(2)}
+                </p>
+              )}
+              {/* {fields.price.errors && (
+                <p className="text-xs font-light">{fields.price.errors}</p>
+              )} */}
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="stock">Stock</label>
+              <input
+                type="number"
+                name="stock"
+                id="stock"
+                min={0}
+                defaultValue={stockItem?.stock || 0}
+                disabled={stockItem?.stock ? true : false}
+              />
+              {fields.stock.errors && (
+                <p className="text-xs font-light">{fields.stock.errors}</p>
+              )}
+            </div>
+            <div className="flex flex-col gap-1">
+              <label htmlFor="cost">Cost</label>
+              <input
+                type="number"
+                name="cost"
+                id="cost"
+                min={0}
+                defaultValue={stockItem?.cost || 0}
+              />
+
+              {fields.cost.errors && (
+                <p className="text-xs font-light">{fields.cost.errors}</p>
+              )}
+            </div>
+          </div>
+          {/* {categories && (
+            <CategorySelect
+              categoryId={stockItem?.stockItem.Category?.id}
+              categories={categories}
+              supplierId={serviceId}
+              // state={fields.categoryId.errors}
+              state={fields.categoryId.errors}
+            />
+          )} */}
+        </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="description">Description</label>
+
+          <textarea
+            name="description"
+            id="description"
+            placeholder="Description"
+            defaultValue={stockItem?.stockItem.description || ""}
+            className="min-w-80 min-h-40"
+          />
+          {/* {fields.description.errors && (
+            <p className="text-xs font-light">{fields.description.errors}</p>
+          )} */}
         </div>
       </section>
       <section className="errors">

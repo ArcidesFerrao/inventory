@@ -7,7 +7,6 @@ export const supplierSchema = z.object({
     description: z.string().max(500).optional(),
     specialization: z.string().max(500).optional(),
     email: z.string().email("Invalid email address").optional(),
-    phone: z.string().regex(/^\+?\d{7,15}$/, "Phone number must be valid"),
     address: z.string().min(5, "Address required"),
     website: z.string().url("Invalid website url").optional(),
     establishedYear: z.string().regex(/^\d{4}$/, "Year must be 4 digits").optional(),

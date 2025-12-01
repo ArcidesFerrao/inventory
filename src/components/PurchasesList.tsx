@@ -27,16 +27,18 @@ export const PurchasesList = ({
     }
     const result = await createPurchase(purchaseItems, serviceId);
 
-    if (result.message) {
-      toast.error(result.message ?? "Purchase not processed successfully");
+    if (!result.success) {
       setLoading(false);
+      toast.error(result.message ?? "Purchase not processed successfully");
     }
-    if (result.success && !result.message) {
+    if (result.success) {
       toast.success("Purchase Completed");
       setTimeout(() => {
+        setLoading(false);
         router.push("/service/purchases");
       }, 500);
     }
+    setLoading(false);
 
     console.log("Purchase completed:", result);
   };
