@@ -3,7 +3,6 @@
 import { OrderWithStockItems, SupplierSaleWithItems } from "@/types/types";
 import { useState } from "react";
 import { SupplierSaleListItem, SupplierOrderListItem } from "./List";
-// import { Delivery, Order, OrderItem, Service } from "@/generated/prisma/client";
 
 export default function OrdersAndSales({
   orders,

@@ -23,9 +23,14 @@ import {
   StockItem,
   Category,
   Item,
-  ServiceStockItem,
+  // ServiceStockItem,
 } from "@/generated/prisma/client";
-import { itemSchema, stockItemSchema } from "@/schemas/schema";
+import {
+  itemSchema,
+  serviceStockItemSchema,
+  stockItemSchema,
+} from "@/schemas/schema";
+import { createServiceStockItem } from "@/app/actions/items";
 
 type StockItemWithUnit = StockItem & {
   Unit: {
@@ -40,20 +45,20 @@ type StockItemWithUnit = StockItem & {
   type: "SUPPLY" | "STOCK" | "SERVICE";
   quantity: number;
 };
-type ServiceStockItemWithUnit = ServiceStockItem & {
-  stockItem: StockItem & {
-    Unit: {
-      name: string;
-      id: string;
-      description: string | null;
-    } | null;
-    Category: {
-      id: string;
-      name: string;
-    } | null;
-  };
-  quantity: number;
-};
+// type ServiceStockItemWithUnit = ServiceStockItem & {
+//   stockItem: StockItem & {
+//     Unit: {
+//       name: string;
+//       id: string;
+//       description: string | null;
+//     } | null;
+//     Category: {
+//       id: string;
+//       name: string;
+//     } | null;
+//   };
+//   quantity: number;
+// };
 
 type ItemWithUnit = Item & {
   Unit: {
@@ -673,32 +678,34 @@ export const SupplierProductForm = ({
 
 export const ServiceStockItemForm = ({
   stockItem,
+  // supplierId,
   serviceId,
 }: {
-  stockItem?: ServiceStockItemWithUnit | null;
+  stockItem?: StockItemWithUnit | null;
+  // supplierId: string;
   serviceId: string;
 }) => {
-  const actionFn = stockItem ? editStockItem : createStockItem;
+  const actionFn = stockItem ? editStockItem : createServiceStockItem;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: stockItemSchema });
+      return parseWithZod(formData, { schema: serviceStockItemSchema });
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onSubmit",
     defaultValue: stockItem,
   });
   const router = useRouter();
-
+  const supplierId = "directPurchase";
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
-  const [unitId, setUnitId] = useState(stockItem?.stockItem.unitId || "");
+  const [unitId, setUnitId] = useState(stockItem?.unitId || "");
 
-  const [price, setPrice] = useState(stockItem?.stockItem.price || 0);
+  const [price, setPrice] = useState(stockItem?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [name, setName] = useState(stockItem?.stockItem.name || "");
-  console.log(categories);
+  const [name, setName] = useState(stockItem?.name || "");
+
   useEffect(() => {
     if (!name || name.trim() === "") {
       setSuggestions([]);
@@ -718,8 +725,8 @@ export const ServiceStockItemForm = ({
   }, [name]);
 
   useEffect(() => {
-    if (stockItem?.stockItem.unitId) {
-      setUnitId(stockItem.stockItem.unitId);
+    if (stockItem?.unitId) {
+      setUnitId(stockItem.unitId);
     }
   }, [stockItem]);
 
@@ -738,12 +745,12 @@ export const ServiceStockItemForm = ({
     };
 
     const fetchCategories = async () => {
-      setCategories(await getSupplierCategories(serviceId));
+      setCategories(await getSupplierCategories("directPurchase"));
     };
 
     fetchUnits();
     fetchCategories();
-  }, [state, stockItem, router, serviceId]);
+  }, [state, stockItem, router, supplierId]);
 
   return (
     <form
@@ -763,6 +770,12 @@ export const ServiceStockItemForm = ({
           type="hidden"
           name="supplierId"
           id="supplierId"
+          value={supplierId}
+        />
+        <input
+          type="hidden"
+          name="serviceId"
+          id="serviceId"
           value={serviceId}
         />
         <section className="form-name-unit flex gap-2 items-end ">
@@ -777,9 +790,9 @@ export const ServiceStockItemForm = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            {/* {fields.name.errors && (
+            {fields.name.errors && (
               <p className="text-xs font-light">{fields.name.errors}</p>
-            )} */}
+            )}
 
             {suggestions.length > 0 && (
               <ul className="absolute top-full my-0.5 suggestions-list w-full ">
@@ -806,11 +819,11 @@ export const ServiceStockItemForm = ({
                 name="unitQty"
                 id="unitQty"
                 className="max-w-32"
-                defaultValue={stockItem?.stockItem.unitQty ?? 1}
+                defaultValue={stockItem?.unitQty ?? 1}
               />
-              {/* {fields.unitQty.errors && (
+              {fields.unitQty.errors && (
                 <p className="text-xs font-light">{fields.unitQty.errors}</p>
-              )} */}
+              )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
               <label htmlFor="unit">Unit</label>
@@ -829,9 +842,9 @@ export const ServiceStockItemForm = ({
                   </option>
                 ))}
               </select>
-              {/* {fields.unitId.errors && (
+              {fields.unitId.errors && (
                 <p className="text-xs font-light">{fields.unitId.errors}</p>
-              )} */}
+              )}
             </div>
           </div>
         </section>
@@ -853,9 +866,9 @@ export const ServiceStockItemForm = ({
                   MZN {price.toFixed(2)}
                 </p>
               )}
-              {/* {fields.price.errors && (
+              {fields.price.errors && (
                 <p className="text-xs font-light">{fields.price.errors}</p>
-              )} */}
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="stock">Stock</label>
@@ -886,15 +899,14 @@ export const ServiceStockItemForm = ({
               )}
             </div>
           </div>
-          {/* {categories && (
+          {categories && (
             <CategorySelect
-              categoryId={stockItem?.stockItem.Category?.id}
+              categoryId={stockItem?.Category?.id}
               categories={categories}
-              supplierId={serviceId}
-              // state={fields.categoryId.errors}
+              supplierId={supplierId}
               state={fields.categoryId.errors}
             />
-          )} */}
+          )}
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="description">Description</label>
@@ -903,12 +915,12 @@ export const ServiceStockItemForm = ({
             name="description"
             id="description"
             placeholder="Description"
-            defaultValue={stockItem?.stockItem.description || ""}
+            defaultValue={stockItem?.description || ""}
             className="min-w-80 min-h-40"
           />
-          {/* {fields.description.errors && (
+          {fields.description.errors && (
             <p className="text-xs font-light">{fields.description.errors}</p>
-          )} */}
+          )}
         </div>
       </section>
       <section className="errors">

@@ -39,9 +39,14 @@ export default function MenuAndStock({
           </button>
         </div>
         <div className="flex gap-2 items-center">
-          <Link href="/service/products/new" className="add-product flex gap-1">
+          <Link
+            href={
+              view === "list" ? "/service/products/new" : "/service/stock/new"
+            }
+            className="add-product flex gap-1"
+          >
             <span className="text-md px-2 flex items-center gap-2">
-              New Item
+              New {view === "stock" && "Stock"} Item
             </span>
           </Link>
         </div>

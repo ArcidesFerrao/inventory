@@ -2,8 +2,9 @@ import { AdminUserProfile } from "@/components/UserProfile";
 import authCheck from "@/lib/authCheck";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import React from "react";
+
 type Params = Promise<{ id: string }>;
+
 export default async function AdminUserPage(props: { params: Params }) {
   const session = await authCheck();
 
