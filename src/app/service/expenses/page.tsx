@@ -25,7 +25,7 @@ export default async function ExpensesPage() {
             Track and manage your expenses transactions
           </p>
         </div>
-        <Link href="/service/sales/new" className="add-product flex gap-1">
+        <Link href="/service/expenses/new" className="add-product flex gap-1">
           <span className="text-md px-2">New Expense</span>
         </Link>
       </div>

@@ -59,6 +59,12 @@ export default async function ServicePage() {
               </h4>
             </div>
             <div>
+              <h3 className="text-lg font-normal">Expenses</h3>
+              <h4 className="text-lg py-1 whitespace-nowrap font-bold">
+                MZN {stats.expenses.toFixed(2)}
+              </h4>
+            </div>
+            <div>
               <h3 className="text-lg font-normal">Net Position</h3>
               <h4
                 className={`text-lg py-1 whitespace-nowrap font-bold ${
@@ -87,6 +93,12 @@ export default async function ServicePage() {
                   <h3 className="text-lg font-normal">Gross Profit</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-bold">
                     MZN {stats.profit.toFixed(2)}
+                  </h4>
+                </div>
+                <div>
+                  <h3 className="text-lg font-normal">Net Profit</h3>
+                  <h4 className="text-xl py-1 whitespace-nowrap font-bold">
+                    MZN {stats.netProfit.toFixed(2)}
                   </h4>
                 </div>
                 <div>

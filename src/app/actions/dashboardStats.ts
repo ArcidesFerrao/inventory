@@ -12,6 +12,13 @@ export async function getServiceDashBoardStats() {
         }
     })
 
+    const totalExpenses = await db.expense.aggregate({
+        where: { serviceId: service?.id },
+        _sum: {
+            amount: true
+        }
+    })
+
     const itemCount = await db.item.count({
         where: {serviceId: service?.id, type: "SERVICE"}
     })
@@ -72,10 +79,11 @@ export async function getServiceDashBoardStats() {
     }
     const earnings = totalEarnings._sum.total || 0;
     const purchases = totalPurchases._sum.total || 0;
-    
-    // Core financial metrics
+    const expenses = totalExpenses._sum.amount || 0
+        // Core financial metrics
     const profit = earnings - totalCogs;
-    const balance = earnings - purchases;
+    const netProfit = profit - expenses;
+    const balance = earnings - purchases - expenses;
     const inventoryValue = purchases - totalCogs;
     
     // extra metrics
@@ -113,7 +121,7 @@ export async function getServiceDashBoardStats() {
     
     
 
-    return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems };
+    return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems };
 }
 
 

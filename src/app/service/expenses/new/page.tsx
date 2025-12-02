@@ -1,3 +1,4 @@
+import ExpenseForm from "@/components/ExpenseForm";
 import { auth } from "@/lib/auth";
 
 import Link from "next/link";
@@ -16,7 +17,12 @@ export default async function NewExpense() {
           <span className="text-md px-2">Cancel</span>
         </Link>
       </div>
-      <div className="sales-content flex justify-between gap-4"></div>
+      <div className="sales-content flex justify-between gap-4">
+        <ExpenseForm
+          serviceId={session.user.serviceId}
+          userId={session.user.id}
+        />
+      </div>
     </div>
   );
 }

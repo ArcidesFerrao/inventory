@@ -1,20 +1,47 @@
-import React, { useState } from "react";
+"use client";
+
+import { createExpense } from "@/app/actions/expenses";
+import { expenseSchema } from "@/schemas/schema";
+import { useForm } from "@conform-to/react";
+import { parseWithZod } from "@conform-to/zod";
+import { useRouter } from "next/navigation";
+import React, { useActionState, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type ExpenseFormData = {
   amount: number;
   description: string;
   categoryId: string;
   paymentMethod: string;
+  serviceId: string;
+  userId: string;
 };
 
-export default function ExpenseForm() {
+export default function ExpenseForm({
+  serviceId,
+  userId,
+}: {
+  serviceId: string;
+  userId: string;
+}) {
+  const [state, action, isPending] = useActionState(createExpense, undefined);
+  const [form, fields] = useForm({
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: expenseSchema });
+    },
+    shouldValidate: "onBlur",
+    shouldRevalidate: "onSubmit",
+  });
+  const router = useRouter();
+
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: 0,
     description: "",
     categoryId: "",
     paymentMethod: "CASH",
+    serviceId: serviceId,
+    userId: userId,
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -26,8 +53,41 @@ export default function ExpenseForm() {
       [name]: type === "number" ? parseFloat(value) : value,
     }));
   };
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      toast.success("Item created successfully!");
+      router.push("/service/expenses");
+    }
+    if (state?.status === "error") {
+      toast.error("Failed to add Item!");
+    }
+  }, [state, router, serviceId]);
   return (
-    <form>
+    <form
+      id={form.id}
+      action={action}
+      onSubmit={form.onSubmit}
+      className="flex flex-col gap-4 min-w-md"
+    >
+      <input
+        type="hidden"
+        name="serviceId"
+        id="serviceId"
+        value={formData.serviceId}
+        onChange={handleChange}
+        required
+        min={0}
+      />
+      <input
+        type="hidden"
+        name="userId"
+        id="userId"
+        value={formData.userId}
+        onChange={handleChange}
+        required
+        min={0}
+      />
       <div className="">
         <label htmlFor="amount">Amount (MZN)</label>
         <input
@@ -40,6 +100,7 @@ export default function ExpenseForm() {
           min={0}
         />
       </div>
+      {fields.amount.allErrors && <p>{fields.amount.errors}</p>}
       <div>
         <label htmlFor="description">Description</label>
         <input
@@ -52,8 +113,9 @@ export default function ExpenseForm() {
           maxLength={100}
         />
       </div>
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Saving..." : "Save Expense"}
+      {fields.description.allErrors && <p>{fields.description.errors}</p>}
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Saving..." : "Save Expense"}
       </button>
     </form>
   );

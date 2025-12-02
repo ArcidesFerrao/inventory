@@ -86,6 +86,15 @@ export const itemSchema = z.object({
         })
     ).optional(),
 })
+export const expenseSchema = z.object({
+    id: z.string().optional(),
+    description: z.string().optional(),
+    amount: z.number().positive("Quanitity must be greater than 0"),
+    categoryId: z.string().optional(),
+    serviceId: z.string(),
+    userId: z.string(),
+    
+})
 
 
 // userId: z.string().nonempty("User Id is required"),
