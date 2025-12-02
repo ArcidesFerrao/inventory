@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
 import { createNotification } from "./notifications";
 import {  OrderItemWithStockItems } from "@/types/types";
+import { revalidatePath } from "next/cache";
 
 export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
@@ -290,6 +291,10 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
             message: `${order.Service?.businessName} confirmed delivery!`,
             link: `/supply/orders/${orderId}`
         })
+
+        revalidatePath(`/supply/orders/delivery/${deliveryId}`)
+        revalidatePath(`/supply/orders/${orderId}`)
+        revalidatePath(`/supply/orders`)
 
         return { success: true, delivery, order };
         

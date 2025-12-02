@@ -212,7 +212,7 @@ export const ItemForm = ({
               <select
                 name="unitId"
                 id="unitId"
-                disabled
+                // disabled
                 value={units.find((u) => u.name === "pcs")?.id || ""}
               >
                 <option value="" disabled>
@@ -228,10 +228,6 @@ export const ItemForm = ({
                 <p className="text-xs font-light">{fields.unitId.errors}</p>
               )}
             </div>
-
-            {fields.unitId.errors && (
-              <p className="text-xs font-light">{fields.unitId.errors}</p>
-            )}
           </div>
         </div>
         <div className="flex gap-2 justify-between">

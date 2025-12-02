@@ -23,6 +23,8 @@ export async function createItem(prevState: unknown, formData: FormData) {
             item => item.quantity > 0
         ) || [];
 
+        console.log(activeCatalogItems)
+
         await db.item.create({
             data: {
                 name: values.name,
