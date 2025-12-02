@@ -25,9 +25,6 @@ export default async function SalesPage() {
       </div>
       <div className="py-4 flex justify-between">
         <Card title="Total Sales" value={stats.sales.totalSales} />
-        {/* <Card title="Delivered Orders" value={stats.orders.delivered} /> */}
-        {/* <Card title="Confirmed Orders" value={stats.orders.confirmed} /> */}
-        {/* <Card title="Cancelled Orders" value={stats.orders.cancelled} /> */}
       </div>
       <div className="admin-orders flex flex-col gap-5">
         <h2 className="text-lg font-bold">Sales List</h2>

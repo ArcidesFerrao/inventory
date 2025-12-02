@@ -6,7 +6,7 @@ import {
   SaleWithItems,
   SupplierSaleWithItems,
 } from "@/types/types";
-import { Order, OrderItem } from "@/generated/prisma/client";
+import { Expense, Order, OrderItem } from "@/generated/prisma/client";
 
 type ProductsStockProps = {
   id: string;
@@ -347,6 +347,74 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
           ))}
         </tbody>
       </table>
+    </li>
+  );
+};
+
+export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
+  return (
+    <li
+      key={expense.id}
+      className="list-orders flex flex-col gap-2 justify-between"
+    >
+      <div className="sale-header flex justify-between">
+        <div className="sale-title flex flex-col gap-2">
+          <h3 className="flex gap-2 items-center text-xl font-medium">
+            Expense
+            <p className="text-sm font-light ">#{expense.id.slice(0, 6)}...</p>
+          </h3>
+          <div className="sale-title-details flex gap-4">
+            <div className="flex gap-2">
+              <span className="flex items-center">
+                <span className="formkit--date"></span>
+              </span>
+              <p className="text-sm font-light">
+                {expense.timestamp.toLocaleDateString()} ,{" "}
+                {expense.timestamp.toLocaleTimeString()}
+              </p>
+            </div>
+            {/* {sale.SaleItem.length > 1 && (
+              <div className="flex items-center gap-2">
+                <span className="flex items-center">
+                  <span className="fluent--box-16-regular"></span>
+                </span>
+                <p className="text-sm font-light">
+                  {sale.SaleItem.length} items
+                </p>
+              </div>
+            )} */}
+            <div className="flex items-center">
+              <p className="text-sm font-light">{expense.paymentMethod}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Total Amount</p>
+          <h2 className="text-lg font-bold  text-nowrap">
+            MZN {expense.amount.toFixed(2)}
+          </h2>
+        </div>
+      </div>
+      {/* <table>
+        <thead>
+          <tr>
+            <th>Qty</th>
+            <th>Item</th>
+            <th className="unit-cost">Unit Cost</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sale.SaleItem.map((i) => (
+            <tr key={i.id}>
+              <td>{i.quantity}</td>
+              <td>{i.item?.name}</td>
+              <td className="unit-cost">MZN {i.price}.00</td>
+              <td>MZN {i.quantity * i.price}.00</td>
+            </tr>
+          ))}
+        </tbody>
+      </table> */}
     </li>
   );
 };

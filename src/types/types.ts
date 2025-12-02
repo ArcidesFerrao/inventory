@@ -84,6 +84,9 @@ export type ItemWithCategory = Item & {
   category: Category | null
 }
 
+// export type ExpenseList = Sale & {
+//   SaleItem : SaleItemWithProducts[]
+// }
 export type SaleWithItems = Sale & {
   SaleItem : SaleItemWithProducts[]
 }
