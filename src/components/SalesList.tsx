@@ -20,7 +20,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
     const result = await createSale(saleItems, serviceId);
 
     if (saleItems.length === 0) {
-      toast.error(result.message ?? "Sale not processed successfully");
+      toast.error("Sale not processed successfully");
       setLoading(false);
     }
 
@@ -32,7 +32,12 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
       }, 100);
     }
 
-    // console.log(result.message ? result.message : `Sale completed`);
+    if (!result.success) {
+      toast.error(result.message as string);
+      setLoading(false);
+    }
+
+    setLoading(false);
   };
 
   const handleIncrement = (id: string) => {

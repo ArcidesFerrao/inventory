@@ -34,24 +34,24 @@ export async function createSale(
 
 
             for (const saleItem of saleItems) {
-                console.log("Processing saleItem:", saleItem.name);
+                // console.log("Processing saleItem:", saleItem.name);
                 const itemRecipes = saleItem.CatalogItems || [];
                 
                 for (const recipeItem of itemRecipes) {
-                    const stockId = recipeItem.serviceStockItemId
-                    const stockProduct = stocks.find(s => s.id === stockId)
+                    const serviceStockItemId = recipeItem.serviceStockItem.id
+                    const stockProduct = stocks.find(s => s.id === serviceStockItemId)
                     if (!stockProduct) continue;
                         
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
-                    stockUsage[stockId] = (stockUsage[stockId] ?? 0) + qtyUsed;
+                    stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsed;
                     cogs += qtyUsed * (stockProduct.cost ?? 0);
 
-                    console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                    // console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
                 }
             }
 
             for (const [stockId, totalQty] of Object.entries(stockUsage)) {
-                await tx.serviceStockItem.update({
+                 await tx.serviceStockItem.update({
                     where: { id: stockId },
                     data: {
                         stock: {
@@ -59,8 +59,11 @@ export async function createSale(
                         }
                     }
                 });
+
+                // console.log(updated)
             }
 
+            // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)
 
             const newSale = await tx.sale.create({
                 data: {
@@ -81,17 +84,20 @@ export async function createSale(
                 },
             });
 
-            await tx.stockMovement.createMany({
-                data: Object.entries(stockUsage).map(([stockId, qty]) => ({
-                    serviceStockItemId: stockId,
-                    quantity: qty,
-                    changeType: "SALE",
-                    referenceId: newSale.id,
-                    notes: "Sold Products"
-                }))
-            })
+            for (const [stockId, qty] of Object.entries(stockUsage).filter(([,qty]) => qty > 0)) {
 
-            console.log("COGS:", cogs);
+                await tx.stockMovement.create({
+                    data: {
+                        serviceStockItemId:  stockId,
+                        quantity: qty,
+                        changeType: "SALE",
+                        referenceId: newSale.id,
+                        notes: "Sold Products"}
+                    })
+                
+            }
+
+            // console.log("COGS:", cogs);
             return newSale
 
         }, { timeout: 15000 }  );   
@@ -122,6 +128,6 @@ export async function createSale(
 
     } catch (error) {
         console.error("Error creating sale:", error);
-        throw new Error("Failed to create sale");
+        return { success: false, message: error}
     }
 }
