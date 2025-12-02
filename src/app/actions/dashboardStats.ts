@@ -409,3 +409,25 @@ export async function getAdminItemsStats() {
         stockItemsData
     }}
 }
+
+export async function getAdminSalesStats() {
+    const [salesData, totalSales] = await Promise.all([
+        db.sale.findMany({
+            include: {
+                Service: true,
+                Supplier: true,
+                SaleItem: true
+            },
+            orderBy: {
+                timestamp: "desc"
+            },
+            take: 20
+        }),
+        
+        db.sale.count({}),
+    ])
+
+    return {sales: {
+            salesData, totalSales
+        },}
+}

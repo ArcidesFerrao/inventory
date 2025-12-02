@@ -1,6 +1,7 @@
 import { getAdminOrdersStats } from "@/app/actions/dashboardStats";
 import { Card } from "@/components/Card";
 import { auth } from "@/lib/auth";
+import Link from "next/link";
 
 import { redirect } from "next/navigation";
 
@@ -43,7 +44,11 @@ export default async function OrdersPage() {
           <tbody>
             {stats.orders.ordersData.map((s) => (
               <tr key={s.id}>
-                <td>{s.id.slice(0, 5)}...</td>
+                <td>
+                  <Link href={`/admin/orders/${s.id}`}>
+                    {s.id.slice(0, 5)}...
+                  </Link>
+                </td>
                 <td>{s.Service?.businessName}</td>
                 <td>{s.supplier.businessName}</td>
                 <td>{s.status}</td>
