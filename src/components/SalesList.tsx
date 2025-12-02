@@ -15,7 +15,6 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
   );
 
   const handleCompleteSale = async () => {
-    // console.log("creating sale");
     setLoading(true);
     const saleItems = items.filter((item) => item.quantity > 0);
     const result = await createSale(saleItems, serviceId);
@@ -90,109 +89,31 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
     <>
       <div className="products-selection flex flex-col gap-4 w-full p-4">
         <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Refeição</h3>
+          <h3 className="text-md font-medium underline">List</h3>
           <ul>
             {items.map((item) => {
-              if (item.category?.name === "Meal")
-                return (
-                  <li
-                    key={item.id}
-                    className="flex justify-between items-center"
-                  >
-                    <h3>{item.name}</h3>
+              return (
+                <li key={item.id} className="flex justify-between items-center">
+                  <h3>{item.name}</h3>
 
-                    <div className="sales-amount flex gap-4 items-center max-w-6/12">
-                      <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(item.id)}>
-                          -
-                        </button>
-                        <span className="w-12 text-center">
-                          {item.quantity}
-                        </span>
-                        <button onClick={() => handleIncrement(item.id)}>
-                          +
-                        </button>
-                      </div>
-                      <span className="min-w-28">
-                        <p>
-                          {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
-                        </p>
-                      </span>
+                  <div className="sales-amount flex gap-4 items-center max-w-6/12">
+                    <div className="amount-btn flex gap-2 items-center px-2 py-1">
+                      <button onClick={() => handleDecrement(item.id)}>
+                        -
+                      </button>
+                      <span className="w-12 text-center">{item.quantity}</span>
+                      <button onClick={() => handleIncrement(item.id)}>
+                        +
+                      </button>
                     </div>
-                  </li>
-                );
-            })}
-          </ul>
-        </div>
-        <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Lanches</h3>
-          <ul>
-            {items.map((item) => {
-              if (item.category?.name === "Lunch")
-                return (
-                  <li
-                    key={item.id}
-                    className="flex justify-between items-center"
-                  >
-                    <h3>{item.name}</h3>
-
-                    <div className="sales-amount flex gap-4 items-center max-w-6/12">
-                      <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(item.id)}>
-                          -
-                        </button>
-                        <span className="w-12 text-center">
-                          {item.quantity}
-                        </span>
-                        <button onClick={() => handleIncrement(item.id)}>
-                          +
-                        </button>
-                      </div>
-                      <span className="min-w-28">
-                        <p>
-                          {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                );
-            })}
-          </ul>
-        </div>
-        <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">Bebidas</h3>
-          <ul>
-            {items.map((item) => {
-              if (item.category?.name === "Drink")
-                return (
-                  <li
-                    key={item.id}
-                    className="flex justify-between items-center "
-                  >
-                    <div>
-                      <h3>{item.name}</h3>
-                    </div>
-
-                    <div className="sales-amount flex gap-4 items-center max-w-6/12">
-                      <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                        <button onClick={() => handleDecrement(item.id)}>
-                          -
-                        </button>
-                        <span className="w-12 text-center">
-                          {item.quantity}
-                        </span>
-                        <button onClick={() => handleIncrement(item.id)}>
-                          +
-                        </button>
-                      </div>
-                      <span className="min-w-28">
-                        <p>
-                          {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                );
+                    <span className="min-w-28">
+                      <p>
+                        {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
+                      </p>
+                    </span>
+                  </div>
+                </li>
+              );
             })}
           </ul>
         </div>

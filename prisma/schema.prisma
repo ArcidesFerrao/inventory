@@ -172,19 +172,21 @@ model Service {
 }
 
 model ServiceStockItem {
-  id          String       @id @default(cuid())
-  stock       Int?
-  cost        Float?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  deletedAt   DateTime?
-  serviceId   String
-  stockItemId String
-  RecipeItems RecipeItem[] @relation("ServiceStockItems")
-  status      ItemStatus   @default(ACTIVE)
-  service     Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  stockItem   StockItem    @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
-  orderItems  OrderItem[]
+  id             String          @id @default(cuid())
+  stock          Int?
+  cost           Float?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+  serviceId      String
+  stockItemId    String
+  RecipeItems    RecipeItem[]    @relation("ServiceStockItems")
+  status         ItemStatus      @default(ACTIVE)
+  service        Service         @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  stockItem      StockItem       @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
+  orderItems     OrderItem[]
+  saleItems      SaleItem[]
+  stockMovements StockMovement[]
 
   @@unique([serviceId, stockItemId])
   @@index([serviceId, status])
@@ -205,15 +207,17 @@ model Sale {
 }
 
 model SaleItem {
-  id          String     @id @default(ulid())
-  saleId      String
-  itemId      String?
-  stockItemId String?
-  quantity    Int
-  price       Float
-  item        Item?      @relation(fields: [itemId], references: [id], onDelete: SetNull)
-  sale        Sale       @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  stockItem   StockItem? @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+  id                 String            @id @default(ulid())
+  saleId             String
+  itemId             String?
+  stockItemId        String?
+  serviceStockItemId String?
+  quantity           Int
+  price              Float
+  item               Item?             @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  sale               Sale              @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  stockItem          StockItem?        @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+  serviceStockItem   ServiceStockItem? @relation(fields: [serviceStockItemId], references: [id], onDelete: SetNull)
 }
 
 model Purchase {
@@ -328,16 +332,18 @@ model ActivityLog {
 }
 
 model StockMovement {
-  id          String      @id @default(cuid())
-  itemId      String?
-  stockItemId String?
-  changeType  StockChange
-  quantity    Int
-  referenceId String?
-  notes       String?
-  timestamp   DateTime    @default(now())
-  item        Item?       @relation(fields: [itemId], references: [id], onDelete: SetNull)
-  stockItem   StockItem?  @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+  id                 String            @id @default(cuid())
+  itemId             String?
+  stockItemId        String?
+  serviceStockItemId String?
+  changeType         StockChange
+  quantity           Int
+  referenceId        String?
+  notes              String?
+  timestamp          DateTime          @default(now())
+  item               Item?             @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  stockItem          StockItem?        @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+  serviceStockItem   ServiceStockItem? @relation(fields: [serviceStockItemId], references: [id], onDelete: SetNull)
 }
 
 model PriceHistory {
