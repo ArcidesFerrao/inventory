@@ -1,4 +1,5 @@
-import { ProductForm } from "@/components/ProductForm";
+import { ItemForm } from "@/components/ItemForm";
+// import { ProductForm } from "@/components/ProductForm";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -21,7 +22,7 @@ export default async function NewProductPage() {
           <span className="ep--back"></span>
         </Link>
       </div>
-      <ProductForm serviceId={session?.user.serviceId} />
+      <ItemForm serviceId={session?.user.serviceId} />
     </div>
   );
 }

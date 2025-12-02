@@ -198,3 +198,17 @@ export type SupplierWithItems = Supplier & {
 }
 
 export type SupplierStockItems = StockItem
+
+
+export type ItemWithUnit = Item & {
+  Unit: {
+    name: string;
+    id: string;
+    description: string | null;
+  } | null;
+  Category: {
+    name: string;
+    id: string;
+    // type: $Enums.CategoryType;
+  } | null;
+};

@@ -8,7 +8,6 @@ import {
   createItem,
   createStockItem,
   editStockItem,
-  getItems,
   getStockItemsNames,
 } from "@/app/actions/product";
 import { editItem } from "@/app/actions/product";
@@ -23,6 +22,7 @@ import {
   StockItem,
   Category,
   Item,
+  ServiceStockItem,
   // ServiceStockItem,
 } from "@/generated/prisma/client";
 import {
@@ -30,7 +30,11 @@ import {
   serviceStockItemSchema,
   stockItemSchema,
 } from "@/schemas/schema";
-import { createServiceStockItem } from "@/app/actions/items";
+import {
+  createServiceStockItem,
+  editServiceStockItem,
+  getServiceStockItems,
+} from "@/app/actions/items";
 
 type StockItemWithUnit = StockItem & {
   Unit: {
@@ -92,7 +96,7 @@ export const ProductForm = ({
     defaultValue: item,
   });
   const router = useRouter();
-  const [type, setType] = useState(item ? item.type : "STOCK");
+  const [type, setType] = useState(item ? item.type : "SERVICE");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
@@ -100,7 +104,7 @@ export const ProductForm = ({
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
   const [recipeItems, setRecipeItems] = useState<
-    { itemId: string; name: string; unitQty: number }[]
+    (ServiceStockItem & { stockItem: StockItem; unitQty: number })[]
   >([]);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -123,12 +127,11 @@ export const ProductForm = ({
 
   useEffect(() => {
     const fetchItems = async () => {
-      const items = await getItems(serviceId);
+      const serviceStockItems = await getServiceStockItems(serviceId);
 
       setRecipeItems(
-        items.map((p) => ({
-          itemId: p.id,
-          name: p.name,
+        serviceStockItems.map((p) => ({
+          ...p,
           unitQty: 0,
         }))
       );
@@ -222,6 +225,7 @@ export const ProductForm = ({
               id="type"
               value={type}
               onChange={(e) => setType(e.target.value as "STOCK" | "SERVICE")}
+              aria-readonly
             >
               <option value="" disabled>
                 Select a type
@@ -339,38 +343,42 @@ export const ProductForm = ({
                 serviceId={serviceId}
                 categoryId={item?.categoryId}
                 field={fields.categoryId}
-                state={state as string}
+                // state={state}
                 // state={fields.categoryId.errors?.[0]}
               />
+              {fields.categoryId.errors && (
+                <p className="text-xs font-light">{fields.categoryId.errors}</p>
+              )}
             </div>
           )}
         </div>
-        {type === "SERVICE" && (
-          <div className="flex flex-col gap-4">
-            <fieldset className="flex flex-col gap-4 p-4">
-              <legend className="font-semibold">Recipe Items</legend>
-              {recipeItems.map((stockItem, index) => (
+        <div className="flex flex-col gap-4">
+          <fieldset className="flex flex-col gap-4 p-4">
+            <legend className="font-semibold">Recipe Items</legend>
+            {recipeItems.map((stockItem, index) => {
+              const isActive = Number(stockItem.unitQty) > 0;
+              return (
                 <div
-                  key={stockItem.itemId}
+                  key={stockItem.id}
                   className="flex items-center justify-between"
                 >
                   <label
                     className="pl-2 py-1 font-light "
-                    htmlFor={`recipe[${index}].quantity`}
+                    htmlFor={`CatalogItems[${index}].quantity`}
                   >
-                    {stockItem.name}
+                    {stockItem.stockItem.name}
                   </label>
                   <input
                     type="number"
                     className="max-w-1/3 text-sm"
                     min={0}
-                    name={`recipe[${index}].quantity`}
+                    name={`CatalogItems[${index}].quantity`}
                     value={stockItem.unitQty}
                     onChange={(e) => {
                       const newQuantity = Number(e.target.value);
                       setRecipeItems((prev) =>
                         prev.map((ri) =>
-                          ri.itemId === stockItem.itemId
+                          ri.id === stockItem.id
                             ? {
                                 ...ri,
                                 unitQty: newQuantity,
@@ -380,16 +388,25 @@ export const ProductForm = ({
                       );
                     }}
                   />
-                  <input
-                    type="hidden"
-                    name={`recipe[${index}].serviceStockItemId`}
-                    value={stockItem.itemId}
-                  />
+                  {isActive && (
+                    <>
+                      <input
+                        type="hidden"
+                        name={`CatalogItems[${index}].serviceStockItemId`}
+                        value={stockItem.id}
+                      />
+                      <input
+                        type="hidden"
+                        name={`CatalogItems[${index}].stockItemId`}
+                        value={stockItem.stockItemId}
+                      />
+                    </>
+                  )}
                 </div>
-              ))}
-            </fieldset>
-          </div>
-        )}
+              );
+            })}
+          </fieldset>
+        </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="description">Description</label>
 
@@ -685,7 +702,7 @@ export const ServiceStockItemForm = ({
   // supplierId: string;
   serviceId: string;
 }) => {
-  const actionFn = stockItem ? editStockItem : createServiceStockItem;
+  const actionFn = stockItem ? editServiceStockItem : createServiceStockItem;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
     onValidate({ formData }) {
@@ -737,7 +754,7 @@ export const ServiceStockItemForm = ({
           ? "Stock Item edited successfully!"
           : "Stock Item created successfully!"
       );
-      router.push("/supply/products");
+      router.push("/service/products");
     }
 
     const fetchUnits = async () => {

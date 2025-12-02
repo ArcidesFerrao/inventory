@@ -27,7 +27,7 @@ export default async function ProductsPage() {
         </div>
         <Link href="/supply/products/new" className="add-product flex gap-1">
           <span>+</span>
-          <span className="text-md">Product</span>
+          <span className="text-md">Item</span>
         </Link>
       </div>
       <div className="state-products flex justify-between w-full">

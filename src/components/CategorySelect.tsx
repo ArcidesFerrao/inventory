@@ -7,6 +7,7 @@ import { Modal } from "./Modal";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Category } from "@/generated/prisma/client";
+// import { SubmissionResult } from "@conform-to/react";
 
 export function CategorySelect({
   categoryId,
@@ -97,14 +98,14 @@ export function ProductsCategorySelect({
   categoryId,
   categories,
   serviceId,
-  state,
+  // state,
   field,
 }: // onChange,
 {
   categoryId?: string | null;
   categories: { id: string; name: string }[];
   serviceId: string;
-  state: string;
+  // state: SubmissionResult<string[]> | undefined;
   field: {
     name: string;
     value?: string;
@@ -145,9 +146,9 @@ export function ProductsCategorySelect({
           value={field.value || cId || ""}
           onChange={(e) => setCId(e.target.value)}
           id="categoryId"
+          name="categoryId"
           // onChange={field.onChange}
           // id={field.name}
-          // name="categoryId"
           // value={cId}
         >
           <option value="">Select or create category</option>
@@ -187,7 +188,9 @@ export function ProductsCategorySelect({
           </button>
         </Modal>
       </div>
-      {state && <p className="text-xs font-light">{state}</p>}
+      {/* {state && (
+        <p className="text-xs font-light">{JSON.stringify(state.error)}</p>
+      )} */}
     </div>
   );
 }

@@ -17,6 +17,11 @@ export async function createItem(prevState: unknown, formData: FormData) {
     
     try {
         const values = submission.value;
+        console.log(values);
+
+         const activeCatalogItems = values.CatalogItems?.filter(
+            item => item.quantity > 0
+        ) || [];
 
         await db.item.create({
             data: {
@@ -31,9 +36,10 @@ export async function createItem(prevState: unknown, formData: FormData) {
                 status: "ACTIVE",
                 serviceId: values.serviceId,
                 CatalogItems: {
-                    create: values.recipe?.map((r) => ({
+                    create: activeCatalogItems.map((r) => ({
                         quantity: r.quantity,
                         serviceStockItemId: r.serviceStockItemId,
+                        stockItemId: r.stockItemId
                     })) || [],
                 }
             }
@@ -59,6 +65,9 @@ export async function editItem(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
 
+        const activeCatalogItems = values.CatalogItems?.filter(
+            item => item.quantity > 0
+        ) || [];
 
         await db.item.update({
             where: {
@@ -76,7 +85,7 @@ export async function editItem(prevState: unknown, formData: FormData) {
                 status: "ACTIVE",
                 CatalogItems: {
                     deleteMany: {},
-                    create: values.recipe?.map((r) => ({
+                    create: activeCatalogItems.map((r) => ({
                         quantity: r.quantity,
                         serviceStockItemId: r.serviceStockItemId,
 
