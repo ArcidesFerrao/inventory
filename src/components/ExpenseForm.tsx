@@ -68,7 +68,7 @@ export default function ExpenseForm({
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col gap-4 min-w-md"
+      className="expense-form flex flex-col gap-4 min-w-md"
     >
       <input
         type="hidden"
@@ -88,7 +88,7 @@ export default function ExpenseForm({
         required
         min={0}
       />
-      <div className="">
+      <div className=" flex gap-4 justify-between">
         <label htmlFor="amount">Amount (MZN)</label>
         <input
           type="number"
@@ -101,7 +101,7 @@ export default function ExpenseForm({
         />
       </div>
       {fields.amount.allErrors && <p>{fields.amount.errors}</p>}
-      <div>
+      <div className="flex gap-4 justify-between">
         <label htmlFor="description">Description</label>
         <input
           type="text"

@@ -455,6 +455,7 @@ nav {
   border-radius: 0.4rem;
 }
 
+.expense-form button,
 .confirm-delivery button,
 .schedule-button,
 .delivery-btn,
@@ -475,6 +476,7 @@ nav {
   border-radius: 0.2rem;
 }
 
+.expense-form button:hover,
 .confirm-delivery button:hover,
 .fullfill-btn:hover,
 .order-status button,

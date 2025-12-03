@@ -22,7 +22,7 @@ export default async function ExpensesPage() {
         <div className="sales-title">
           <h2 className="text-2xl font-medium">Recent Expenses</h2>
           <p className="text-md font-extralight">
-            Track and manage your expenses transactions
+            Track and manage your expenses
           </p>
         </div>
         <Link href="/service/expenses/new" className="add-product flex gap-1">

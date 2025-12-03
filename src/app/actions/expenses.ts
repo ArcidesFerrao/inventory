@@ -6,6 +6,7 @@ import { expenseSchema } from "@/schemas/schema";
 import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
+import { logActivity } from "./logs";
 
 export async function createExpense(prevState: unknown, formData: FormData) {
     const session = await auth()
@@ -19,7 +20,7 @@ export async function createExpense(prevState: unknown, formData: FormData) {
         const values = submission.value;
         // console.log(values);
 
-        await db.expense.create({
+        const expense = await db.expense.create({
             data: {
                 amount: values.amount,
                 description: values.description,
@@ -30,6 +31,23 @@ export async function createExpense(prevState: unknown, formData: FormData) {
             }
         })
 
+        await logActivity(
+                    expense.serviceId,
+                    null,
+                    "CREATE",
+                    "Expense",
+                    expense.id,
+                    `Expense amount MZN ${expense.amount.toFixed(2)} created`,
+                    {
+                        
+                        timeStamp: expense.timestamp,
+                        
+                        
+                    },
+                    null,
+                    'INFO',
+                    null
+                );
         console.log()
    return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
