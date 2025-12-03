@@ -175,11 +175,11 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
 }
 
 
-export async function getSupplierDashBoardStats() {
+export async function getSupplierDashBoardStats(period: Period = 'monthly') {
     const session = await auth()
 
     if (!session?.user) return null 
-    
+ const { startDate, endDate } = getDateRange(period)
     const supplier = await db.supplier.findUnique({
         where: {
             userId: session.user.id,
@@ -199,16 +199,26 @@ export async function getSupplierDashBoardStats() {
     })
 
     const customerCount = await db.supplierCustomer.count({
-        where: { supplierId }
+        where: { supplierId, createdAt: {
+                    gte: startDate,
+                    lte: endDate,
+                } }
     })
 
     const orderCount = await db.order.count({
-        where: { supplierId }
+        where: { supplierId, timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                } }
     })
 
     const totalRevenue = await db.order.aggregate({
         where: {
-                supplierId 
+                supplierId,
+                timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                } 
         },
         _sum: {
             total: true,
@@ -229,7 +239,11 @@ export async function getSupplierDashBoardStats() {
         by: ['stockItemId'],
         where: {
             order: {
-                supplierId
+                supplierId,
+                timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                }
             }
         },
         _sum: {
@@ -246,7 +260,11 @@ export async function getSupplierDashBoardStats() {
     const topItems = await Promise.all(mostOrderedItems.map(async (item) => {
         const stockItem = await db.stockItem.findUnique({
             where: {
-                id: item.stockItemId!
+                id: item.stockItemId!,
+                createdAt: {
+                    gte: startDate,
+                    lte: endDate,
+                }
             },
             select: {
                 id: true,

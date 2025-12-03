@@ -1,10 +1,18 @@
-import Link from "next/link";
 import { getSupplierDashBoardStats } from "../actions/dashboardStats";
 import { getStockItems } from "../actions/product";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import DateFilter from "@/components/DateFilter";
 
-export default async function SupplyPage() {
+type SearchParams = {
+  period?: "daily" | "weekly" | "monthly";
+};
+
+export default async function SupplyPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const session = await auth();
 
   if (!session) {
@@ -15,7 +23,10 @@ export default async function SupplyPage() {
     redirect("/register/supplier");
   }
 
-  const stats = await getSupplierDashBoardStats();
+  const params = await searchParams;
+  const period = params.period || "monthly";
+
+  const stats = await getSupplierDashBoardStats(period);
   const stockItems = await getStockItems(session.user.supplierId);
   const filteredItems = stockItems.filter(
     (item) => (item.stock || item.stock == 0) && item.stock < 10
@@ -28,13 +39,14 @@ export default async function SupplyPage() {
         <h1 className="text-4xl font-semibold">
           {stats.supplier}&apos;s Dashboard
         </h1>
-        <Link
+        {/* <Link
           href="/supply/products/new"
           className="add-product add-product-dash flex gap-2"
         >
           <span>+</span>
           <span className="text-md">Item</span>
-        </Link>
+        </Link> */}
+        <DateFilter currentPeriod={period} />
       </div>
 
       <div className="supply-stats flex gap-4 my-8">
