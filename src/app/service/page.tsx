@@ -2,6 +2,8 @@ import { getServiceDashBoardStats } from "../actions/dashboardStats";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import DateFilter from "@/components/DateFilter";
+import { CashFlowChart } from "@/components/CashFlowChart";
+import { RecentActivity } from "@/components/RecentActivity";
 
 type SearchParams = {
   period?: "daily" | "weekly" | "monthly";
@@ -31,7 +33,7 @@ export default async function ServicePage({
   );
 
   return (
-    <section className="flex flex-col w-full ">
+    <section className="flex flex-col gap-4 w-full ">
       <div className="dash-header flex items-center justify-between">
         <h1 className="text-2xl font-semibold">
           {stats.service}&apos;s Dashboard
@@ -148,36 +150,47 @@ export default async function ServicePage({
         </div>
       </div>
 
-      <div className="flex  w-fit gap-4">
-        {lowStockItems.length > 0 && (
-          <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-xl font-bold">Critic Items</h2>
-            <ul className="flex flex-col gap-1">
-              {lowStockItems.map((item) => (
-                <li key={item.id} className="flex justify-between w-60">
-                  <span>{item.stockItem.name}</span>
-                  <span className="font-medium">{item.stock}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {stats.topItems.length > 0 && (
-          <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-xl font-bold">Top Items</h2>
-            <ul className="flex flex-col gap-1">
-              {stats.topItems.map(
-                (item) =>
-                  item && (
-                    <li key={item.id} className="flex justify-between w-60">
-                      <span>{item.name}</span>
-                      <span className="font-medium">{item.quantity}</span>
-                    </li>
-                  )
-              )}
-            </ul>
-          </div>
-        )}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <CashFlowChart
+            revenue={stats.earnings}
+            purchases={stats.purchases}
+            expenses={stats.expenses}
+            balance={stats.balance}
+          />
+          <RecentActivity serviceId={session.user.serviceId} />
+        </div>
+        <div className="flex flex-col gap-4 w-full">
+          {lowStockItems.length > 0 && (
+            <div className="items-list flex flex-col p-4 w-full gap-4 justify-between items-start">
+              <h2 className="text-xl font-bold">Critic Items</h2>
+              <ul className="flex flex-col  w-full gap-1">
+                {lowStockItems.map((item) => (
+                  <li key={item.id} className="flex justify-between">
+                    <span>{item.stockItem.name}</span>
+                    <span className="font-medium">{item.stock}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {stats.topItems.length > 0 && (
+            <div className="items-list flex flex-col p-4   gap-4 justify-start items-start">
+              <h2 className="text-xl font-bold">Top Items</h2>
+              <ul className="flex flex-col w-full gap-1">
+                {stats.topItems.map(
+                  (item) =>
+                    item && (
+                      <li key={item.id} className="flex justify-between w-full">
+                        <span>{item.name}</span>
+                        <span className="font-medium">{item.quantity}</span>
+                      </li>
+                    )
+                )}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

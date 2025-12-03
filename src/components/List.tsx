@@ -6,7 +6,7 @@ import {
   SaleWithItems,
   SupplierSaleWithItems,
 } from "@/types/types";
-import { Expense, Order, OrderItem } from "@/generated/prisma/client";
+import { Expense, Order, OrderItem, Sale } from "@/generated/prisma/client";
 
 type ProductsStockProps = {
   id: string;
@@ -347,6 +347,41 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
           ))}
         </tbody>
       </table>
+    </li>
+  );
+};
+
+export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
+  return (
+    <li
+      key={sale.id}
+      className="list-orders flex flex-col gap-2 justify-between"
+    >
+      <div className="sale-header flex justify-between">
+        <div className="sale-title flex flex-col gap-2">
+          <h3 className="flex gap-2 items-center text-xl font-medium">
+            Sale
+            <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
+          </h3>
+          <div className="sale-title-details flex gap-4">
+            <div className="flex gap-2">
+              <span className="flex items-center">
+                <span className="formkit--date"></span>
+              </span>
+              <p className="text-sm font-light">
+                {sale.timestamp.toLocaleDateString()} ,{" "}
+                {sale.timestamp.toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p>Total Amount</p>
+          <h2 className="text-lg font-bold  text-nowrap">
+            MZN {sale.total.toFixed(2)}
+          </h2>
+        </div>
+      </div>
     </li>
   );
 };
