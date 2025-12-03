@@ -1,18 +1,39 @@
 import { getSelectedStockItems } from "@/app/actions/product";
 import { ListSupplierItem } from "@/components/List";
+import { SearchInput } from "@/components/SearchInput";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function ProductsPage() {
+type SearchParams = {
+  search?: string;
+};
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const session = await auth();
 
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
 
+  const params = await searchParams;
+  const searchQuery = params.search?.toLowerCase() || "";
+
   const items = await getSelectedStockItems(session.user.supplierId);
 
-  const filteredItems = items.filter(
+  const filteredItems = items.filter((item) => {
+    const matchesSearch =
+      !searchQuery ||
+      item.name.toLowerCase().includes(searchQuery) ||
+      item.id.toLocaleLowerCase().includes(searchQuery);
+
+    return matchesSearch;
+  });
+
+  const lowStockItems = items.filter(
     (item) => (item.stock || item.stock == 0) && item.stock < 10
   );
 
@@ -37,18 +58,21 @@ export default async function ProductsPage() {
         </div>
         <div>
           <p>Low Stock</p>
-          <h2 className="text-2xl font-medium">{filteredItems.length}</h2>
+          <h2 className="text-2xl font-medium">{lowStockItems.length}</h2>
         </div>
         <div>
           <p>Out of Stock</p>
           <h2 className="text-2xl font-medium">0</h2>
         </div>
       </div>
-      {items.length === 0 ? (
+
+      <SearchInput currentSearch={searchQuery} />
+
+      {filteredItems.length === 0 ? (
         <p>No items found...</p>
       ) : (
         <ul className="flex flex-col gap-4 w-full">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <ListSupplierItem
               id={item.id}
               name={item.name}
