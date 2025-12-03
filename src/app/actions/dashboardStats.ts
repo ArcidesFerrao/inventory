@@ -1,10 +1,29 @@
 import { auth} from "@/lib/auth";
 import { db } from "@/lib/db";
+import { Period } from "@/types/types";
 
-export async function getServiceDashBoardStats() {
+const PERIOD_DAYS = {
+        daily: 1,
+        weekly: 7,
+        biweekly: 14,
+        monthly: 30,
+        annualy: 360
+} as const 
+
+function getDateRange(period: Period) {
+    const now = new Date();
+    const startDate = new Date();
+    startDate.setDate(now.getDate() - PERIOD_DAYS[period]);
+
+    return { startDate, endDate: now}
+}
+
+export async function getServiceDashBoardStats(period: Period = 'monthly') {
     const session = await auth()
 
     if (!session?.user) return null;
+
+    const { startDate, endDate } = getDateRange(period)
 
     const service = await db.service.findUnique({
         where: {
@@ -13,7 +32,14 @@ export async function getServiceDashBoardStats() {
     })
 
     const totalExpenses = await db.expense.aggregate({
-        where: { serviceId: service?.id },
+        where: { 
+            serviceId: service?.id, 
+        
+            timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                }
+        },
         _sum: {
             amount: true
         }
@@ -24,16 +50,28 @@ export async function getServiceDashBoardStats() {
     })
 
     const salesCount = await db.sale.count({
-        where: { serviceId: service?.id }
+        where: { serviceId: service?.id, timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                } }
     })
 
     const totalEarnings = await db.sale.aggregate({
-        where: { serviceId: service?.id },
+        where: { serviceId: service?.id, timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                } },
         _sum: { total: true}
     })
 
     const totalPurchases = await db.purchase.aggregate({
-        where: {serviceId: service?.id},
+        where: {
+            serviceId: service?.id, 
+            timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                }
+        },
         _sum: {
             total: true
         }
@@ -42,8 +80,13 @@ export async function getServiceDashBoardStats() {
     const sales = await db.saleItem.findMany({
         where: {
             sale: {
-                serviceId: service?.id
-            }
+                serviceId: service?.id,
+                timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                }
+            },
+            
         },
         include: {
             item: {
@@ -94,7 +137,14 @@ export async function getServiceDashBoardStats() {
     const mostPaidItems = await db.saleItem.groupBy({
         by: ['itemId'],
         where: {
-            sale: { serviceId: service?.id }
+            sale: { 
+                serviceId: service?.id,
+                timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                }
+                
+             }
         },
         _sum: {
             quantity: true

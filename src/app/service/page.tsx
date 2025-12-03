@@ -1,10 +1,18 @@
-import Link from "next/link";
 import { getServiceDashBoardStats } from "../actions/dashboardStats";
 import { getItems } from "../actions/product";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import DateFilter from "@/components/DateFilter";
 
-export default async function ServicePage() {
+type SearchParams = {
+  period?: "daily" | "weekly" | "monthly";
+};
+
+export default async function ServicePage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const session = await auth();
 
   if (!session) {
@@ -15,7 +23,9 @@ export default async function ServicePage() {
     redirect("/register/service");
   }
 
-  const stats = await getServiceDashBoardStats();
+  const params = await searchParams;
+  const period = params.period || "monthly";
+  const stats = await getServiceDashBoardStats(period);
   const stockProducts = await getItems(session.user.serviceId);
   const filteredProducts = stockProducts.filter(
     (product) =>
@@ -27,19 +37,10 @@ export default async function ServicePage() {
   return (
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
-        <h1 className="text-4xl font-medium">
+        <h1 className="text-2xl font-semibold">
           {stats.service}&apos;s Dashboard
         </h1>
-        <div className="flex gap-4">
-          <Link href="/service/products/new" className="add-product flex gap-2">
-            <span>+</span>
-            <span className="text-md">Product</span>
-          </Link>
-          <Link href="/service/sales/new" className="add-product flex gap-2">
-            <span>+</span>
-            <span className="text-md">Sale</span>
-          </Link>
-        </div>
+        <DateFilter currentPeriod={period} />
       </div>
 
       <div className="service-stats flex gap-4 my-8">

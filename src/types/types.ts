@@ -215,3 +215,7 @@ export type ItemWithUnit = Item & {
     // type: $Enums.CategoryType;
   } | null;
 };
+
+
+export type Period = 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'annualy'
+
