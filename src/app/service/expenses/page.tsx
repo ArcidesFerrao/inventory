@@ -1,20 +1,88 @@
+import { ExpenseFilters } from "@/components/ExpenseFilters";
 import { ExpenseListItem } from "@/components/List";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function ExpensesPage() {
+type SearchParams = {
+  search?: string;
+  category: string;
+  period?: "daily" | "weekly" | "monthly";
+};
+
+const PERIOD_DAYS = {
+  daily: 1,
+  weekly: 7,
+  monthly: 30,
+  all: 0,
+} as const;
+
+export default async function ExpensesPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const session = await auth();
 
   if (!session?.user) redirect("/login");
 
   if (!session.user.serviceId) redirect("/register/service");
 
+  const params = await searchParams;
+  const searchQuery = params.search?.toLowerCase() || "";
+  const categoryFilter = params.category || "all";
+  const period = params.period || "all";
+
+  const dateFilter =
+    PERIOD_DAYS[period] > 0
+      ? {
+          gte: new Date(Date.now() - PERIOD_DAYS[period] * 24 * 60 * 60 * 1000),
+        }
+      : undefined;
+
   const expenses = await db.expense.findMany({
-    where: { serviceId: session.user.serviceId },
+    where: {
+      serviceId: session.user.serviceId,
+      ...(dateFilter && { timestamp: dateFilter }),
+    },
     orderBy: { timestamp: "desc" },
   });
+
+  const filteredExpenses = expenses.filter((expense) => {
+    const matchesSearch =
+      !searchQuery ||
+      expense.description?.toLowerCase().includes(searchQuery) ||
+      expense.categoryId?.toLowerCase().includes(searchQuery);
+
+    const matchesCategory =
+      categoryFilter === "all" || expense.categoryId === categoryFilter;
+
+    return matchesCategory && matchesSearch;
+  });
+
+  const totalAmount = filteredExpenses.reduce(
+    (acc, exp) => acc + exp.amount,
+    0
+  );
+  const averageExpense =
+    filteredExpenses.length > 0 ? totalAmount / filteredExpenses.length : 0;
+
+  // const expensesByCategory = filteredExpenses.reduce((acc, expense) => {
+  //   const category = expense.categoryId || "";
+  //   acc[category] = acc[category || 0] + expense.amount;
+  //   return acc;
+  // }, {} as Record<string, number>);
+
+  // const topCategory = Object.entries(expensesByCategory).sort(
+  //   ([, a], [, b]) => b - a
+  // )[0];
+
+  const categories = Array.from(
+    new Set(
+      expenses.map((e) => e.categoryId).filter((c): c is string => Boolean(c))
+    )
+  );
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">
@@ -29,23 +97,32 @@ export default async function ExpensesPage() {
           <span className="text-md px-2">New Expense</span>
         </Link>
       </div>
-      <div className="flex justify-between">
+
+      <div className="flex justify-between py-2">
         <div className="total-sales-title flex flex-col gap-2">
-          <p>Total Expenses</p>
-          <h2 className="text-xl font-bold">{expenses.length}</h2>
+          <p>Expenses</p>
+          <h2 className="text-xl font-bold">{filteredExpenses.length}</h2>
         </div>
-        <div className="flex flex-col gap-2">
-          <p>Revenue</p>
-          <h2 className="text-xl font-bold">
-            MZN {expenses.reduce((acc, sale) => acc + sale.amount, 0)}.00
-          </h2>
+        <div className="total-sales-title flex flex-col gap-2">
+          <p>Total Spent</p>
+          <h2 className="text-xl font-bold">MZN {totalAmount.toFixed(2)}</h2>
+        </div>
+        <div className="total-sales-title flex flex-col gap-2">
+          <p>Average Expense</p>
+          <h2 className="text-xl font-bold">MZN {averageExpense.toFixed(2)}</h2>
         </div>
       </div>
-      {expenses.length === 0 ? (
+      <ExpenseFilters
+        currentSearch={searchQuery}
+        currentCategory={categoryFilter}
+        currentPeriod={period}
+        categories={categories}
+      />
+      {filteredExpenses.length === 0 ? (
         <p>No expenses found...</p>
       ) : (
         <ul className="w-full flex flex-col gap-2">
-          {expenses.map((expense) => (
+          {filteredExpenses.map((expense) => (
             <ExpenseListItem key={expense.id} expense={expense} />
           ))}
         </ul>
