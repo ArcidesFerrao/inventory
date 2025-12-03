@@ -58,3 +58,40 @@ export async function createExpense(prevState: unknown, formData: FormData) {
         } satisfies SubmissionResult<string[]>
     }
 }
+
+export async function createCategoryExpense({name, description}:{name: string; description: string | undefined}) {
+    const session = await auth()
+    if (!session?.user.serviceId) redirect("/login");
+    
+    try {
+
+        const category = await db.expenseCategory.create({
+            data: {
+                name: name,
+                description: description,
+                serviceId: session.user.serviceId,
+            }
+        })
+
+        await logActivity(
+                    category.serviceId,
+                    null,
+                    "CREATE",
+                    "Category Expense",
+                    category.id,
+                    `Expense category ${category.name} created`,
+                    {                    },
+                    null,
+                    'INFO',
+                    null
+                );
+        console.log()
+   return {status: "success"} 
+    } catch (error) {
+        console.error("Failed to create Expense", error);
+        return {
+            status: "error",
+            error: "Failed to create Expense"
+        } 
+    }
+}

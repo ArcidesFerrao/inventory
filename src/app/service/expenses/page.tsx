@@ -46,14 +46,26 @@ export default async function ExpensesPage({
       serviceId: session.user.serviceId,
       ...(dateFilter && { timestamp: dateFilter }),
     },
+    include: {
+      category: true,
+    },
     orderBy: { timestamp: "desc" },
+  });
+
+  const categories = await db.expenseCategory.findMany({
+    where: {
+      serviceId: session.user.serviceId,
+    },
+    orderBy: {
+      name: "asc",
+    },
   });
 
   const filteredExpenses = expenses.filter((expense) => {
     const matchesSearch =
       !searchQuery ||
       expense.description?.toLowerCase().includes(searchQuery) ||
-      expense.categoryId?.toLowerCase().includes(searchQuery);
+      expense.category?.name?.toLowerCase().includes(searchQuery);
 
     const matchesCategory =
       categoryFilter === "all" || expense.categoryId === categoryFilter;
@@ -67,22 +79,6 @@ export default async function ExpensesPage({
   );
   const averageExpense =
     filteredExpenses.length > 0 ? totalAmount / filteredExpenses.length : 0;
-
-  // const expensesByCategory = filteredExpenses.reduce((acc, expense) => {
-  //   const category = expense.categoryId || "";
-  //   acc[category] = acc[category || 0] + expense.amount;
-  //   return acc;
-  // }, {} as Record<string, number>);
-
-  // const topCategory = Object.entries(expensesByCategory).sort(
-  //   ([, a], [, b]) => b - a
-  // )[0];
-
-  const categories = Array.from(
-    new Set(
-      expenses.map((e) => e.categoryId).filter((c): c is string => Boolean(c))
-    )
-  );
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">

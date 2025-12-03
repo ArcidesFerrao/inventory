@@ -9,7 +9,7 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
     // console.log(purchaseItems)
     if (purchaseItems.length === 0) return {success: false, message: "No purchase items"}
     
-    const total = purchaseItems.reduce((sum, stockItem) => sum + ((stockItem.price || 0) * stockItem.quantity), 0);
+    const total = purchaseItems.reduce((sum, serviceStockItem) => sum + ((serviceStockItem.price || 0) * serviceStockItem.quantity), 0);
     try {
         const result  = await db.$transaction(async (tx) => {
             const purchase = await tx.purchase.create({
@@ -19,12 +19,13 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                     serviceId,
                     sourceType: "DIRECT",
                     PurchaseItem: {
-                        create: purchaseItems.map((stockItem) => ({
-                            // stockItemId: stockItem.id,
-                            stock: stockItem.quantity,
-                            price: stockItem.price ?? 0,
-                            unitCost: stockItem.price ?? 0,
-                            totalCost: (stockItem.price ?? 0) * stockItem.quantity,
+                        create: purchaseItems.map((serviceStockItem) => ({
+                            stockItemId: serviceStockItem.stockItem.id,
+                            serviceStockItemId: serviceStockItem.id,
+                            stock: serviceStockItem.quantity,
+                            price: serviceStockItem.price ?? 0,
+                            unitCost: serviceStockItem.price ?? 0,
+                            totalCost: (serviceStockItem.price ?? 0) * serviceStockItem.quantity,
                         })),
                     },
                 },
@@ -34,11 +35,11 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
             })
 
             await Promise.all(
-                purchaseItems.map((stockItem) => 
+                purchaseItems.map((serviceStockItem) => 
                     tx.serviceStockItem.update({
-                        where: { id: stockItem.id },
+                        where: { id: serviceStockItem.id },
                         data: {
-                            stock: { increment: stockItem.quantity },
+                            stock: { increment: serviceStockItem.quantity },
                         }
                     })
                 )

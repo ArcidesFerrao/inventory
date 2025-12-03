@@ -1,7 +1,8 @@
 // import { StockChange } from "@/generated/prisma/enums";
+import { createCategoryExpense } from "@/app/actions/expenses";
 import { StockChange } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 
 interface ModalProps {
@@ -11,6 +12,10 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
+interface CreateCategoryProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   if (!isOpen) return null;
   return (
@@ -203,3 +208,112 @@ export function StockMovementModal({
     </div>
   );
 }
+
+export const CreateCategoryModal = ({
+  isOpen,
+  onClose,
+}: CreateCategoryProps) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!name.trim()) {
+      setError("Category name is required");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const result = await createCategoryExpense({
+          name: name.trim(),
+          description: description.trim() || undefined,
+        });
+
+        if (result.status !== "success") {
+          setName("");
+          setDescription("");
+          onClose();
+          router.refresh();
+        } else {
+          setError(result.error || "Failed to create category");
+        }
+      } catch (err) {
+        setError("An unexpected error occured:" + err);
+      }
+    });
+  };
+
+  const handleClose = () => {
+    setName("");
+    setDescription("");
+    setError("");
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="absolute inset-0 bg-black bg-opacity-50"
+        onClick={handleClose}
+      ></div>
+
+      <div className="category-modal relative">
+        <div>
+          <h2>Create Expense Category</h2>
+          <button onClick={handleClose} disabled={isPending}>
+            x
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="category-name">Category Name</label>
+            <input
+              type="text"
+              name="category-name"
+              id="category-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g., Utilities, Marketing, Transportation"
+              disabled={isPending}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="category-description">Description</label>
+            <textarea
+              name="category-description"
+              id="category-description"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              disabled={isPending}
+            />
+          </div>
+          {error && (
+            <div>
+              <p>{error}</p>
+            </div>
+          )}
+          <div>
+            <button type="button" onClick={handleClose} disabled={isPending}>
+              Cancel
+            </button>
+            <button type="submit" disabled={isPending}>
+              {isPending ? "Creating..." : "Create"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};

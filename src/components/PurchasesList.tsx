@@ -45,29 +45,29 @@ export const PurchasesList = ({
 
   const handleIncrement = (id: string) => {
     setItems((prevItems) =>
-      prevItems.map((stockItem) =>
-        stockItem.id === id
-          ? { ...stockItem, quantity: stockItem.quantity + 1 }
-          : stockItem
+      prevItems.map((serviceStockItem) =>
+        serviceStockItem.id === id
+          ? { ...serviceStockItem, quantity: serviceStockItem.quantity + 1 }
+          : serviceStockItem
       )
     );
   };
 
   const handleDecrement = (id: string) => {
     setItems((prevItems) =>
-      prevItems.map((stockItem) =>
-        stockItem.id === id && stockItem.quantity > 0
-          ? { ...stockItem, quantity: stockItem.quantity - 1 }
-          : stockItem
+      prevItems.map((serviceStockItem) =>
+        serviceStockItem.id === id && serviceStockItem.quantity > 0
+          ? { ...serviceStockItem, quantity: serviceStockItem.quantity - 1 }
+          : serviceStockItem
       )
     );
   };
 
-  const totalItems = items.reduce((sum, stockItem) => {
-    return sum + stockItem.quantity;
+  const totalItems = items.reduce((sum, serviceStockItem) => {
+    return sum + serviceStockItem.quantity;
   }, 0);
-  const totalPrice = items.reduce((sum, stockItem) => {
-    return sum + (stockItem.price ?? 0) * stockItem.quantity;
+  const totalPrice = items.reduce((sum, serviceStockItem) => {
+    return sum + (serviceStockItem.price ?? 0) * serviceStockItem.quantity;
   }, 0);
 
   return (

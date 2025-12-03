@@ -1,5 +1,6 @@
 "use client";
 
+import { ExpenseCategory } from "@/generated/prisma";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -7,7 +8,7 @@ interface ExpenseFiltersProps {
   currentSearch: string;
   currentCategory: string;
   currentPeriod: string;
-  categories: string[];
+  categories: ExpenseCategory[];
 }
 
 export const ExpenseFilters = ({
@@ -24,6 +25,7 @@ export const ExpenseFilters = ({
   const [isPending, startTransition] = useTransition();
 
   const [searchValue, setSearchValue] = useState(currentSearch);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const updateParams = (key: string, value: string) => {
     startTransition(() => {
@@ -77,19 +79,27 @@ export const ExpenseFilters = ({
         )} */}
       </div>
       <div className="flex gap-2">
-        <select
-          value={currentCategory}
-          onChange={(e) => updateParams("category", e.target.value)}
-          name="category"
-          id="category"
-        >
-          <option value="all">All Categories</option>
-          {categories.map((category) => (
-            <option value={category} key={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+        <div className="flex">
+          <select
+            value={currentCategory}
+            onChange={(e) => updateParams("category", e.target.value)}
+            name="category"
+            id="category"
+          >
+            <option value="all">All Categories</option>
+            {categories.map((category) => (
+              <option value={category.id} key={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <button
+            title="Create new category"
+            onClick={() => setIsModalOpen(true)}
+          >
+            +
+          </button>
+        </div>
         <select
           value={currentPeriod}
           onChange={(e) => updateParams("period", e.target.value)}

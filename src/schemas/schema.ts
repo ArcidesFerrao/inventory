@@ -95,6 +95,12 @@ export const expenseSchema = z.object({
     userId: z.string(),
     
 })
+export const expenseCategorySchema = z.object({
+    id: z.string().optional(),
+    name: z.string(),
+    description: z.string().optional(),
+    serviceId: z.string(),
+})
 
 
 // userId: z.string().nonempty("User Id is required"),

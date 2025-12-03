@@ -177,7 +177,7 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
     
     
 
-    return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems };
+    return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems };
 }
 
 
