@@ -1,5 +1,4 @@
 import { getServiceDashBoardStats } from "../actions/dashboardStats";
-import { getItems } from "../actions/product";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import DateFilter from "@/components/DateFilter";
@@ -26,14 +25,11 @@ export default async function ServicePage({
   const params = await searchParams;
   const period = params.period || "monthly";
   const stats = await getServiceDashBoardStats(period);
-  const stockProducts = await getItems(session.user.serviceId);
-  const filteredProducts = stockProducts.filter(
-    (product) =>
-      (product.stock || product.stock == 0) &&
-      product.stock < (product.critical ?? 10)
+  if (!stats) return <p>Please login to see the dashboard</p>;
+  const lowStockItems = stats?.serviceStockItems.filter(
+    (product) => (product.stock || product.stock == 0) && product.stock < 10
   );
 
-  if (!stats) return <p>Please login to see the dashboard</p>;
   return (
     <section className="flex flex-col w-full ">
       <div className="dash-header flex items-center justify-between">
@@ -153,13 +149,13 @@ export default async function ServicePage({
       </div>
 
       <div className="flex  w-fit gap-4">
-        {filteredProducts.length > 0 && (
+        {lowStockItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
             <h2 className="text-xl font-bold">Critic Items</h2>
             <ul className="flex flex-col gap-1">
-              {filteredProducts.map((item) => (
+              {lowStockItems.map((item) => (
                 <li key={item.id} className="flex justify-between w-60">
-                  <span>{item.name}</span>
+                  <span>{item.stockItem.name}</span>
                   <span className="font-medium">{item.stock}</span>
                 </li>
               ))}

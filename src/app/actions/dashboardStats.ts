@@ -48,6 +48,12 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
     const itemCount = await db.item.count({
         where: {serviceId: service?.id, type: "SERVICE"}
     })
+    const serviceStockItems = await db.serviceStockItem.findMany({
+        where: {serviceId: service?.id, },
+        include: {
+            stockItem: true
+        }
+    })
 
     const salesCount = await db.sale.count({
         where: { serviceId: service?.id, timestamp: {
@@ -171,7 +177,7 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
     
     
 
-    return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems };
+    return { service: service?.businessName, itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems };
 }
 
 
