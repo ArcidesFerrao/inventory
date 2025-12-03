@@ -1,6 +1,5 @@
-import { ProductForm } from "@/components/ProductForm";
+import { ItemForm } from "@/components/ItemForm";
 import { db } from "@/lib/db";
-import React from "react";
 
 type Params = Promise<{ id: string }>;
 
@@ -19,8 +18,8 @@ export default async function EditProductPage(props: { params: Params }) {
 
   return (
     <div className="flex flex-col gap-2 items-center w-full">
-      <h1 className="text-xl font-semibold">Edit Product: {item.name}</h1>
-      <ProductForm
+      <h1 className="text-xl font-semibold">Edit Item: {item.name}</h1>
+      <ItemForm
         serviceId={item.serviceId}
         item={{
           ...item,

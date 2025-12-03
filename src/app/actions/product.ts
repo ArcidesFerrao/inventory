@@ -13,17 +13,17 @@ export async function createItem(prevState: unknown, formData: FormData) {
     const submission = parseWithZod(formData, { schema: itemSchema });
     if (submission.status !== "success") return submission.reply();
 
-    console.log(session);
+    // console.log(session);
     
     try {
         const values = submission.value;
-        console.log(values);
+        // console.log(values);
 
          const activeCatalogItems = values.CatalogItems?.filter(
             item => item.quantity > 0
         ) || [];
 
-        console.log(activeCatalogItems)
+        // console.log(activeCatalogItems)
 
         await db.item.create({
             data: {
@@ -63,7 +63,7 @@ export async function editItem(prevState: unknown, formData: FormData) {
     const submission = parseWithZod(formData, { schema: itemSchema });
     if (submission.status !== "success") return submission.reply();
 
-    console.log(session);
+    // console.log(session);
     try {
         const values = submission.value;
 
@@ -90,7 +90,7 @@ export async function editItem(prevState: unknown, formData: FormData) {
                     create: activeCatalogItems.map((r) => ({
                         quantity: r.quantity,
                         serviceStockItemId: r.serviceStockItemId,
-
+                        stockItemId: r.stockItemId
                     })) || [],
                 }
             }

@@ -3,7 +3,7 @@
 import { createPurchase } from "@/app/actions/purchase";
 import { PurchasesProps } from "@/types/types";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const PurchasesList = ({
@@ -16,7 +16,7 @@ export const PurchasesList = ({
 
   const handleCompleteSale = async () => {
     setLoading(true);
-    console.log("creating purchase");
+    // console.log("creating purchase");
     const purchaseItems = items.filter(
       (item) => item.quantity > 0 && (item.price ?? 0) > 0
     );
@@ -40,7 +40,7 @@ export const PurchasesList = ({
     }
     setLoading(false);
 
-    console.log("Purchase completed:", result);
+    // console.log("Purchase completed:", result);
   };
 
   const handleIncrement = (id: string) => {

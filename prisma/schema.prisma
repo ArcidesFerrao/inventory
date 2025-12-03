@@ -190,6 +190,7 @@ model ServiceStockItem {
   orderItems     OrderItem[]
   saleItems      SaleItem[]
   stockMovements StockMovement[]
+  purchaseItems  PurchaseItem[]
 
   @@unique([serviceId, stockItemId])
   @@index([serviceId, status])
@@ -236,18 +237,20 @@ model Purchase {
 }
 
 model PurchaseItem {
-  id          String     @id @default(ulid())
-  itemId      String?
-  purchaseId  String
-  stockItemId String?
-  stock       Int
-  price       Float
-  quantity    Int        @default(1)
-  unitCost    Float      @default(0)
-  totalCost   Float      @default(0)
-  stockItem   StockItem? @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
-  purchase    Purchase   @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
-  item        Item?      @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  id                 String            @id @default(ulid())
+  itemId             String?
+  purchaseId         String
+  stockItemId        String?
+  serviceStockItemId String?
+  stock              Int
+  price              Float
+  quantity           Int               @default(1)
+  unitCost           Float             @default(0)
+  totalCost          Float             @default(0)
+  serviceStockItem   ServiceStockItem? @relation(fields: [serviceStockItemId], references: [id], onDelete: SetNull)
+  stockItem          StockItem?        @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
+  purchase           Purchase          @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  item               Item?             @relation(fields: [itemId], references: [id], onDelete: SetNull)
 }
 
 model Order {
