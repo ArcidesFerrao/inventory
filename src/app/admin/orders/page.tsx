@@ -23,7 +23,7 @@ export default async function OrdersPage() {
       <div className="admin-header">
         <h1 className="text-4xl font-medium underline">Orders</h1>
       </div>
-      <div className="py-4 flex justify-between">
+      <div className="py-4 flex flex-wrap gap-2 justify-between">
         <Card title="Total Orders" value={stats.orders.totalOrders} />
         <Card title="Delivered Orders" value={stats.orders.delivered} />
         <Card title="Confirmed Orders" value={stats.orders.confirmed} />

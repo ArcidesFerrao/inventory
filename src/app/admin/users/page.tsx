@@ -23,7 +23,7 @@ export default async function UsersAdminPage() {
       <div className="admin-header">
         <h1 className="text-4xl font-medium underline">Users</h1>
       </div>
-      <div className="py-4 flex justify-between">
+      <div className="py-4 flex flex-wrap gap-2 justify-between">
         <Card title="Total Users" value={stats.users.totalUsers} />
         <Card title="Active Users" value={stats.users.activeUsers} />
         <Card title="Suspended Users" value={stats.users.suspendedUsers} />

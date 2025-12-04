@@ -21,7 +21,7 @@ export default async function AdminItemsPage() {
       <div className="admin-header">
         <h1 className="text-4xl font-medium underline">Items</h1>
       </div>
-      <div className="py-4 flex justify-between">
+      <div className="py-4 flex flex-wrap justify-between gap-2">
         <Card title="Items" value={stats.items.itemsData.length} />
         <Card
           title="Active"

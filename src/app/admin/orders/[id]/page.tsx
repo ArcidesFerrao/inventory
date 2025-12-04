@@ -1,8 +1,5 @@
-// import { DeleteOrderButton } from "@/components/DeleteButton";
-import { AcceptButton, DenyButton } from "@/components/ActionButton";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import React from "react";
 
 type Params = Promise<{ id: string }>;
 
@@ -94,23 +91,6 @@ export default async function OrderPage(props: { params: Params }) {
           >
             {order?.status}
           </button>
-          {order?.status === "DRAFT" && (
-            <div className="order-buttons flex flex-col gap-4">
-              <AcceptButton orderId={order?.id || ""} />
-              <DenyButton orderId={order?.id || ""} />
-            </div>
-          )}
-
-          {order?.status === "SUBMITTED" && (
-            <div className="order-buttons flex flex-col ">
-              <Link
-                className="delivery-btn bg-blue-600 text-center"
-                href={`/supply/orders/${order?.id}/deliveries/new`}
-              >
-                Delivery
-              </Link>
-            </div>
-          )}
         </div>
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
@@ -123,8 +103,6 @@ export default async function OrderPage(props: { params: Params }) {
             <tr>
               <th>Item</th>
               <th>Ordered</th>
-              <th className="order-items-data">Delivered</th>
-              <th className="order-items-data">Remaining</th>
               <th>Price (MZN)</th>
               <th>Total (MZN)</th>
             </tr>
@@ -134,10 +112,6 @@ export default async function OrderPage(props: { params: Params }) {
               <tr key={i.id}>
                 <td>{i.stockItem.name}</td>
                 <td>{i.orderedQty}</td>
-                <td className="order-items-data">{i.deliveredQty}</td>
-                <td className="order-items-data">
-                  {i.orderedQty - i.deliveredQty}
-                </td>
                 <td>{i.price.toFixed(2)}</td>
                 <td>{(i.price * i.orderedQty).toFixed(2)}</td>
               </tr>
@@ -147,13 +121,12 @@ export default async function OrderPage(props: { params: Params }) {
       </div>
       {order?.delivery && (
         <div className="deliveries-details flex flex-col gap-2 w-full">
-          <h2 className="text-xl font-semibold">Deliveries</h2>
           <div className="p-4 delivery-details">
             <div className="delivery-info-header flex justify-between">
               <div className="delivery-info">
                 <Link
                   // className="flex"
-                  href={`/supply/orders/delivery/${order?.delivery.id}`}
+                  href={`/admin/orders/delivery/${order?.delivery.id}`}
                 >
                   <h3 className="font-medium py-2">
                     Delivery #{order?.delivery.id.slice(0, 5)}...

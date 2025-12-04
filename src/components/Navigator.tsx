@@ -23,7 +23,7 @@ export const Navigator = () => {
         <NavLink
           href="/stock/logs"
           label="Active Logs"
-          icon={<span className="lucide--logs"></span>}
+          icon={<span className="icon-park-twotone--log"></span>}
         />
       </ul>
     </nav>
@@ -57,12 +57,12 @@ export const ServiceNav = () => {
         <NavLink
           href="/service/expenses"
           label="Expenses"
-          icon={<span className="carbon--sales-ops"></span>}
+          icon={<span className="mdi--cart-sale"></span>}
         />
         <NavLink
           href="/service/logs"
           label="Active Logs"
-          icon={<span className="lucide--logs"></span>}
+          icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
           href="/service/settings"
@@ -96,7 +96,7 @@ export const SupplyNav = () => {
         <NavLink
           href="/supply/logs"
           label="Active Logs"
-          icon={<span className="lucide--logs"></span>}
+          icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
           href="/supply/settings"
@@ -140,7 +140,7 @@ export const AdminNav = () => {
         <NavLink
           href="/admin/activity"
           label="Logs"
-          icon={<span className="lucide--logs"></span>}
+          icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
           href="/admin/settings"

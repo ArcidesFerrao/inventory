@@ -27,7 +27,7 @@ export default async function SalePage(props: { params: Params }) {
       <div className="order-header flex justify-between w-full">
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold">
-            Order #{sale?.id.slice(0, 5)}...
+            Sale #{sale?.id.slice(0, 5)}...
           </h2>
           <p className="text-xs font-extralight">
             Created {sale?.timestamp.toDateString()}
@@ -38,7 +38,7 @@ export default async function SalePage(props: { params: Params }) {
         </Link>
       </div>
       <div className="order-details flex justify-between gap-4 w-full p-4">
-        <div className="info-details flex flex-col gap-4">
+        <div className="info-details flex justify-between w-full gap-4">
           <div className="flex gap-2">
             <span className="p-1">
               <span className="formkit--date"></span>

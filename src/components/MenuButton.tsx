@@ -62,7 +62,7 @@ export const MenuButton = ({
                 <NavLink
                   href="/supply/logs"
                   label="Active Logs"
-                  icon={<span className="lucide--logs"></span>}
+                  icon={<span className="icon-park-twotone--log"></span>}
                 />
                 <NavLink
                   href="/supply/settings"
@@ -88,7 +88,7 @@ export const MenuButton = ({
                 <NavLink
                   href="/service/purchases"
                   label="Purchases"
-                  icon={<span className="f7--purchased"></span>}
+                  icon={<span className="bxs--purchase-tag"></span>}
                 />
                 <NavLink
                   href="/service/sales"
@@ -96,9 +96,14 @@ export const MenuButton = ({
                   icon={<span className="carbon--sales-ops"></span>}
                 />
                 <NavLink
+                  href="/service/expenses"
+                  label="Expenses"
+                  icon={<span className="mdi--cart-sale"></span>}
+                />
+                <NavLink
                   href="/service/logs"
                   label="Active Logs"
-                  icon={<span className="lucide--logs"></span>}
+                  icon={<span className="icon-park-twotone--log"></span>}
                 />
                 <NavLink
                   href="/service/settings"
@@ -134,7 +139,7 @@ export const MenuButton = ({
                 <NavLink
                   href="/admin/activity"
                   label="Logs"
-                  icon={<span className="lucide--logs"></span>}
+                  icon={<span className="icon-park-twotone--log"></span>}
                 />
                 <NavLink
                   href="/admin/settings"

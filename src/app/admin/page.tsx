@@ -23,11 +23,11 @@ export default async function AdminPage() {
       <div className="admin-header">
         <h1 className="text-4xl font-medium">Admin Dashboard</h1>
       </div>
-      <div className="flex justify-between py-4">
-        <Card title="Total Suppliers" value={stats.totals.totalSuppliers} />
-        <Card title="Total Services" value={stats.totals.totalServices} />
-        <Card title="Total Orders" value={stats.totals.totalOrders} />
-        <Card title="Total Sales" value={stats.totals.totalSales} />
+      <div className="flex flex-wrap gap-2 justify-between py-4">
+        <Card title="Suppliers" value={stats.totals.totalSuppliers} />
+        <Card title="Services" value={stats.totals.totalServices} />
+        <Card title="Orders" value={stats.totals.totalOrders} />
+        <Card title="Sales" value={stats.totals.totalSales} />
       </div>
       <div className="top-stats grid grid-cols-2 gap-5 ">
         <div className="top-suppliers flex flex-col gap-5">
