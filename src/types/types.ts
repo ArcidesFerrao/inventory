@@ -1,4 +1,4 @@
-import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Item, StockItem, Order, OrderItem,  Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier, User, ServiceStockItem} from "@/generated/prisma/client";
+import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Item, StockItem, Order, OrderItem,  Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier, User, ServiceStockItem, AuditLog} from "@/generated/prisma/client";
 
 
 export type SaleItemWithCatalogItems = Item & {
@@ -219,3 +219,56 @@ export type ItemWithUnit = Item & {
 
 export type Period = 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'annualy'
 
+
+export type AuditSearchParams = {
+  userId?: string;
+  entityType?: string;
+  action?: string;
+  startDate?: string;
+  endDate?: string;
+  search?: string;
+  page?: string;
+}
+
+export interface AuditLogStatsProps {
+  totalLogs: number;
+  last24Hours: number;
+  actionStats: Array<{ action: string; _count: number }>;
+  entityTypeStats: Array<{ 
+    // entityType: string; 
+    _count: number 
+  }>
+}
+
+export interface AuditLogFilterProps {
+  currentFilters: {
+    userId?: string;
+    entityType?: string;
+    action?: string;
+    startDate?: string;
+    endDate?: string;
+    search?: string;
+  };
+  users: Array<{ id: string; name: string | null; email: string | null }>;
+  entityTypes: string[];
+  actions: string[];
+}
+
+export type WhereClause = {
+    userId?: string;
+    entityType?: string;
+    action?: string;
+    createdAt?: {
+      gte?: Date;
+      lte?: Date;
+    };
+    OR?: Array<{
+      entityName?: { contains: string; mode: "insensitive" };
+      entityId?: { contains: string; mode: "insensitive" };
+    }>;
+  };
+
+
+export interface AuditLogTableProps {
+  logs: AuditLog[]
+}
