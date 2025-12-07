@@ -86,6 +86,31 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Stock Item", error);
+        await logActivity(
+        submission.value.serviceId,
+        null,
+        "ERROR",
+        "ServiceStockItem",
+        submission.value.id || "",
+        `Error creating ${submission.value.name} from inventory`,
+        {
+            
+                    },
+        null,
+        "ERROR",
+        null
+    );
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Stock Item",
+            entityId: submission.value.id || "",
+            entityName: submission.value.name ,
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error creating serviceStockItem"
+                }
+            }
+        });
         return {
             status: "error",
             error: { general: ["Failed to create Stock Item"]}
@@ -187,6 +212,31 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to update Service Stock Item", error);
+        await logActivity(
+        submission.value.serviceId,
+        null,
+        "ERROR",
+        "ServiceStockItem",
+        submission.value.id || "",
+        `Error updating ${submission.value.name} from inventory`,
+        {
+            
+                    },
+        null,
+        "ERROR",
+        null
+    );
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Stock Item",
+            entityId: submission.value.id || "",
+            entityName: submission.value.name ,
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error updating serviceStockItem"
+                }
+            }
+        });
         return {
             status: "error",
             error: { general: ["Failed to update Service Stock Item"]}
@@ -206,27 +256,28 @@ export async function deleteServiceStockItem(stockItemId: string) {
 
     if (!stockItem) throw new Error("Not found");
 
-    await db.serviceStockItem.delete({
-        where: { id: stockItemId }
-    });
+    try {
+        await db.serviceStockItem.delete({
+            where: { id: stockItemId }
+        });
 
-    // Audit Log (save full details for recovery)
-    await createAuditLog({
-        action: "DELETE",
-        entityType: "ServiceStockItem",
-        entityId: stockItemId,
-        entityName: stockItem.stockItem.name,
-        details: {
-            oldValues: {
-                stock: stockItem.stock?.toString() || "",
-                cost: stockItem.cost?.toString() || "",
-                stockItemId: stockItem.stockItemId,
-            },
-            metadata: {
-                deletedAt: new Date().toDateString(),
+        // Audit Log (save full details for recovery)
+        await createAuditLog({
+                action: "DELETE",
+                entityType: "ServiceStockItem",
+                entityId: stockItemId,
+            entityName: stockItem.stockItem.name,
+            details: {
+                oldValues: {
+                    stock: stockItem.stock?.toString() || "",
+                    cost: stockItem.cost?.toString() || "",
+                    stockItemId: stockItem.stockItemId,
+                },
+                metadata: {
+                    deletedAt: new Date().toDateString(),
+                }
             }
-        }
-    });
+        });
 
     // Activity Log
     await logActivity(
@@ -244,12 +295,43 @@ export async function deleteServiceStockItem(stockItemId: string) {
         "WARN",
         null
     );
+    } catch (error ) {
+        await logActivity(
+        session.user.serviceId,
+        null,
+        "ERROR",
+        "ServiceStockItem",
+        stockItemId,
+        `Error Removing ${stockItem.stockItem.name} from inventory`,
+        {
+            lastStock: stockItem.stock,
+            lastCost: stockItem.cost,
+        },
+        null,
+        "ERROR",
+        null
+    );
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Stock Item",
+            entityId: stockItemId,
+            entityName: "",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error deleting serviceStockItem"
+                }
+            }
+        });
+
+        return {success: false, error}
+    }
+    
 }
 
 // Example 3: Bulk stock adjustment
 // export async function bulkAdjustStock(adjustments: Array<{ id: string; stock: number }>) {
-//     const session = await auth();
-//     if (!session?.user?.serviceId) redirect("/login");
+    //     const session = await auth();
+    //     if (!session?.user?.serviceId) redirect("/login");
 
 //     const results = [];
 

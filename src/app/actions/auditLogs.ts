@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 
-type AuditAction = | "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "BULK_UPDATE" | "BULK_DELETE";
+type AuditAction = | "CREATE" | "UPDATE" | "DELETE" | "RESTORE" | "BULK_UPDATE" | "BULK_DELETE" | "ERROR";
 
 interface CreateAuditLogParams {
     action: AuditAction;

@@ -6,6 +6,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { SubmissionResult } from "@conform-to/react";
 import { redirect } from "next/navigation";
 import { serviceSchema, supplierSchema } from "@/schemas/roleSchema";
+import { createAuditLog } from "./auditLogs";
 
 
 export async function registerService(prevState: unknown, formData: FormData) {
@@ -32,20 +33,28 @@ export async function registerService(prevState: unknown, formData: FormData) {
             }
         })
         
-        await db.auditLog.create({
-                    data: {
-                        action: "CREATE",
-                        entityType: "Service",
-                        entityId: service.id,
-                        entityName: service.businessName || "service",
-                        details: {}
-                    }
+                await createAuditLog({
+                    action: "CREATE",
+                    entityType: "Service",
+                    entityId: service.id,
+                    entityName: service.businessName || "service",
+                    details: {}
                 })
 
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Service", error);
-        
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Service",
+            entityId: "",
+            entityName: "",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error creating Service"
+                }
+            }
+        });
         return {
             status: "error",
             error: { general: ["Failed to create Service"]}
@@ -78,20 +87,28 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
                 
             }
         });
+        await createAuditLog({
+            action: "CREATE",
+            entityType: "Supplier",
+            entityId: supplier.id,
+            entityName: supplier.businessName || "supplier",
+            details: {}
+        });
 
-        await db.auditLog.create({
-                    data: {
-                        action: "CREATE",
-                        entityType: "Supplier",
-                        entityId: supplier.id,
-                        entityName: supplier.businessName || "supplier",
-                        details: {}
-                    }
-                })
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Supplier", error);
-        
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Supplier",
+            entityId: "",
+            entityName: "",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error creating Supplier"
+                }
+            }
+        });
         return {
             status: "error",
             error: { general: ["Failed to create Supplier"]}

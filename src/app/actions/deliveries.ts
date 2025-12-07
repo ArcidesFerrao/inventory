@@ -9,8 +9,9 @@ import { logActivity } from "./logs";
 import { createNotification } from "./notifications";
 import {  OrderItemWithStockItems } from "@/types/types";
 import { revalidatePath } from "next/cache";
+import { createAuditLog } from "./auditLogs";
 
-export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{ supplierOrderId: string; orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
+export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
 }[]}) {
     const session = await auth()
@@ -88,10 +89,36 @@ export async function createDelivery({  orderId, deliveryDate, deliveryTime,note
             null
         );
 
+        await createAuditLog({
+                    action: "CREATE",
+                    entityType: "Delivery",
+                    entityId: updatedOrder.supplierId,
+                    entityName: updatedOrder.supplier?.businessName || "Supplier",
+                    details: {
+                        metadata: {
+                            orderId,
+                            deliveryId: delivery.id,
+                            deliveredAt: delivery.deliveredAt?.toDateString() ?? ""
+                        }
+                    }
+                });
+
         return {success: true, delivery, updatedOrder};
 
     } catch (error) {
         console.error("Error creating delivery:", error);
+        await createAuditLog({
+                    action: "ERROR",
+                    entityType: "Order",
+                    entityId: orderId,
+                    entityName: "Supplier",
+                    details: {
+                        metadata: {
+                            orderId,
+                            error: (error as string).toString() || "Error creeating delivery for the order"
+                        }
+                    }
+                });
         return { success: false, error: "Failed to create delivery" };
     }
 }
@@ -292,6 +319,20 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
             link: `/supply/orders/${orderId}`
         })
 
+        await createAuditLog({
+                    action: "UPDATE",
+                    entityType: "Delivery",
+                    entityId: serviceId,
+                    entityName: order.Service?.businessName || "Service",
+                    details: {
+                        metadata: {
+                            orderId,
+                            deliveryId,
+                            deliveredAt: delivery.deliveredAt?.toDateString() ?? ""
+                        }
+                    }
+                });
+
         revalidatePath(`/supply/orders/delivery/${deliveryId}`)
         revalidatePath(`/supply/orders/${orderId}`)
         revalidatePath(`/supply/orders`)
@@ -313,10 +354,22 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                 error: error instanceof Error ? error.message : String(error),
             },
             null,
-            'INFO',
+            'ERROR',
             null
         )
             
+        await createAuditLog({
+                    action: "ERROR",
+                    entityType: "Delivery",
+                    entityId: deliveryId,
+                    entityName: "",
+                    details: {
+                        metadata: {
+                            orderId,
+                            error: (error as string).toString() || "Error updating delivery for the order"
+                        }
+                    }
+                });
 
         return {success: false, error: "Error confirming delivery"}
     }
@@ -377,6 +430,19 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
             link: `/service/purchases/orders/${order.id}`
         })
 
+        await createAuditLog({
+                    action: "UPDATE",
+                    entityType: "Delivery",
+                    entityId: order.supplierId,
+                    entityName: order.supplier.businessName,
+                    details: {
+                        metadata: {
+                            orderId,
+                            deliveryId
+                        }
+                    }
+                });
+
         return { success: true, order, delivery };
     } catch (error) {
         console.error("Error marking delivery as arrived:", error);
@@ -392,9 +458,11 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
                 error: error instanceof Error ? error.message : String(error),
             },
             null,
-            'INFO',
+            'ERROR',
             null
         )
+
+        
             // throw new Error("Failed to mark delivery as arrived");
         return {success: false, error: "Error marking delivery as arrived"}
     }
@@ -412,8 +480,22 @@ export async function  rateDelivery(deliveryId: string, star: number) {
                 rating: star
             }
         })
+
+        
         return {success: true, ratedDelivery}
     } catch (error) {
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Delivery",
+            entityId: deliveryId,
+            entityName: "",
+            details: {
+                metadata: {
+                    star: star.toString(),
+                    error: (error as string).toString() || "Error rating delivery for the order"
+                }
+            }
+        });
         return {success: false, message: "Error rating delivery", error}
     }
 
@@ -501,11 +583,50 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
             link: `/service/purchases/orders/${updatedOrder.id}`}
         )
 
+        await createAuditLog({
+                    action: "CREATE",
+                    entityType: "Delivery",
+                    entityId: orderId,
+                    entityName: "Order",
+                    details: {
+                        metadata: {
+                            notes,
+                            deliveryDate
+                        }
+                    }
+                });
+
         return {success: true, delivery, updatedOrder};
 
 
     } catch (error) {
         console.error("Error creating delivery: ", error);
+        await logActivity(
+            null,
+            session.user.id,
+            "ERROR",
+            "Order",
+            orderId,
+            `Error while creating delivery`,
+            {
+                orderId,
+                error: error instanceof Error ? error.message : String(error),
+            },
+            null,
+            'ERROR',
+            null
+        )
+        await createAuditLog({
+                    action: "ERROR",
+                    entityType: "Order",
+                    entityId: orderId,
+                    entityName: "",
+                    details: {
+                        metadata: {
+                            error: (error as string).toString() || "Error creating delivery for the order"
+                        }
+                    }
+                });
         return {success: false, error: "Failed to create delivery"}
     }
 

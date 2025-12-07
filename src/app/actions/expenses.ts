@@ -48,7 +48,6 @@ export async function createExpense(prevState: unknown, formData: FormData) {
                     'INFO',
                     null
                 );
-        console.log()
 
         await db.auditLog.create({
             data: {
@@ -64,6 +63,19 @@ export async function createExpense(prevState: unknown, formData: FormData) {
    return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Expense", error);
+        await db.auditLog.create({
+            data: {
+                action: "ERROR",
+                entityType: "Expense",
+                entityId: submission.value.serviceId,
+                entityName: "service",
+                details: {
+                    metadata: {
+                        error: (error as string).toString() || "Error creating expense"
+                    } 
+                }
+            }
+        })
         return {
             status: "error",
             error: { general: ["Failed to create Expense"]}
@@ -102,7 +114,7 @@ export async function createCategoryExpense({name, description}:{name: string; d
         await db.auditLog.create({
             data: {
                 action: "CREATE",
-                entityType: "Expense",
+                entityType: "Category Expense",
                 entityId: session.user.serviceId,
                 entityName: "service",
                 details: {
@@ -113,6 +125,21 @@ export async function createCategoryExpense({name, description}:{name: string; d
    return {status: "success"} 
     } catch (error) {
         console.error("Failed to create Expense", error);
+        await db.auditLog.create({
+            data: {
+                action: "ERROR",
+                entityType: "Category Expense",
+                entityId: session.user.serviceId,
+                entityName: "service",
+                details: {
+                    metadata: {
+                        name,
+                        description,
+                        error: (error as string).toString() || "Error creating expense category"
+                    } 
+                }
+            }
+        })
         return {
             status: "error",
             error: "Failed to create Expense"

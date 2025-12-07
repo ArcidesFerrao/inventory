@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import {  SaleItemWithCatalogItems } from "@/types/types";
 import { logActivity } from "./logs";
+import { createAuditLog } from "./auditLogs";
 
 export async function createSale(
     saleItems: SaleItemWithCatalogItems[], serviceId: string
@@ -139,6 +140,32 @@ export async function createSale(
         return { success: true, saleId: result.id, cogs: result.cogs};
     } catch (error) {
         console.error("Error creating sale:", error);
+        await logActivity(
+                            serviceId,
+                            null,
+                            "ERROR",
+                            "Sale",
+                            null,
+                            `Error while creating sale`,
+                            {
+                                
+                                error: error instanceof Error ? error.message : String(error),
+                            },
+                            null,
+                            'ERROR',
+                            null
+                        )
+                        await createAuditLog({
+                                    action: "ERROR",
+                                    entityType: "Sale",
+                                    entityId: serviceId,
+                                    entityName: "Service",
+                                    details: {
+                                        metadata: {
+                                            error: (error as string).toString() || "Error creating sale"
+                                        }
+                                    }
+                                });
         return { success: false, message: error}
     }
 }

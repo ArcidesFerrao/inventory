@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { logActivity } from "./logs";
 import { ServiceStockProduct } from "@/types/types";
+import { createAuditLog } from "./auditLogs";
 
 // export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null;  quantity: number, }[], serviceId: string) {
 export async function createPurchase(purchaseItems: ServiceStockProduct[], serviceId: string) {
@@ -72,6 +73,32 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
 
     } catch (error) {
         console.error("Error creating purchase:", error);
+        await logActivity(
+                    serviceId,
+                    null,
+                    "ERROR",
+                    "Purchase",
+                    null,
+                    `Error while creating purchase`,
+                    {
+                        
+                        error: error instanceof Error ? error.message : String(error),
+                    },
+                    null,
+                    'ERROR',
+                    null
+                )
+                await createAuditLog({
+                            action: "ERROR",
+                            entityType: "Purchase",
+                            entityId: serviceId,
+                            entityName: "Service",
+                            details: {
+                                metadata: {
+                                    error: (error as string).toString() || "Error creating purchase"
+                                }
+                            }
+                        });
         return {success: false, message: "Failed to create purchase"}
 
     }
