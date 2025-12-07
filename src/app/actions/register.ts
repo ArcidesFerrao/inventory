@@ -19,7 +19,7 @@ export async function registerService(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
         
-        await db.service.create({
+        const service = await db.service.create({
             data: {
                 userId: session.user.id,
                 businessName: values.businessName,
@@ -32,6 +32,16 @@ export async function registerService(prevState: unknown, formData: FormData) {
             }
         })
         
+        await db.auditLog.create({
+                    data: {
+                        action: "CREATE",
+                        entityType: "Service",
+                        entityId: service.id,
+                        entityName: service.businessName || "service",
+                        details: {}
+                    }
+                })
+
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Service", error);
@@ -54,7 +64,7 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
     try {
         const values = submission.value;
         
-        await db.supplier.create({
+        const supplier = await db.supplier.create({
             data: {
                 userId: session.user.id,
                 businessName: values.businessName,
@@ -68,6 +78,16 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
                 
             }
         });
+
+        await db.auditLog.create({
+                    data: {
+                        action: "CREATE",
+                        entityType: "Supplier",
+                        entityId: supplier.id,
+                        entityName: supplier.businessName || "supplier",
+                        details: {}
+                    }
+                })
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Supplier", error);

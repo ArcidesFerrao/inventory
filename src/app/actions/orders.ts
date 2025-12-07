@@ -153,6 +153,18 @@ export async function createOrder(
             message: `${order.Service?.businessName} placed a new order.`,
             link: `/supply/orders/${order.id}`
         })
+        
+        await db.auditLog.create({
+            data: {
+                action: "CREATE",
+                entityType: "Order",
+                entityId: serviceId,
+                entityName: order.Service?.businessName || "Service",
+                details: {
+                    metadata: order.id
+                }
+            }
+        })
         return { success: true, order};
     } catch (error) {
         console.error("Error creating order:", error);
@@ -238,7 +250,21 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
             message: `${result.order.supplier.businessName} accepteded the order.`,
             link: `/service/purchases/orders/${result.order.id}`
         })
-            
+
+        if (result) {
+
+            await db.auditLog.create({
+                data: {
+                    action: "ACCEPT",
+                    entityType: "Order",
+                    entityId: result.order.serviceId || "",
+                    entityName: result.order.Service?.businessName || "",
+                    details: {
+                        metadata: orderId
+                }
+            }
+        })   
+    }
         return { success: true, ...result};
         
     } catch (error) {
@@ -257,6 +283,9 @@ export async function denyOrder({orderId}: { orderId: string;}) {
                     },
                     data: {
                         status: "CANCELLED"
+                    },
+                    include: {
+                        supplier: true
                     }
                 });
                 
@@ -280,7 +309,22 @@ export async function denyOrder({orderId}: { orderId: string;}) {
             return {order}
         })
 
+        if (result) {
+
+            await db.auditLog.create({
+                data: {
+                    action: "Deny",
+                    entityType: "Order",
+                    entityId: result.order.supplierId || "",
+                    entityName: result.order.supplier.businessName || "",
+                    details: {
+                        metadata: orderId
+                }
+            }
+        })}
+         
         return {success: true, ...result}
+
     } catch (error) {
         console.error("Error denying order", error);
         return { success: false, error: "Failed to deny order" };

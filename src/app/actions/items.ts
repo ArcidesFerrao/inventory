@@ -5,6 +5,8 @@ import { serviceStockItemSchema } from "@/schemas/schema";
 import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
+import { createAuditLog } from "./auditLogs";
+import { logActivity } from "./logs";
 
 
 export async function getServiceStockItems(serviceId: string) {
@@ -51,19 +53,36 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
                 stock: values.stock,
                 status: "ACTIVE",
                 supplierId: "directPurchase",
-            }
+            },
         });
 
-        await db.serviceStockItem.create({
+        const serviceStockItem = await db.serviceStockItem.create({
             data: {
                 cost: values.price,
                 stock: values.stock,
                 stockItemId: stockItem.id,
                 status: "ACTIVE",
                 serviceId: values.serviceId
+            },
+            include: {
+                service: true
             }
         })
 
+        if (values) {
+        
+            await db.auditLog.create({
+                data: {
+                    action: "CREATE",
+                    entityType: "ServiceStockItem",
+                    entityId: values.serviceId || "",
+                    entityName: serviceStockItem.service?.businessName || "",
+                    details: {
+                        metadata: values.name
+                    }
+                }
+            }) 
+        }
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Stock Item", error);
@@ -86,14 +105,82 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
     try {
         const values = submission.value;
 
+        const oldStockItem = await db.serviceStockItem.findUnique({
+            where: { id: values.id },
+            include: {
+                stockItem: true,
+                service: true,
+            },
+        });
 
-        await db.serviceStockItem.update({
+        if (!oldStockItem) {
+            return {
+                status: "error",
+                error: { general: ["Stock item not found"] }
+            } satisfies SubmissionResult<string[]>;
+        }
+
+        const serviceStockItem = await db.serviceStockItem.update({
             where: {
                 id: submission.value.id,
             },
             data: {
                 stock: values.stock,
                 cost: values.cost,
+            },
+            include: {
+                service: true
+            }
+        });
+
+        if (values) {
+        
+            await db.auditLog.create({
+                data: {
+                    action: "UPDATE",
+                    entityType: "ServiceStockItem",
+                    entityId: values.serviceId || "",
+                    entityName: serviceStockItem.service?.businessName || "",
+                    details: {
+                        changes: {
+                        ...(oldStockItem.stock !== serviceStockItem.stock && {
+                            stock: {
+                                old: oldStockItem.stock,
+                                new: serviceStockItem.stock,
+                            }
+                        }),
+                        ...(oldStockItem.cost !== serviceStockItem.cost && {
+                            cost: {
+                                old: oldStockItem.cost,
+                                new: serviceStockItem.cost,
+                            }
+                        }),
+                    },
+                    // Add context
+                    metadata: {
+                        serviceName: serviceStockItem.service.businessName,
+                        productName: oldStockItem.stockItem.name,
+                        updatedAt: new Date(),
+                    }
+                    }
+                }
+            }) 
+        }
+
+        await db.activityLog.create({
+            data: {
+                actionType: "STOCK_UPDATED",
+                entityType: "ServiceStockItem",
+                entityId: serviceStockItem.id,
+                description: `Stock updated for ${oldStockItem.stockItem.name}`,
+                details: {
+                    oldStock: oldStockItem.stock,
+                    newStock: serviceStockItem.stock,
+                    oldCost: oldStockItem.cost,
+                    newCost: serviceStockItem.cost,
+                },
+                severity: (serviceStockItem.stock || 0) < 10 ? "WARNING" : "INFO",
+                serviceId: serviceStockItem.serviceId,
             }
         });
 
@@ -107,22 +194,112 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
     }
 }
 
+
 export async function deleteServiceStockItem(stockItemId: string) {
+    const session = await auth();
+    if (!session?.user?.serviceId) redirect("/login");
 
-    try {
-        await db.serviceStockItem.delete({
-            where: {
-                id: stockItemId,
+    const stockItem = await db.serviceStockItem.findUnique({
+        where: { id: stockItemId },
+        include: { stockItem: true }
+    });
+
+    if (!stockItem) throw new Error("Not found");
+
+    await db.serviceStockItem.delete({
+        where: { id: stockItemId }
+    });
+
+    // Audit Log (save full details for recovery)
+    await createAuditLog({
+        action: "DELETE",
+        entityType: "ServiceStockItem",
+        entityId: stockItemId,
+        entityName: stockItem.stockItem.name,
+        details: {
+            oldValues: {
+                stock: stockItem.stock?.toString() || "",
+                cost: stockItem.cost?.toString() || "",
+                stockItemId: stockItem.stockItemId,
+            },
+            metadata: {
+                deletedAt: new Date().toDateString(),
             }
-        });
+        }
+    });
 
-        return {status: "success"}
-    } catch (error) {
-        console.error("Failed to delete Service Stock Item", error);
-        return {
-            status: "error",
-            error: { general: ["Failed to delete Service Stock Item"]}
-        } satisfies SubmissionResult<string[]>
-    }
-
+    // Activity Log
+    await logActivity(
+        session.user.serviceId,
+        null,
+        "STOCK_REMOVED",
+        "ServiceStockItem",
+        stockItemId,
+        `Removed ${stockItem.stockItem.name} from inventory`,
+        {
+            lastStock: stockItem.stock,
+            lastCost: stockItem.cost,
+        },
+        null,
+        "WARN",
+        null
+    );
 }
+
+// Example 3: Bulk stock adjustment
+// export async function bulkAdjustStock(adjustments: Array<{ id: string; stock: number }>) {
+//     const session = await auth();
+//     if (!session?.user?.serviceId) redirect("/login");
+
+//     const results = [];
+
+//     for (const adjustment of adjustments) {
+//         const oldItem = await db.serviceStockItem.findUnique({
+//             where: { id: adjustment.id },
+//             include: { stockItem: true }
+//         });
+
+//         if (!oldItem) continue;
+
+//         const updated = await db.serviceStockItem.update({
+//             where: { id: adjustment.id },
+//             data: { stock: adjustment.stock },
+//             include: { stockItem: true }
+//         });
+
+//         results.push({
+//             // name: updated.stockItem.name,
+//             oldStock: oldItem.stock,
+//             newStock: updated.stock,
+//         });
+//     }
+
+//     // Single Audit Log for bulk operation
+//     await createAuditLog({
+//         action: "BULK_UPDATE",
+//         entityType: "ServiceStockItem",
+//         entityId: "bulk",
+//         entityName: `${adjustments.length} Stock Items`,
+//         details: {
+//             changes: results,
+//             metadata: {
+//                 count: adjustments.length,
+//                 adjustedAt: new Date(),
+//             }
+//         }
+//     });
+
+//     // Single Activity Log
+//     await logActivity({
+//         serviceId: session.user.serviceId,
+//         supplierId: "",
+//         actionType: "BULK_STOCK_ADJUSTMENT",
+//         entityType: "ServiceStockItem",
+//         description: `Bulk adjusted ${adjustments.length} items`,
+//         details: {
+//             count: adjustments.length,
+//             items: results,
+//         },
+//         severity: "INFO",
+//     });
+// }

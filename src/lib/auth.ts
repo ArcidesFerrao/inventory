@@ -65,6 +65,8 @@ export const authOptions: NextAuthConfig = {
                 select: {
                     id: true,
                     phoneNumber: true,
+                    email: true,
+                    name: true,
                     role: true,
                     Service: {
                         select: {
@@ -80,6 +82,20 @@ export const authOptions: NextAuthConfig = {
             })
 
             const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
+            
+            if (userData) {
+                await db.auditLog.create({
+                    data: {
+                        action: "LOGIN",
+                        entityType: "USER",
+                        entityId: userData.id,
+                        entityName: userData.name || userData.email || "user",
+                        
+                    }
+                })
+
+            }
+
 
             return {
                 ...session,

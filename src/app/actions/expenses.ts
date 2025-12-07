@@ -49,6 +49,18 @@ export async function createExpense(prevState: unknown, formData: FormData) {
                     null
                 );
         console.log()
+
+        await db.auditLog.create({
+            data: {
+                action: "CREATE",
+                entityType: "Expense",
+                entityId: values.serviceId,
+                entityName: "service",
+                details: {
+                    metadata: values.description
+                }
+            }
+        })
    return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Expense", error);
@@ -85,7 +97,19 @@ export async function createCategoryExpense({name, description}:{name: string; d
                     'INFO',
                     null
                 );
-        console.log()
+        console.log() 
+        
+        await db.auditLog.create({
+            data: {
+                action: "CREATE",
+                entityType: "Expense",
+                entityId: session.user.serviceId,
+                entityName: "service",
+                details: {
+                    metadata: description
+                }
+            }
+        })
    return {status: "success"} 
     } catch (error) {
         console.error("Failed to create Expense", error);

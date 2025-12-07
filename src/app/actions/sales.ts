@@ -123,9 +123,20 @@ export async function createSale(
             'INFO',
             null
         );
-
+        
+        await db.auditLog.create({
+            data: {
+                action: "CREATE",
+                entityType: "Sale",
+                entityId: serviceId,
+                entityName: "service",
+                details: {}
+            }
+        })
+        
+        
+        
         return { success: true, saleId: result.id, cogs: result.cogs};
-
     } catch (error) {
         console.error("Error creating sale:", error);
         return { success: false, message: error}
