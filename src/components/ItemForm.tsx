@@ -108,7 +108,7 @@ export const ItemForm = ({
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col gap-4 min-w-md"
+      className="new-item-form flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
         Fill the form to {item ? "edit the" : "create a new"} Item
@@ -246,7 +246,7 @@ export const ItemForm = ({
             )}
           </div>
           {type === "SERVICE" && (
-            <div className="flex gap-4 text-sm">
+            <div className="flex gap-4 text-sm item-category-form">
               <div className="flex flex-col gap-1">
                 <label htmlFor="price">Price</label>
                 <input

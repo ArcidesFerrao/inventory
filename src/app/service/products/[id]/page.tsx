@@ -29,7 +29,7 @@ export default async function ItemPage(props: { params: Params }) {
       <div className="flex justify-between w-full">
         <div>
           <h2 className="text-2xl font-semibold">{item?.name}</h2>
-          <p className="text-xs font-thin">Id: {item?.id}</p>
+          <p className="text-xs font-thin">Id: {item?.id.slice(0, 5)}...</p>
         </div>
         <div className="flex gap-2 items-center">
           <DeleteButton itemId={id} />
@@ -41,7 +41,7 @@ export default async function ItemPage(props: { params: Params }) {
           </Link>
         </div>
       </div>
-      <div className="flex  justify-between w-full  my-5">
+      <div className="item-info flex  justify-between w-full  my-5">
         <div className="flex flex-col gap-5">
           {item?.type === "STOCK" && (
             <div className="flex gap-5 justify-between">
@@ -92,7 +92,7 @@ export default async function ItemPage(props: { params: Params }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between gap-4 w-full">
+      <div className="item-description flex justify-between gap-4 w-full">
         <div className="flex flex-col gap-2">
           <h2 className="font-semibold">Description </h2>
           <span className="product-detail-desc p-2 text-md font-light">

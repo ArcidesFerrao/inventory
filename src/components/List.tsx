@@ -49,15 +49,15 @@ export const ListStockItem = ({
 };
 export const ListItem = ({ id, name, price }: ProductsProps) => {
   return (
-    <li key={id} className="listing-item flex p-4 justify-between">
-      <div className="flex flex-col gap-4 justify-between ">
-        <Link href={`/service/products/${id}`}>
-          <h3 className="text-md font-medium">{name}</h3>
-        </Link>
-      </div>
-      <div className="flex flex-col items-end gap-2">
-        <h2 className="text-lg font-bold text-nowrap ">MZN {price},00</h2>
-      </div>
+    <li key={id} className="listing-item flex items-center p-4 justify-between">
+      {/* <div className="flex flex-col gap-4 justify-between "> */}
+      <Link href={`/service/products/${id}`}>
+        <h3 className="text-md font-medium">{name}</h3>
+      </Link>
+      {/* </div> */}
+      {/* <div className="flex flex-col items-end gap-2"> */}
+      <h2 className="text-lg font-bold text-nowrap ">MZN {price},00</h2>
+      {/* </div> */}
     </li>
   );
 };
@@ -113,7 +113,7 @@ export const PurchaseListItem = ({
     >
       <div className="purchase-header flex justify-between">
         <div className="purchase-title flex flex-col gap-2">
-          <h3 className="flex gap-2 items-center text-xl font-medium">
+          <h3 className="flex flex-col gap-2 text-xl font-medium">
             Purchase
             <p className="text-sm font-light ">
               #{purchases.id.slice(0, 6)}...
@@ -291,7 +291,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
     >
       <div className="sale-header flex justify-between">
         <div className="sale-title flex flex-col gap-2">
-          <h3 className="flex gap-2 items-center text-xl font-medium">
+          <h3 className="flex flex-col gap-2  text-xl font-medium">
             Sale
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>

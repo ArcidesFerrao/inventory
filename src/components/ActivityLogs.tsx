@@ -12,8 +12,8 @@ export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
   const errorLogs = logs.filter((log) => log.severity === "ERROR");
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex justify-between py-5">
-        <div className="flex flex-col gap-2">
+      <div className="activity-logs-info flex justify-between py-5">
+        <div className=" flex flex-col gap-2">
           <p>Total Logs</p>
           <h2 className="text-xl font-bold">{totalLogs}</h2>
         </div>

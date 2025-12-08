@@ -25,7 +25,7 @@ export const ExpenseFilters = ({
   const [isPending, startTransition] = useTransition();
 
   const [searchValue, setSearchValue] = useState(currentSearch);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const updateParams = (key: string, value: string) => {
     startTransition(() => {
@@ -78,8 +78,8 @@ export const ExpenseFilters = ({
           </div>
         )} */}
       </div>
-      <div className="flex gap-2">
-        <div className="flex">
+      <div className="flex gap-2 justify-between">
+        <div className="flex ">
           <select
             value={currentCategory}
             onChange={(e) => updateParams("category", e.target.value)}
@@ -93,12 +93,12 @@ export const ExpenseFilters = ({
               </option>
             ))}
           </select>
-          <button
+          {/* <button
             title="Create new category"
             onClick={() => setIsModalOpen(true)}
           >
             +
-          </button>
+          </button> */}
         </div>
         <select
           value={currentPeriod}

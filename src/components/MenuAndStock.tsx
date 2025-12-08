@@ -117,7 +117,7 @@ export const ViewList = ({ items }: { items: ItemWithCategory[] }) => {
         <>
           {categories.map((categoryName) => (
             <section
-              className="flex flex-col p-4 gap-2  max-h-fit"
+              className="flex flex-col gap-2  max-h-fit"
               key={categoryName}
             >
               <h2 className="text-lg font-medium">{categoryName}</h2>

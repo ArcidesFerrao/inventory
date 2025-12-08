@@ -10,6 +10,11 @@ export default async function NewOrder() {
   if (!session?.user.serviceId) redirect("/login");
 
   const suppliers = await db.supplier.findMany({
+    where: {
+      businessName: {
+        not: "Direct Purchase",
+      },
+    },
     include: {
       StockItems: {
         include: {

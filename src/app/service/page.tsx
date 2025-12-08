@@ -34,7 +34,7 @@ export default async function ServicePage({
 
   return (
     <section className="flex flex-col gap-4 w-full ">
-      <div className="dash-header flex items-center justify-between">
+      <div className="dash-header flex items-center gap-2 justify-between">
         <h1 className="text-2xl font-semibold">
           {stats.service}&apos;s Dashboard
         </h1>
@@ -150,7 +150,7 @@ export default async function ServicePage({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="dash-stats-details grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
           <CashFlowChart
             revenue={stats.earnings}

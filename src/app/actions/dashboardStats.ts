@@ -56,10 +56,12 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
     })
 
     const salesCount = await db.sale.count({
-        where: { serviceId: service?.id, timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                } }
+        where: { 
+            serviceId: service?.id, 
+            timestamp: {
+                gte: startDate,
+                lte: endDate,
+        } }
     })
 
     const totalEarnings = await db.sale.aggregate({

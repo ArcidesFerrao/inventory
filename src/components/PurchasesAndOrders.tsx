@@ -38,6 +38,16 @@ export default function PurchasesAndOrders({
     return true;
   });
 
+  const filters = [
+    { value: "ALL", label: "All" },
+    { value: "DRAFT", label: "Draft" },
+    { value: "SUBMITTED", label: "Submitted" },
+    { value: "IN_PREPARATION", label: "In Preparation" },
+    { value: "DELIVERED", label: "Delivered" },
+    { value: "CONFIRMED", label: "Confirmed" },
+    { value: "CANCELLED", label: "Cancelled" },
+  ];
+
   const totalPurchasedItems = purchases.reduce((acc, purchase) => {
     return (
       acc + purchase.PurchaseItem.reduce((sum, item) => sum + item.stock, 0)
@@ -88,7 +98,7 @@ export default function PurchasesAndOrders({
           {view === "purchases" && (
             <Link
               href="/service/purchases/new"
-              className="add-product flex gap-1"
+              className="add-product purchase-btn flex gap-1"
             >
               <span className="text-md px-2 flex items-center gap-2">
                 <span className="roentgen--bag"></span>New Purchase
@@ -119,7 +129,7 @@ export default function PurchasesAndOrders({
           {purchases.length === 0 ? (
             <p>No purchases found...</p>
           ) : (
-            <ul className="flex flex-col gap-2 w-full">
+            <ul className="flex flex-col gap-4 w-full">
               {purchases.map((p) => (
                 <PurchaseListItem key={p.id} purchases={p} />
               ))}
@@ -150,38 +160,21 @@ export default function PurchasesAndOrders({
             <p>No orders found...</p>
           ) : (
             <ul className="flex flex-col gap-2">
-              <div className="orders-filter flex gap-2">
-                {[
-                  { value: "ALL", label: "All" },
-                  { value: "DRAFT", label: "Draft" },
-                  { value: "SUBMITTED", label: "Submitted" },
-                  { value: "IN_PREPARATION", label: "In Preparation" },
-                  { value: "DELIVERED", label: "Delivered" },
-                  { value: "CONFIRMED", label: "Confirmed" },
-                  { value: "CANCELLED", label: "Cancelled" },
-                ].map((filter) => (
-                  <label
-                    key={filter.value}
-                    className={`cursor-pointer text-nowrap px-4 py-2 text-sm  ${
-                      orderFilter === filter.value
-                        ? "font-bold border-b-2"
-                        : " hover:border-b-2 font-medium"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="orderFilter"
-                      value={filter.value}
-                      checked={orderFilter === filter.value}
-                      onChange={(e) =>
-                        setOrderFilter(e.target.value as typeof orderFilter)
-                      }
-                      className="hidden"
-                    />
-                    {filter.label}
-                  </label>
+              <select
+                name=""
+                id=""
+                className="orders-filter text-sm"
+                value={orderFilter}
+                onChange={(e) =>
+                  setOrderFilter(e.target.value as typeof orderFilter)
+                }
+              >
+                {filters.map((f) => (
+                  <option key={f.value} value={f.value}>
+                    {f.label}
+                  </option>
                 ))}
-              </div>
+              </select>
               {filteredOrders.length === 0 ? (
                 <p>No orders found...</p>
               ) : (

@@ -82,7 +82,7 @@ export default async function ExpensesPage({
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">
-      <div className="list-header flex items-center justify-between w-full">
+      <div className="list-header expense-list-header flex items-center justify-between w-full">
         <div className="sales-title">
           <h2 className="text-2xl font-medium">Recent Expenses</h2>
           <p className="text-md font-extralight">
@@ -94,16 +94,16 @@ export default async function ExpensesPage({
         </Link>
       </div>
 
-      <div className="flex justify-between py-2">
-        <div className="total-sales-title flex flex-col gap-2">
+      <div className="total-expense-info flex justify-between py-2">
+        <div className="total-expense-title flex flex-col gap-2">
           <p>Expenses</p>
           <h2 className="text-xl font-bold">{filteredExpenses.length}</h2>
         </div>
-        <div className="total-sales-title flex flex-col gap-2">
+        <div className="total-expense-title flex flex-col gap-2">
           <p>Total Spent</p>
           <h2 className="text-xl font-bold">MZN {totalAmount.toFixed(2)}</h2>
         </div>
-        <div className="total-sales-title flex flex-col gap-2">
+        <div className="total-expense-title flex flex-col gap-2">
           <p>Average Expense</p>
           <h2 className="text-xl font-bold">MZN {averageExpense.toFixed(2)}</h2>
         </div>
