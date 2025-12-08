@@ -135,7 +135,7 @@ export default async function SupplyPage({
         </div>
       </div>
 
-      <div className="flex  w-fit gap-4">
+      <div className="suppliertop-list flex  w-fit gap-4">
         {filteredItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
             <h2 className="text-2xl font-bold">Low Stock Items</h2>
