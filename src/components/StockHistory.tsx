@@ -32,7 +32,7 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
         {movements.map((movement) => (
           <div className="p-4" key={movement.id}>
             <div className="flex justify-between items-start">
-              <div className="flex items-center gap-2">
+              <div className="stock-history-info flex items-center gap-2">
                 <span>{movement.changeType}</span>
                 <span>Quantity: {movement.quantity}</span>
                 {movement.notes && (

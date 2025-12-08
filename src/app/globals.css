@@ -134,6 +134,11 @@ body {
     align-items: start;
   }
   .sales-list-header,
+  .stock-item-desc,
+  .stock-history-info,
+  .stock-item-info,
+  .stock-item-header,
+  .item-header-title,
   .expense-list-header {
     flex-direction: column;
     align-items: flex-start;

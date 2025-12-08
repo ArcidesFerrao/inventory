@@ -19,8 +19,8 @@ export default async function ProductPage(props: { params: Params }) {
   });
   return (
     <div className="flex flex-col gap-5 items-start w-full">
-      <div className="flex justify-between w-full">
-        <div className="flex gap-5 items-center">
+      <div className="stock-item-header flex justify-between w-full">
+        <div className="item-header-title flex gap-5 items-center">
           <div className="flex flex-col gap-1">
             <h2 className="text-2xl font-semibold">{item?.name}</h2>
             <p className="text-xs font-thin">Id: {item?.id}</p>
@@ -37,7 +37,7 @@ export default async function ProductPage(props: { params: Params }) {
           </Link>
         </div>
       </div>
-      <div className="flex justify-between w-full">
+      <div className="stock-item-info flex justify-between w-full">
         <div className="flex flex-col gap-4">
           <div className="flex gap-5">
             <div className="flex flex-col gap-2">
@@ -75,7 +75,7 @@ export default async function ProductPage(props: { params: Params }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between gap-4 w-full">
+      <div className="stock-item-desc flex justify-between gap-4 w-full">
         <div className="flex flex-col gap-2">
           <h2 className="font-semibold">Description </h2>
           <span className="product-detail-desc p-2 text-md font-light">
