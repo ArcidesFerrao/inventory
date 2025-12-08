@@ -133,6 +133,7 @@ body {
 
   .supplier-item-details,
   .supplier-item-title,
+  .delivery-info-container,
   .total-expense-info,
   .stats-details-container {
     flex-direction: column;

@@ -120,7 +120,7 @@ export default async function OrderPage(props: { params: Params }) {
         <div className="deliveries-details flex flex-col gap-2 w-full">
           <div
             key={order.delivery.id}
-            className="p-4 flex justify-between delivery-details"
+            className="delivery-info-container p-4 flex justify-between delivery-details"
           >
             <div className="flex flex-col gap-2">
               <h3 className="font-medium">
@@ -161,14 +161,20 @@ export default async function OrderPage(props: { params: Params }) {
                   {order.delivery.status}
                 </button>
                 {order.delivery.status === "COMPLETED" && (
-                  <p className="text-xs font-light ">
-                    Delivered Time:{" "}
-                    {order.delivery.deliveredAt?.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </p>
+                  <>
+                    <p className="text-xs font-light ">
+                      Delivered Date:{" "}
+                      {order.delivery.deliveredAt?.toLocaleDateString()}
+                    </p>
+                    <p className="text-xs font-light ">
+                      Delivered Time:{" "}
+                      {order.delivery.deliveredAt?.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </p>
+                  </>
                 )}
               </div>
               {order.delivery.status === "COMPLETED" && (
