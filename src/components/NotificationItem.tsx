@@ -20,7 +20,7 @@ export const NotificationListItem = ({ n }: { n: Notification }) => {
       <a
         href={n.link ?? "#"}
         onClick={handleClick}
-        className="flex justify-between items-center gap-4"
+        className="notify-list-a flex justify-between items-center gap-4"
       >
         <p className={n.read ? "font-thin" : "font-medium"}>{n.title}</p>
         <p className="text-sm text-gray-400">{n.message}</p>

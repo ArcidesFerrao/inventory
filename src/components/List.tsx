@@ -600,7 +600,7 @@ export const SupplierOrderListItem = ({
   const delivery = order?.delivery;
   // console.log(delivery);
   return (
-    <li key={order.id} className="list-orders flex justify-between">
+    <li key={order.id} className="list-orders header-p-o flex justify-between">
       <div className="flex flex-col gap-5">
         <div className="order-header flex flex-col gap-2">
           <Link
