@@ -117,7 +117,7 @@ export default async function ExpensesPage({
       {filteredExpenses.length === 0 ? (
         <p>No expenses found...</p>
       ) : (
-        <ul className="w-full flex flex-col gap-2">
+        <ul className="w-full flex flex-col gap-4">
           {filteredExpenses.map((expense) => (
             <ExpenseListItem key={expense.id} expense={expense} />
           ))}

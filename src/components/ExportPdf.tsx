@@ -305,14 +305,14 @@ export function ExportSelection({ stockItems, purchases, sales, logs }: Props) {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <div className="export-header flex gap-4 items-center  justify-between">
-        <h4 className="font-medium">Export Data</h4>
-        <div>
+      <div className="export-header flex gap-4  justify-between">
+        <h4 className="font-medium text-nowrap">Export Data</h4>
+        <div className="flex flex-col gap-2">
           <ExportStockPdf stockItem={stockItems} />
           <ExportLogsPdf logs={logs} />
         </div>
       </div>
-      <div className="flex flex-col gap-2 py-4">
+      <div className="flex flex-col gap-4 ">
         <div className="range-select flex gap-2 items-center justify-between">
           <label htmlFor="range">Range:</label>
           <select
@@ -329,7 +329,7 @@ export function ExportSelection({ stockItems, purchases, sales, logs }: Props) {
             <option value="all">All Time</option>
           </select>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <ExportSalesPdf sales={filterByRange(sales)} />
           <ExportPurchasesPdf purchases={filterByRange(purchases)} />
         </div>

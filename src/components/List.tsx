@@ -518,12 +518,12 @@ export default function LogListItem({
     <li className="list-logs flex justify-between ">
       <div className="flex flex-col gap-2">
         <div className="log-info flex gap-2 items-center">
-          <span className="text-xs text-gray-400">{actionType}</span>
+          <span className="text-xs text-gray-400 text-wrap">{actionType}</span>
           <span className="text-xs text-blue-400">
             {entityType.toUpperCase()}
           </span>
         </div>
-        <p className="log-desc ">{description}</p>
+        <p className="log-desc text-sm ">{description}</p>
         <div className="log-date flex gap-2 items-center">
           <p className="font-extralight text-gray-400 text-xs">
             {timestamp.toLocaleDateString()}
