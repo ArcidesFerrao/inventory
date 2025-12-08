@@ -64,7 +64,7 @@ export default async function SalesPage() {
       {sales.length === 0 ? (
         <p>No sales found...</p>
       ) : (
-        <ul className="w-full flex flex-col gap-2">
+        <ul className="w-full flex flex-col gap-4">
           {sales.map((sale) => (
             <SaleListItem key={sale.id} sale={sale} />
           ))}
