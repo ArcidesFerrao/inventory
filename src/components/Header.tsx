@@ -19,7 +19,12 @@ export const Header = () => {
     <header className="flex justify-between p-4 items-center">
       <Link href="/">
         <div className="innovante flex gap-2 items-center ">
-          <Image src="/logo.png" width={22} height={22} alt="Innovante" />
+          <Image
+            src="/evolure-box-w.png"
+            width={22}
+            height={22}
+            alt="Innovante"
+          />
           <h1 className="font-bold text-2xl uppercase ">CONTELA</h1>
         </div>
       </Link>

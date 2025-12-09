@@ -86,6 +86,7 @@ body {
   .new-item-form textarea {
     min-width: fit-content;
   }
+  .form-name-unit,
   .item-category-form {
     flex-direction: column !important;
     width: 100%;
@@ -314,10 +315,10 @@ input[type="submit"]:disabled {
   color: var(--input-bg);
 }
 
-.innovante {
+/* .innovante {
   padding: 0.1rem 0.2rem;
-}
-.innovante,
+} */
+/* .innovante, */
 input[type="submit"] {
   border: solid 1px var(--foreground);
 }

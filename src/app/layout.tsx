@@ -54,7 +54,7 @@ const sansationSans = localFont({
 // });
 
 export const metadata: Metadata = {
-  title: "Inventory App",
+  title: "Contela",
   description: "Manage Stock Efficiently",
   icons: {
     icon: [{ url: "/favicon.png" }],
