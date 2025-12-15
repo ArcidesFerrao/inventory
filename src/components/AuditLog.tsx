@@ -196,90 +196,17 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
         </thead>
         <tbody>
           {logs.map((log) => (
-            <>
-              <tr key={log.id} onClick={() => toggleRow(log.id)}>
-                <td>{formatDate(log.createdAt)}</td>
-                <td>{log.action}</td>
-                <td>{log.entityType}</td>
-                <td>{log.entityName}</td>
-                <td>
-                  <button>
-                    {expandedRow === log.id ? "▼" : "▶"} View Detail
-                  </button>
-                </td>
-              </tr>
-              {/* {expandedRow === log.id && <tr> 
-                <td colSpan={5} className="p-4">
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-sm">Details</h4>
-                      
-                      {log.details?.changes && (
-                        <div>
-                          <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Changes:</h5>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            {Object.entries(log.details.changes).map(([key, value]: [string, any]) => (
-                              <div key={key} className="p-2 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-                                <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
-                                  {key}
-                                </div>
-                                <div className="flex items-center gap-2 text-xs">
-                                  <span className="text-red-600 dark:text-red-400 line-through">
-                                    {JSON.stringify(value.old)}
-                                  </span>
-                                  <span>→</span>
-                                  <span className="text-green-600 dark:text-green-400 font-medium">
-                                    {JSON.stringify(value.new)}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {log.details?.oldValues && (
-                        <div>
-                          <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Previous Values:</h5>
-                          <pre className="p-3 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-xs overflow-x-auto">
-                            {JSON.stringify(log.details.oldValues, null, 2)}
-                          </pre>
-                        </div>
-                      )}
-
-                      {log.details?.newValues && (
-                        <div>
-                          <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">New Values:</h5>
-                          <pre className="p-3 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-xs overflow-x-auto">
-                            {JSON.stringify(log.details.newValues, null, 2)}
-                          </pre>
-                        </div>
-                      )}
-
-                      {log.details?.metadata && (
-                        <div>
-                          <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Metadata:</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {Object.entries(log.details.metadata).map(([key, value]) => (
-                              <div key={key} className="px-2 py-1 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-xs">
-                                <span className="font-semibold">{key}:</span> {JSON.stringify(value)}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {(!log.details?.changes && !log.details?.oldValues && !log.details?.newValues) && (
-                        <div>
-                          <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Raw Details:</h5>
-                          <pre className="p-3 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-xs overflow-x-auto max-h-60 overflow-y-auto">
-                            {JSON.stringify(log.details, null, 2)}
-                          </pre>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>*/}
-            </>
+            <tr key={log.id} onClick={() => toggleRow(log.id)}>
+              <td>{formatDate(log.createdAt)}</td>
+              <td>{log.action}</td>
+              <td>{log.entityType}</td>
+              <td>{log.entityName}</td>
+              <td>
+                <button>
+                  {expandedRow === log.id ? "▼" : "▶"} View Detail
+                </button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>

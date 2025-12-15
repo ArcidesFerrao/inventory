@@ -19,7 +19,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
           >
             Personal Information
           </button>
-          {user.Service && (
+          {user.role === "SERVICE" && user.Service && (
             <button
               onClick={() => setView("detail")}
               className={view === "detail" ? "active-view" : ""}
@@ -27,7 +27,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
               Service Details
             </button>
           )}
-          {user.Supplier && (
+          {user.role === "SUPPLIER" && user.Supplier && (
             <button
               onClick={() => setView("detail")}
               className={view === "detail" ? "active-view" : ""}
@@ -42,14 +42,19 @@ export default function UserProfile({ user }: { user: UserProfile }) {
             Security
           </button>
         </div>
-        {user.Service && (
+        {user.role === "SERVICE" && (
           <Link href="/service">
             <span>Service Dashboard</span>
           </Link>
         )}
-        {user.Supplier && (
+        {user.role === "SUPPLIER" && (
           <Link href="/supply">
             <span>Supplier Dashboard</span>
+          </Link>
+        )}
+        {user.role === "ADMIN" && (
+          <Link href="/admin">
+            <span>Admin Dashboard</span>
           </Link>
         )}
       </div>
@@ -101,7 +106,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
       )}
       {view === "detail" && (
         <>
-          {user.Supplier && (
+          {user.role === "SUPPLIER" && user.Supplier && (
             <div className="details-section flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <p>Company Name</p>
@@ -153,7 +158,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
               </div>
             </div>
           )}
-          {user.Service && (
+          {user.role === "SERVICE" && user.Service && (
             <div className="details-section flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <p>Company Name</p>
