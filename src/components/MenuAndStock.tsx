@@ -83,6 +83,7 @@ export default function MenuAndStock({
                     name={p.stockItem.name}
                     price={p.cost || 0}
                     stock={p.stock || 0}
+                    unitQty={p.stockItem.unitQty || 1}
                     key={p.id}
                   />
                 ))}

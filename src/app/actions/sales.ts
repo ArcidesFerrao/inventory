@@ -16,7 +16,7 @@ export async function createSale(
         const result = await db.$transaction(async (tx) => {
                
             let cogs = 0;
-
+            
             const stockUsage: Record<string, number> = {};
 
             const stockIds = saleItems.flatMap(item => 
@@ -44,8 +44,12 @@ export async function createSale(
                     if (!stockProduct) continue;
                         
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
-                    stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsed;
-                    cogs += qtyUsed * (stockProduct.cost ?? 0);
+                    stockUsage[serviceStockItemId] += qtyUsed;
+                    // stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsed;
+
+                    const costPerBaseUnit = (stockProduct.cost ?? 0) / (stockProduct.stockItem?.unitQty ?? 1);
+
+                    cogs += qtyUsed * costPerBaseUnit;
 
                     // console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
                 }

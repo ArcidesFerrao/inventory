@@ -177,6 +177,7 @@ model Service {
 model ServiceStockItem {
   id             String          @id @default(cuid())
   stock          Int?
+  stockQty       Int?
   cost           Float?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt

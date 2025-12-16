@@ -213,7 +213,7 @@ export const ItemForm = ({
                 name="unitId"
                 id="unitId"
                 // disabled
-                value={units.find((u) => u.name === "pcs")?.id || ""}
+                value={units.find((u) => u.name === "unit")?.id || ""}
               >
                 <option value="" disabled>
                   Select a unit

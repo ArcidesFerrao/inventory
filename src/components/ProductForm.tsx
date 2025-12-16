@@ -716,6 +716,8 @@ export const ServiceStockItemForm = ({
   const supplierId = "directPurchase";
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
   const [unitId, setUnitId] = useState(stockItem?.unitId || "");
+  const [unitName, setUnitName] = useState("");
+  const [unitQty, setUnitQty] = useState<number>(1);
 
   const [price, setPrice] = useState(stockItem?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
@@ -795,7 +797,7 @@ export const ServiceStockItemForm = ({
           id="serviceId"
           value={serviceId}
         />
-        <section className="form-name-unit flex gap-2 items-end ">
+        <section className="form-name-unit flex gap-2 items-start ">
           <div className="flex w-full flex-col gap-1 relative">
             <label htmlFor="name">Stock Item Name</label>
 
@@ -836,8 +838,19 @@ export const ServiceStockItemForm = ({
                 name="unitQty"
                 id="unitQty"
                 className="max-w-32"
-                defaultValue={stockItem?.unitQty ?? 1}
+                value={unitQty}
+                onChange={(e) => setUnitQty(Number(e.target.value))}
               />
+              {unitName === "ml" && unitQty >= 1000 && (
+                <p className="text-sm font-extralight">
+                  {unitName === "ml" && unitQty / 1000} L
+                </p>
+              )}
+              {unitName === "g" && unitQty >= 1000 && (
+                <p className="text-sm font-extralight">
+                  {unitName === "g" && unitQty / 1000} Kg
+                </p>
+              )}
               {fields.unitQty.errors && (
                 <p className="text-xs font-light">{fields.unitQty.errors}</p>
               )}
@@ -854,7 +867,11 @@ export const ServiceStockItemForm = ({
                   Select a unit
                 </option>
                 {units.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
+                  <option
+                    key={unit.id}
+                    value={unit.id}
+                    onClick={() => setUnitName(unit.name)}
+                  >
                     {unit.name}
                   </option>
                 ))}

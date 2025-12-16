@@ -55,11 +55,14 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
         }
 
         for (const recipeItem of recipe) {
-          const ingredientStock =
-            recipeItem.serviceStockItem.stockItem?.stock ?? 0;
+          const stockItem = recipeItem.serviceStockItem.stockItem;
+          const totalAvailable = (stockItem?.stock ?? 0) * stockItem.unitQty;
+          // const totalNeed = (item.quantity + 1) * recipeItem.quantity;
+          // const ingredientStock =
+          //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
           const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
 
-          if (ingredientStock < totalNeeded) {
+          if (totalAvailable < totalNeeded) {
             toast.error(
               `Not enough ${
                 recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
