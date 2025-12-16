@@ -17,8 +17,10 @@ export default function LoginPage() {
     if (session?.user && status === "authenticated") {
       if (session?.user.role === "SERVICE") {
         router.push("/service");
-      } else {
+      } else if (session?.user.role === "SUPPLIER") {
         router.push("/supply");
+      } else if (session?.user.isAdmin) {
+        router.push("/");
       }
     }
   }, [session, status, router]);
@@ -44,8 +46,8 @@ export default function LoginPage() {
         router.push("/service");
       } else if (session?.user.role === "SUPPLIER") {
         setLoading(false);
-        router.push("/supplier");
-      } else {
+        router.push("/supply");
+      } else if (session?.user.isAdmin) {
         setLoading(false);
         router.push("/");
       }

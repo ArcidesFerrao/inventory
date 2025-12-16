@@ -85,49 +85,62 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
         }
     })
 
-    const sales = await db.saleItem.findMany({
+    // const sales = await db.saleItem.findMany({
+    //     where: {
+    //         sale: {
+    //             serviceId: service?.id,
+    //             timestamp: {
+    //                 gte: startDate,
+    //                 lte: endDate,
+    //             }
+    //         },
+            
+    //     },
+    //     include: {
+    //         item: {
+    //             include: {
+    //             CatalogItems: {
+    //                     include:{
+    //                         stockItem: true
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // })
+
+    // let totalCogs = 0
+    // // calculate cogs
+    // for (const saleItem of sales) {
+    //     let cogsForItem = 0
+    //     if (saleItem.item) {
+    //         if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
+    //             for (const recipe of saleItem.item.CatalogItems) {
+    //                 cogsForItem += recipe.quantity * (recipe.stockItem?.price || 0);
+    //             }
+    //         } else {
+    //             cogsForItem += saleItem.item.price || 0;
+    //         }
+    //     } else {
+    //         console.warn(`SaleItem ${saleItem.id} has no menu items`)
+    //     }
+    //     cogsForItem *= saleItem.quantity;
+    //     totalCogs += cogsForItem;
+    // }
+
+    const totalCogs = await db.sale.aggregate({
         where: {
-            sale: {
-                serviceId: service?.id,
-                timestamp: {
+            serviceId: service?.id,
+            timestamp: {
                     gte: startDate,
                     lte: endDate,
                 }
-            },
-            
         },
-        include: {
-            item: {
-                include: {
-                CatalogItems: {
-                        include:{
-                            stockItem: true
-                        }
-                    }
-                }
-            }
+        _sum: {
+            cogs: true
         }
-    })
+    }).then(res => res._sum.cogs || 0);
 
-    let totalCogs = 0
-    // calculate cogs
-    for (const saleItem of sales) {
-        let cogsForItem = 0
-        if (saleItem.item) {
-
-            if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
-                for (const recipe of saleItem.item.CatalogItems) {
-                    cogsForItem += recipe.quantity * (recipe.stockItem?.price || 0);
-                }
-            } else {
-                cogsForItem += saleItem.item.price || 0;
-            }
-        } else {
-            console.warn(`SaleItem ${saleItem.id} has no menu items`)
-        }
-        cogsForItem *= saleItem.quantity;
-        totalCogs += cogsForItem;
-    }
     const earnings = totalEarnings._sum.total || 0;
     const purchases = totalPurchases._sum.total || 0;
     const expenses = totalExpenses._sum.amount || 0
@@ -135,7 +148,11 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
     const profit = earnings - totalCogs;
     const netProfit = profit - expenses;
     const balance = earnings - purchases - expenses;
-    const inventoryValue = purchases - totalCogs;
+    // const inventoryValue = purchases - totalCogs;
+    const inventoryValue = serviceStockItems.reduce((sum, item) => {
+        const unitCost = (item.stockItem.cost || 0) / (item.stockItem.unitQty || 1);
+        return sum + (unitCost * (item.stockQty || 0));
+    }, 0)
     
     // extra metrics
     const averageSaleValue = salesCount > 0 ? earnings / salesCount : 0;

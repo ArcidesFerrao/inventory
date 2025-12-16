@@ -55,11 +55,12 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
         }
 
         for (const recipeItem of recipe) {
-          const stockItem = recipeItem.serviceStockItem.stockItem;
-          const totalAvailable = (stockItem?.stock ?? 0) * stockItem.unitQty;
+          // const stockItem = recipeItem.serviceStockItem.stockItem;
           // const totalNeed = (item.quantity + 1) * recipeItem.quantity;
           // const ingredientStock =
           //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
+          const serviceStock = recipeItem.serviceStockItem;
+          const totalAvailable = serviceStock?.stockQty ?? 0;
           const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
 
           if (totalAvailable < totalNeeded) {

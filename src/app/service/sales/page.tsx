@@ -42,22 +42,23 @@ export default async function SalesPage() {
         <div className="flex flex-col gap-2">
           <p>Revenue</p>
           <h2 className="text-xl font-bold">
-            MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
+            MZN {sales.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
           </h2>
         </div>
         <div className="total-sales-title flex flex-col gap-2">
           <p>Cogs</p>
           <h2 className="text-xl font-bold">
-            MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0)}.00
+            MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0).toFixed(2)}
           </h2>
         </div>
         <div className="flex flex-col gap-2">
           <p>Gross Profit</p>
           <h2 className="text-xl font-bold">
             MZN{" "}
-            {sales.reduce((acc, sale) => acc + sale.total, 0) -
-              sales.reduce((acc, sale) => acc + sale.cogs, 0)}
-            .00
+            {(
+              sales.reduce((acc, sale) => acc + sale.total, 0) -
+              sales.reduce((acc, sale) => acc + sale.cogs, 0)
+            ).toFixed(2)}
           </h2>
         </div>
       </div>

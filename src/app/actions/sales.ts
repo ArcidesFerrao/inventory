@@ -26,9 +26,9 @@ export async function createSale(
                 where: {
                     id: { in: stockIds}
                 },
-                select: { id: true, stock: true, cost: true,
+                select: { id: true, stock: true, stockQty: true, cost: true,
 
-                    stockItem: true
+                    stockItem: { select: { unitQty:true, name: true} }
                  },
             })
 
@@ -44,8 +44,8 @@ export async function createSale(
                     if (!stockProduct) continue;
                         
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
-                    stockUsage[serviceStockItemId] += qtyUsed;
-                    // stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsed;
+                    // stockUsage[serviceStockItemId] += qtyUsed;
+                    stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsed;
 
                     const costPerBaseUnit = (stockProduct.cost ?? 0) / (stockProduct.stockItem?.unitQty ?? 1);
 
@@ -56,10 +56,17 @@ export async function createSale(
             }
 
             for (const [stockId, totalQty] of Object.entries(stockUsage)) {
+                const stock = stocks.find(s => s.id === stockId);
+                if (!stock) continue;
+
+                if ((stock.stockQty ?? 0) < totalQty) {
+                    throw new Error(`Insufficient stock for item ${stock.stockItem?.name}`);
+                }
+
                  await tx.serviceStockItem.update({
                     where: { id: stockId },
                     data: {
-                        stock: {
+                        stockQty: {
                             decrement: totalQty,
                         }
                     }

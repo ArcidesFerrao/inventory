@@ -16,15 +16,6 @@ export default async function StockItemPage(props: { params: Params }) {
           unit: true,
         },
       },
-      //   CatalogItems: {
-      //     include: {
-      //       stockItem: {
-      //         select: {
-      //           name: true,
-      //         },
-      //       },
-      //     },
-      //   },
     },
   });
   return (
@@ -61,6 +52,12 @@ export default async function StockItemPage(props: { params: Params }) {
               <p>Stock</p>
               <h2 className="font-bold text-xl">{item?.stock}</h2>
             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <p>Stock Quantity</p>
+            <h2 className="font-bold text-xl">
+              {item?.stockQty} {item?.stockItem.unit?.name}
+            </h2>
           </div>
         </div>
         <div className="flex flex-col gap-2 w-fit">

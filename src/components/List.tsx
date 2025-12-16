@@ -13,7 +13,7 @@ type ProductsStockProps = {
   name: string;
   price: number;
   stock: number;
-  unitQty: number;
+  stockQty: number;
 };
 type ProductsProps = {
   id: string;
@@ -32,7 +32,7 @@ export const ListStockItem = ({
   id,
   name,
   price,
-  unitQty,
+  stockQty,
   stock,
 }: ProductsStockProps) => {
   return (
@@ -46,7 +46,7 @@ export const ListStockItem = ({
         <h2 className="text-lg font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
           <p className="text-sm font-light">Stock: {stock}</p>
-          <p className="text-sm font-light">Quantity: {stock * unitQty}</p>
+          <p className="text-sm font-light">Quantity: {stockQty}</p>
         </div>
       </div>
     </li>
