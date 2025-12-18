@@ -209,6 +209,8 @@ model Sale {
   SaleItem    SaleItem[]
   Service     Service?   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   Supplier    Supplier?  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, timestamp])
 }
 
 model SaleItem {
@@ -223,6 +225,8 @@ model SaleItem {
   sale               Sale              @relation(fields: [saleId], references: [id], onDelete: Cascade)
   stockItem          StockItem?        @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
   serviceStockItem   ServiceStockItem? @relation(fields: [serviceStockItemId], references: [id], onDelete: SetNull)
+
+  @@index([itemId])
 }
 
 model Purchase {
@@ -235,6 +239,8 @@ model Purchase {
   PurchaseItem PurchaseItem[]
   Service      Service?       @relation(fields: [serviceId], references: [id])
   serviceId    String?
+
+  @@index([serviceId, timestamp])
 }
 
 model PurchaseItem {
@@ -387,7 +393,7 @@ model Expense {
   service  Service          @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([serviceId])
+  @@index([serviceId, timestamp])
   @@index([categoryId])
   @@index([userId])
 }
