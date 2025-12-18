@@ -10,8 +10,17 @@ export default async function Home() {
       <h1 className="text-2xl font-semibold">Welcome to Contela Management</h1>
       {session?.user ? (
         <>
-          <p className="font-extralight text-sm">Pick a dashboard</p>
-          <DashMenu isAdmin={session.user.isAdmin ?? false} />
+          <p className="font-extralight text-sm">
+            {" "}
+            {session.user.role === "SERVICE" || session.user.role === "SUPPLIER"
+              ? "Go to"
+              : "Pick a"}{" "}
+            dashboard
+          </p>
+          <DashMenu
+            isAdmin={session.user.isAdmin ?? false}
+            role={session.user.role}
+          />
         </>
       ) : (
         <div className=" flex flex-col text-center gap-4  py-2">
