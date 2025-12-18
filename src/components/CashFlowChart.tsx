@@ -26,6 +26,9 @@ export const CashFlowChart = ({
     { name: "Purchases", value: purchases, color: "#f59e0b" },
     { name: "Expenses", value: expenses, color: "#ef4444" },
   ];
+
+  if (revenue === 0 && purchases === 0 && expenses === 0) return null;
+
   return (
     <div>
       <h3 className="text-lg font-normal">Cash Flow Distribution</h3>

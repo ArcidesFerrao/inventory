@@ -194,9 +194,21 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
         }
     }))
     
+    const recentSales = await db.sale.findMany({
+        where: { serviceId: service?.id,
+            timestamp: {
+                    gte: startDate,
+                    lte: endDate,
+                }
+         },
+        orderBy: {
+          timestamp: "desc",
+        },
+        take: 5,
+      });
     
 
-    return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems };
+    return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems, recentSales };
 }
 
 

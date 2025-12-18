@@ -158,7 +158,7 @@ export default async function ServicePage({
             expenses={stats.expenses}
             balance={stats.balance}
           />
-          <RecentActivity serviceId={session.user.serviceId} />
+          <RecentActivity sales={stats.recentSales} />
         </div>
         <div className="flex flex-col gap-4 w-full">
           {lowStockItems.length > 0 && (
