@@ -793,7 +793,7 @@ nav {
 
 .admin-products table,
 .admin-orders table,
-.top-stats ul,
+.top-lists,
 .admin-users table {
   background-color: var(--accent);
   border-radius: 0.4rem;

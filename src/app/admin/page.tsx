@@ -32,34 +32,38 @@ export default async function AdminPage() {
       <div className="top-stats grid grid-cols-2 gap-5 ">
         <div className="top-suppliers flex flex-col gap-5">
           <h2 className="text-lg font-bold">Top Suppliers</h2>
-          <div className="flex justify-between">
-            <h3>Supplier</h3>
-            <p>Orders</p>
-          </div>
+          <div className="top-lists flex flex-col gap-2">
+            <div className="flex justify-between">
+              <h3>Supplier</h3>
+              <p>Orders</p>
+            </div>
 
-          <ul className="top-list-admin flex flex-col gap-2 p-4">
-            {stats.topSuppliers.map((s) => (
-              <li key={s.id} className="flex justify-between py-1">
-                <h3>{s.name}</h3>
-                <p>{s.totalOrders}</p>
-              </li>
-            ))}
-          </ul>
+            <ul className="top-list-admin flex flex-col gap-2 p-4">
+              {stats.topSuppliers.map((s) => (
+                <li key={s.id} className="flex justify-between py-1">
+                  <h3>{s.name}</h3>
+                  <p>{s.totalOrders}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         <div className="top-services flex flex-col gap-5">
           <h2 className="text-lg font-bold">Top Services</h2>
-          <div className="flex justify-between">
-            <h3>Service</h3>
-            <p>Orders</p>
+          <div className="top-lists flex flex-col gap-2">
+            <div className="flex justify-between">
+              <h3>Service</h3>
+              <p>Orders</p>
+            </div>
+            <ul className="top-list-admin flex flex-col gap-2 p-4">
+              {stats.topServices.map((s) => (
+                <li key={s.id} className="top-lists flex justify-between py-1">
+                  <h3>{s.name}</h3>
+                  <p>{s.totalOrders}</p>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="top-list-admin flex flex-col gap-2 p-4">
-            {stats.topServices.map((s) => (
-              <li key={s.id} className="top-lists flex justify-between py-1">
-                <h3>{s.name}</h3>
-                <p>{s.totalOrders}</p>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </>
