@@ -157,6 +157,11 @@ export async function getSelectedStockItems(supplierId: string) {
             name: true,
             price: true,
             stock: true,
+            category: {
+                select: {
+                    name: true
+                }
+            }
         }
     }
 );

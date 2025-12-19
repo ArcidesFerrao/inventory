@@ -98,6 +98,7 @@ export const ItemForm = ({
     const fetchCategories = async () => {
       setCategories(await getServiceCategories(serviceId));
     };
+
     const fetchUnits = async () => {
       setUnits(await getUnits());
     };

@@ -149,7 +149,6 @@ export const ViewList = ({ items }: { items: ItemWithCategory[] }) => {
           </ul>
         </section>
       )}
-      {/* </div> */}
     </>
   );
 };

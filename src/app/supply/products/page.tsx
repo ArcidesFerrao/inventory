@@ -71,18 +71,93 @@ export default async function ProductsPage({
       {filteredItems.length === 0 ? (
         <p>No items found...</p>
       ) : (
-        <ul className="flex flex-col gap-4 w-full">
-          {filteredItems.map((item) => (
-            <ListSupplierItem
-              id={item.id}
-              name={item.name}
-              price={item.price || 0}
-              qty={item.stock || 0}
-              key={item.id}
-            />
-          ))}
-        </ul>
+        <ViewList items={filteredItems} />
       )}
     </div>
   );
 }
+
+export const ViewList = ({
+  items,
+}: {
+  items: {
+    name: string;
+    id: string;
+    stock: number | null;
+    price: number | null;
+    category: {
+      name: string;
+    } | null;
+  }[];
+}) => {
+  const itemsByCategory = items.reduce(
+    (acc, item) => {
+      const categoryName = item.category?.name || "";
+      if (!acc[categoryName]) {
+        acc[categoryName] = [];
+      }
+
+      acc[categoryName].push(item);
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        name: string;
+        id: string;
+        stock: number | null;
+        price: number | null;
+        category: {
+          name: string;
+        } | null;
+      }[]
+    >
+  );
+
+  const categories = Object.keys(itemsByCategory);
+  const hasCategories =
+    categories.length > 1 || (categories.length === 1 && categories[0]);
+
+  return (
+    // <div className="menu-products flex justify-between gap-8">
+    <>
+      {hasCategories ? (
+        <>
+          {categories.map((categoryName) => (
+            <section
+              className="flex flex-col gap-2  max-h-fit"
+              key={categoryName}
+            >
+              <h2 className="text-lg font-medium">{categoryName}</h2>
+              <ul className="flex flex-col gap-2">
+                {itemsByCategory[categoryName].map((item) => (
+                  <ListSupplierItem
+                    id={item.id}
+                    name={item.name}
+                    price={item.price || 0}
+                    key={item.id}
+                    qty={item.stock || 0}
+                  />
+                ))}
+              </ul>
+            </section>
+          ))}
+        </>
+      ) : (
+        <section className="flex flex-col p-4 gap-2 max-h-fit">
+          <ul className="flex flex-col gap-2">
+            {items.map((item) => (
+              <ListSupplierItem
+                id={item.id}
+                name={item.name}
+                price={item.price || 0}
+                key={item.id}
+                qty={item.stock || 0}
+              />
+            ))}
+          </ul>
+        </section>
+      )}
+    </>
+  );
+};
