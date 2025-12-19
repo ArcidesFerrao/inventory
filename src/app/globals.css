@@ -182,9 +182,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  .cash-stats-container {
-    flex-wrap: wrap;
-  }
   .add-product-dash,
   .header-greetings,
   .navigator {
@@ -213,6 +210,7 @@ body {
   .cash-stats-container {
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
 }
 

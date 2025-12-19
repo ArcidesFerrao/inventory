@@ -398,12 +398,12 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
       className="list-orders flex flex-col gap-2 justify-between"
     >
       <div className="sale-header flex justify-between">
-        <div className="sale-title flex  flex-col gap-2">
-          <h3 className="flex gap-2 items-center text-xl font-medium">
+        <div className="expense-title flex  flex-col gap-2">
+          <h3 className="flex gap-2 items-center text-lg font-medium">
             Expense:
             <p className="text-md font-light ">{expense.description}</p>
           </h3>
-          <div className="sale-title-details flex gap-4">
+          <div className="expense-title-details flex gap-4">
             <div className="flex gap-2">
               <span className="flex items-center">
                 <span className="formkit--date"></span>
