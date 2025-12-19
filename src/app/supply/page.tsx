@@ -80,9 +80,9 @@ export default async function SupplyPage({
               <h2 className="text-lg font-medium underline ">Profitability</h2>
               <div className="stats-container flex flex-col">
                 <div>
-                  <h3 className="text-lg font-normal">Orders</h3>
+                  <h3 className="text-lg font-normal">Sales</h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                    {stats.orderCount}
+                    {stats.saleCount}
                   </h4>
                 </div>
                 <div>

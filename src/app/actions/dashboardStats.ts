@@ -242,14 +242,14 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                 } }
     })
 
-    const orderCount = await db.order.count({
+    const saleCount = await db.sale.count({
         where: { supplierId, timestamp: {
                     gte: startDate,
                     lte: endDate,
                 } }
     })
 
-    const totalRevenue = await db.order.aggregate({
+    const totalRevenue = await db.sale.aggregate({
         where: {
                 supplierId,
                 timestamp: {
@@ -269,7 +269,7 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
     const totalCogs = 0;
 
     const profit = earnings - totalCogs;
-    const averageOrderValue = orderCount > 0 ? earnings / orderCount : 0;
+    const averageOrderValue = saleCount > 0 ? earnings / saleCount : 0;
     const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
 
     const mostOrderedItems = await db.orderItem.groupBy({
@@ -320,7 +320,7 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
         supplier: supplier.businessName,
         stockItemCount, 
         customerCount, 
-        orderCount, 
+        saleCount, 
         revenue: earnings, 
         profit, 
         averageOrderValue, 

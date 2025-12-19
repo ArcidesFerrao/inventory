@@ -444,7 +444,7 @@ export const SupplierSaleListItem = ({
       className="list-orders flex flex-col gap-2 justify-between"
     >
       <div className="sale-header flex justify-between">
-        <div className="sale-title flex flex-col gap-2">
+        <div className="supplier-sale-title flex flex-col gap-2">
           <h3 className="flex gap-2 items-center text-xl font-medium">
             Sale
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
