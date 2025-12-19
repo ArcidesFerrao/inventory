@@ -50,6 +50,7 @@ export const ItemForm = ({
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [name, setName] = useState(item?.name || "");
+  const [unitId, setUnitId] = useState(item?.unitId || "");
 
   useEffect(() => {
     if (!name || name.trim() === "") {
@@ -213,7 +214,8 @@ export const ItemForm = ({
                 name="unitId"
                 id="unitId"
                 // disabled
-                value={units.find((u) => u.name === "unit")?.id || ""}
+                value={unitId}
+                onChange={(e) => setUnitId(e.target.value)}
               >
                 <option value="" disabled>
                   Select a unit

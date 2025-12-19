@@ -53,24 +53,15 @@ export default async function StockItemPage(props: { params: Params }) {
               <h2 className="font-bold text-xl">{item?.stock}</h2>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <p>Stock Quantity</p>
-            <div className="flex gap-1">
-              <h2 className="font-bold text-xl">{item?.stockQty} </h2>
-              {item?.stockItem.unit?.name === "unit" && (
-                <h2 className="font-bold text-xl">
-                  {item.stockQty === 1
-                    ? "unit"
-                    : item?.stockItem.unit?.name + "s"}
-                </h2>
-              )}
-              {item?.stockItem.unit?.name !== "unit" && (
-                <h2 className="font-bold text-xl">
-                  {item?.stockItem.unit?.name}
-                </h2>
-              )}
+          {item?.stockItem.unit?.name !== "unit" && (
+            <div className="flex flex-col gap-2">
+              <p>Stock Quantity</p>
+              <h2 className="font-bold text-xl">
+                {item?.stockQty}
+                {item?.stockItem.unit?.name}
+              </h2>
             </div>
-          </div>
+          )}
         </div>
         <div className="flex flex-col gap-2 w-fit">
           {/* <div className="flex flex-col gap-2">
