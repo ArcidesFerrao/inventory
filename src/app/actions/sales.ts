@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import {  SaleItemWithCatalogItems } from "@/types/types";
 import { logActivity } from "./logs";
 import { createAuditLog } from "./auditLogs";
+import { Prisma } from "@/generated/prisma";
 
 export async function createSale(
     saleItems: SaleItemWithCatalogItems[], serviceId: string
@@ -28,7 +29,7 @@ export async function createSale(
                 },
                 select: { id: true, stock: true, stockQty: true, cost: true,
 
-                    stockItem: { select: { unitQty:true, name: true} }
+                    stockItem: { select: { unit: { select: { name: true } }, unitQty:true, name: true} }
                  },
             })
 
@@ -63,16 +64,28 @@ export async function createSale(
                     throw new Error(`Insufficient stock for item ${stock.stockItem?.name}`);
                 }
 
-                 await tx.serviceStockItem.update({
-                    where: { id: stockId },
-                    data: {
-                        stockQty: {
-                            decrement: totalQty,
-                        }
+                const data: Prisma.ServiceStockItemUpdateInput ={
+                    stockQty: {
+                        decrement: totalQty,
                     }
+                }
+
+                if (stock.stockItem?.unit?.name !== "unit") {
+                    data.stock = {
+                        decrement: Math.ceil(totalQty / (stock.stockItem?.unitQty ?? 1))
+                    }
+                } else {
+                    data.stock = {
+                        decrement: totalQty
+                    }
+                }
+
+                const updated = await tx.serviceStockItem.update({
+                    where: { id: stockId },
+                    data
                 });
 
-                // console.log(updated)
+                console.log(updated)
             }
 
             // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)
