@@ -13,6 +13,7 @@ export const NotificationListItem = ({ n }: { n: Notification }) => {
       body: JSON.stringify({ notificationId: n.id }),
     });
 
+    router.refresh();
     router.push(n.link ?? "#");
   };
   return (

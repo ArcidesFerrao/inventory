@@ -50,7 +50,9 @@ export const ItemForm = ({
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [name, setName] = useState(item?.name || "");
-  const [unitId, setUnitId] = useState(item?.unitId || "");
+  const [unitId, setUnitId] = useState(
+    units.find((u) => u.name === "unit")?.id
+  );
 
   useEffect(() => {
     if (!name || name.trim() === "") {
@@ -278,7 +280,7 @@ export const ItemForm = ({
         </div>
         <div className="flex flex-col gap-4">
           <fieldset className="flex flex-col gap-4 p-4">
-            <legend className="font-semibold">Recipe Items</legend>
+            <legend className="font-semibold">Catalog Items</legend>
             {recipeItems.map((stockItem, index) => {
               return (
                 <div

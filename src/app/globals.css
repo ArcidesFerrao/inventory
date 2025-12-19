@@ -182,6 +182,9 @@ body {
 }
 
 @media (max-width: 768px) {
+  .cash-stats-container {
+    flex-wrap: wrap;
+  }
   .add-product-dash,
   .header-greetings,
   .navigator {
@@ -212,6 +215,13 @@ body {
     justify-content: space-between;
   }
 }
+
+@media (min-width: 769px) and (max-width: 980px) {
+  .sale-title p {
+    font-size: x-small;
+  }
+}
+
 @media (min-width: 769px) {
   .nav-menu-btn,
   .header-menu {
@@ -329,7 +339,7 @@ button {
   transition: all 250ms ease-in;
 }
 
-input[type="submit"]:active,
+.cash-stats-container input[type="submit"]:active,
 button:active {
   background-color: var(--foreground);
   color: var(--dash-bg);
