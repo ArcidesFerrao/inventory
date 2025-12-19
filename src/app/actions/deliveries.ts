@@ -10,6 +10,7 @@ import { createNotification } from "./notifications";
 import {  OrderItemWithStockItems } from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { createAuditLog } from "./auditLogs";
+import { Prisma } from "@/generated/prisma";
 
 export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
@@ -139,6 +140,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     data: {
                         status: "COMPLETED",
                         deliveredAt: new Date(),
+                        accepted: true,
                     },
                     include: {
                         deliveryItems: {
@@ -169,14 +171,12 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
 
             //Handle stock updates
 
-            // const updatedItems = 
-            await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
+            const updatedItems =  await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
                 const stockItem = deliveryItem.orderItem.stockItem;
                 const quantity = deliveryItem.quantity;
 
 
-                // const updatedStockItem = 
-                await tx.stockItem.update({
+                const updatedStockItem = await tx.stockItem.update({
                     where: {
                         id: stockItem.id,
                     }, 
@@ -184,6 +184,9 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         stock: {
                             decrement: quantity,
                         }
+                    },
+                    include: {
+                        unit: true
                     }
                 });
 
@@ -203,32 +206,64 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         stockItemId: stockItem.id 
                     },
                     include: {
-                        stockItem: true
+                        stockItem: {
+                            include: {
+                                unit: true
+                            }
+                        }
                     }
                 });
+
+                const updateData: Prisma.ServiceStockItemUpdateInput = {
+                    cost: stockItem.price,
+                    stock: {
+                        increment: quantity,
+                    }
+                }
+
+                if (serviceStockItem?.stockItem.unit?.name === "unit") {
+                    updateData.stock = {
+                        increment: quantity,
+                    };
+                    updateData.stockQty = {
+                        increment: quantity,
+                    };
+                } else {
+                    updateData.stock = {
+                        increment: quantity,
+                    };
+                    updateData.stockQty = {
+                        increment: quantity * stockItem.unitQty,
+                    };
+                }
+
+
 
                 if (serviceStockItem) {
                     await tx.serviceStockItem.update({
                         where: {
                             id: serviceStockItem.id,
                         },
-                        data: {
-                            cost: stockItem.price,
-                            stock: {
-                                increment: quantity,
-                            }
-                        }
+                        data: updateData
                     })
                 } else {
                     serviceStockItem = await tx.serviceStockItem.create({
                         data: {
-                            stock: quantity,
+                            // stock: quantity,
                             cost: stockItem.price,
                             stockItemId: stockItem.id,
-                            serviceId
+                            serviceId,
+                            ...(updatedStockItem.unit?.name === "unit"
+                                ? { stock: quantity, stockQty: quantity }
+                                : { stock: quantity, stockQty: quantity * stockItem.unitQty }
+                            )
                         },
                         include: {
-                            stockItem: true
+                            stockItem: {
+                                include: {
+                                    unit: true
+                                }
+                            }
                         }
                         
                     })
@@ -246,7 +281,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
 
                 // return { serviceId, supplierId: updatedStockItem.supplierId, deliveryId}
             }));
-
+            console.log(updatedItems)
             // Create Sale + purchase with their items
             const total = delivery.deliveryItems.reduce((sum, item) => sum + item.orderItem.price * item.quantity, 0);
 
