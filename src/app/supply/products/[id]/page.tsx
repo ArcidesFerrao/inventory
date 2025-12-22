@@ -59,10 +59,12 @@ export default async function ProductPage(props: { params: Params }) {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <p>Category</p>
-            <h2 className="font-bold text-xl">{item?.category?.name}</h2>
-          </div>
+          {item?.category && (
+            <div className="flex flex-col gap-2">
+              <p>Category</p>
+              <h2 className="font-bold text-xl">{item?.category?.name}</h2>
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-2">

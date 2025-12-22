@@ -787,7 +787,7 @@ nav {
   min-width: 150px;
 }
 
-.top-lists {
+.top-lists li {
   border-bottom: 1px solid var(--hover-bg);
 }
 

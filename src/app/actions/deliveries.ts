@@ -147,7 +147,16 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                             include: {
                                 orderItem: {
                                     include: {
-                                        stockItem: true
+                                        stockItem: true,
+                                        serviceStockItem: {
+                                            include: {
+                                                stockItem: {
+                                                    include: {
+                                                        unit: true
+                                                    }
+                                                }
+                                            }
+                                        },
                                     }
                                 },
                             }
@@ -172,13 +181,13 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
             //Handle stock updates
 
             const updatedItems =  await Promise.all(delivery.deliveryItems.map(async (deliveryItem) => {
-                const stockItem = deliveryItem.orderItem.stockItem;
+                const supplierStockItem = deliveryItem.orderItem.stockItem;
                 const quantity = deliveryItem.quantity;
 
 
-                const updatedStockItem = await tx.stockItem.update({
+                 await tx.stockItem.update({
                     where: {
-                        id: stockItem.id,
+                        id: supplierStockItem.id,
                     }, 
                     data: {
                         stock: {
@@ -192,7 +201,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
 
                 await tx.stockMovement.create({
                     data: {
-                        stockItemId: stockItem.id,
+                        stockItemId: supplierStockItem.id,
                         changeType: "SALE",
                         quantity,
                         referenceId: deliveryItem.id,
@@ -200,40 +209,69 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     }
                 })
 
-                let serviceStockItem = await tx.serviceStockItem.findFirst({
-                    where: {
-                        serviceId,
-                        stockItemId: stockItem.id 
-                    },
-                    include: {
-                        stockItem: {
-                            include: {
-                                unit: true
+                let serviceStockItem:
+                    | Prisma.ServiceStockItemGetPayload<{
+                        include: {
+                            stockItem: {
+                                include: {
+                                    unit: true;
+                                };
+                            };
+                        };
+                        }>
+                    | null = deliveryItem.orderItem.serviceStockItem;
+
+                if (!serviceStockItem) {
+                    serviceStockItem = await tx.serviceStockItem.findFirst({
+                        where: {
+                            serviceId,
+                            stockItem: {
+                                name: supplierStockItem.name
+                            }
+                        },
+                        include: {
+                            stockItem: {
+                                include: {
+                                    unit: true
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                } else {
+                    serviceStockItem = await tx.serviceStockItem.findUnique({
+                        where: {
+                            id: serviceStockItem.id,
+                        },
+                        include: {
+                            stockItem: {
+                                include: {
+                                    unit: true
+                                }
+                            }
+                        }
+                    });
+                }
 
                 const updateData: Prisma.ServiceStockItemUpdateInput = {
-                    cost: stockItem.price,
+                    cost: supplierStockItem.price,
                     stock: {
                         increment: quantity,
                     }
                 }
 
                 if (serviceStockItem?.stockItem.unit?.name === "unit") {
-                    updateData.stock = {
-                        increment: quantity,
-                    };
+                    // updateData.stock = {
+                    //     increment: quantity,
+                    // };
                     updateData.stockQty = {
                         increment: quantity,
                     };
                 } else {
-                    updateData.stock = {
-                        increment: quantity,
-                    };
+                    // updateData.stock = {
+                    //     increment: quantity,
+                    // };
                     updateData.stockQty = {
-                        increment: quantity * stockItem.unitQty,
+                        increment: quantity * supplierStockItem.unitQty,
                     };
                 }
 
@@ -246,16 +284,62 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         },
                         data: updateData
                     })
+
+                    await tx.stockMovement.create({
+                        data: {
+                            stockItemId: serviceStockItem?.stockItemId,
+                            changeType: "PURCHASE",
+                            quantity,
+                            referenceId: deliveryItem.id,
+                            notes: `Delivery #${delivery.id.slice(0,8)}... completed, added to service stock`,
+                        }
+                    });
                 } else {
-                    serviceStockItem = await tx.serviceStockItem.create({
+                    const directSupplier = await tx.supplier.findFirst({
+                        where: {
+                            businessName:  "DirectPurchase"    
+                        }
+                    });
+                        if (!directSupplier) {
+                            throw new Error("DirectPurchase supplier not found");
+                        }
+
+                    let directStockItem = await tx.stockItem.findFirst({
+                        where: {
+                            name: supplierStockItem.name,
+                        },
+                        include: {
+                            unit: true
+                        }
+                    });
+
+                    if (!directStockItem) {
+                        directStockItem = await tx.stockItem.create({
+                            data: {
+                                name: supplierStockItem.name,
+                                description: supplierStockItem.description,
+                                price: supplierStockItem.price,
+                                unitId: supplierStockItem.unitId,
+                                supplierId: directSupplier.id,
+                                stock: 0,
+                                status: "ACTIVE",
+                                unitQty: supplierStockItem.unitQty,
+                            },
+                            include: {
+                                unit: true
+                            }
+                        });
+                    }
+
+                     await tx.serviceStockItem.create({
                         data: {
                             // stock: quantity,
-                            cost: stockItem.price,
-                            stockItemId: stockItem.id,
+                            cost: supplierStockItem.price,
+                            stockItemId: directStockItem.id,
                             serviceId,
-                            ...(updatedStockItem.unit?.name === "unit"
+                            ...(directStockItem.unit?.name === "unit"
                                 ? { stock: quantity, stockQty: quantity }
-                                : { stock: quantity, stockQty: quantity * stockItem.unitQty }
+                                : { stock: quantity, stockQty: quantity * supplierStockItem.unitQty }
                             )
                         },
                         include: {
@@ -267,9 +351,11 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         }
                         
                     })
+
+
                     await tx.stockMovement.create({
                         data: {
-                            stockItemId: serviceStockItem?.id,
+                            stockItemId: directStockItem?.id,
                             changeType: "PURCHASE",
                             quantity,
                             referenceId: deliveryItem.id,

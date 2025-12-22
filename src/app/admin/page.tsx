@@ -57,7 +57,7 @@ export default async function AdminPage() {
             </div>
             <ul className="top-list-admin flex flex-col gap-2">
               {stats.topServices.map((s) => (
-                <li key={s.id} className="top-lists flex justify-between py-1">
+                <li key={s.id} className="flex justify-between py-1">
                   <h3>{s.name}</h3>
                   <p>{s.totalOrders}</p>
                 </li>

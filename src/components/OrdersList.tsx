@@ -27,7 +27,7 @@ export const OrdersList = ({
   );
 
   const handleCompleteOrder = async () => {
-    console.log("creating order");
+    // console.log("creating order");
     setLoading(true);
     if (startDate === "" || endDate === "") {
       setError("Start and End dates required");
