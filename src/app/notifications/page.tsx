@@ -2,6 +2,7 @@ import { NotificationListItem } from "@/components/NotificationItem";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getUserNotification } from "../actions/notifications";
+import MarkAsRead from "@/components/MarkAsRead";
 
 export default async function NotificationsPage() {
   const session = await auth();
@@ -10,9 +11,14 @@ export default async function NotificationsPage() {
 
   const notifications = await getUserNotification(session.user.id);
 
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
   return (
     <div className="notifications-page flex flex-col items-center p-4">
-      <h1 className="text-xl font-semibold mb-4">Notifications</h1>
+      <div className="relative flex">
+        <h1 className="text-xl font-semibold mb-4">Notifications</h1>
+        {unreadCount > 0 && <MarkAsRead userId={session.user.id} />}
+      </div>
       {notifications.length === 0 ? (
         <p className="text-gray-400">No notifications available.</p>
       ) : (

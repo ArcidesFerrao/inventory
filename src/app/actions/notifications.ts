@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from "@/lib/db";
 
 
@@ -42,4 +44,17 @@ export async function getUnreadNotificationCount(userId:string) {
         where: { userId, read: false },
     });
     return unread
+}
+
+export async function markAllAsRead(userId: string) {
+    await db.notification.updateMany({
+        where: {
+            userId,
+            read: false
+        },
+        data: {
+            read: true
+        }
+    })
+    
 }
