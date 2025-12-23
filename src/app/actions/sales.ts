@@ -70,22 +70,38 @@ export async function createSale(
                     }
                 }
 
+                const remainingBaseUnits = (stock.stockQty ?? 0) - totalQty;
+
+                const newStockQty = Math.trunc((remainingBaseUnits ?? 1)/stock.stockItem.unitQty);
+
+                console.log("New stock qty in base units:", newStockQty);
+                
+                
                 if (stock.stockItem?.unit?.name !== "unit") {
-                    data.stock = {
-                        decrement: Math.ceil(totalQty / (stock.stockItem?.unitQty ?? 1))
-                    }
+                    // data.stock = {
+                    //     decrement: Math.ceil(totalQty / (stock.stockItem?.unitQty ?? 1))
+                    // }
+
+                    const updated = await tx.serviceStockItem.update({
+                        where: { id: stockId },
+                        data: {
+                            stock: newStockQty,
+                            stockQty: remainingBaseUnits,
+                        }
+                    });
+                    console.log(updated)
                 } else {
                     data.stock = {
                         decrement: totalQty
                     }
+                    const updated = await tx.serviceStockItem.update({
+                        where: { id: stockId },
+                        data
+                    });
+                    console.log(updated)
                 }
 
-                const updated = await tx.serviceStockItem.update({
-                    where: { id: stockId },
-                    data
-                });
 
-                console.log(updated)
             }
 
             // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)
