@@ -30,9 +30,22 @@ export default async function ItemsPage() {
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header flex items-center justify-between w-full">
         <div className="list-title">
-          <h2 className="text-2xl font-medium">Menu & Stock Products</h2>
+          <h2 className="text-2xl font-medium">
+            {session.user.businessType === "SHOP"
+              ? "Services"
+              : session.user.businessType === "STORE"
+              ? "Items"
+              : "Menu"}{" "}
+            & Stock Products
+          </h2>
           <p className="text-md font-extralight">
-            Manage your services and stock inventory
+            Manage your{" "}
+            {session.user.businessType === "SHOP"
+              ? "services"
+              : session.user.businessType === "STORE"
+              ? "items"
+              : "menu"}{" "}
+            and stock inventory
           </p>
         </div>
       </div>
