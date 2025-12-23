@@ -32,11 +32,15 @@ export default async function ItemsPage() {
         <div className="list-title">
           <h2 className="text-2xl font-medium">Menu & Stock Products</h2>
           <p className="text-md font-extralight">
-            Manage your menu items and stock inventory
+            Manage your services and stock inventory
           </p>
         </div>
       </div>
-      <MenuAndStock items={items} stockItems={serviceStockItems} />
+      <MenuAndStock
+        businessType={session.user.businessType ?? ""}
+        items={items}
+        stockItems={serviceStockItems}
+      />
     </div>
   );
 }

@@ -532,10 +532,6 @@ enum BusinessType {
   RESTAURANT
   SHOP
   STORE
-  MINIMARKET
-  SUPERMARKET
-  RETAIL
-  RESELLER
 }
 
 enum CategoryType {

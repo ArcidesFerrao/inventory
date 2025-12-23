@@ -14,6 +14,7 @@ declare module "next-auth" {
       supplierId?: string | null
       isAdmin?: boolean | null
       role?: string | null
+      businessType?: string | null
     }
   }
 

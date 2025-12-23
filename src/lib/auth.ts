@@ -70,7 +70,8 @@ export const authOptions: NextAuthConfig = {
                     role: true,
                     Service: {
                         select: {
-                            id: true
+                            id: true,
+                            businessType: true,
                         }
                     },
                     Supplier: {
@@ -94,7 +95,8 @@ export const authOptions: NextAuthConfig = {
                     serviceId: userData?.Service?.id, 
                     supplierId: userData?.Supplier?.id, 
                     isAdmin,
-                    role: userData?.role
+                    role: userData?.role,
+                    businessType: userData?.Service?.businessType
                 }
             }
         }

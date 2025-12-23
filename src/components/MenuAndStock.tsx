@@ -7,9 +7,11 @@ import { ListItem, ListStockItem } from "./List";
 import { ServiceStockItem, StockItem } from "@/generated/prisma";
 
 export default function MenuAndStock({
+  businessType,
   items,
   stockItems,
 }: {
+  businessType: string | null;
   items: ItemWithCategory[];
   stockItems: (ServiceStockItem & {
     stockItem: StockItem;
@@ -27,7 +29,12 @@ export default function MenuAndStock({
             }`}
             onClick={() => setView("list")}
           >
-            <span className="roentgen--bag"></span> List
+            <span className="roentgen--bag"></span>
+            {businessType === "SHOP"
+              ? "Services"
+              : businessType === "STORE"
+              ? "Items"
+              : "Menu"}
           </button>
           <button
             className={` flex items-center gap-2 px-4 py-2 text-xl ${
