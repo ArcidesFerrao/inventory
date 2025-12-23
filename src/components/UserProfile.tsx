@@ -173,7 +173,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 <h4>{user.Service.website}</h4>
               </div>
               <div className="flex flex-col gap-2">
-                <p>Established Year</p>
+                <p>Business Type</p>
                 <h4>{user.Service.businessType}</h4>
               </div>
               <div className="flex flex-col gap-2">
