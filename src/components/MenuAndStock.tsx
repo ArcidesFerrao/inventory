@@ -14,7 +14,11 @@ export default function MenuAndStock({
   businessType: string | null;
   items: ItemWithCategory[];
   stockItems: (ServiceStockItem & {
-    stockItem: StockItem;
+    stockItem: StockItem & {
+      unit: {
+        name: string;
+      } | null;
+    };
   })[];
 }) {
   const [view, setView] = useState<"list" | "stock">("list");
@@ -90,7 +94,8 @@ export default function MenuAndStock({
                     name={p.stockItem.name}
                     price={p.cost || 0}
                     stock={p.stock || 0}
-                    stockQty={p.stockQty || 1}
+                    stockQty={p.stockQty || 0}
+                    unit={p.stockItem.unit?.name || ""}
                     key={p.id}
                   />
                 ))}

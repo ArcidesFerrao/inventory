@@ -14,6 +14,7 @@ type ProductsStockProps = {
   price: number;
   stock: number;
   stockQty: number;
+  unit: string;
 };
 type ProductsProps = {
   id: string;
@@ -32,9 +33,10 @@ export const ListStockItem = ({
   id,
   name,
   price,
-  stockQty,
   stock,
-}: ProductsStockProps) => {
+}: // stockQty,
+// unit,
+ProductsStockProps) => {
   return (
     <li key={id} className="listing-stock-item flex p-4 justify-between">
       <div className="flex  gap-4 justify-between ">
@@ -46,7 +48,9 @@ export const ListStockItem = ({
         <h2 className="text-lg font-bold  text-nowrap">MZN {price},00</h2>
         <div className="flex gap-2">
           <p className="text-sm font-light">Stock: {stock}</p>
-          <p className="text-sm font-light">Quantity: {stockQty}</p>
+          {/* <p className="text-sm font-light">
+            Quantity: {stockQty} {unit}
+          </p> */}
         </div>
       </div>
     </li>

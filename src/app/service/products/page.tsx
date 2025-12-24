@@ -22,7 +22,11 @@ export default async function ItemsPage() {
       serviceId: session.user.serviceId,
     },
     include: {
-      stockItem: true,
+      stockItem: {
+        include: {
+          unit: true,
+        },
+      },
     },
   });
 

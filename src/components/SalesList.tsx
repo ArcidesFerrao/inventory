@@ -41,41 +41,87 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
   };
 
   const handleIncrement = (id: string) => {
-    setItems((prevItems) => {
-      return prevItems.map((item) => {
-        if (item.id !== id) return item;
-        const recipe = item.CatalogItems ?? [];
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
 
-        if (recipe.length === 0) {
-          if ((item.stock ?? 0) <= item.quantity) {
-            toast.error(`Not enough stock of ${item.name}`);
-            return item;
-          }
-          return { ...item, quantity: item.quantity + 1 };
-        }
+    const recipe = item.CatalogItems ?? [];
 
-        for (const recipeItem of recipe) {
-          // const stockItem = recipeItem.serviceStockItem.stockItem;
-          // const totalNeed = (item.quantity + 1) * recipeItem.quantity;
-          // const ingredientStock =
-          //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
-          const serviceStock = recipeItem.serviceStockItem;
-          const totalAvailable = serviceStock?.stockQty ?? 0;
-          const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
+    if (recipe.length === 0) {
+      if ((item.stock ?? 0) <= item.quantity) {
+        toast.error(`Not enough stock of ${item.name}`);
+        return;
+      }
 
-          if (totalAvailable < totalNeeded) {
-            toast.error(
-              `Not enough ${
-                recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
-              } to make another ${item.name}`
-            );
-            return item;
-          }
-        }
-        return { ...item, quantity: item.quantity + 1 };
-      });
-    });
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
+      return;
+    }
+
+    for (const recipeItem of recipe) {
+      // const stockItem = recipeItem.serviceStockItem.stockItem;
+      // const totalNeed = (item.quantity + 1) * recipeItem.quantity;
+      // const ingredientStock =
+      //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
+      const serviceStock = recipeItem.serviceStockItem;
+      const totalAvailable = serviceStock?.stockQty ?? 0;
+      const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
+
+      if (totalAvailable < totalNeeded) {
+        toast.error(
+          `Not enough ${
+            recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
+          } to make another ${item.name}`
+        );
+        return;
+      }
+    }
+
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
   };
+
+  // const handleIncrementSafe = (id: string) => {
+  //   setItems((prevItems) => {
+  //     return prevItems.map((item) => {
+  //       if (item.id !== id) return item;
+  //       const recipe = item.CatalogItems ?? [];
+
+  //       if (recipe.length === 0) {
+  //         if ((item.stock ?? 0) <= item.quantity) {
+  //           toast.error(`Not enough stock of ${item.name}`);
+  //           return item;
+  //         }
+  //         return { ...item, quantity: item.quantity + 1 };
+  //       }
+
+  //       for (const recipeItem of recipe) {
+  // const stockItem = recipeItem.serviceStockItem.stockItem;
+  // const totalNeed = (item.quantity + 1) * recipeItem.quantity;
+  // const ingredientStock =
+  //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
+  //         const serviceStock = recipeItem.serviceStockItem;
+  //         const totalAvailable = serviceStock?.stockQty ?? 0;
+  //         const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
+
+  //         if (totalAvailable < totalNeeded) {
+  //           toast.error(
+  //             `Not enough ${
+  //               recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
+  //             } to make another ${item.name}`
+  //           );
+  //           return item;
+  //         }
+  //       }
+  //       return { ...item, quantity: item.quantity + 1 };
+  //     });
+  //   });
+  // };
 
   const handleDecrement = (id: string) => {
     setItems((prevItems) =>
