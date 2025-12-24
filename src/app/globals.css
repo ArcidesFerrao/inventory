@@ -214,11 +214,11 @@ body {
   }
 }
 
-@media (min-width: 769px) and (max-width: 980px) {
+/* @media (min-width: 769px) and (max-width: 980px) {
   .sale-title p {
     font-size: x-small;
   }
-}
+} */
 
 @media (min-width: 769px) {
   .nav-menu-btn,
@@ -908,4 +908,13 @@ nav {
   background-color: var(--dash-bg);
   border: solid 1px var(--input-bg);
   border-radius: 50%;
+}
+
+.stock-movement {
+  background-color: var(--dash-bg);
+}
+
+.stock-history-info:hover {
+  background-color: var(--input-bg);
+  border-radius: 0.2rem;
 }

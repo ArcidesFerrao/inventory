@@ -24,28 +24,23 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
   }
 
   return (
-    <div className="border rounded-sm overflow-hidden">
-      <div className="px-2 py-1 ">
-        <h2>Stock Movement History</h2>
+    <div className="stock-movement rounded-sm overflow-hidden p-2">
+      <div className="p-2 ">
+        <h2 className="text-md font-semibold">Stock Movement History</h2>
       </div>
-      <div className="divide-y">
-        {movements.map((movement) => (
-          <div className="p-4" key={movement.id}>
-            <div className="flex justify-between items-start">
-              <div className="stock-history-info flex items-center gap-2">
-                <span>{movement.changeType}</span>
-                <span>Quantity: {movement.quantity}</span>
-                {movement.notes && (
-                  <span className="text-sm ">{movement.notes}</span>
-                )}
-              </div>
-            </div>
-            <span className="text-xs">
-              {new Date(movement.timestamp).toLocaleDateString()}
-            </span>
+      {/* <div className="divide-y"> */}
+      {movements.map((movement) => (
+        <div className="stock-history-info px-2 py-1" key={movement.id}>
+          <div className=" flex items-center gap-2 text-sm">
+            <span>{movement.changeType}</span>
+            <span>Quantity: {movement.quantity}</span>
+            {movement.notes && <span>{movement.notes}</span>}
           </div>
-        ))}
-      </div>
+          <span className="text-xs">
+            {new Date(movement.timestamp).toLocaleDateString()}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
