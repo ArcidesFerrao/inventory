@@ -18,7 +18,7 @@ export const serviceSchema = z.object({
     businessName: z.string().min(2, "Business Name is required").max(100, "Name too long"),
     description: z.string().max(500).optional(),
     location: z.string().min(2, "Location is required"),
-    businessType: z.enum(["RESTAURANT", "SHOP", "STORE", "SUPERMARKET", "RETAIL", "RESELLER"], {
+    businessType: z.enum(["RESTAURANT", "SHOP", "STORE"], {
     errorMap: () => ({ message: "Invalid business type" }),
   }),
     website: z.string().url("Invalid website url").optional(),
