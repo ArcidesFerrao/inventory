@@ -378,8 +378,8 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {sale.timestamp.toLocaleDateString()} ,{" "}
-                {sale.timestamp.toLocaleTimeString()}
+                {new Date(sale.timestamp).toLocaleDateString()} ,{" "}
+                {new Date(sale.timestamp).toLocaleTimeString()}
               </p>
             </div>
           </div>

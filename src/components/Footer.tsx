@@ -2,7 +2,7 @@ import React from "react";
 
 export const Footer = () => {
   return (
-    <footer className="absolute bottom-0 items-center text-center">
+    <footer className=" items-center text-center">
       <p className="font-thin text-xs">© 2025 Contela Platform</p>
     </footer>
   );

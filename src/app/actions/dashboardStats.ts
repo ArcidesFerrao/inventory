@@ -1,6 +1,7 @@
 import { auth} from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Period } from "@/types/types";
+import { unstable_cache } from "next/cache";
 
 const PERIOD_DAYS = {
         daily: 1,
@@ -23,192 +24,205 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
 
     if (!session?.user) return null;
 
-    const { startDate, endDate } = getDateRange(period)
-
-    const service = await db.service.findUnique({
-        where: {
-            userId: session.user.id
-        }
-    })
-
-    const totalExpenses = await db.expense.aggregate({
-        where: { 
-            serviceId: service?.id, 
+    return await unstable_cache(
+        async () => {
+            const { startDate, endDate } = getDateRange(period)
         
-            timestamp: {
-                    gte: startDate,
-                    lte: endDate,
+            const service = await db.service.findUnique({
+                where: {
+                    userId: session.user.id
                 }
-        },
-        _sum: {
-            amount: true
-        }
-    })
-
-    const itemCount = await db.item.count({
-        where: {serviceId: service?.id, type: "SERVICE"}
-    })
-    const serviceStockItems = await db.serviceStockItem.findMany({
-        where: {serviceId: service?.id, },
-        include: {
-            stockItem: true
-        }
-    })
-
-    const salesCount = await db.sale.count({
-        where: { 
-            serviceId: service?.id, 
-            timestamp: {
-                gte: startDate,
-                lte: endDate,
-        } }
-    })
-
-    const totalEarnings = await db.sale.aggregate({
-        where: { serviceId: service?.id, timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                } },
-        _sum: { total: true}
-    })
-
-    const totalPurchases = await db.purchase.aggregate({
-        where: {
-            serviceId: service?.id, 
-            timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                }
-        },
-        _sum: {
-            total: true
-        }
-    })
-
-    // const sales = await db.saleItem.findMany({
-    //     where: {
-    //         sale: {
-    //             serviceId: service?.id,
-    //             timestamp: {
-    //                 gte: startDate,
-    //                 lte: endDate,
-    //             }
-    //         },
-            
-    //     },
-    //     include: {
-    //         item: {
-    //             include: {
-    //             CatalogItems: {
-    //                     include:{
-    //                         stockItem: true
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // })
-
-    // let totalCogs = 0
-    // // calculate cogs
-    // for (const saleItem of sales) {
-    //     let cogsForItem = 0
-    //     if (saleItem.item) {
-    //         if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
-    //             for (const recipe of saleItem.item.CatalogItems) {
-    //                 cogsForItem += recipe.quantity * (recipe.stockItem?.price || 0);
-    //             }
-    //         } else {
-    //             cogsForItem += saleItem.item.price || 0;
-    //         }
-    //     } else {
-    //         console.warn(`SaleItem ${saleItem.id} has no menu items`)
-    //     }
-    //     cogsForItem *= saleItem.quantity;
-    //     totalCogs += cogsForItem;
-    // }
-
-    const totalCogs = await db.sale.aggregate({
-        where: {
-            serviceId: service?.id,
-            timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                }
-        },
-        _sum: {
-            cogs: true
-        }
-    }).then(res => res._sum.cogs || 0);
-
-    const earnings = totalEarnings._sum.total || 0;
-    const purchases = totalPurchases._sum.total || 0;
-    const expenses = totalExpenses._sum.amount || 0
-        // Core financial metrics
-    const profit = earnings - totalCogs;
-    const netProfit = profit - expenses;
-    const balance = earnings - purchases - expenses;
-    // const inventoryValue = purchases - totalCogs;
-    const inventoryValue = serviceStockItems.reduce((sum, item) => {
-        const unitCost = (item.stockItem.cost || 0) / (item.stockItem.unitQty || 1);
-        return sum + (unitCost * (item.stockQty || 0));
-    }, 0)
-    
-    // extra metrics
-    const averageSaleValue = salesCount > 0 ? earnings / salesCount : 0;
-    const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
-    const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases) * 100 : 0;
-    
-    const mostPaidItems = await db.saleItem.groupBy({
-        by: ['itemId'],
-        where: {
-            sale: { 
-                serviceId: service?.id,
-                timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                }
+            })
+        
+            const totalExpenses = await db.expense.aggregate({
+                where: { 
+                    serviceId: service?.id, 
                 
-             }
-        },
-        _sum: {
-            quantity: true
-        },
-        orderBy: {
-            _sum: {
-                quantity: 'desc'
-            }
-        },
-        take: 3
-    })
-
-    const topItems = await Promise.all(mostPaidItems.map(async (i) => {
-        if (!i.itemId) return
-
-        const item = await db.item.findUnique({
-            where: { id: i.itemId }
-        })
-        return {
-            ...item,
-            quantity: i._sum.quantity
-        }
-    }))
-    
-    const recentSales = await db.sale.findMany({
-        where: { serviceId: service?.id,
-            timestamp: {
-                    gte: startDate,
-                    lte: endDate,
+                    timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                },
+                _sum: {
+                    amount: true
                 }
-         },
-        orderBy: {
-          timestamp: "desc",
-        },
-        take: 5,
-      });
-    
+            })
+        
+            const itemCount = await db.item.count({
+                where: {serviceId: service?.id, type: "SERVICE"}
+            })
+            const serviceStockItems = await db.serviceStockItem.findMany({
+                where: {serviceId: service?.id, },
+                include: {
+                    stockItem: true
+                }
+            })
+        
+            const salesCount = await db.sale.count({
+                where: { 
+                    serviceId: service?.id, 
+                    timestamp: {
+                        gte: startDate,
+                        lte: endDate,
+                } }
+            })
+        
+            const totalEarnings = await db.sale.aggregate({
+                where: { serviceId: service?.id, timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        } },
+                _sum: { total: true}
+            })
+        
+            const totalPurchases = await db.purchase.aggregate({
+                where: {
+                    serviceId: service?.id, 
+                    timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                },
+                _sum: {
+                    total: true
+                }
+            })
+        
+            // const sales = await db.saleItem.findMany({
+            //     where: {
+            //         sale: {
+            //             serviceId: service?.id,
+            //             timestamp: {
+            //                 gte: startDate,
+            //                 lte: endDate,
+            //             }
+            //         },
+                    
+            //     },
+            //     include: {
+            //         item: {
+            //             include: {
+            //             CatalogItems: {
+            //                     include:{
+            //                         stockItem: true
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // })
+        
+            // let totalCogs = 0
+            // // calculate cogs
+            // for (const saleItem of sales) {
+            //     let cogsForItem = 0
+            //     if (saleItem.item) {
+            //         if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
+            //             for (const recipe of saleItem.item.CatalogItems) {
+            //                 cogsForItem += recipe.quantity * (recipe.stockItem?.price || 0);
+            //             }
+            //         } else {
+            //             cogsForItem += saleItem.item.price || 0;
+            //         }
+            //     } else {
+            //         console.warn(`SaleItem ${saleItem.id} has no menu items`)
+            //     }
+            //     cogsForItem *= saleItem.quantity;
+            //     totalCogs += cogsForItem;
+            // }
+        
+            const totalCogs = await db.sale.aggregate({
+                where: {
+                    serviceId: service?.id,
+                    timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                },
+                _sum: {
+                    cogs: true
+                }
+            }).then(res => res._sum.cogs || 0);
+        
+            const earnings = totalEarnings._sum.total || 0;
+            const purchases = totalPurchases._sum.total || 0;
+            const expenses = totalExpenses._sum.amount || 0
+                // Core financial metrics
+            const profit = earnings - totalCogs;
+            const netProfit = profit - expenses;
+            const balance = earnings - purchases - expenses;
+            // const inventoryValue = purchases - totalCogs;
+            const inventoryValue = serviceStockItems.reduce((sum, item) => {
+                const unitCost = (item.stockItem.cost || 0) / (item.stockItem.unitQty || 1);
+                return sum + (unitCost * (item.stockQty || 0));
+            }, 0)
+            
+            // extra metrics
+            const averageSaleValue = salesCount > 0 ? earnings / salesCount : 0;
+            const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
+            const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases) * 100 : 0;
+            
+            const mostPaidItems = await db.saleItem.groupBy({
+                by: ['itemId'],
+                where: {
+                    sale: { 
+                        serviceId: service?.id,
+                        timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                        
+                     }
+                },
+                _sum: {
+                    quantity: true
+                },
+                orderBy: {
+                    _sum: {
+                        quantity: 'desc'
+                    }
+                },
+                take: 3
+            })
+        
+            const topItems = await Promise.all(mostPaidItems.map(async (i) => {
+                if (!i.itemId) return
+        
+                const item = await db.item.findUnique({
+                    where: { id: i.itemId }
+                })
+                return {
+                    ...item,
+                    quantity: i._sum.quantity
+                }
+            }))
+            
+            const recentSales = await db.sale.findMany({
+                where: { serviceId: service?.id,
+                    timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                 },
+                orderBy: {
+                  timestamp: "desc",
+                },
+                take: 5,
+              });
+            
+            //   console.log("Cache Miss: Calculating stats")
+        
+            return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems, recentSales };
 
-    return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems, recentSales };
+
+        },
+        [`dashboard-stats-${session.user.id}-${period}`],
+        {
+            tags: [`dashboard-stats-${session.user.id}`],
+            revalidate: 60, // in seconds
+        }
+    )();
+
 }
 
 
@@ -216,117 +230,127 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
     const session = await auth()
 
     if (!session?.user) return null 
- const { startDate, endDate } = getDateRange(period)
-    const supplier = await db.supplier.findUnique({
-        where: {
-            userId: session.user.id,
-        },
-        select: {
-            id: true,
-            businessName: true,
-        },
-    });
-    
 
-    if (!supplier?.id) return null
-    const supplierId = supplier.id;
+    return await unstable_cache(
+        async () => {
+            const { startDate, endDate } = getDateRange(period)
+            const supplier = await db.supplier.findUnique({
+                where: {
+                    userId: session.user.id,
+                },
+                select: {
+                    id: true,
+                    businessName: true,
+                },
+            });
+            
 
-    const stockItemCount = await db.stockItem.count({
-        where: { supplierId }
-    })
+            if (!supplier?.id) return null
+            const supplierId = supplier.id;
 
-    const customerCount = await db.supplierCustomer.count({
-        where: { supplierId, createdAt: {
-                    gte: startDate,
-                    lte: endDate,
-                } }
-    })
+            const stockItemCount = await db.stockItem.count({
+                where: { supplierId }
+            })
 
-    const saleCount = await db.sale.count({
-        where: { supplierId, timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                } }
-    })
+            const customerCount = await db.supplierCustomer.count({
+                where: { supplierId, createdAt: {
+                            gte: startDate,
+                            lte: endDate,
+                        } }
+            })
 
-    const totalRevenue = await db.sale.aggregate({
-        where: {
-                supplierId,
-                timestamp: {
-                    gte: startDate,
-                    lte: endDate,
-                } 
-        },
-        _sum: {
-            total: true,
-        }
-    })
+            const saleCount = await db.sale.count({
+                where: { supplierId, timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        } }
+            })
 
-    const revenue = totalRevenue._sum.total || 0;
-
-    const earnings = revenue;
-
-    const totalCogs = 0;
-
-    const profit = earnings - totalCogs;
-    const averageOrderValue = saleCount > 0 ? earnings / saleCount : 0;
-    const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
-
-    const mostOrderedItems = await db.orderItem.groupBy({
-        by: ['stockItemId'],
-        where: {
-            order: {
-                supplierId,
-                timestamp: {
-                    gte: startDate,
-                    lte: endDate,
+            const totalRevenue = await db.sale.aggregate({
+                where: {
+                        supplierId,
+                        timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        } 
+                },
+                _sum: {
+                    total: true,
                 }
-            }
-        },
-        _sum: {
-            orderedQty: true
-        },
-        orderBy: {
-            _sum: {
-                orderedQty: "desc"
-            }
-        },
-        take: 3
-    })
+            })
 
-    const topItems = await Promise.all(mostOrderedItems.map(async (item) => {
-        const stockItem = await db.stockItem.findUnique({
-            where: {
-                id: item.stockItemId!,
-                createdAt: {
-                    gte: startDate,
-                    lte: endDate,
+            const revenue = totalRevenue._sum.total || 0;
+
+            const earnings = revenue;
+
+            const totalCogs = 0;
+
+            const profit = earnings - totalCogs;
+            const averageOrderValue = saleCount > 0 ? earnings / saleCount : 0;
+            const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
+
+            const mostOrderedItems = await db.orderItem.groupBy({
+                by: ['stockItemId'],
+                where: {
+                    order: {
+                        supplierId,
+                        timestamp: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                    }
+                },
+                _sum: {
+                    orderedQty: true
+                },
+                orderBy: {
+                    _sum: {
+                        orderedQty: "desc"
+                    }
+                },
+                take: 3
+            })
+
+            const topItems = await Promise.all(mostOrderedItems.map(async (item) => {
+                const stockItem = await db.stockItem.findUnique({
+                    where: {
+                        id: item.stockItemId!,
+                        createdAt: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                    },
+                    select: {
+                        id: true,
+                        price: true,
+                        name: true,
+                    }
+                });
+
+                return {
+                    ...stockItem,
+                    quantity: item._sum?.orderedQty ?? 0
                 }
-            },
-            select: {
-                id: true,
-                price: true,
-                name: true,
-            }
-        });
+            }))
 
-        return {
-            ...stockItem,
-            quantity: item._sum?.orderedQty ?? 0
+            return { 
+                supplier: supplier.businessName,
+                stockItemCount, 
+                customerCount, 
+                saleCount, 
+                revenue: earnings, 
+                profit, 
+                averageOrderValue, 
+                grossMargin, 
+                topItems 
+            };
+        },
+        [`dashboard-stats-${session.user.id}-${period}`],
+        {
+            tags: [`dashboard-stats-${session.user.id}`],
+            revalidate: 60, // in seconds
         }
-    }))
-
-    return { 
-        supplier: supplier.businessName,
-        stockItemCount, 
-        customerCount, 
-        saleCount, 
-        revenue: earnings, 
-        profit, 
-        averageOrderValue, 
-        grossMargin, 
-        topItems 
-    };
+    )();
 }
 
 
