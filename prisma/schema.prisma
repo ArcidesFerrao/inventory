@@ -24,11 +24,49 @@ model User {
   hashedPassword      String?
   profileStatus       ProfileStatus @default(PENDING)
 
-  Supplier         Supplier?
-  Service          Service?
-  AuditLog         AuditLog[]
-  Notification     Notification[]
-  recordedExpenses Expense[]
+  Supplier            Supplier?
+  Service             Service?
+  AuditLog            AuditLog[]
+  Notification        Notification[]
+  recordedExpenses    Expense[]
+  sessions            Session[]
+  verificationTokens  VerificationToken[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String // email or phone number
+  token      String   @unique
+  type       String // "email" or "phone"
+  userId     String?
+  expires    DateTime
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([email, token])
 }
 
 model Item {
