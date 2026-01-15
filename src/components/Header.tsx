@@ -37,7 +37,7 @@ export const Header = () => {
         ) : (
           <p className="header-welcome">
             Welcome,{" "}
-            <Link href={`/${session?.user.id}`}>{session?.user.name}</Link>
+            <Link href={`/user/${session?.user.id}`}>{session?.user.name}</Link>
           </p>
         )}
       </div>

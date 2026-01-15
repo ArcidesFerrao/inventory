@@ -5,6 +5,7 @@ import { Pool } from "pg";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  prismaAuth: PrismaClient | undefined;
   pool: Pool | undefined;
 }
 
@@ -17,6 +18,7 @@ if (!connectionString) {
 const pool = globalForPrisma.pool ?? new Pool({
   connectionString,
 });
+
 const adapter = new PrismaPg(pool)
 
 export const db = globalForPrisma.prisma ?? new PrismaClient({
@@ -24,7 +26,12 @@ export const db = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV !== "development" ? ["error", "warn"] : ["error"],
 });
 
+// export const dbAuth = globalForPrisma.prismaAuth ?? new PrismaClient({
+//   log: process.env.NODE_ENV !== "development" ? ["error", "warn"] : ["error"],
+// });
+
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = db;
+  // globalForPrisma.prismaAuth = dbAuth;
   globalForPrisma.pool = pool;
 }

@@ -15,13 +15,13 @@ export default function DashMenu({
         <span className="carbon--dashboard"></span>
         <p>Stock Management</p>
       </button> */}
-      {(role === "SERVICE" || role === "ADMIN") && (
+      {(role === "USER" || role === "SERVICE" || role === "ADMIN") && (
         <button className="p-4" onClick={() => redirect("/service")}>
           <span className="fa7-solid--store"></span>
           <p>Service Management</p>
         </button>
       )}
-      {(role === "SUPPLIER" || role === "ADMIN") && (
+      {(role === "USER" || role === "SUPPLIER" || role === "ADMIN") && (
         <button className="p-4" onClick={() => redirect("/supply")}>
           <span className="solar--delivery-bold"></span>
           <p>Supplier Management</p>

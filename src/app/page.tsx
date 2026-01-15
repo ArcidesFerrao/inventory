@@ -12,7 +12,9 @@ export default async function Home() {
         <>
           <p className="font-extralight text-sm">
             {" "}
-            {session.user.role === "SERVICE" || session.user.role === "SUPPLIER"
+            {session.user.role === "USER" ||
+            session.user.role === "SERVICE" ||
+            session.user.role === "SUPPLIER"
               ? "Go to"
               : "Pick a"}{" "}
             dashboard

@@ -46,13 +46,13 @@ export const authOptions: NextAuthConfig = {
                 };
 
                 // Check if email/phone is verified
-                const isEmail = loginValue.includes("@");
-                if (isEmail && !user.emailVerified) {
-                    throw new Error("Please verify your email before signing in");
-                }
-                if (!isEmail && !user.phoneNumberVerified) {
-                    throw new Error("Please verify your phone number before signing in");
-                }
+                // const isEmail = loginValue.includes("@");
+                // if (isEmail && !user.emailVerified) {
+                //     throw new Error("Please verify your email before signing in");
+                // }
+                // if (!isEmail && !user.phoneNumberVerified) {
+                //     throw new Error("Please verify your phone number before signing in");
+                // }
 
                 const isValid = await bcrypt.compare(password, user.hashedPassword);
                 if (!isValid) return null;
@@ -71,22 +71,27 @@ export const authOptions: NextAuthConfig = {
         verifyRequest: "/verify-request",
     }, 
     callbacks: {
-        async signIn({ user, account }) {
-            // For OAuth providers (Google), automatically verify email
-            if (account?.provider === "google" && user.email) {
-                await db.user.update({
-                    where: { id: user.id },
-                    data: { emailVerified: new Date() }
-                });
-            }
-            return true;
-        },
+        // async signIn({ user, account }) {
+        //     // For OAuth providers (Google), automatically verify email
+        //     if (account?.provider === "google" && user.email) {
+        //         await db.user.update({
+        //             where: { id: user.id },
+        //             data: { emailVerified: new Date() }
+        //         });
+        //     }
+        //     return true;
+        // },
         async session({ session, token }) {
 
             if (session.user) {
                 session.user.id = token.sub as string;
                 
             }
+
+            if (!session.user?.id) {
+                return session;
+            }
+
             const  userData = await db.user.findUnique({
                 where: {
                     id: session.user.id,
@@ -112,9 +117,6 @@ export const authOptions: NextAuthConfig = {
             })
 
             const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
-            
-            
-
 
             return {
                 ...session,
@@ -128,6 +130,12 @@ export const authOptions: NextAuthConfig = {
                     businessType: userData?.Service?.businessType
                 }
             }
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.sub = user.id;
+            }
+            return token;
         }
     },
     events: {

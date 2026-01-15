@@ -36,7 +36,9 @@ export default function LoginPage() {
     // console.log(loginValue, password);
 
     if (res?.error !== null) {
-      console.error(res.error);
+      if (res.error) {
+        console.error(res.error);
+      }
       setError(res?.error ?? "");
       setLoading(false);
     } else {
@@ -53,6 +55,14 @@ export default function LoginPage() {
       }
     }
   };
+
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     await signIn("google", { callbackUrl: "/" });
+  //   } catch (error) {
+  //     console.error("Google sign-in failed:", error);
+  //   }
+  // };
 
   if (status === "loading") {
     return <p>Loading...</p>;
@@ -95,6 +105,13 @@ export default function LoginPage() {
       <p>
         Dont have an account? <Link href="/signup">Create an account</Link>
       </p>
+      <button
+        type="button"
+        className="login-button border"
+        onClick={() => signIn("google", { callbackUrl: "/" })}
+      >
+        <span>Sign In with Google</span>
+      </button>
     </form>
   );
 }
