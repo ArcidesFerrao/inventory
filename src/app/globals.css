@@ -296,6 +296,7 @@ select {
 }
 
 .reg-form textarea,
+.reset-btn,
 .reg-form input,
 .signup-form input,
 .signup-form select,
@@ -303,6 +304,21 @@ select {
   background-color: var(--accent);
   padding: 0.4rem 0.8rem;
   border-radius: 0.2rem;
+}
+
+.google-signin {
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.2rem;
+}
+
+.reset-btn:hover,
+.login-form input:hover,
+.google-signin:hover {
+  background-color: var(--admin-card);
+  color: var(--foreground);
+  border-radius: 0;
 }
 
 .register-form {
