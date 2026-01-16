@@ -45,15 +45,6 @@ export const authOptions: NextAuthConfig = {
                     throw new Error("Invalid credentials");
                 };
 
-                // Check if email/phone is verified
-                // const isEmail = loginValue.includes("@");
-                // if (isEmail && !user.emailVerified) {
-                //     throw new Error("Please verify your email before signing in");
-                // }
-                // if (!isEmail && !user.phoneNumberVerified) {
-                //     throw new Error("Please verify your phone number before signing in");
-                // }
-
                 const isValid = await bcrypt.compare(password, user.hashedPassword);
                 if (!isValid) return null;
 
@@ -71,16 +62,7 @@ export const authOptions: NextAuthConfig = {
         verifyRequest: "/verify-request",
     }, 
     callbacks: {
-        // async signIn({ user, account }) {
-        //     // For OAuth providers (Google), automatically verify email
-        //     if (account?.provider === "google" && user.email) {
-        //         await db.user.update({
-        //             where: { id: user.id },
-        //             data: { emailVerified: new Date() }
-        //         });
-        //     }
-        //     return true;
-        // },
+        
         async session({ session, token }) {
 
             if (session.user) {
@@ -149,6 +131,19 @@ export const authOptions: NextAuthConfig = {
             }
         }
     },
+    useSecureCookies: process.env.NODE_ENV === "production",
+    cookies: {
+        sessionToken: {
+            name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token",
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            }
+        }
+    },
+    trustHost: true,
     secret: process.env.NEXTAUTH_SECRET
 }
 

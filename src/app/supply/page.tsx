@@ -16,6 +16,8 @@ export default async function SupplyPage({
   const session = await auth();
 
   if (!session) {
+    console.log("No session found, redirecting to login");
+
     redirect("/login");
   }
 
