@@ -33,6 +33,8 @@ model User {
   verificationTokens  VerificationToken[]
   passwordResetTokens PasswordResetToken[]
   accounts            Account[]
+  stockMovements      StockMovement[]
+  activityLogs        ActivityLog[]
 }
 
 model Account {
@@ -186,10 +188,11 @@ model Supplier {
   Customers       SupplierCustomer[]
   ActivityLog     ActivityLog[]
 
-  Sale          Sale[]
-  Category      Category[]
-  orders        Order[]
-  notifications Notification[]
+  Sale             Sale[]
+  Category         Category[]
+  orders           Order[]
+  notifications    Notification[]
+  supplierSettings SupplierSettings?
 }
 
 model SupplierCustomer {
@@ -228,6 +231,7 @@ model Service {
   notifications     Notification[]
   expenses          Expense[]
   expenseCategories ExpenseCategory[]
+  serviceSettings   ServiceSettings?
 
   @@unique([businessName, location])
 }
@@ -257,16 +261,16 @@ model ServiceStockItem {
 }
 
 model Sale {
-  id          String     @id @default(ulid())
-  timestamp   DateTime   @default(now())
+  id          String      @id @default(ulid())
+  timestamp   DateTime    @default(now())
   total       Float
-  cogs        Float      @default(0)
-  paymentType String
+  cogs        Float       @default(0)
+  paymentType PaymentType @default(CASH)
   supplierId  String?
   serviceId   String?
   SaleItem    SaleItem[]
-  Service     Service?   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  Supplier    Supplier?  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  Service     Service?    @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  Supplier    Supplier?   @relation(fields: [supplierId], references: [id], onDelete: Cascade)
 
   @@index([serviceId, timestamp])
 }
@@ -291,8 +295,8 @@ model Purchase {
   id           String         @id @default(ulid())
   timestamp    DateTime       @default(now())
   total        Float
-  sourceType   String         @default("DIRECT") // "DIRECT" | "ORDER"
-  paymentType  String
+  sourceType   SourceType     @default(DIRECT)
+  paymentType  PaymentType    @default(CASH)
   sourceId     String?
   PurchaseItem PurchaseItem[]
   Service      Service?       @relation(fields: [serviceId], references: [id])
@@ -327,7 +331,8 @@ model Order {
   notes              String?
   total              Float             @default(0)
   status             OrderStatus       @default(DRAFT)
-  paymentType        String
+  paymentType        PaymentType       @default(CASH)
+  stockProcessed     Boolean           @default(false)
   supplierCustomerId String?
   serviceId          String?
   supplierId         String
@@ -384,6 +389,7 @@ model DeliveryItem {
 
 model ActivityLog {
   id          String    @id @default(cuid())
+  userId      String?
   actionType  String
   entityType  String
   entityId    String?
@@ -395,6 +401,7 @@ model ActivityLog {
   timestamp   DateTime  @default(now())
   supplierId  String?
   serviceId   String?
+  user        User?     @relation(fields: [userId], references: [id])
   Service     Service?  @relation(fields: [serviceId], references: [id])
   Supplier    Supplier? @relation(fields: [supplierId], references: [id])
 
@@ -405,13 +412,17 @@ model ActivityLog {
 model StockMovement {
   id                 String            @id @default(cuid())
   itemId             String?
+  userId             String?
   stockItemId        String?
   serviceStockItemId String?
   changeType         StockChange
   quantity           Int
   referenceId        String?
   notes              String?
+  beforeQty          Int?
+  afterQty           Int?
   timestamp          DateTime          @default(now())
+  user               User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
   item               Item?             @relation(fields: [itemId], references: [id], onDelete: SetNull)
   stockItem          StockItem?        @relation(fields: [stockItemId], references: [id], onDelete: SetNull)
   serviceStockItem   ServiceStockItem? @relation(fields: [serviceStockItemId], references: [id], onDelete: SetNull)
@@ -510,7 +521,7 @@ model AuditLog {
 }
 
 model Notification {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   userId     String
   supplierId String?
   serviceId  String?
@@ -518,12 +529,57 @@ model Notification {
   title      String
   message    String
   link       String?
-  read       Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  read       Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  severity   String    @default("INFO")
+  user       User      @relation(fields: [userId], references: [id])
+  service    Service?  @relation(fields: [serviceId], references: [id])
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+}
 
-  user     User      @relation(fields: [userId], references: [id])
-  service  Service?  @relation(fields: [serviceId], references: [id])
-  supplier Supplier? @relation(fields: [supplierId], references: [id])
+model ServiceSettings {
+  id        String @id @default(cuid())
+  serviceId String @unique
+
+  currency           String  @default("MZN")
+  allowNegativeStock Boolean @default(false)
+  lowStockThreshold  Int     @default(5)
+
+  enableSales      Boolean @default(true)
+  enableOrders     Boolean @default(true)
+  enableDeliveries Boolean @default(true)
+
+  autoConfirmOrders    Boolean @default(false)
+  autoCompleteDelivery Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model SupplierSettings {
+  id         String @id @default(cuid())
+  supplierId String @unique
+
+  defaultPaymentType PaymentType @default(CASH)
+  allowPartialOrders Boolean     @default(false)
+  autoConfirmOrders  Boolean     @default(false)
+
+  leadTimeDays      Int? // expected delivery time
+  minimumOrderValue Float? // enforce supplier rules
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+}
+
+model SystemConfig {
+  key         String   @id
+  value       Json
+  description String?
+  updatedAt   DateTime @updatedAt
 }
 
 enum StockChange {
@@ -577,6 +633,11 @@ enum PaymentType {
   CREDIT
   DEBIT
   MOBILE_MONEY
+}
+
+enum SourceType {
+  DIRECT
+  ORDER
 }
 
 enum UserRole {
