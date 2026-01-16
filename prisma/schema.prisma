@@ -254,6 +254,7 @@ model ServiceStockItem {
   saleItems      SaleItem[]
   stockMovements StockMovement[]
   purchaseItems  PurchaseItem[]
+  stockSnapshots StockSnapshot[]
 
   @@unique([serviceId, stockItemId])
   @@index([serviceId, status])
@@ -428,6 +429,17 @@ model StockMovement {
   serviceStockItem   ServiceStockItem? @relation(fields: [serviceStockItemId], references: [id], onDelete: SetNull)
 }
 
+model StockSnapshot {
+  id                 String   @id @default(cuid())
+  serviceStockItemId String
+  quantity           Int
+  recordedAt         DateTime @default(now())
+
+  serviceStockItem ServiceStockItem @relation(fields: [serviceStockItemId], references: [id], onDelete: Cascade)
+
+  @@index([serviceStockItemId, recordedAt])
+}
+
 model PriceHistory {
   id          String   @id @default(cuid())
   itemId      String?
@@ -497,6 +509,8 @@ model Category {
   Item      Item[]
   StockItem StockItem[]
   createdAt DateTime    @default(now())
+
+  @@index([type])
 }
 
 model Unit {
@@ -521,7 +535,7 @@ model AuditLog {
 }
 
 model Notification {
-  id         String    @id @default(uuid())
+  id         String               @id @default(uuid())
   userId     String
   supplierId String?
   serviceId  String?
@@ -529,12 +543,12 @@ model Notification {
   title      String
   message    String
   link       String?
-  read       Boolean   @default(false)
-  createdAt  DateTime  @default(now())
-  severity   String    @default("INFO")
-  user       User      @relation(fields: [userId], references: [id])
-  service    Service?  @relation(fields: [serviceId], references: [id])
-  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  read       Boolean              @default(false)
+  createdAt  DateTime             @default(now())
+  severity   NotificationSeverity @default(INFO)
+  user       User                 @relation(fields: [userId], references: [id])
+  service    Service?             @relation(fields: [serviceId], references: [id])
+  supplier   Supplier?            @relation(fields: [supplierId], references: [id])
 }
 
 model ServiceSettings {
@@ -657,4 +671,10 @@ enum BusinessType {
 enum CategoryType {
   SUPPLIER
   SERVICE
+}
+
+enum NotificationSeverity {
+  INFO
+  WARNING
+  CRITICAL
 }
