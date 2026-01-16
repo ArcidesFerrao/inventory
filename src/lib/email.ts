@@ -51,7 +51,7 @@ export async function sendPasswordResetEmail(email: string, resetUrl: string) {
                         ${resetUrl}
                     </p>
                     <p style="color: #666;">This link will expire in 1 hour.</p>
-                    <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email.</p>
+                    <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email. ${email}</p>
                 </div>
             `
         });

@@ -134,7 +134,7 @@ export async function createPasswordResetToken(email: string) {
     }
 
     const token = generateSecureToken();
-    const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
     // Delete any existing tokens
     await db.passwordResetToken.deleteMany({

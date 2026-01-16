@@ -19,7 +19,7 @@ export default function LoginPage() {
         router.push("/service");
       } else if (session?.user.role === "SUPPLIER") {
         router.push("/supply");
-      } else if (session?.user.isAdmin) {
+      } else if (session?.user.isAdmin || session?.user.role === "USER") {
         router.push("/");
       }
     }
@@ -49,7 +49,7 @@ export default function LoginPage() {
       } else if (session?.user.role === "SUPPLIER") {
         setLoading(false);
         router.push("/supply");
-      } else if (session?.user.isAdmin) {
+      } else if (session?.user.isAdmin || session?.user.role === "USER") {
         setLoading(false);
         router.push("/");
       }
