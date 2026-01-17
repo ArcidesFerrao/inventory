@@ -58,7 +58,7 @@ type LogItem = {
   price?: number;
   // stockItem?: StockItem;
   name: string;
-  // orderedQty: number;
+  orderedQty: number;
   cost: number;
   quantity: number;
 };
@@ -87,12 +87,11 @@ export function ExportLogs({ logs }: { logs: LogWithItems[] }) {
                         .map(
                           (item) =>
                             `${item.name} - MZN ${item.cost || item.price} x ${
-                              item.quantity
+                              item.orderedQty || item.quantity
                             }`
                         )
                         .join("\n")
                     : "",
-                  // log.details ? JSON.stringify(log.details) : "",
                   new Date(log.timestamp).toLocaleDateString(),
                 ];
               }),

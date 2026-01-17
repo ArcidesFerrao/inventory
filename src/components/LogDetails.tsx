@@ -39,11 +39,11 @@ export const ArrivedDeliveryLogDetails = ({
 }) => {
   return (
     <div className="flex flex-col gap-1">
-      {/* <h4>Delivered At:</h4>
+      <h4>Delivered At:</h4>
       <p>
         {details.deliveredAt !== null &&
           details.deliveredAt.toLocaleDateString()}
-      </p> */}
+      </p>
     </div>
   );
 };
@@ -88,7 +88,7 @@ export const CreateOrderLogDetails = ({
           {details.items.map((item) => (
             <ul key={item.itemId} className="text-sm font-extralight">
               <li key={item.itemId}>
-                {item.name} - {item.orderedQty} x MZN {item.price}
+                {item.name} - MZN {item.price} x {item.orderedQty}
               </li>
             </ul>
           ))}
