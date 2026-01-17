@@ -416,7 +416,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         logActivity(
             serviceId,
             order.supplierId,
-            "DELIVERY_CONFIRMED",
+            "CONFIRMED",
             "Delivery",
             delivery.id,
             `Delivery marked as Completed`,
@@ -528,7 +528,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
         await logActivity(
             null,
             order.supplierId,
-            "DELIVERY_ARRIVED",
+            "ARRIVED",
             "Delivery",
             delivery.id,
             `Delivery marked as Arrived by Supplier`,

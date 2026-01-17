@@ -56,12 +56,12 @@ type ParsedSupplierDetails = {
 type LogItem = {
   id: string;
   price?: number;
-  // stockItem?: StockItem;
+  
   name: string;
   orderedQty: number;
   cost: number;
   quantity: number;
-};
+} & { stockItem: StockItem | null };
 
 type SupplierLogItem = DeliveryItem & { stockItem: StockItem | null };
 
@@ -86,7 +86,7 @@ export function ExportLogs({ logs }: { logs: LogWithItems[] }) {
                     ? parsedDetails.items
                         .map(
                           (item) =>
-                            `${item.name} - MZN ${item.cost || item.price} x ${
+                            `${item.stockItem?.name || item.name} - MZN ${item.cost || item.price} x ${
                               item.orderedQty || item.quantity
                             }`
                         )

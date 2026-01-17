@@ -5,7 +5,6 @@ import { logActivity } from "./logs";
 import { ServiceStockProduct } from "@/types/types";
 import { createAuditLog } from "./auditLogs";
 
-// export async function createPurchase(purchaseItems: { id: string; name: string; price: number | null;  quantity: number, }[], serviceId: string) {
 export async function createPurchase(purchaseItems: ServiceStockProduct[], serviceId: string) {
     // console.log(purchaseItems)
     if (purchaseItems.length === 0) return {success: false, message: "No purchase items"}
@@ -34,7 +33,6 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                     PurchaseItem: true,
                 },
             })
-
             await Promise.all(
                 purchaseItems.map((serviceStockItem) => 
                     tx.serviceStockItem.update({
@@ -45,60 +43,61 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                     })
                 )
             )
-
+            
+            
             return purchase
         })
 
         await logActivity(
-                    serviceId,
-                    null,
-                    "CREATE",
-                    "Purchase",
-                    result.id,
-                    `Purchase totaling MZN ${total.toFixed(2)}`,
-                    {
-                        total,
-                        stockItems: purchaseItems.map(i => ({
-                            id: i.id, 
-                            name: i.stockItem.name, 
-                            quantity: i.quantity, 
-                            price: i.price}))
-                    },
-                    null,
-                    'INFO',
-                    null
-                );
-
+            serviceId,
+            null,
+            "CREATE",
+            "Purchase",
+            result.id,
+            `Purchase totaling MZN ${total.toFixed(2)}`,
+            {
+                total,
+                stockItems: purchaseItems.map(i => ({
+                    id: i.id, 
+                    name: i.stockItem.name, 
+                    quantity: i.quantity, 
+                    price: i.price}))
+            },
+            null,
+            'INFO',
+            null
+        );
+            
         return { success: true, purchaseId:result.id};
 
     } catch (error) {
         console.error("Error creating purchase:", error);
         await logActivity(
-                    serviceId,
-                    null,
-                    "ERROR",
-                    "Purchase",
-                    null,
-                    `Error while creating purchase`,
-                    {
-                        
-                        error: error instanceof Error ? error.message : String(error),
-                    },
-                    null,
-                    'ERROR',
-                    null
-                )
-                await createAuditLog({
-                            action: "ERROR",
-                            entityType: "Purchase",
-                            entityId: serviceId,
-                            entityName: "Service",
-                            details: {
-                                metadata: {
-                                    error: (error as string).toString() || "Error creating purchase"
-                                }
-                            }
-                        });
+            serviceId,
+            null,
+            "ERROR",
+            "Purchase",
+            null,
+            `Error while creating purchase`,
+            {
+                
+                error: error instanceof Error ? error.message : String(error),
+            },
+            null,
+            'ERROR',
+            null
+        )
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Purchase",
+            entityId: serviceId,
+            entityName: "Service",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error creating purchase"
+                }
+            }
+        });
         return {success: false, message: "Failed to create purchase"}
 
     }
