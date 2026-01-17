@@ -286,6 +286,30 @@ export const ExportLogsPdf = ({ logs }: { logs: LogWithItems[] }) => {
 
 export function ExportSelection({ stockItems, purchases, sales, logs }: Props) {
   const [range, setRange] = useState<"today" | "weekly" | "all">("weekly");
+  const [selectedReport, setSelectedReport] = useState<
+    "stock" | "sales" | "purchases" | "logs"
+  >("stock");
+
+  const exportOptions = [
+    {
+      value: "purchases",
+      label: "Purchases Report",
+      description:
+        "Export all purchase orders, supplier transactions, and inventory restocking data.",
+    },
+    {
+      value: "stock",
+      label: "Stock Report",
+      description:
+        "Export current inventory levels, stock status, and product details.",
+    },
+    {
+      value: "logs",
+      label: "Activity Logs Report",
+      description:
+        "Export system activity logs, user actions, and transaction history.",
+    },
+  ];
 
   function filterByRange<T extends { timestamp: Date }>(data: T[]) {
     const now = new Date();
@@ -305,16 +329,10 @@ export function ExportSelection({ stockItems, purchases, sales, logs }: Props) {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <div className="export-header flex gap-4  justify-between">
-        <h4 className="font-medium text-nowrap">Export Data</h4>
-        <div className="flex flex-col gap-2">
-          <ExportStockPdf stockItem={stockItems} />
-          <ExportLogsPdf logs={logs} />
-        </div>
-      </div>
-      <div className="flex flex-col gap-4 ">
-        <div className="range-select flex gap-2 items-center justify-between">
-          <label htmlFor="range">Range:</label>
+      <h3 className="text-lg font-normal ">Data Export</h3>
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between">
+          <h4>Report Type</h4>
           <select
             name="range"
             className="rounded"
@@ -329,10 +347,35 @@ export function ExportSelection({ stockItems, purchases, sales, logs }: Props) {
             <option value="all">All Time</option>
           </select>
         </div>
+        <select
+          name="reportType"
+          id="reportType"
+          value={selectedReport}
+          onChange={(e) =>
+            setSelectedReport(
+              e.target.value as "stock" | "sales" | "purchases" | "logs"
+            )
+          }
+        >
+          <option value="stock">Stock Report</option>
+          <option value="sales">Sales Report</option>
+          <option value="purchases">Purchases Report</option>
+        </select>
+
+        <div></div>
+      </div>
+      {/* <div className="export-header flex gap-4  justify-between">
+        <h4 className="font-medium text-nowrap">Export Data</h4>
         <div className="flex flex-col gap-2">
+          <ExportStockPdf stockItem={stockItems} />
+          <ExportLogsPdf logs={logs} />
+        </div>
+      </div> */}
+      <div className="flex flex-col gap-4 ">
+        {/* <div className="flex flex-col gap-2">
           <ExportSalesPdf sales={filterByRange(sales)} />
           <ExportPurchasesPdf purchases={filterByRange(purchases)} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

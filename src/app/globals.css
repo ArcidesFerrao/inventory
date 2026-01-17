@@ -330,6 +330,17 @@ select {
   border: 1px solid var(--dash-bg);
 }
 
+.settings-note {
+  border: 1px solid var(--dash-bg);
+  border-radius: 0.3rem;
+  background-color: var(--input-bg);
+}
+
+.settings-section {
+  border: 1px solid var(--input-bg);
+  border-radius: 0.3rem;
+}
+
 /* input:read-only, */
 
 .complete-btn:disabled,

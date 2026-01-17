@@ -272,3 +272,5 @@ export type WhereClause = {
 export interface AuditLogTableProps {
   logs: AuditLog[]
 }
+
+
