@@ -5,6 +5,7 @@ import {
   Sale,
   ServiceStockItem,
   StockItem,
+  Unit,
 } from "@/generated/prisma/client";
 import { JsonValue } from "@prisma/client/runtime/client";
 import { jsPDF } from "jspdf";
@@ -186,9 +187,11 @@ export function ExportPurchases({
 };
 
 export function ExportStock({
+  serviceStockItems,
   stockItems,
 }: {
-  stockItems: (ServiceStockItem & { stockItem: StockItem })[];
+  stockItems?: (StockItem & { unit: Unit | null })[] 
+  serviceStockItems?: (ServiceStockItem & { stockItem: StockItem })[];
 }) {
   try {
     const doc = new jsPDF();
@@ -196,16 +199,31 @@ export function ExportStock({
     doc.setFontSize(16);
     doc.text("Stock Report", 14, 20);
 
-    autoTable(doc, {
-      startY: 30,
-      head: [["Item", "Quantity", "Cost (MZN)"]],
-      body: stockItems.map((s) => [
-        s.stockItem.name,
-        s.stock,
-        s.stockItem.price?.toFixed(2) || "0.00",
-      ]),
-    });
-    doc.save("stock_report.pdf");
+    if (serviceStockItems) {
+      
+      autoTable(doc, {
+        startY: 30,
+        head: [["Item", "Quantity", "Cost (MZN)"]],
+        body: serviceStockItems?.map((s) => [
+          s.stockItem?.name ,
+          s.stock,
+          s.stockItem.price?.toFixed(2) || "0.00",
+        ]),
+      });
+      doc.save("stock_report.pdf");
+    }
+    if (stockItems) {
+      autoTable(doc, {
+        startY: 30,
+        head: [["Item", "Quantity", "Cost (MZN)"]],
+        body: stockItems?.map((s) => [
+          s.name,
+          s.stock,
+          s.cost?.toFixed(2) || "0.00",
+        ]),
+      });
+      doc.save("stock_report.pdf");
+    }
   } catch (error) {
     console.error("Error exporting stock to PDF:", error);
   }

@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
-import SettingsManagement from "@/components/SettingsManagement";
-import ExportData from "@/components/ExportData";
+import { SettingsManagement } from "@/components/SettingsManagement";
+import { ExportData } from "@/components/ExportData";
 import { db } from "@/lib/db";
 
 export default async function SettingsPage() {

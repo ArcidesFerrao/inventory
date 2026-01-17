@@ -24,3 +24,23 @@ export async function saveSettingsAction({ serviceId, settings }: { serviceId: s
         return { success: false , error };
     }
 }
+export async function saveSupplierSettingsAction({ supplierId, settings }: { supplierId: string; settings: { minimumOrderValue: number } }) {
+
+
+    try {
+        await db.supplierSettings.upsert({
+            where: { supplierId },
+            update: {
+                minimumOrderValue: settings.minimumOrderValue
+            },
+            create: {
+                supplierId,
+                minimumOrderValue: settings.minimumOrderValue
+            }
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Error saving settings:", error);
+        return { success: false , error };
+    }
+}
