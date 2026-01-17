@@ -10,12 +10,12 @@ import {
   StockItem,
   Unit,
 } from "@/generated/prisma/client";
-import { JsonValue } from "@prisma/client/runtime/client";
 import {
   ExportLogs,
   ExportPurchases,
   ExportSales,
   ExportStock,
+  ExportSupplierLogs,
 } from "@/app/actions/exportData";
 
 type PurchaseWithItems = Purchase & {
@@ -40,13 +40,7 @@ type SaleWithItems = Sale & {
   }[];
 };
 
-type LogWithItems = ActivityLog & {
-  id: string;
-  actionType: string;
-  description: string;
-  timestamp: Date;
-  details: JsonValue;
-};
+type LogWithItems = ActivityLog;
 
 type Props = {
   serviceStockItems: (ServiceStockItem & { stockItem: StockItem })[];
@@ -257,7 +251,7 @@ export function SupplierSelectExport({
         // purchases: () =>
         // ExportPurchases({ purchases: filterByRange(purchases) }),
         sales: () => ExportSales({ sales: filterByRange(sales) }),
-        logs: () => ExportLogs({ logs: filterByRange(logs) }),
+        logs: () => ExportSupplierLogs({ logs: filterByRange(logs) }),
       };
 
       exportMap[selectedReport]();

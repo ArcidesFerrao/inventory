@@ -1,5 +1,6 @@
 import {
   ActivityLog,
+  DeliveryItem,
   Item,
   Purchase,
   Sale,
@@ -7,7 +8,6 @@ import {
   StockItem,
   Unit,
 } from "@/generated/prisma/client";
-import { JsonValue } from "@prisma/client/runtime/client";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -32,26 +32,38 @@ type SaleWithItems = Sale & {
     item: Item | null;
   }[];
 };
-
-type LogWithItems = ActivityLog & {
-  id: string;
-  actionType: string;
-  description: string;
-  timestamp: Date;
-  details: JsonValue;
+type SupplierSaleWithItems = Sale & {
+  SaleItem: {
+    id: string;
+    price: number;
+    quantity: number;
+    saleId: string;
+    stockItemId: string | null;
+    stockItem: StockItem | null;
+  }[];
 };
 
+type LogWithItems = ActivityLog;
+
 type ParsedDetails = {
-  total: number;
   items: LogItem[];
+  totalItems: number;
+};
+type ParsedSupplierDetails = {
+  items: SupplierLogItem[];
+  totalItems: number;
 };
 type LogItem = {
   id: string;
-  name: string;
-  quantity: number;
-  cost: number;
   price?: number;
+  // stockItem?: StockItem;
+  name: string;
+  // orderedQty: number;
+  cost: number;
+  quantity: number;
 };
+
+type SupplierLogItem = DeliveryItem & { stockItem: StockItem | null };
 
 
 export function ExportLogs({ logs }: { logs: LogWithItems[] }) {
@@ -227,4 +239,88 @@ export function ExportStock({
   } catch (error) {
     console.error("Error exporting stock to PDF:", error);
   }
+};
+
+
+
+
+export function ExportSupplierLogs({ logs }: { logs: LogWithItems[] }) {
+  
+    try {
+        const doc = new jsPDF();
+        
+            doc.setFontSize(16);
+            doc.text("Activity Logs Report", 14, 20);
+        
+            autoTable(doc, {
+              startY: 30,
+              head: [["Action", "Description", "Details", "Timestamp"]],
+              body: (logs ?? []).map((log) => {
+                const parsedDetails = log.details as ParsedSupplierDetails;
+                return [
+                  log.actionType,
+                  log.description,
+                  parsedDetails?.items
+                    ? parsedDetails.items
+                        .map(
+                          (item) =>
+                            `${item.stockItem?.name} - MZN ${item.stockItem?.price || 0} x ${item.quantity}`
+                        )
+                        .join("\n")
+                    : "",
+                  // log.details ? JSON.stringify(log.details) : "",
+                  new Date(log.timestamp).toLocaleDateString(),
+                ];
+              }),
+            });
+        
+            doc.save("logs_report.pdf");
+    } catch (error) {
+        console.error("Error exporting logs to PDF:", error);
+    }
+}
+
+
+export function ExportSupplierSales({ sales }: { sales: SupplierSaleWithItems[] }) {
+    try{
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text("Sales Report", 14, 20);
+
+        autoTable(doc, {
+        startY: 30,
+        head: [["Date", "Total Amount (MZN)", "Cost of Goods Sold (MZN)"]],
+        body: sales.map((sale) => [
+            new Date(sale.timestamp).toLocaleDateString(),
+            sale.total.toFixed(2),
+            sale.cogs.toFixed(2),
+        ]),
+        });
+
+        sales.forEach((sale) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const startY = (doc as any).lastAutoTable.finalY + 10;
+
+        doc.setFontSize(14);
+        doc.text(
+            `Items for sale on ${new Date(sale.timestamp).toLocaleDateString()}`,
+            14,
+            startY
+        );
+
+        autoTable(doc, {
+            startY: startY + 5,
+            head: [["Item", "Quantity", "Price (MZN)"]],
+            body: sale.SaleItem.map((i) => [
+            i.stockItem?.name || "Unknown",
+            i.quantity,
+            i.price.toFixed(2),
+            ]),
+        });
+        });
+        doc.save("sales_report.pdf");
+    } catch (error) {
+        console.error("Error exporting sales to PDF:", error);
+    }
 };
