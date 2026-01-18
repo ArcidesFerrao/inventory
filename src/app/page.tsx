@@ -7,9 +7,7 @@ export default async function Home() {
 
   return (
     <main className="home-dash flex flex-col items-center gap-4 py-10">
-      <h1 className="text-2xl font-semibold text-center">
-        Welcome to Contela Management
-      </h1>
+      <h1 className="text-2xl font-semibold text-center">Welcome to Contela</h1>
       {session?.user ? (
         <>
           <p className="font-extralight text-sm">
