@@ -39,6 +39,7 @@ export default function LoginPage() {
       if (res.error) {
         console.error(res.error);
       }
+
       setError(res?.error ?? "");
       setLoading(false);
     } else {
@@ -91,7 +92,7 @@ export default function LoginPage() {
       <input type="submit" value={loading ? "Signing in..." : "Sign In"} />
       {error && (
         <>
-          {error === "CredentialsSignin" ? (
+          {error === "Configuration" || error === "CredentialsSignin" ? (
             <p className="text-red-500">Invalid Password or Email.</p>
           ) : (
             <p>{error}</p>

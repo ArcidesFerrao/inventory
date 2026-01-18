@@ -102,7 +102,7 @@ export default async function OrderPage(props: { params: Params }) {
             <tr>
               <th>Item</th>
               <th>Qty</th>
-              <th>Total</th>
+              <th>Price</th>
             </tr>
           </thead>
           <tbody>
