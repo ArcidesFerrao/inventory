@@ -18,7 +18,7 @@
   --dash-bg: #4e475f70;
   /* --input-bg: rgba(32, 32, 32, 0.7); */
   --input-bg: #13111aa9;
-
+  --label-font: #c8c8f3;
   --font-family: var(--font-sansation-sans);
 }
 
@@ -187,8 +187,14 @@ body {
   .navigator {
     display: none;
   }
-  .dash-header h1 {
-    font-size: xx-large;
+  h1 {
+    font-size: var(--text-2xl);
+  }
+  h2 {
+    font-size: var(--text-xl);
+  }
+  h4 {
+    font-size: var(--text-base);
   }
   .sales-content,
   .menu-products {
@@ -278,6 +284,11 @@ table {
   border-radius: 0.5rem;
   overflow: hidden;
 }
+
+.label-text {
+  color: var(--label-font);
+}
+
 .dash-menu button,
 .login-button,
 .user-page button {

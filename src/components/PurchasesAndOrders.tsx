@@ -117,9 +117,9 @@ export default function PurchasesAndOrders({
             </div>
             <div>
               <p>Total Spent</p>
-              <h2 className="text-2xl font-semibold">
+              <h4 className="text-2xl font-semibold">
                 MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
-              </h2>
+              </h4>
             </div>
             <div>
               <p>Items Purchased</p>
@@ -146,13 +146,13 @@ export default function PurchasesAndOrders({
             </div>
             <div className="flex flex-col text-end">
               <p>Total Value</p>
-              <h2 className="text-2xl font-semibold">
+              <h4 className="text-2xl font-semibold">
                 MZN{" "}
                 {orders
                   .filter((so) => so.status !== "CANCELLED")
                   .reduce((acc, sale) => acc + sale.total, 0)}
                 .00
-              </h2>
+              </h4>
             </div>
           </div>
 

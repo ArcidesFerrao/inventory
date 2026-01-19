@@ -51,8 +51,8 @@ export const ItemsDeliveryComponent = (items: {
         ))}
       </ul>
       <div className="total-amount">
-        <h4>Delivery Total:</h4>
-        <h3>MZN 00.00</h3>
+        <h3>Delivery Total:</h3>
+        <h4>MZN 00.00</h4>
       </div>
     </div>
   );

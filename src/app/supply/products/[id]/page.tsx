@@ -69,11 +69,11 @@ export default async function ProductPage(props: { params: Params }) {
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-2">
             <p>Cost</p>
-            <h2 className="font-bold text-xl">{item?.cost?.toFixed(2)} MZN</h2>
+            <h4 className="font-bold text-xl">{item?.cost?.toFixed(2)} MZN</h4>
           </div>
           <div className="flex flex-col gap-2">
             <p>Price</p>
-            <h2 className="font-bold text-xl">{item?.price?.toFixed(2)} MZN</h2>
+            <h4 className="font-bold text-xl">{item?.price?.toFixed(2)} MZN</h4>
           </div>
         </div>
       </div>

@@ -37,29 +37,29 @@ export default async function SalesPage() {
       <div className="flex justify-between">
         <div className="total-sales-title flex flex-col gap-2">
           <p>Total Sales</p>
-          <h2 className="text-xl font-bold">{sales.length}</h2>
+          <h4 className="text-xl font-bold">{sales.length}</h4>
         </div>
         <div className="flex flex-col gap-2">
           <p>Revenue</p>
-          <h2 className="text-xl font-bold">
+          <h4 className="text-xl font-bold">
             MZN {sales.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
-          </h2>
+          </h4>
         </div>
         <div className="total-sales-title flex flex-col gap-2">
           <p>Cogs</p>
-          <h2 className="text-xl font-bold">
+          <h4 className="text-xl font-bold">
             MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0).toFixed(2)}
-          </h2>
+          </h4>
         </div>
         <div className="flex flex-col gap-2">
           <p>Gross Profit</p>
-          <h2 className="text-xl font-bold">
+          <h4 className="text-xl font-bold">
             MZN{" "}
             {(
               sales.reduce((acc, sale) => acc + sale.total, 0) -
               sales.reduce((acc, sale) => acc + sale.cogs, 0)
             ).toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
       {sales.length === 0 ? (

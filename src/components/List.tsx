@@ -45,7 +45,7 @@ ProductsStockProps) => {
         </Link>
       </div>
       <div className="flex flex-col items-end gap-1">
-        <h2 className="text-lg font-bold  text-nowrap">MZN {price},00</h2>
+        <h4 className="text-lg font-bold  text-nowrap">MZN {price},00</h4>
         <div className="flex gap-2">
           <p className="text-sm font-light">Stock: {stock}</p>
           {/* <p className="text-sm font-light">
@@ -65,7 +65,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
       </Link>
       {/* </div> */}
       {/* <div className="flex flex-col items-end gap-2"> */}
-      <h2 className="text-lg font-bold text-nowrap ">MZN {price},00</h2>
+      <h4 className="text-lg font-bold text-nowrap ">MZN {price},00</h4>
       {/* </div> */}
     </li>
   );
@@ -76,7 +76,7 @@ export const ListDrinkItem = ({ id, name, price }: ProductsProps) => {
       <Link href={`/service/products/${id}`}>
         <h4 className="text-md font-light hover:underline">{name}</h4>
       </Link>
-      <h2 className="text-md font-semibold  text-nowrap">MZN {price},00</h2>
+      <h4 className="text-md font-semibold  text-nowrap">MZN {price},00</h4>
     </li>
   );
 };
@@ -95,7 +95,7 @@ export const ListSupplierItem = ({
         <span className="text-sm font-light">Qty: {qty}</span>
       </div>
       <div className="supplier-item-details flex items-center gap-5">
-        <h2 className="text-xl font-bold  text-nowrap">MZN {price},00</h2>
+        <h4 className="text-xl font-bold  text-nowrap">MZN {price},00</h4>
         <div className="flex gap-2">
           <StockItemDeleteButton stockItemId={id} />
           <Link
@@ -155,9 +155,9 @@ export const PurchaseListItem = ({
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-bold text-nowrap">
+          <h4 className="text-lg font-bold text-nowrap">
             MZN {purchases.total.toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
       <table>
@@ -193,7 +193,7 @@ export const OrderListItem = ({
 }) => {
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
-    0
+    0,
   );
 
   return (
@@ -283,9 +283,9 @@ export const OrderListItem = ({
         </div>
         <div className="order-amount text-end py-2">
           <p className="text-sm ">Order Total</p>
-          <h2 className="text-lg font-semibold  text-nowrap">
+          <h4 className="text-lg font-semibold  text-nowrap">
             MZN {order.total.toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
     </li>
@@ -331,9 +331,9 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-bold  text-nowrap">
+          <h4 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
       <table>
@@ -386,9 +386,9 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-bold  text-nowrap">
+          <h4 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
     </li>
@@ -424,9 +424,9 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-bold  text-nowrap">
+          <h4 className="text-lg font-bold  text-nowrap">
             MZN {expense.amount.toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
     </li>
@@ -440,7 +440,7 @@ export const SupplierSaleListItem = ({
 }) => {
   const totalSoldItems = sale.SaleItem.reduce(
     (acc, item) => acc + item.quantity,
-    0
+    0,
   );
   return (
     <li
@@ -478,9 +478,9 @@ export const SupplierSaleListItem = ({
         </div>
         <div className="flex flex-col gap-2">
           <p>Total Amount</p>
-          <h2 className="text-lg font-bold  text-nowrap">
+          <h4 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
-          </h2>
+          </h4>
           <p className="text-sm font-light">Payment: {sale.paymentType}</p>
         </div>
       </div>
@@ -604,7 +604,7 @@ export const SupplierOrderListItem = ({
 }) => {
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
-    0
+    0,
   );
   const delivery = order?.delivery;
   // console.log(delivery);
@@ -682,9 +682,9 @@ export const SupplierOrderListItem = ({
         </div>
         <div className="order-amount text-end">
           <p className="text-sm ">Order Total</p>
-          <h2 className="text-lg font-bold  text-nowrap">
+          <h4 className="text-lg font-bold  text-nowrap">
             MZN {order?.total.toFixed(2)}
-          </h2>
+          </h4>
         </div>
       </div>
     </li>

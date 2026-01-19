@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { HomeNavLink, NavLink } from "./NavLink";
 import { NotificationBell } from "./Bell";
+import { LogOutButton } from "./LogOutButton";
 
 export const MenuButton = ({
   userId,
@@ -151,10 +152,7 @@ export const MenuButton = ({
               </ul>
             )}
           </div>
-
-          <Link href="/signout">
-            <p className="p-4 underline ">Sign Out</p>
-          </Link>
+          <LogOutButton />
         </section>
       )}
     </div>

@@ -19,7 +19,7 @@ export default async function ExpensePage(props: { params: Params }) {
       <div className="flex flex-col gap-2 w-fit">
         <div className="flex flex-col gap-2">
           <p>Amount</p>
-          <h2 className="font-bold text-xl">{item?.amount.toFixed(2)} MZN</h2>
+          <h4 className="font-bold text-xl">{item?.amount.toFixed(2)} MZN</h4>
         </div>
       </div>
       <div className="flex justify-between gap-4 w-full">

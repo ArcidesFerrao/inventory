@@ -83,12 +83,12 @@ export default async function ItemPage(props: { params: Params }) {
         <div className="flex flex-col gap-2 w-fit">
           <div className="flex flex-col gap-2">
             <p>Type</p>
-            <h2 className="font-bold text-xl">{item?.type}</h2>
+            <h4 className="font-bold text-xl">{item?.type}</h4>
           </div>
 
           <div className="flex flex-col gap-2">
             <p>Price</p>
-            <h2 className="font-bold text-xl">{item?.price?.toFixed(2)} MZN</h2>
+            <h4 className="font-bold text-xl">{item?.price?.toFixed(2)} MZN</h4>
           </div>
         </div>
       </div>

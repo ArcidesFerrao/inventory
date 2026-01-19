@@ -16,7 +16,7 @@ export default function OrdersAndSales({
   const pendingOrders = orders.filter((order) => order.status === "DRAFT");
   const approvedOrders = orders.filter((order) => order.status === "SUBMITTED");
   const deliveredOrders = orders.filter(
-    (order) => order.status === "DELIVERED"
+    (order) => order.status === "DELIVERED",
   );
 
   // const totalOrderedItems = supplierOrders.reduce((acc, supplierOrder) => {
@@ -70,13 +70,13 @@ export default function OrdersAndSales({
             </div>
             <div className="flex flex-col text-end gap-1">
               <p>Total Value</p>
-              <h2 className="text-xl font-bold">
+              <h4 className="text-xl font-bold">
                 MZN{" "}
                 {orders
                   .filter((so) => so.status !== "CANCELLED")
                   .reduce((acc, order) => acc + (order.total ?? 0), 0)}
                 .00
-              </h2>
+              </h4>
             </div>
           </div>
           {orders.length === 0 ? (
@@ -99,18 +99,18 @@ export default function OrdersAndSales({
             </div>
             <div className="flex flex-col gap-1">
               <p>Revenue</p>
-              <h2 className="text-xl font-bold">
+              <h4 className="text-xl font-bold">
                 MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
-              </h2>
+              </h4>
             </div>
             <div className="flex flex-col gap-1">
               <p>Gross Profit</p>
-              <h2 className="text-xl font-bold">
+              <h4 className="text-xl font-bold">
                 MZN{" "}
                 {sales.reduce((acc, sale) => acc + sale.total, 0) -
                   sales.reduce((acc, sale) => acc + sale.cogs, 0)}
                 .00
-              </h2>
+              </h4>
             </div>
           </div>
           {sales.length === 0 ? (

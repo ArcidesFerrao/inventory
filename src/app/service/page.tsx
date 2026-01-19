@@ -17,28 +17,28 @@ function DashboardSkeleton() {
           <h2 className="text-2xl font-bold underline">Cash Flow</h2>
           <div className="flex flex-col cash-stats-container gap-2">
             <div>
-              <h3 className="text-lg font-normal">Revenue</h3>
+              <h3 className="label-text text-lg font-normal">Revenue</h3>
               <h4 className="flex gap-2 items-center text-lg py-1 whitespace-nowrap font-bold">
                 MZN
                 <span className="eos-icons--three-dots-loading"></span>
               </h4>
             </div>
             <div>
-              <h3 className="text-lg font-normal">Purchases</h3>
+              <h3 className="label-text text-lg font-normal">Purchases</h3>
               <h4 className="flex gap-2 items-center text-lg py-1 whitespace-nowrap font-bold">
                 MZN
                 <span className="eos-icons--three-dots-loading"></span>
               </h4>
             </div>
             <div>
-              <h3 className="text-lg font-normal">Expenses</h3>
+              <h3 className="label-text text-lg font-normal">Expenses</h3>
               <h4 className="flex gap-2 items-center text-lg py-1 whitespace-nowrap font-bold">
                 MZN
                 <span className="eos-icons--three-dots-loading"></span>
               </h4>
             </div>
             <div>
-              <h3 className="text-lg font-normal">Net Position</h3>
+              <h3 className="label-text text-lg font-normal">Net Position</h3>
               <h4
                 className={`flex gap-2 items-center text-lg py-1 whitespace-nowrap font-bold`}
               >

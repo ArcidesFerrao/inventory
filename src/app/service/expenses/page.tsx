@@ -75,7 +75,7 @@ export default async function ExpensesPage({
 
   const totalAmount = filteredExpenses.reduce(
     (acc, exp) => acc + exp.amount,
-    0
+    0,
   );
   const averageExpense =
     filteredExpenses.length > 0 ? totalAmount / filteredExpenses.length : 0;
@@ -97,15 +97,15 @@ export default async function ExpensesPage({
       <div className="total-expense-info flex justify-between py-2">
         <div className="total-expense-title flex flex-col gap-2">
           <p>Expenses</p>
-          <h2 className="text-xl font-bold">{filteredExpenses.length}</h2>
+          <h4 className="text-xl font-bold">{filteredExpenses.length}</h4>
         </div>
         <div className="total-expense-title flex flex-col gap-2">
           <p>Total Spent</p>
-          <h2 className="text-xl font-bold">MZN {totalAmount.toFixed(2)}</h2>
+          <h4 className="text-xl font-bold">MZN {totalAmount.toFixed(2)}</h4>
         </div>
         <div className="total-expense-title flex flex-col gap-2">
           <p>Average Expense</p>
-          <h2 className="text-xl font-bold">MZN {averageExpense.toFixed(2)}</h2>
+          <h4 className="text-xl font-bold">MZN {averageExpense.toFixed(2)}</h4>
         </div>
       </div>
       <ExpenseFilters
