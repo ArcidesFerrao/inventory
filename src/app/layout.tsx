@@ -76,6 +76,7 @@ export default function RootLayout({
           <Footer />
         </ProviderWrapper>
       </body>
+      <link rel="manifest" href="/manifest.json" />
     </html>
   );
 }

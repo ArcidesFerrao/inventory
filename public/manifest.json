@@ -1,0 +1,20 @@
+{
+  "name": "Contela",
+  "short_name": "Contela",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F5FA",
+  "theme_color": "#F4F5FA",
+  "icons": [
+    {
+      "src": "/assets/evolure-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/evolure-icon-b.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

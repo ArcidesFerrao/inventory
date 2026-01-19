@@ -12,6 +12,7 @@ export default function AdminSettings({
   units: Unit[];
   categories: Category[];
 }) {
+  // const [view, setView] = useState<"Configuration" | "Settings">(    "Configuration",  );
   const [unitModalOpen, setUnitModalOpen] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 

@@ -34,7 +34,7 @@ export default async function ProductsPage({
   });
 
   const lowStockItems = items.filter(
-    (item) => (item.stock || item.stock == 0) && item.stock < 10
+    (item) => (item.stock || item.stock == 0) && item.stock < 10,
   );
 
   return (
@@ -77,7 +77,7 @@ export default async function ProductsPage({
   );
 }
 
-export const ViewList = ({
+const ViewList = ({
   items,
 }: {
   items: {
@@ -111,7 +111,7 @@ export const ViewList = ({
           name: string;
         } | null;
       }[]
-    >
+    >,
   );
 
   const categories = Object.keys(itemsByCategory);
