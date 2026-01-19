@@ -1,5 +1,6 @@
 'use server'
 
+import { Prisma, ProfileStatus } from "@/generated/prisma";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { itemSchema, stockItemSchema } from "@/schemas/schema";
@@ -25,8 +26,13 @@ export async function createItem(prevState: unknown, formData: FormData) {
 
         // console.log(activeCatalogItems)
 
-        await db.item.create({
-            data: {
+        await db.$transaction(async (tx) => {
+
+            await assertCanAddProduct(tx, values.serviceId, undefined);
+
+            
+            await tx.item.create({
+                data: {
                 name: values.name,
                 description: values.description,
                 price: values.price,
@@ -46,6 +52,7 @@ export async function createItem(prevState: unknown, formData: FormData) {
                 }
             }
         });
+    })
 
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
@@ -296,3 +303,94 @@ export async function getStockItemsNames(q: string) {
   }
 }
 
+type ProductLimits = Record<ProfileStatus, number>;
+
+export async function getProductLimits() : Promise<ProductLimits> {
+    const config = await db.systemConfig.findUnique({
+        where: {
+            key: "product_limits_by_profile_status"
+        }
+    })
+
+    if (!config) {
+        throw new Error("SYSTEM_CONFIG_MISSING: product limits")
+    }
+
+    return config.value as ProductLimits
+}
+
+export async function assertCanAddProduct(
+    tx: Prisma.TransactionClient,
+    serviceId?: string,
+    supplierId?: string
+) {
+
+    const service = await tx.service.findUnique({
+        where: {
+            id: serviceId
+        },
+        include: {
+            user: {
+                select: {
+                    profileStatus: true,
+                    role: true
+                }
+            }
+        }
+    })
+    const supplier = await tx.supplier.findUnique({
+        where: {
+            id: supplierId
+        },
+        include: {
+            user: {
+                select: {
+                    profileStatus: true,
+                    role: true
+                }
+            }
+        }
+    })
+
+    if (!service || !supplier) throw new Error("USER_NOT_FOUND")
+    if (service.user.role === "ADMIN" || supplier.user.role === "ADMIN") return
+
+    const limits = await getProductLimits()
+    if (service) {
+        const limit = limits[service.user.profileStatus]
+        if (limit === -1) return
+    
+        if (limit === 0) {
+            throw new Error("PRODUCT_CREATION_NOT_ALLOWED")
+        }
+    
+        const count = await tx.item.count({
+            where: {
+                serviceId
+            }
+        })
+    
+        if (count >= limit) {
+            throw new Error("PRODUCT_LIMIT_EXCEEDED")
+        }
+    } 
+
+    if (supplier) {
+        const limit = limits[supplier.user.profileStatus]
+        if (limit === -1) return
+        if (limit === 0) {
+            throw new Error("PRODUCT_CREATION_NOT_ALLOWED")
+        }
+
+        const count = await tx.stockItem.count({
+            where: {
+                supplierId
+            }
+        })
+        if (count >= limit) {
+            throw new Error("PRODUCT_LIMIT_EXCEEDED")
+        }
+
+    }
+
+}
