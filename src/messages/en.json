@@ -1,0 +1,68 @@
+{
+    "Admin": {
+        "title": "Admin Dashboard"
+
+    },
+    "Common": {
+        "users": "Users",
+        "items": "Items",
+        "orders": "Orders",
+        "sales": "Sales",
+        "logs": "Logs",
+        "settings": "Settings",
+        "signIn": "Sign In",
+        "signOut": "Sign Out",
+        "export": "Export",
+        "admin": "Administrator",
+        "services": "Services",
+        "suppliers": "Suppliers",
+        "fullName": "Full Name",
+        "emailAddress": "Email Address",
+        "phoneNumber": "Phone Number",
+        "memberSince": "Member Since",
+        "lastUpdated": "Last Updated",
+        "security": "Security",
+        "personalInformation": "Personal Information",
+        "underConstruction": "Under Construction",
+        "backTo": "Back to",
+        "notifications": "Notifications",
+        "footer": "Contela Platform by Evolure Labs",
+        "usersList": "Users List",
+        "ordersList": "Orders List",
+        "SalesList": "Sales List",
+        "role": "Role",
+        "status": "Status",
+        "createdAt": "Created At",
+        "from": "From",
+        "unit": "Unit",
+        "category": "Category",
+        "agent": "Agent",
+        "total": "Total",
+        "action": "Action",
+        "type": "Type",
+        "entity": "Entity",
+        "details": "Details",
+        "timestamp": "Timestamp",
+        "viewDetail": "View Detail",
+        "search": "Search",
+        "deliveredOrders": "Delivered Orders",
+        "confirmedOrders": "Confirmed Orders",
+        "cancelledOrders": "Cancelled Orders",
+        "create": "Create",
+        "description": "Description",
+        "name": "Name",
+        "cancel": "Cancel",
+        "close": "Close",
+        "verify": "Verify",
+        "detail": "Detail",
+        "sold": "Sold",
+        "soldItems": "Sold Items",
+        "by": "by",
+        "totalAmount": "Total Amount"
+
+
+
+
+
+    }
+}
