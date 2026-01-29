@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createOrder } from "@/app/actions/orders";
+import { createOrder } from "@/lib/actions/orders";
 import toast from "react-hot-toast";
 import { SupplierStockItems } from "@/types/types";
 
@@ -23,7 +23,7 @@ export const OrdersList = ({
   const [listError, setListError] = useState<string | null>(null);
 
   const [items, setItems] = useState(
-    initialItems.map((p) => ({ ...p, quantity: 0 }))
+    initialItems.map((p) => ({ ...p, quantity: 0 })),
   );
 
   const handleCompleteOrder = async () => {
@@ -47,7 +47,7 @@ export const OrdersList = ({
       serviceId,
       supplierId,
       startDate,
-      endDate
+      endDate,
     );
 
     if (result.error || !result.success) {
@@ -69,8 +69,8 @@ export const OrdersList = ({
   const handleIncrement = (id: string) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
     );
   };
 
@@ -79,8 +79,8 @@ export const OrdersList = ({
       prevItems.map((item) =>
         item.id === id && item.quantity > 0
           ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
 

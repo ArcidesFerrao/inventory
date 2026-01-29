@@ -1,6 +1,6 @@
 "use client";
 
-import { createPurchase } from "@/app/actions/purchase";
+import { createPurchase } from "@/lib/actions/purchase";
 import { PurchasesProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,7 +18,7 @@ export const PurchasesList = ({
     setLoading(true);
     // console.log("creating purchase");
     const purchaseItems = items.filter(
-      (item) => item.quantity > 0 && (item.price ?? 0) > 0
+      (item) => item.quantity > 0 && (item.price ?? 0) > 0,
     );
     if (purchaseItems.length === 0) {
       toast.error("Add at least one item with a valid price.");
@@ -48,8 +48,8 @@ export const PurchasesList = ({
       prevItems.map((serviceStockItem) =>
         serviceStockItem.id === id
           ? { ...serviceStockItem, quantity: serviceStockItem.quantity + 1 }
-          : serviceStockItem
-      )
+          : serviceStockItem,
+      ),
     );
   };
 
@@ -58,8 +58,8 @@ export const PurchasesList = ({
       prevItems.map((serviceStockItem) =>
         serviceStockItem.id === id && serviceStockItem.quantity > 0
           ? { ...serviceStockItem, quantity: serviceStockItem.quantity - 1 }
-          : serviceStockItem
-      )
+          : serviceStockItem,
+      ),
     );
   };
 
@@ -94,8 +94,8 @@ export const PurchasesList = ({
                           prev.map((p) =>
                             p.id === item.id
                               ? { ...p, price: parseFloat(e.target.value) || 0 }
-                              : p
-                          )
+                              : p,
+                          ),
                         )
                       }
                     />

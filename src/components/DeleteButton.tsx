@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import ConfirmDialog from "./ConfirmDialog";
-import { deleteStockItem } from "@/app/actions/product";
+import { deleteStockItem } from "@/lib/actions/product";
 import { useRouter } from "next/navigation";
 
 export const StockItemDeleteButton = ({

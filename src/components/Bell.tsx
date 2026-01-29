@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-export const NotificationBell = () => {
+export const NotificationBell = ({ locale }: { locale: string }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export const NotificationBell = () => {
 
   return (
     <Link
-      href="/notifications"
+      href={`/${locale}/notifications"`}
       className="relative opacity-70 hover:opacity-100 "
     >
       <svg

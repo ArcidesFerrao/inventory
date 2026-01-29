@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ListItem, ListStockItem } from "./List";
 import { ServiceStockItem, StockItem } from "@/generated/prisma";
+import { useLocale } from "@/lib/useLocale";
 
 export default function MenuAndStock({
   businessType,
@@ -21,6 +22,8 @@ export default function MenuAndStock({
     };
   })[];
 }) {
+  const locale = useLocale();
+
   const [view, setView] = useState<"list" | "stock">("list");
 
   return (
@@ -37,8 +40,8 @@ export default function MenuAndStock({
             {businessType === "SHOP"
               ? "Services"
               : businessType === "STORE"
-              ? "Items"
-              : "Menu"}
+                ? "Items"
+                : "Menu"}
           </button>
           <button
             className={` flex items-center gap-2 px-4 py-2 text-xl ${
@@ -52,7 +55,9 @@ export default function MenuAndStock({
         <div className="flex gap-2 items-center">
           <Link
             href={
-              view === "list" ? "/service/products/new" : "/service/stock/new"
+              view === "list"
+                ? `/${locale}/service/products/new`
+                : `/${locale}/service/stock/new"`
             }
             className="add-product flex gap-1"
           >
@@ -109,15 +114,18 @@ export default function MenuAndStock({
 }
 
 export const ViewList = ({ items }: { items: ItemWithCategory[] }) => {
-  const itemsByCategory = items.reduce((acc, item) => {
-    const categoryName = item.category?.name || "";
-    if (!acc[categoryName]) {
-      acc[categoryName] = [];
-    }
+  const itemsByCategory = items.reduce(
+    (acc, item) => {
+      const categoryName = item.category?.name || "";
+      if (!acc[categoryName]) {
+        acc[categoryName] = [];
+      }
 
-    acc[categoryName].push(item);
-    return acc;
-  }, {} as Record<string, ItemWithCategory[]>);
+      acc[categoryName].push(item);
+      return acc;
+    },
+    {} as Record<string, ItemWithCategory[]>,
+  );
 
   const categories = Object.keys(itemsByCategory);
   const hasCategories =

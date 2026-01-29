@@ -1,6 +1,6 @@
 "use client";
 
-import { createSale } from "@/app/actions/sales";
+import { createSale } from "@/lib/actions/sales";
 import { SaleProductsProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,7 +11,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
   const [loading, setLoading] = useState(false);
 
   const [items, setItems] = useState(
-    initialItems.map((p) => ({ ...p, quantity: 0 }))
+    initialItems.map((p) => ({ ...p, quantity: 0 })),
   );
 
   const handleCompleteSale = async () => {
@@ -54,8 +54,8 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
 
       setItems((prevItems) =>
         prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        )
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+        ),
       );
       return;
     }
@@ -73,7 +73,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
         toast.error(
           `Not enough ${
             recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
-          } to make another ${item.name}`
+          } to make another ${item.name}`,
         );
         return;
       }
@@ -81,8 +81,8 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
 
     setItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
     );
   };
 
@@ -128,8 +128,8 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
       prevItems.map((item) =>
         item.id === id && item.quantity > 0
           ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
 

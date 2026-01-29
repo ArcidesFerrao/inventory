@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/useLocale";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ReactNode } from "react";
@@ -12,9 +13,9 @@ type NavLinkProps = {
 
 export const NavLink = ({ href, icon, label }: NavLinkProps) => {
   const pathname = usePathname();
-  // const isActive = pathname === href;
-  const isActivated = pathname.startsWith(href) && href !== "/";
+  const locale = useLocale();
 
+  const isActivated = pathname.startsWith(href) && href !== `/${locale}`;
   return (
     <Link
       href={href}
@@ -30,7 +31,6 @@ export const NavLink = ({ href, icon, label }: NavLinkProps) => {
 export const HomeNavLink = ({ href, icon, label }: NavLinkProps) => {
   const pathname = usePathname();
   const isActive = pathname === href;
-  // const isActivated = pathname.startsWith(href) && href !== "/";
 
   return (
     <Link

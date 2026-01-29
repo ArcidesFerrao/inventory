@@ -1,7 +1,7 @@
 "use client";
 
-import { rateDelivery } from "@/app/actions/deliveries";
-import { acceptOrder, denyOrder } from "@/app/actions/orders";
+import { rateDelivery } from "@/lib/actions/deliveries";
+import { acceptOrder, denyOrder } from "@/lib/actions/orders";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -24,7 +24,7 @@ export const AcceptButton = ({
     }
     if (!acceptedOrder?.success) {
       toast.error(
-        acceptedOrder?.error || "There was an error accepting the order"
+        acceptedOrder?.error || "There was an error accepting the order",
       );
     }
     setLoading(false);

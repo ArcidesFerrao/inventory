@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import "./icons.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import ProviderWrapper from "@/components/ProviderWrapper";
-import { Toaster } from "react-hot-toast";
+
 import localFont from "next/font/local";
 
 const sansationSans = localFont({
@@ -45,14 +40,6 @@ const sansationSans = localFont({
   fallback: ["sans-serif"],
 });
 
-// Sansation({
-//   variable: "--font-sansation-sans",
-//   subsets: ["latin"],
-//   weight: ["300", "400", "700"],
-//   display: "swap",
-//   fallback: ["sans-serif"],
-// });
-
 export const metadata: Metadata = {
   title: "Contela",
   description: "Manage Stock Efficiently",
@@ -63,20 +50,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${sansationSans.variable}  antialiased`}>
-        <ProviderWrapper>
-          <Header />
-          <Toaster position="top-right" />
-          {children}
-          <Footer />
-        </ProviderWrapper>
-      </body>
-      <link rel="manifest" href="/manifest.json" />
+    <html lang="pt-MZ" className={`${sansationSans.variable}  antialiased`}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

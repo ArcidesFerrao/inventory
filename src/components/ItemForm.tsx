@@ -1,13 +1,13 @@
 "use client";
 
-import { getServiceCategories } from "@/app/actions/categories";
-import { getServiceStockItems } from "@/app/actions/items";
+import { getServiceCategories } from "@/lib/actions/categories";
+import { getServiceStockItems } from "@/lib/actions/items";
 import {
   createItem,
   editItem,
   getStockItemsNames,
-} from "@/app/actions/product";
-import { getUnits } from "@/app/actions/units";
+} from "@/lib/actions/product";
+import { getUnits } from "@/lib/actions/units";
 import { ServiceStockItem, StockItem } from "@/generated/prisma/client";
 import { itemSchema } from "@/schemas/schema";
 import { ItemWithUnit } from "@/types/types";
@@ -40,7 +40,7 @@ export const ItemForm = ({
   const [type, setType] = useState(item ? item.type : "SERVICE");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    []
+    [],
   );
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
@@ -51,7 +51,7 @@ export const ItemForm = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [name, setName] = useState(item?.name || "");
   const [unitId, setUnitId] = useState(
-    units.find((u) => u.name === "unit")?.id
+    units.find((u) => u.name === "unit")?.id,
   );
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export const ItemForm = ({
         serviceStockItems.map((p) => ({
           ...p,
           unitQty: 0,
-        }))
+        })),
       );
     };
 
@@ -87,7 +87,7 @@ export const ItemForm = ({
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
-        item ? "Item edited successfully!" : "Item created successfully!"
+        item ? "Item edited successfully!" : "Item created successfully!",
       );
       router.push("/service/products");
     }
@@ -309,8 +309,8 @@ export const ItemForm = ({
                                 ...ri,
                                 unitQty: newQuantity,
                               }
-                            : ri
-                        )
+                            : ri,
+                        ),
                       );
                     }}
                   />

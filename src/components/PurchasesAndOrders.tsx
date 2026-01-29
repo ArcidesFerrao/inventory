@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { OrderListItem, PurchaseListItem } from "./List";
 import { Order, OrderItem } from "@/generated/prisma/client";
+import { useLocale } from "@/lib/useLocale";
 
 export default function PurchasesAndOrders({
   purchases,
@@ -15,6 +16,8 @@ export default function PurchasesAndOrders({
     orderItems: OrderItem[];
   })[];
 }) {
+  const locale = useLocale();
+
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
     | "ALL"
@@ -87,7 +90,7 @@ export default function PurchasesAndOrders({
         <div className="flex gap-2 items-center">
           {view === "orders" && (
             <Link
-              href="/service/purchases/orders/new"
+              href={`/${locale}/service/purchases/orders/new`}
               className="add-product flex gap-1"
             >
               <span className="text-md px-2 flex items-center gap-2">
@@ -97,7 +100,7 @@ export default function PurchasesAndOrders({
           )}
           {view === "purchases" && (
             <Link
-              href="/service/purchases/new"
+              href={`/${locale}/service/purchases/new`}
               className="add-product purchase-btn flex gap-1"
             >
               <span className="text-md px-2 flex items-center gap-2">

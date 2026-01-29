@@ -1,6 +1,6 @@
 "use client";
 
-import { createExpense } from "@/app/actions/expenses";
+import { createExpense } from "@/lib/actions/expenses";
 import { expenseSchema } from "@/schemas/schema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
@@ -44,7 +44,7 @@ export default function ExpenseForm({
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
 

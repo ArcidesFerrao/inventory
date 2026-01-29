@@ -16,7 +16,7 @@ import {
   ExportSales,
   ExportStock,
   ExportSupplierLogs,
-} from "@/app/actions/exportData";
+} from "@/lib/actions/exportData";
 
 type PurchaseWithItems = Purchase & {
   PurchaseItem: {

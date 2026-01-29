@@ -1,6 +1,6 @@
 "use client";
 
-import { registerService, registerSupplier } from "@/app/actions/register";
+import { registerService, registerSupplier } from "@/lib/actions/register";
 import { BusinessType } from "@/generated/prisma";
 import { serviceSchema, supplierSchema } from "@/schemas/roleSchema";
 import { useForm } from "@conform-to/react";
@@ -187,7 +187,7 @@ export const ServiceRegisterForm = () => {
 export const SupplierRegisterForm = () => {
   const [state, action, isPending] = useActionState(
     registerSupplier,
-    undefined
+    undefined,
   );
   const [form, fields] = useForm({
     onValidate({ formData }) {

@@ -5,7 +5,7 @@ import { ToggleSwitch } from "./ToggleSwitch";
 import {
   saveSettingsAction,
   saveSupplierSettingsAction,
-} from "@/app/actions/settings";
+} from "@/lib/actions/settings";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { markAllAsRead } from "@/app/actions/notifications";
+import { markAllAsRead } from "@/lib/actions/notifications";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 

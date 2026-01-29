@@ -3,15 +3,15 @@
 import {
   getServiceCategories,
   getSupplierCategories,
-} from "@/app/actions/categories";
+} from "@/lib/actions/categories";
 import {
   createItem,
   createStockItem,
   editStockItem,
   getStockItemsNames,
-} from "@/app/actions/product";
-import { editItem } from "@/app/actions/product";
-import { getUnits } from "@/app/actions/units";
+} from "@/lib/actions/product";
+import { editItem } from "@/lib/actions/product";
+import { getUnits } from "@/lib/actions/units";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ import {
   createServiceStockItem,
   editServiceStockItem,
   getServiceStockItems,
-} from "@/app/actions/items";
+} from "@/lib/actions/items";
 
 type StockItemWithUnit = StockItem & {
   Unit: {
@@ -99,7 +99,7 @@ export const ProductForm = ({
   const [type, setType] = useState(item ? item.type : "SERVICE");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    []
+    [],
   );
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
@@ -133,7 +133,7 @@ export const ProductForm = ({
         serviceStockItems.map((p) => ({
           ...p,
           unitQty: 0,
-        }))
+        })),
       );
     };
 
@@ -143,7 +143,7 @@ export const ProductForm = ({
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
-        item ? "Item edited successfully!" : "Item created successfully!"
+        item ? "Item edited successfully!" : "Item created successfully!",
       );
       router.push("/service/products");
     }
@@ -383,8 +383,8 @@ export const ProductForm = ({
                                 ...ri,
                                 unitQty: newQuantity,
                               }
-                            : ri
-                        )
+                            : ri,
+                        ),
                       );
                     }}
                   />
@@ -475,7 +475,7 @@ export const SupplierProductForm = ({
     const fetchSuggestions = async () => {
       const results = await getStockItemsNames(name);
       const filtered = results.filter(
-        (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim()
+        (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim(),
       );
       setSuggestions(filtered);
     };
@@ -495,7 +495,7 @@ export const SupplierProductForm = ({
       toast.success(
         stockItem
           ? "Stock Item edited successfully!"
-          : "Stock Item created successfully!"
+          : "Stock Item created successfully!",
       );
       router.push("/supply/products");
     }
@@ -734,7 +734,7 @@ export const ServiceStockItemForm = ({
     const fetchSuggestions = async () => {
       const results = await getStockItemsNames(name);
       const filtered = results.filter(
-        (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim()
+        (r) => r.toLowerCase().trim() !== name.toLocaleLowerCase().trim(),
       );
       setSuggestions(filtered);
     };
@@ -754,7 +754,7 @@ export const ServiceStockItemForm = ({
       toast.success(
         stockItem
           ? "Stock Item edited successfully!"
-          : "Stock Item created successfully!"
+          : "Stock Item created successfully!",
       );
       router.push("/service/products");
     }

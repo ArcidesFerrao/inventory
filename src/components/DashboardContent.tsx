@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import DateFilter from "@/components/DateFilter";
 import { CashFlowChart } from "@/components/CashFlowChart";
 import { RecentActivity } from "@/components/RecentActivity";
-import { getServiceDashBoardStats } from "@/app/actions/dashboardStats";
+import { getServiceDashBoardStats } from "@/lib/actions/dashboardStats";
 
 type SearchParams = {
   period?: "daily" | "weekly" | "monthly";

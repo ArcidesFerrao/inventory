@@ -1,5 +1,5 @@
 // import { StockChange } from "@/generated/prisma/enums";
-import { createCategoryExpense } from "@/app/actions/expenses";
+import { createCategoryExpense } from "@/lib/actions/expenses";
 import { StockChange } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState, useTransition } from "react";
@@ -95,7 +95,7 @@ export function StockMovementModal({
       router.refresh();
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : "Failed to record movement"
+        error instanceof Error ? error.message : "Failed to record movement",
       );
     } finally {
       setLoading(false);

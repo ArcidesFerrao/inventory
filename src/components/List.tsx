@@ -7,6 +7,7 @@ import {
   SupplierSaleWithItems,
 } from "@/types/types";
 import { Expense, Order, OrderItem, Sale } from "@/generated/prisma/client";
+import { useParams } from "next/navigation";
 
 type ProductsStockProps = {
   id: string;
@@ -37,10 +38,12 @@ export const ListStockItem = ({
 }: // stockQty,
 // unit,
 ProductsStockProps) => {
+  const { locale } = useParams();
+
   return (
     <li key={id} className="listing-stock-item flex p-4 justify-between">
       <div className="flex  gap-4 justify-between ">
-        <Link href={`/service/stock/${id}`}>
+        <Link href={`/${locale}/service/stock/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
       </div>
@@ -57,10 +60,12 @@ ProductsStockProps) => {
   );
 };
 export const ListItem = ({ id, name, price }: ProductsProps) => {
+  const { locale } = useParams();
+
   return (
     <li key={id} className="listing-item flex items-center p-4 justify-between">
       {/* <div className="flex flex-col gap-4 justify-between "> */}
-      <Link href={`/service/products/${id}`}>
+      <Link href={`/${locale}/service/products/${id}`}>
         <h3 className="text-md font-medium">{name}</h3>
       </Link>
       {/* </div> */}
@@ -71,9 +76,11 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
   );
 };
 export const ListDrinkItem = ({ id, name, price }: ProductsProps) => {
+  const { locale } = useParams();
+
   return (
     <li key={id} className="flex gap-4 justify-between py-1">
-      <Link href={`/service/products/${id}`}>
+      <Link href={`/${locale}/service/products/${id}`}>
         <h4 className="text-md font-light hover:underline">{name}</h4>
       </Link>
       <h4 className="text-md font-semibold  text-nowrap">MZN {price},00</h4>
@@ -86,10 +93,12 @@ export const ListSupplierItem = ({
   price,
   qty,
 }: SupplierProductsProps) => {
+  const { locale } = useParams();
+
   return (
     <li key={id} className="supplier-item flex p-4 justify-between">
       <div className="supplier-item-title flex gap-4 justify-between items-center ">
-        <Link href={`/supply/products/${id}`}>
+        <Link href={`/${locale}/supply/products/${id}`}>
           <h3 className="text-lg font-medium">{name}</h3>
         </Link>
         <span className="text-sm font-light">Qty: {qty}</span>
@@ -100,7 +109,7 @@ export const ListSupplierItem = ({
           <StockItemDeleteButton stockItemId={id} />
           <Link
             className="edit-button p-2 flex "
-            href={`/supply/products/${id}/edit`}
+            href={`/${locale}/supply/products/${id}/edit`}
           >
             <span className="mdi--edit"></span>
           </Link>
@@ -191,6 +200,8 @@ export const OrderListItem = ({
     orderItems: OrderItem[];
   };
 }) => {
+  const { locale } = useParams();
+
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
     0,
@@ -200,7 +211,7 @@ export const OrderListItem = ({
     <li key={order.id} className="list-orders flex justify-between">
       <div className="flex flex-col gap-5">
         <div className="order-header flex flex-col gap-2">
-          <Link href={`/service/purchases/orders/${order.id}`}>
+          <Link href={`/${locale}/service/purchases/orders/${order.id}`}>
             <h3 className="order-title flex gap-2 items-center text-xl font-medium">
               Order
               <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
@@ -523,6 +534,8 @@ export default function LogListItem({
   timestamp: Date;
   severity: string;
 }) {
+  const { locale } = useParams();
+
   return (
     <li className="list-logs flex justify-between ">
       <div className="flex flex-col gap-2">
@@ -545,7 +558,7 @@ export default function LogListItem({
       <div>
         <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
           <span>{severity}</span>
-          <Link href={`/service/logs/${id}`}>View</Link>
+          <Link href={`/${locale}/service/logs/${id}`}>View</Link>
         </div>
       </div>
     </li>
@@ -566,6 +579,8 @@ export function SupplierLogListItem({
   timestamp: Date;
   severity: string;
 }) {
+  const { locale } = useParams();
+
   return (
     <li className="list-logs flex justify-between ">
       <div className="flex flex-col gap-2">
@@ -588,7 +603,7 @@ export function SupplierLogListItem({
       <div>
         <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
           <span>{severity}</span>
-          <Link href={`/supply/logs/${id}`}>View</Link>
+          <Link href={`/${locale}/supply/logs/${id}`}>View</Link>
         </div>
       </div>
     </li>
@@ -602,6 +617,8 @@ export const SupplierOrderListItem = ({
   order: OrderWithStockItems;
   // supplierOrder: SupplierOrderWithOrderAndItems;
 }) => {
+  const { locale } = useParams();
+
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
     0,
@@ -613,7 +630,7 @@ export const SupplierOrderListItem = ({
       <div className="flex flex-col gap-5">
         <div className="order-header flex flex-col gap-2">
           <Link
-            href={`/supply/orders/${order.id}`}
+            href={`/${locale}/supply/orders/${order.id}`}
             className="flex items-center gap-2"
           >
             <h3 className="order-title  text-xl font-medium">Order</h3>

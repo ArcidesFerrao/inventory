@@ -1,6 +1,6 @@
 "use client";
 
-import { createNewDelivery } from "@/app/actions/deliveries";
+import { createNewDelivery } from "@/lib/actions/deliveries";
 import { Order, OrderItem, StockItem } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
