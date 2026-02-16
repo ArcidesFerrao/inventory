@@ -7,9 +7,9 @@ import { redirect } from "next/navigation";
 export default async function NewExpense({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const locale = await params.locale;
+  const { locale } = await params;
 
   const session = await auth();
 

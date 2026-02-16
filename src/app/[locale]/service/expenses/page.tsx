@@ -19,11 +19,11 @@ const PERIOD_DAYS = {
 } as const;
 
 export default async function ExpensesPage({
+  params,
   searchParams,
-  props,
 }: {
+  params: Promise<Params>;
   searchParams: Promise<SearchParams>;
-  props: { params: Params };
 }) {
   const session = await auth();
 
@@ -31,12 +31,12 @@ export default async function ExpensesPage({
 
   if (!session.user.serviceId) redirect("/register/service");
 
-  const { locale } = await props.params;
+  const { locale } = await params;
 
-  const params = await searchParams;
-  const searchQuery = params.search?.toLowerCase() || "";
-  const categoryFilter = params.category || "all";
-  const period = params.period || "all";
+  const query = await searchParams;
+  const searchQuery = query.search?.toLowerCase() || "";
+  const categoryFilter = query.category || "all";
+  const period = query.period || "all";
 
   const dateFilter =
     PERIOD_DAYS[period] > 0

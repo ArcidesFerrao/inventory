@@ -9,21 +9,25 @@ type SearchParams = {
   search?: string;
 };
 
+type Params = {
+  locale: string;
+};
+
 export default async function ProductsPage({
+  params,
   searchParams,
-  props,
 }: {
   searchParams: Promise<SearchParams>;
-  props: { locale: string };
+  params: Promise<Params>;
 }) {
   const session = await auth();
 
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
 
-  const { locale } = await props;
-  const params = await searchParams;
-  const searchQuery = params.search?.toLowerCase() || "";
+  const { locale } = await params;
+  const query = await searchParams;
+  const searchQuery = query.search?.toLowerCase() || "";
 
   const items = await getSelectedStockItems(session.user.supplierId);
 

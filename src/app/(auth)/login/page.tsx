@@ -1,12 +1,15 @@
 "use client";
-
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function LoginPage() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
+  const sessionHook = useSession();
+  const session = sessionHook.data;
+  const status = sessionHook.status;
+
   const [loading, setLoading] = useState(false);
   const [loginValue, setLoginValue] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +27,7 @@ export default function LoginPage() {
       }
     }
   }, [session, status, router]);
+  if (!sessionHook) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -8,9 +8,9 @@ import { redirect } from "next/navigation";
 export default async function SalesPage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const locale = params.locale;
+  const { locale } = await params;
   const session = await auth();
 
   if (!session?.user.isAdmin) {
