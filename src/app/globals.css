@@ -24,7 +24,8 @@
 
 html,
 body {
-  /* scroll-behavior: smooth; */
+  scroll-behavior: smooth;
+  height: 100vh;
   font-family: var(--font-sansation-sans), var(--default-font-family);
 }
 
@@ -251,6 +252,8 @@ img {
 footer {
   display: flex;
   justify-content: center;
+  align-self: flex-end;
+
   margin: 2rem 0;
 }
 
@@ -297,6 +300,12 @@ table {
   border-radius: 0.2rem;
 }
 
+.signup-form a,
+.login-form a {
+  color: var(--label-font);
+  font-weight: 600;
+}
+
 .register-form select,
 textarea,
 input,
@@ -316,7 +325,7 @@ select {
   padding: 0.4rem 0.8rem;
   border-radius: 0.2rem;
 }
-
+.profile-sections
 .google-signin {
   background-color: var(--foreground);
   color: var(--background);

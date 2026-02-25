@@ -21,14 +21,14 @@ export default function UserProfile({ user }: { user: UserProfile }) {
             onClick={() => setView("personal")}
             className={view === "personal" ? "active-view" : ""}
           >
-            Personal Information
+            {t("personalInformation")}
           </button>
           {user.role === "SERVICE" && user.Service && (
             <button
               onClick={() => setView("detail")}
               className={view === "detail" ? "active-view" : ""}
             >
-              Service Details
+              {t("serviceDetails")}
             </button>
           )}
           {user.role === "SUPPLIER" && user.Supplier && (
@@ -36,29 +36,29 @@ export default function UserProfile({ user }: { user: UserProfile }) {
               onClick={() => setView("detail")}
               className={view === "detail" ? "active-view" : ""}
             >
-              Supplier Details
+              {t("supplierDetails")}
             </button>
           )}
           <button
             onClick={() => setView("security")}
             className={view === "security" ? "active-view" : ""}
           >
-            Security
+            {t("security")}
           </button>
         </div>
         {user.role === "SERVICE" && (
           <Link href={`/${locale}/service`}>
-            <span>Service Dashboard</span>
+            <span>{t("servicesDashboard")}</span>
           </Link>
         )}
         {user.role === "SUPPLIER" && (
           <Link href={`/${locale}/supply`}>
-            <span>Supplier Dashboard</span>
+            <span>{t("suppliersDashboard")}</span>
           </Link>
         )}
         {user.role === "ADMIN" && (
           <Link href={`/${locale}/admin`}>
-            <span>Admin Dashboard</span>
+            <span>{t("adminDashboard")}</span>
           </Link>
         )}
       </div>
@@ -121,7 +121,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {t("company")}Company {t("emailAddress")}
+                  {t("company")} {t("emailAddress")}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="ic--round-mail"></span>
@@ -137,7 +137,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
               </div>
               <div className="flex flex-col gap-2">
                 <p>
-                  {t("company")}Company {t("phoneNumber")}
+                  {t("company")} {t("phoneNumber")}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="solar--phone-bold"></span>
@@ -145,7 +145,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("website")}Website</p>
+                <p>{t("website")}</p>
                 <div className="flex items-center gap-2">
                   <span className="streamline-plump--web"></span>
                   <h4>{user.Supplier.website}</h4>
@@ -205,19 +205,17 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="profile-sections profile-details">
+      <div className="profile-sections profile-details flex  gap-4">
         <button
           onClick={() => setView("personal")}
           className={view === "personal" ? "active-view" : ""}
         >
-          Personal Information
           {t("personalInformation")}
         </button>
         <button
           onClick={() => setView("detail")}
           className={view === "detail" ? "active-view" : ""}
         >
-          Detail
           {t("detail")}
         </button>
 
@@ -225,7 +223,6 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
           onClick={() => setView("security")}
           className={view === "security" ? "active-view" : ""}
         >
-          Security
           {t("security")}
         </button>
       </div>
@@ -250,18 +247,20 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
               <h4>{user.email}</h4>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-5">
-              <p>{t("phoneNumber")}</p>
-              <button className="text-xs font-extralight border px-2 py-1">
-                {t("verify")}
-              </button>
+          {user.phoneNumber && (
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-5">
+                <p>{t("phoneNumber")}</p>
+                <button className="text-xs font-extralight border px-2 py-1">
+                  {t("verify")}
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="solar--phone-bold"></span>
+                <h4>{user.phoneNumber}</h4>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="solar--phone-bold"></span>
-              <h4>{user.phoneNumber}</h4>
-            </div>
-          </div>
+          )}
           <div className="flex flex-col gap-2">
             <p>{t("memberSince")}</p>
             <div className="flex items-center gap-2">

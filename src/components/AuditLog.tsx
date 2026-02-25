@@ -5,6 +5,7 @@ import {
   AuditLogStatsProps,
   AuditLogTableProps,
 } from "@/types/types";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -14,6 +15,8 @@ export function AuditLogStats({
   actionStats,
   entityTypeStats,
 }: AuditLogStatsProps) {
+  const t = useTranslations("Common");
+  const ta = useTranslations("Audit");
   const topAction = actionStats[0];
   const topEntityType = entityTypeStats[0];
 
@@ -23,7 +26,7 @@ export function AuditLogStats({
         <div>
           <span></span>
           <div>
-            <p>Total Logs</p>
+            <p>{ta("totalLogs")}</p>
             <h3>{totalLogs.toLocaleString()}</h3>
           </div>
         </div>
@@ -33,7 +36,7 @@ export function AuditLogStats({
         <div>
           <span></span>
           <div>
-            <p>Last 24 Hours</p>
+            <p>{ta("last24Hours")}</p>
             <h3>{last24Hours.toLocaleString()}</h3>
           </div>
         </div>
@@ -42,9 +45,11 @@ export function AuditLogStats({
         <div>
           <span></span>
           <div>
-            <p>Top Action</p>
+            <p>{ta("topActions")}</p>
             <h3>{topAction.action}</h3>
-            <p>{topAction._count} times</p>
+            <p>
+              {topAction._count} {ta("times")}
+            </p>
           </div>
         </div>
       </div>
@@ -52,9 +57,11 @@ export function AuditLogStats({
         <div>
           <span></span>
           <div>
-            <p>Top Entity</p>
+            <p>{ta("topEntities")}</p>
             {/* <h3>{topEntityType.entityType}</h3> */}
-            <p>{topEntityType._count} logs</p>
+            <p>
+              {topEntityType._count} {t("logs")}
+            </p>
           </div>
         </div>
       </div>
@@ -70,7 +77,8 @@ export function AuditLogFilters({
 }: AuditLogFilterProps) {
   const router = useRouter();
   const pathname = usePathname();
-  // const searchParams = useSearchParams();
+  const t = useTranslations("Common");
+  const ta = useTranslations("Audit");
   const [isPending, startTransition] = useTransition();
 
   const [filters, setFilters] = useState(currentFilters);
@@ -98,18 +106,20 @@ export function AuditLogFilters({
   };
 
   const hasActiveFilters = Object.values(currentFilters).some(
-    (v) => v && v !== "all"
+    (v) => v && v !== "all",
   );
 
   return (
     <div className="flex flex-col gap-1">
       <div>
-        <h3 className="text-2xl font-medium ">Filters</h3>
-        {hasActiveFilters && <button onClick={clearFilters}>Clear</button>}
+        <h3 className="text-2xl font-medium ">{t("filters")}</h3>
+        {hasActiveFilters && (
+          <button onClick={clearFilters}>{t("clear")}</button>
+        )}
       </div>
 
       <div className="flex gap-1 items-center">
-        <label htmlFor="search">Search</label>
+        <label htmlFor="search">{t("search")}</label>
         <input
           type="text"
           value={filters.search}
@@ -120,14 +130,14 @@ export function AuditLogFilters({
       </div>
       <div className="flex gap-2">
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium mb-1">Action</label>
+          <label className="text-sm font-medium mb-1">{t("action")}</label>
           <select
             value={filters.action || "all"}
             onChange={(e) => updateFilters("action", e.target.value)}
             className="w-full "
             disabled={isPending}
           >
-            <option value="all">All Actions</option>
+            <option value="all">{ta("allActions")}</option>
             {actions.map((action) => (
               <option key={action} value={action}>
                 {action}
@@ -165,6 +175,7 @@ export function AuditLogFilters({
 }
 
 export function AuditLogTable({ logs }: AuditLogTableProps) {
+  const t = useTranslations("Common");
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
   const formatDate = (date: Date) => {
@@ -186,12 +197,12 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
       <table>
         <thead>
           <tr>
-            <th>Timestamp</th>
+            <th>{t("timestamp")}</th>
             {/* <th>User</th> */}
-            <th>Action</th>
-            <th>Type</th>
-            <th>Entity</th>
-            <th>Details</th>
+            <th>{t("action")}</th>
+            <th>{t("type")}</th>
+            <th>{t("entity")}</th>
+            <th>{t("details")}</th>
           </tr>
         </thead>
         <tbody>
@@ -203,7 +214,7 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
               <td>{log.entityName}</td>
               <td>
                 <button>
-                  {expandedRow === log.id ? "▼" : "▶"} View Detail
+                  {expandedRow === log.id ? "▼" : "▶"} {t("viewDetails")}
                 </button>
               </td>
             </tr>

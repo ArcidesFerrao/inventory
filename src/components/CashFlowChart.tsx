@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   Cell,
   Legend,
@@ -21,17 +22,18 @@ export const CashFlowChart = ({
   purchases,
   expenses,
 }: CashFlowChartProps) => {
+  const t = useTranslations("Common");
   const data = [
-    { name: "Revenue", value: revenue, color: "#90b981" },
-    { name: "Purchases", value: purchases, color: "#f59e0b" },
-    { name: "Expenses", value: expenses, color: "#ef4444" },
+    { name: t("revenue"), value: revenue, color: "#90b981" },
+    { name: t("purchases"), value: purchases, color: "#f59e0b" },
+    { name: t("expenses"), value: expenses, color: "#ef4444" },
   ];
 
   if (revenue === 0 && purchases === 0 && expenses === 0) return null;
 
   return (
     <div>
-      <h3 className="text-lg font-normal">Cash Flow Distribution</h3>
+      <h3 className="text-lg font-normal">{t("cashFlowDistribution")}</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie

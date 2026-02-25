@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -13,6 +14,7 @@ export default function EntityForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const t = useTranslations("Common");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +47,7 @@ export default function EntityForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
       <div className="flex justify-between gap-4">
         <label htmlFor="name" className="no-wrap">
-          {type.charAt(0).toUpperCase() + type.slice(1)} Name
+          {type.charAt(0).toUpperCase() + type.slice(1)} {t("name")}
         </label>
         <input
           className="no-wrap text-gray-800"
@@ -60,7 +62,7 @@ export default function EntityForm({
       {error && <p>{error}</p>}
       <div className="flex justify-between gap-4">
         <label htmlFor="description" className="no-wrap">
-          {type.charAt(0).toUpperCase() + type.slice(1)} Description
+          {type.charAt(0).toUpperCase() + type.slice(1)} {t("description")}
         </label>
         <input
           className="no-wrap text-gray-800"
@@ -79,14 +81,14 @@ export default function EntityForm({
           onClick={onClose}
           disabled={loading}
         >
-          Cancel
+          {t("cancel")}
         </button>
         <button
           className="border py-1 px-2 rounded-sm"
           type="submit"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create"}
+          {loading ? t("creating") : t("create")}
         </button>
       </div>
     </form>

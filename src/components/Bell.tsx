@@ -18,7 +18,7 @@ export const NotificationBell = ({ locale }: { locale: string }) => {
 
   return (
     <Link
-      href={`/${locale}/notifications"`}
+      href={`/${locale}/notifications`}
       className="relative opacity-70 hover:opacity-100 "
     >
       <svg

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import authCheck from "@/lib/authCheck";
 import { redirect } from "next/navigation";
 import UserProfile from "@/components/UserProfile";
+import { getTranslations } from "next-intl/server";
 type Params = Promise<{ id: string }>;
 
 export default async function UserPage(props: { params: Params }) {
@@ -13,6 +14,7 @@ export default async function UserPage(props: { params: Params }) {
   }
 
   const { id } = await props.params;
+  const t = await getTranslations("Common");
 
   const user = await db.user.findUnique({
     where: {
@@ -27,7 +29,7 @@ export default async function UserPage(props: { params: Params }) {
   if (!user) {
     return (
       <section className="user-page flex flex-col items-center">
-        <p>User not found</p>
+        <p>{t("userNotFound")}</p>
       </section>
     );
   }
@@ -37,7 +39,9 @@ export default async function UserPage(props: { params: Params }) {
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
           <h2 className="text-3xl font-semibold">{user.name}</h2>
-          <p className="text-xs font-extralight">User Id: {id}... </p>
+          <p className="text-xs font-extralight">
+            {t("userId")}: {id}...{" "}
+          </p>
         </div>
         <LogOutButton />
       </div>

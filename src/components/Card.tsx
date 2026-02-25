@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Card = ({ title, value }: { title: string; value: number }) => {
   return (
     <div className="dash-card-admin flex flex-col">

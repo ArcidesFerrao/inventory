@@ -25,7 +25,7 @@ export default async function AdminItemsPage() {
         <h1 className="text-4xl font-medium underline">{t("items")}</h1>
       </div>
       <div className="py-4 flex flex-wrap justify-between gap-2">
-        <Card title="Items" value={stats.items.itemsData.length} />
+        <Card title={t("items")} value={stats.items.itemsData.length} />
         <Card
           title={t("active")}
           value={stats.items.activeItems + stats.items.activeStockItems}
@@ -34,7 +34,10 @@ export default async function AdminItemsPage() {
           title={t("inactive")}
           value={stats.items.inactiveItems + stats.items.inactiveStockItems}
         />
-        <Card title="Stock Items" value={stats.items.stockItemsData.length} />
+        <Card
+          title={t("stockItems")}
+          value={stats.items.stockItemsData.length}
+        />
       </div>
       <div className="admin-products flex flex-col gap-5">
         <h2 className="text-lg font-bold">{t("itemsList")}</h2>

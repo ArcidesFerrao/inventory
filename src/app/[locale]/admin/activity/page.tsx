@@ -6,6 +6,7 @@ import {
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { AuditSearchParams, WhereClause } from "@/types/types";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 const ITEMS_PER_PAGE = 10;
@@ -20,6 +21,8 @@ export default async function AdminActivityPage({
   if (!session?.user.isAdmin) {
     redirect("/");
   }
+  const t = await getTranslations("Common");
+  const ta = await getTranslations("Audit");
 
   const params = await searchParams;
 
@@ -118,8 +121,8 @@ export default async function AdminActivityPage({
   return (
     <>
       <div className="admin-header flex flex-col gap-2">
-        <h1 className="text-4xl font-medium ">Audit Logs</h1>
-        <p>Complete audit trail of all user actions in the stystem</p>
+        <h1 className="text-4xl font-medium">{ta("title")}</h1>
+        <p>{ta("subtitle")}</p>
       </div>
 
       <AuditLogStats
@@ -145,15 +148,16 @@ export default async function AdminActivityPage({
 
       <div>
         <p>
-          Showing <span>{logs.length}</span> of <span>{totalCount}</span> logs
+          {t("showing")} <span>{logs.length}</span> {t("of")}{" "}
+          <span>{totalCount}</span> {t("logs")}
           {searchQuery && (
             <span>
-              matching <span>{searchQuery}</span>{" "}
+              {t("matching")} <span>{searchQuery}</span>{" "}
             </span>
           )}
         </p>
         <div className="">
-          Page {page} of {totalPages}
+          {t("page")} {page} {t("of")} {totalPages}
         </div>
       </div>
 

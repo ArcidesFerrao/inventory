@@ -1,4 +1,25 @@
 {
+    "Auth": {
+        "signInTitle": "Sign in to your account",
+        "email": "Email address",
+        "phone": "Phone number",
+        "password": "Password",
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forgot your password?",
+        "noAccount": "Don't have an account?",
+        "login": "Login",
+        "register": "Register",
+        "loginToContinue": "Please Login or Sign Up to continue",
+        "signIn": "Sign In",
+        "signUp": "Sign Up",
+        "signingIn": "Signing in...",
+        "invalidPasswordOrEmail": "Invalid Password or Email.",
+        "signInWithGoogle": "Sign in with Google",
+        "alreadyHaveAccount": "Already have an account? ",
+        "signInHere": "Sign in here.",
+        "pickRole": "Pick a role"
+
+    },
     "Admin": {
         "title": "Admin Dashboard"
         
@@ -31,11 +52,18 @@
     "Sales": {
         "subtitle": "Track and manage your sales transactions",
         "newSale": "New Sale",
+        "sale": "Sale",
         "catalogItems": "Catalog Items",
         "orderSummary": "Order Summary",
         "completeSale": "Complete Sale",
         "noItems": "No Sale Items",
-        "saleNotProcessed": "Sale not processed successfully"
+        "saleNotProcessed": "Sale not processed successfully",
+        "totalSales": "Total Sales",
+        "totalRevenue": "Total Revenue",
+        "agent":"Agent",
+        "saleDetails": "Sale Details",
+        "recentSales": "Recent Sales",
+        "averageSaleValue": "Avg. Value"
     },
     "Purchases": {
         "title": "Recent Purchases & Orders",
@@ -51,12 +79,28 @@
         "order": "Order",
         "totalItemsOrdered": "Total Items",
         "newOrder": "New Order",
-        "orderAmount": "Order Total"
+        "orderAmount": "Order Total",
+        "confirmOrder": "Confirm Order",
+        "cancelOrder": "Cancel Order",
+        "orderNotProcessed": "Order not processed successfully",
+        "confirmedOrders": "Confirmed Orders",
+        "cancelledOrders": "Cancelled Orders",
+        "deliveredOrders": "Delivered Orders",
+        "pendingOrders": "Pending Orders",
+        "orderDetails": "Order Details",
+        "totalOrders": "Total Orders",
+        "ordered": "Ordered",
+        "delivery": "Delivery"
+
     },
     "Delivery": {
         "customerInfo": "Customer Information",
-        "deliveryCompleted": "Delivery Completed"
-
+        "deliveryCompleted": "Delivery Completed",
+        "confirmDelivery": "Confirm Delivery",
+        "rateDelivery": "Rate this delivery",
+        "deliveryDetails": "Delivery Details",
+        "deliveryNotProcessed": "Delivery not processed successfully",
+        "status": "Status"
     },
     "Expenses": {
         "expense": "Expense",
@@ -67,6 +111,23 @@
         "expenseItem": "Expense Item",
         "saveExpense": "Save Expense"
     },
+    "Audit": {
+        "title": "Audit Logs",
+        "subtitle": "Complete audit trail of all user actions in the stystem",
+        "totalAudits": "Total Audits",
+        "auditDetails": "Audit Details",
+        "actionType": "Action",
+        "entityType": "Entity",
+        "type": "Type",
+        "details": "Details",
+        "totalLogs": "Total Logs",
+        "last24Hours": "Last 24 Hours",
+        "last7Days": "Last 7 Days",
+        "topActions": "Top Actions",
+        "topEntities": "Top Entities",
+        "allActions": "All Actions",
+        "times": "times"
+    },
     "Activity": {
         "title": "Activity Logs",
         "subtitle": "Monitor all system activities and events",
@@ -76,6 +137,7 @@
         "entityType": "Entity Type"
     },
     "Settings": {
+        "title": "Settings",
         "subtitle": "Configure your preferences here.",
         "saveSettings": "Save Settings",
         "negativeStock": "Allow Negative Stock",
@@ -96,6 +158,7 @@
         "greetings": "Welcome to Contela",
         "greeting": "Welcome",
         "gotoDash": "Go To Dashboard",
+        "pickDashboard": "Pick a dashboard",
         "users": "Users",
         "items": "Items",
         "orders": "Orders",
@@ -114,6 +177,7 @@
         "admin": "Administrator",
         "services": "Services",
         "suppliers": "Suppliers",
+        "manager": "Manager",
         "fullName": "Full Name",
         "emailAddress": "Email Address",
         "phoneNumber": "Phone Number",
@@ -127,7 +191,7 @@
         "footer": "Contela Platform by Evolure Labs",
         "usersList": "Users List",
         "ordersList": "Orders List",
-        "SalesList": "Sales List",
+        "salesList": "Sales List",
         "role": "Role",
         "status": "Status",
         "active": "Active",
@@ -199,6 +263,7 @@
         "deliveredTime": "Delivered Time",
         "rateDelivery": "Rate this delivery",
         "saving": "Saving",
+        "dashboardMenu": "Dashboard Menu",
         "dashboardMenu0": "Stock Management",
         "dashboardMenu1": "Service Management",
         "dashboardMenu2": "Supplier Management",
@@ -207,11 +272,65 @@
         "topServices": "Top Services",
         "service": "Service",
         "supplier": "Supplier",
+        "activityLogs": "Activity Logs",
         "dashboard": "Dashboard",
         "userNotFound": "User not found",
         "userId": "User Id",
         "inactve": "Inactive",
-        "itemsList": "Items List"
-        
+        "itemsList": "Items List",
+        "totalUsers": "Total Users",
+        "activeUsers": "Active Users",
+        "suspendedUsers": "Suspended Users",
+        "pendingUsers": "Pending Users",
+        "user": "User",
+        "inactive": "Inactive",
+        "stockItems": "Stock Items",
+        "showing": "Showing",
+        "of": "of",
+        "page": "Page",
+        "noItems": "No items found",
+        "viewDetails": "View Details",
+        "matching": "matching",
+        "filters": "Filters",
+        "soldItemsBy": "Sold Items by",
+        "created": "Created",
+        "orderedItemsBy": "Ordered Items by",
+        "address": "Address",
+        "businessName": "Business Name",
+        "orderId": "Order ID",
+        "deliveryId": "Delivery ID",
+        "personalInfo": "Personal Information",
+        "contactInfo": "Contact Information",
+        "serviceDetails": "Service Details",
+        "supplierDetails": "Supplier Details",
+        "adminDashboard": "Admin Dashboard",
+        "servicesDashboard": "Services Dashboard",
+        "suppliersDashboard": "Suppliers Dashboard",
+        "markAllAsRead": "Mark all as read",
+        "markingAsRead": "Marking as read...",
+        "noNotifications": "No notifications available",
+        "statsDescription": "stats of products, sales and earnings",
+        "pleaseLogin": "Please login to access the dashboard",
+        "stock": "Stock",
+        "stockProducts": "Stock Products",
+        "new": "New",
+        "item": "Item",
+        "and": "and",
+        "deleteItem": "Delete Item",
+        "editingItem": "Editing Item",
+        "fillFormEdit": "Fill the form to edit the Stock Item",
+        "thisCannotBeUndone": "This cannot be undone.",
+        "recipeItems": "Recipe Items",
+        "unitQuantity": "Unit Quantity",
+        "updatedAt": "Updated At"
+
+    },
+    "Notifications": {
+        "stockAddedSuccess": "Stock item added successfully",
+        "stockAddedError": "Failed to add stock item",
+        "stockUpdatedSuccess": "Stock item updated successfully",
+        "stockUpdatedError": "Failed to update stock item",
+        "stockDeletedSuccess": "Stock item deleted successfully",
+        "stockDeletedError": "Failed to delete stock item"
     }
 }

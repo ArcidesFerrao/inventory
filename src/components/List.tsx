@@ -10,6 +10,7 @@ import {
 } from "@/types/types";
 import { Expense, Order, OrderItem, Sale } from "@/generated/prisma/client";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 type ProductsStockProps = {
   id: string;
@@ -374,6 +375,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
 };
 
 export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
+  const t = useTranslations("Common");
   return (
     <li
       key={sale.id}
@@ -382,7 +384,7 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
       <div className="sale-header flex justify-between">
         <div className="sale-title flex flex-col gap-2">
           <h3 className="flex gap-2 items-center ">
-            Sale
+            {t("sale")}
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
           <div className="sale-title-details flex gap-4">
@@ -398,7 +400,7 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Total Amount</p>
+          <p>{t("totalAmount")}</p>
           <h4 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
           </h4>

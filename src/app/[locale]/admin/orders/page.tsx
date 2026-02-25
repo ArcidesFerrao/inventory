@@ -11,7 +11,7 @@ export default async function OrdersPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const locale = await params;
+  const { locale } = await params;
   const session = await auth();
 
   if (!session?.user.isAdmin) {
@@ -21,6 +21,7 @@ export default async function OrdersPage({
   const stats = await getAdminOrdersStats();
 
   const t = await getTranslations("Common");
+  const co = await getTranslations("Orders");
 
   if (!stats) {
     redirect("/login");
@@ -32,10 +33,10 @@ export default async function OrdersPage({
         <h1 className="text-4xl font-medium underline">{t("orders")}</h1>
       </div>
       <div className="py-4 flex flex-wrap gap-2 justify-between">
-        <Card title="Total Orders" value={stats.orders.totalOrders} />
-        <Card title="Delivered Orders" value={stats.orders.delivered} />
-        <Card title="Confirmed Orders" value={stats.orders.confirmed} />
-        <Card title="Cancelled Orders" value={stats.orders.cancelled} />
+        <Card title={co("totalOrders")} value={stats.orders.totalOrders} />
+        <Card title={co("deliveredOrders")} value={stats.orders.delivered} />
+        <Card title={co("confirmedOrders")} value={stats.orders.confirmed} />
+        <Card title={co("cancelledOrders")} value={stats.orders.cancelled} />
       </div>
       <div className="admin-orders flex flex-col gap-5">
         <h2 className="text-lg font-bold">{t("ordersList")}</h2>

@@ -1,14 +1,15 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function LoginPage() {
-  // const { data: session, status } = useSession();
   const sessionHook = useSession();
   const session = sessionHook.data;
   const status = sessionHook.status;
+  const a = useTranslations("Auth");
 
   const [loading, setLoading] = useState(false);
   const [loginValue, setLoginValue] = useState("");
@@ -66,20 +67,20 @@ export default function LoginPage() {
   }
   return (
     <form onSubmit={handleSubmit} className="login-form flex flex-col gap-4 ">
-      <h1 className="text-2xl text-center">Login</h1>
+      <h1 className="text-2xl text-center">{a("login")}</h1>
       <div className="flex flex-col gap-2">
-        <label htmlFor="email">Email/PhoneNumber</label>
+        <label htmlFor="email">Email / {a("phone")}</label>
         <input
           type="text"
           name="loginValue"
           id="loginValue"
-          placeholder="Email or Phone Number"
+          // placeholder={"Email or " + a("phone")}
           value={loginValue}
           onChange={(e) => setLoginValue(e.target.value)}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">{a("password")}</label>
         <input
           type="password"
           name="password"
@@ -89,22 +90,26 @@ export default function LoginPage() {
         />
         <p>
           <Link href="/forgot-password" className="text-sm ">
-            Forgot Password?
+            {a("forgotPassword")}
           </Link>
         </p>
       </div>
-      <input type="submit" value={loading ? "Signing in..." : "Sign In"} />
+      <input
+        className="mt-4"
+        type="submit"
+        value={loading ? a("signingIn") : a("signIn")}
+      />
       {error && (
         <>
           {error === "Configuration" || error === "CredentialsSignin" ? (
-            <p className="text-red-500">Invalid Password or Email.</p>
+            <p className="text-red-500">{a("invalidPasswordOrEmail")}</p>
           ) : (
             <p>{error}</p>
           )}
         </>
       )}
       <p>
-        Dont have an account? <Link href="/signup">Create an account</Link>.
+        {a("noAccount")} <Link href="/signup">{a("signUp")}</Link>.
       </p>
       <button
         type="button"
@@ -129,7 +134,7 @@ export default function LoginPage() {
             d="M24 47c5.5 0 10.2-1.8 13.6-4.9l-7.5-5.8c-2.1 1.4-4.8 2.2-6.1 2.2-6.2 0-11.5-4.8-13.3-11.1l-7.1 5.5C7.3 41.2 14.9 47 24 47z"
           />
         </svg>
-        <span>Sign In with Google</span>
+        <span>{a("signInWithGoogle")}</span>
       </button>
     </form>
   );

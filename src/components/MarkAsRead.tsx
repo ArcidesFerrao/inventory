@@ -1,12 +1,14 @@
 "use client";
 
 import { markAllAsRead } from "@/lib/actions/notifications";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 export default function MarkAsRead({ userId }: { userId: string }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("Common");
 
   const markAsRead = () => {
     startTransition(() => {
@@ -22,7 +24,7 @@ export default function MarkAsRead({ userId }: { userId: string }) {
       disabled={isPending}
     >
       <span className="fluent--mail-read-32-regular"></span>
-      {isPending ? "Marking..." : "Mark all as read"}
+      {isPending ? t("markingAsRead") : t("markAllAsRead")}
     </button>
   );
 }

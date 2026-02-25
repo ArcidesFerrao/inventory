@@ -1,11 +1,13 @@
 import MenuAndStock from "@/components/MenuAndStock";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
 import { redirect } from "next/navigation";
 
 export default async function ItemsPage() {
   const session = await auth();
+  const t = await getTranslations("Common");
 
   if (!session?.user.serviceId) redirect("/login");
 
@@ -36,20 +38,20 @@ export default async function ItemsPage() {
         <div className="list-title">
           <h2 className="text-2xl font-medium">
             {session.user.businessType === "SHOP"
-              ? "Services"
+              ? t("services")
               : session.user.businessType === "STORE"
-              ? "Items"
-              : "Menu"}{" "}
-            & Stock Products
+                ? t("items")
+                : t("menu")}{" "}
+            & {t("stockProducts")}
           </h2>
           <p className="text-md font-extralight">
             Manage your{" "}
             {session.user.businessType === "SHOP"
-              ? "services"
+              ? t("services")
               : session.user.businessType === "STORE"
-              ? "items"
-              : "menu"}{" "}
-            and stock inventory
+                ? t("items")
+                : t("menu")}{" "}
+            {t("and")} {t("stock")} {t("inventory")}
           </p>
         </div>
       </div>

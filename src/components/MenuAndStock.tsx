@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ListItem, ListStockItem } from "./List";
 import { ServiceStockItem, StockItem } from "@/generated/prisma";
 import { useLocale } from "@/lib/useLocale";
+import { useTranslations } from "next-intl";
 
 export default function MenuAndStock({
   businessType,
@@ -23,6 +24,7 @@ export default function MenuAndStock({
   })[];
 }) {
   const locale = useLocale();
+  const t = useTranslations("Common");
 
   const [view, setView] = useState<"list" | "stock">("list");
 
@@ -38,10 +40,10 @@ export default function MenuAndStock({
           >
             <span className="roentgen--bag"></span>
             {businessType === "SHOP"
-              ? "Services"
+              ? t("services")
               : businessType === "STORE"
-                ? "Items"
-                : "Menu"}
+                ? t("items")
+                : t("menu")}
           </button>
           <button
             className={` flex items-center gap-2 px-4 py-2 text-xl ${
@@ -49,7 +51,7 @@ export default function MenuAndStock({
             }`}
             onClick={() => setView("stock")}
           >
-            <span className="flowbite--cart-solid"></span> Stock
+            <span className="flowbite--cart-solid"></span> {t("stock")}
           </button>
         </div>
         <div className="flex gap-2 items-center">
@@ -62,7 +64,7 @@ export default function MenuAndStock({
             className="add-product flex gap-1"
           >
             <span className="text-md px-2 flex items-center gap-2">
-              New {view === "stock" && "Stock"} Item
+              {t("new")} {view === "stock" && t("stock")} {t("item")}
             </span>
           </Link>
         </div>
@@ -71,7 +73,7 @@ export default function MenuAndStock({
         <>
           {items.length === 0 ? (
             <section className="flex flex-col gap-2">
-              <p>No items found...</p>
+              <p>{t("noItems")}...</p>
               <p className="font-thin text-sm">
                 Click on &quot;New Item&quot; to add one.
               </p>
@@ -85,7 +87,7 @@ export default function MenuAndStock({
         <>
           {stockItems.length === 0 ? (
             <section className="flex flex-col gap-2">
-              <p>No items found...</p>
+              <p>{t("noItems")}...</p>
               <p className="font-thin text-sm">
                 Click on &quot;New Product&quot; to add one.
               </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { UserRole } from "@/generated/prisma";
+import { useTranslations } from "next-intl";
 // import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,8 @@ export default function SignUpPage() {
   const [role, setRole] = useState<UserRole | "">("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const a = useTranslations("Auth");
+  const ct = useTranslations("Common");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,13 +34,6 @@ export default function SignUpPage() {
     if (res.ok) {
       setLoading(false);
       router.push("/");
-      // await signIn("credentials", {
-      //   email,
-      //   password,
-      //   phonenumber,
-      //   redirect: true,
-      //   callbackUrl: "/",
-      // });
     } else {
       const data = await res.json();
       setError(data.message || "Failed to sign up");
@@ -46,13 +42,13 @@ export default function SignUpPage() {
   };
   return (
     <form className="signup-form flex flex-col gap-4 " onSubmit={handleSubmit}>
-      <h1 className="text-2xl text-center">Create Account</h1>
+      <h1 className="text-2xl text-center">{a("signUp")}</h1>
       {error && <p>{error}</p>}
       <input
         type="text"
         name="name"
         id="name"
-        placeholder="Name..."
+        placeholder={ct("name") + "..."}
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
@@ -63,19 +59,19 @@ export default function SignUpPage() {
         onChange={(e) => setRole(e.target.value as UserRole)}
       >
         <option value="" disabled>
-          Pick a role:
+          {a("pickRole")}:
         </option>
-        <option value="SERVICE">Service</option>
-        <option value="SUPPLIER">Supplier</option>
-        <option value="MANAGER">Manager</option>
-        <option value="ADMIN">Admin</option>
+        <option value="SERVICE">{ct("service")}</option>
+        <option value="SUPPLIER">{ct("supplier")}</option>
+        {/* <option value="MANAGER">{ct("manager")}</option> */}
+        <option value="ADMIN">{ct("admin")}</option>
       </select>
 
       <input
         type="email"
         name="email"
         id="email"
-        placeholder="Email..."
+        placeholder={a("email") + "..."}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
@@ -83,7 +79,7 @@ export default function SignUpPage() {
         type="phonenumber"
         name="phonenumber"
         id="phonenumber"
-        placeholder="Phone Number..."
+        placeholder={a("phone") + "..."}
         value={phonenumber}
         onChange={(e) => setPhonenumber(e.target.value.toString())}
       />
@@ -93,11 +89,11 @@ export default function SignUpPage() {
         id="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
+        placeholder={a("password")}
       />
-      <input type="submit" value={loading ? "Signing Up..." : "Sign Up"} />
+      <input type="submit" value={loading ? a("signingUp") : a("signUp")} />
       <p>
-        Already have an account? <Link href="/login">Login</Link>
+        {a("alreadyHaveAccount")} <Link href="/login">{a("signInHere")}</Link>
       </p>
     </form>
   );

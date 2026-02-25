@@ -6,12 +6,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MenuButton } from "./MenuButton";
 import { NotificationBell } from "./Bell";
+import { useTranslations } from "next-intl";
 
 export const Header = () => {
   const { data: session, status } = useSession();
 
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "pt";
+  const t = useTranslations("Common");
 
   const showMenu =
     pathname?.startsWith(`/${locale}/supply`) ||
@@ -38,7 +40,7 @@ export const Header = () => {
           ""
         ) : (
           <p className="header-welcome">
-            Welcome,{" "}
+            {t("greeting")},{" "}
             <Link href={`/${locale}/user/${session?.user.id}`}>
               {session?.user.name}
             </Link>

@@ -26,10 +26,10 @@ export default async function AdminPage() {
         <h1 className="text-4xl font-medium">{t("dashboard")}</h1>
       </div>
       <div className="flex flex-wrap gap-2 justify-between py-4">
-        <Card title="Suppliers" value={stats.totals.totalSuppliers} />
-        <Card title="Services" value={stats.totals.totalServices} />
-        <Card title="Orders" value={stats.totals.totalOrders} />
-        <Card title="Sales" value={stats.totals.totalSales} />
+        <Card title={t("suppliers")} value={stats.totals.totalSuppliers} />
+        <Card title={t("services")} value={stats.totals.totalServices} />
+        <Card title={t("orders")} value={stats.totals.totalOrders} />
+        <Card title={t("sales")} value={stats.totals.totalSales} />
       </div>
       <div className="top-stats grid grid-cols-2 gap-5 ">
         <div className="top-suppliers flex flex-col gap-5">

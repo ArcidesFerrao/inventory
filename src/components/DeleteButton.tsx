@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import ConfirmDialog from "./ConfirmDialog";
 import { deleteStockItem } from "@/lib/actions/product";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export const StockItemDeleteButton = ({
   stockItemId,
@@ -14,16 +15,18 @@ export const StockItemDeleteButton = ({
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("Notifications");
+
   const handleDelete = () => {
     startTransition(async () => {
       const res = await deleteStockItem(stockItemId);
 
       if (res.status === "success") {
-        toast.success("Stock Item deleted successfully");
+        toast.success(t("stockDeletedSuccess"));
         router.push("/supply/products");
       } else {
         const error = await res.error;
-        toast.error("something went wrong!");
+        toast.error(t("stockDeletedError"));
         console.log("Error deleting item: ", error);
       }
     });
@@ -35,8 +38,8 @@ export const StockItemDeleteButton = ({
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title="Delete this item?"
-        description="This cannot be undone."
+        title={t("deleteItem")}
+        description={t("thisCannotBeUndone")}
       />
       <button
         onClick={() => setIsDialogOpen(true)}
@@ -53,6 +56,7 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("Notifications");
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -65,11 +69,11 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
       });
 
       if (res.ok) {
-        toast.success("Item deleted successfully");
+        toast.success(t("stockDeletedSuccess"));
         router.push("/service/products");
       } else {
         const { error } = await res.json();
-        toast.error("something went wrong!");
+        toast.error(t("stockDeletedError"));
         console.log("Error deleting item: ", error);
       }
     });
@@ -81,8 +85,8 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title="Delete this item?"
-        description="This cannot be undone."
+        title={t("deleteItem")}
+        description={t("thisCannotBeUndone")}
       />
       <button
         onClick={() => setIsDialogOpen(true)}
@@ -98,6 +102,8 @@ export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("Notifications");
+
   const handleDelete = () => {
     startTransition(async () => {
       const res = await fetch(`/api/orders/${orderId}`, {
@@ -109,11 +115,11 @@ export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
       });
 
       if (res.ok) {
-        toast.success("Order deleted successfully");
+        toast.success(t("orderDeletedSuccess"));
         router.push("/service/orders");
       } else {
         const { error } = await res.json();
-        toast.error("something went wrong!");
+        toast.error(t("orderDeletedError"));
         console.log("Error deleting order: ", error);
       }
     });
@@ -125,8 +131,8 @@ export const DeleteOrderButton = ({ orderId }: { orderId: string }) => {
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title="Delete this order?"
-        description="This cannot be undone."
+        title={t("deleteItem")}
+        description={t("thisCannotBeUndone")}
       />
       <button
         onClick={() => setIsDialogOpen(true)}

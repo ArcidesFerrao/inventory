@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 export default async function UsersAdminPage({
   params,
@@ -12,6 +13,7 @@ export default async function UsersAdminPage({
 }) {
   const { locale } = await params;
   const session = await auth();
+  const ct = await getTranslations("Common");
 
   if (!session?.user.isAdmin) {
     redirect("/");
@@ -26,30 +28,30 @@ export default async function UsersAdminPage({
   return (
     <>
       <div className="admin-header">
-        <h1 className="text-4xl font-medium underline">Users</h1>
+        <h1 className="text-4xl font-medium underline">{ct("users")}</h1>
       </div>
       <div className="py-4 flex flex-wrap gap-2 justify-between">
-        <Card title="Total Users" value={stats.users.totalUsers} />
-        <Card title="Active Users" value={stats.users.activeUsers} />
-        <Card title="Suspended Users" value={stats.users.suspendedUsers} />
-        <Card title="Pending Users" value={stats.users.pendingUsers} />
+        <Card title={ct("totalUsers")} value={stats.users.totalUsers} />
+        <Card title={ct("activeUsers")} value={stats.users.activeUsers} />
+        <Card title={ct("suspendedUsers")} value={stats.users.suspendedUsers} />
+        <Card title={ct("pendingUsers")} value={stats.users.pendingUsers} />
       </div>
       <div className="admin-users flex flex-col gap-5">
-        <h2 className="text-lg font-bold">Users List</h2>
+        <h2 className="text-lg font-bold">{ct("usersList")}</h2>
         <table>
           <thead>
             <tr>
-              <th>User</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Created At</th>
+              <th>{ct("user")}</th>
+              <th>{ct("role")}</th>
+              <th>{ct("status")}</th>
+              <th>{ct("createdAt")}</th>
             </tr>
           </thead>
           <tbody>
             {stats.users.usersData.map((s) => (
               <tr key={s.id}>
                 <td>
-                  <Link href={`/${locale}/users/${s.id}`}>{s.name}</Link>
+                  <Link href={`/${locale}/admin/users/${s.id}`}>{s.name}</Link>
                 </td>
                 <td>{s.role}</td>
                 <td>{s.profileStatus}</td>

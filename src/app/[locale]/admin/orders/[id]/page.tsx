@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 type Params = Promise<{ id: string; locale: string }>;
@@ -6,6 +7,8 @@ type Params = Promise<{ id: string; locale: string }>;
 export default async function OrderPage(props: { params: Params }) {
   const { id } = await props.params;
   const { locale } = await props.params;
+  const t = await getTranslations("Common");
+  const to = await getTranslations("Orders");
 
   const order = await db.order.findUnique({
     where: {
@@ -39,10 +42,10 @@ export default async function OrderPage(props: { params: Params }) {
       <div className="order-header flex justify-between w-full">
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold">
-            Order #{order?.id.slice(0, 5)}...
+            {t("order")} #{order?.id.slice(0, 5)}...
           </h2>
           <p className="text-xs font-extralight">
-            Created {order?.timestamp.toDateString()}
+            {t("created")} {order?.timestamp.toDateString()}
           </p>
         </div>
         <Link href={`/${locale}/admin/orders`}>
@@ -56,7 +59,7 @@ export default async function OrderPage(props: { params: Params }) {
               <span className="formkit--date"></span>
             </span>
             <div>
-              <p className="text-md font-extralight">Requested Start</p>
+              <p className="text-md font-extralight">{t("requestedStart")}</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
                 {order?.requestedStartDate.toDateString()}
               </h4>
@@ -67,7 +70,7 @@ export default async function OrderPage(props: { params: Params }) {
               <span className="formkit--date"></span>
             </span>
             <div>
-              <p className="text-md font-extralight">Requested End</p>
+              <p className="text-md font-extralight">{t("requestedEnd")}</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
                 {order?.requestedEndDate.toDateString()}
               </h4>
@@ -78,7 +81,7 @@ export default async function OrderPage(props: { params: Params }) {
               <span className="fluent-mdl2--table-total-row"></span>
             </span>
             <div>
-              <p className="text-md font-extralight">Total Amount</p>
+              <p className="text-md font-extralight">{t("totalAmount")}</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
                 MZN {order?.total.toFixed(2)}
               </h4>
@@ -96,16 +99,16 @@ export default async function OrderPage(props: { params: Params }) {
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">
-          Ordered Items by {order?.Service?.businessName}
+          {t("orderedItemsBy")} {order?.Service?.businessName}
         </h2>
 
         <table>
           <thead>
             <tr>
-              <th>Item</th>
-              <th>Ordered</th>
-              <th>Price (MZN)</th>
-              <th>Total (MZN)</th>
+              <th>{t("items")}</th>
+              <th>{to("ordered")}</th>
+              <th>{t("price")} (MZN)</th>
+              <th>{t("total")} (MZN)</th>
             </tr>
           </thead>
           <tbody>
@@ -130,19 +133,20 @@ export default async function OrderPage(props: { params: Params }) {
                   href={`/${locale}/admin/orders/delivery/${order?.delivery.id}`}
                 >
                   <h3 className="font-medium py-2">
-                    Delivery #{order?.delivery.id.slice(0, 5)}...
+                    {to("delivery")} #{order?.delivery.id.slice(0, 5)}...
                   </h3>
                 </Link>
                 <p className="text-sm font-extralight">
-                  Scheduled Date: {order?.delivery.scheduledAt.toDateString()}
+                  {t("scheduledDate")}:{" "}
+                  {order?.delivery.scheduledAt.toDateString()}
                 </p>
                 <p className="text-sm font-extralight">
-                  Scheduled Time:{" "}
+                  {t("scheduledTime")}:{" "}
                   {order?.delivery.scheduledAt.toLocaleTimeString()}
                 </p>
                 {order?.delivery.status === "COMPLETED" && (
                   <p>
-                    Delivered Time:{" "}
+                    {t("deliveredTime")}:{" "}
                     {order?.delivery.deliveredAt?.toLocaleTimeString()}
                   </p>
                 )}
@@ -152,12 +156,12 @@ export default async function OrderPage(props: { params: Params }) {
               </button>
             </div>
             <div className="delivery-items px-4 py-2">
-              <h4 className="font-medium">Items:</h4>
+              <h4 className="font-medium">{t("items")}:</h4>
               <ul className="flex flex-col gap-2">
                 {order?.delivery.deliveryItems.map((item) => (
                   <li key={item.id}>
                     <p className="text-sm font-extralight">
-                      - {item.orderItem.stockItem.name} - Qty: {item.quantity}
+                      - {item.orderItem.stockItem.name}: {item.quantity}
                     </p>
                   </li>
                 ))}

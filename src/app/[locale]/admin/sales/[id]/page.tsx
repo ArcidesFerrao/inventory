@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 type Params = Promise<{ id: string; locale: string }>;
@@ -6,6 +7,7 @@ type Params = Promise<{ id: string; locale: string }>;
 export default async function SalePage(props: { params: Params }) {
   const { id } = await props.params;
   const { locale } = await props.params;
+  const t = await getTranslations("Common");
 
   const sale = await db.sale.findUnique({
     where: {
@@ -28,10 +30,10 @@ export default async function SalePage(props: { params: Params }) {
       <div className="order-header flex justify-between w-full">
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold">
-            Sale #{sale?.id.slice(0, 5)}...
+            {t("sale")} #{sale?.id.slice(0, 5)}...
           </h2>
           <p className="text-xs font-extralight">
-            Created {sale?.timestamp.toDateString()}
+            {t("created")} {sale?.timestamp.toDateString()}
           </p>
         </div>
         <Link href={`/${locale}/admin/sales`}>
@@ -45,7 +47,7 @@ export default async function SalePage(props: { params: Params }) {
               <span className="formkit--date"></span>
             </span>
             <div>
-              <p className="text-md font-extralight">Timestamp</p>
+              <p className="text-md font-extralight">{t("timestamp")}</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
                 {sale?.timestamp.toDateString()}
               </h4>
@@ -56,7 +58,7 @@ export default async function SalePage(props: { params: Params }) {
               <span className="fluent-mdl2--table-total-row"></span>
             </span>
             <div>
-              <p className="text-md font-extralight">Total Amount</p>
+              <p className="text-md font-extralight">{t("totalAmount")}</p>
               <h4 className="text-md py-1 whitespace-nowrap font-semibold">
                 MZN {sale?.total.toFixed(2)}
               </h4>
@@ -66,16 +68,16 @@ export default async function SalePage(props: { params: Params }) {
       </div>
       <div className="order-items flex flex-col gap-2 w-full">
         <h2 className="text-xl font-semibold">
-          Sold Items by {sale?.Service?.businessName}
+          {t("soldItemsBy")} {sale?.Service?.businessName}
         </h2>
 
         <table>
           <thead>
             <tr>
-              <th>Item</th>
-              <th>Sold</th>
-              <th>Price (MZN)</th>
-              <th>Total (MZN)</th>
+              <th>{t("items")}</th>
+              <th>{t("sold")}</th>
+              <th>{t("price")} (MZN)</th>
+              <th>{t("total")} (MZN)</th>
             </tr>
           </thead>
           <tbody>

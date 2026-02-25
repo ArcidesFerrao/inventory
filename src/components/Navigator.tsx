@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { NavLink, HomeNavLink } from "./NavLink";
 import { usePathname } from "next/navigation";
 
@@ -42,6 +43,7 @@ export const ServiceNav = () => {
   // const { locale } = useParams();
 
   // const base = `/${locale}`;
+  const t = useTranslations("Common");
 
   const pathname = usePathname();
   const base = pathname.split("/")[1] || "pt";
@@ -50,37 +52,37 @@ export const ServiceNav = () => {
       <ul className="flex flex-col gap-2">
         <HomeNavLink
           href={`/${base}/service`}
-          label="Dashboard"
+          label={t("dashboard")}
           icon={<span className="mage--dashboard-fill"></span>}
         />
         <NavLink
           href={`/${base}/service/products`}
-          label="Items"
+          label={t("items")}
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
           href={`/${base}/service/sales`}
-          label="Sales"
+          label={t("sales")}
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
           href={`/${base}/service/purchases`}
-          label="Purchases"
+          label={t("purchases")}
           icon={<span className="f7--purchased"></span>}
         />
         <NavLink
           href={`/${base}/service/expenses`}
-          label="Expenses"
+          label={t("expenses")}
           icon={<span className="mdi--cart-sale"></span>}
         />
         <NavLink
           href={`/${base}/service/logs`}
-          label="Active Logs"
+          label={t("activityLogs")}
           icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
           href={`/${base}/service/settings`}
-          label="Settings"
+          label={t("settings")}
           icon={<span className="icon-park-outline--setting-one"></span>}
         />
       </ul>
@@ -93,33 +95,35 @@ export const SupplyNav = () => {
 
   // const base = `/${locale}`;
   const pathname = usePathname();
+  const t = useTranslations("Common");
+
   const base = pathname.split("/")[1] || "pt";
   return (
     <nav className="navigator">
       <ul className="flex flex-col gap-2">
         <HomeNavLink
           href={`/${base}/supply`}
-          label="Dashboard"
+          label={t("dashboard")}
           icon={<span className="mage--dashboard-fill"></span>}
         />
         <NavLink
           href={`/${base}/supply/products`}
-          label="Stock"
+          label={t("stock")}
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
           href={`/${base}/supply/orders`}
-          label="Orders"
+          label={t("orders")}
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
           href={`/${base}/supply/logs`}
-          label="Active Logs"
+          label={t("activityLogs")}
           icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
           href={`/${base}/supply/settings`}
-          label="Settings"
+          label={t("settings")}
           icon={<span className="icon-park-outline--setting-one"></span>}
         />
       </ul>
@@ -131,6 +135,7 @@ export const AdminNav = () => {
   // const { locale } = useParams();
   const pathname = usePathname();
   const base = pathname.split("/")[1] || "pt";
+  const t = useTranslations("Common");
 
   // const base = `/${locale}`;
   return (
@@ -138,37 +143,37 @@ export const AdminNav = () => {
       <ul className="flex flex-col gap-2">
         <HomeNavLink
           href={`/${base}/admin`}
-          label="Dashboard"
+          label={t("dashboard")}
           icon={<span className="mage--dashboard-fill"></span>}
         />
         <NavLink
           href={`/${base}/admin/users`}
-          label="Users"
+          label={t("users")}
           icon={<span className="ant-design--product-filled"></span>}
         />
         <NavLink
           href={`/${base}/admin/products`}
-          label="Items"
+          label={t("items")}
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
           href={`/${base}/admin/orders`}
-          label="Orders"
+          label={t("orders")}
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
           href={`/${base}/admin/sales`}
-          label="Sales"
+          label={t("sales")}
           icon={<span className="carbon--sales-ops"></span>}
         />
         <NavLink
           href={`/${base}/admin/activity`}
-          label="Logs"
+          label={t("activityLogs")}
           icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
           href={`/${base}/admin/settings`}
-          label="Settings"
+          label={t("settings")}
           icon={<span className="icon-park-outline--setting-one"></span>}
         />
       </ul>

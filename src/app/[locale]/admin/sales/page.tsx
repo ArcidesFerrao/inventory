@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import Link from "next/link";
 
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 export default async function SalesPage({
   params,
@@ -12,6 +13,8 @@ export default async function SalesPage({
 }) {
   const { locale } = await params;
   const session = await auth();
+  const cs = await getTranslations("Sales");
+  const ct = await getTranslations("Common");
 
   if (!session?.user.isAdmin) {
     redirect("/");
@@ -26,20 +29,20 @@ export default async function SalesPage({
   return (
     <>
       <div className="admin-header">
-        <h1 className="text-4xl font-medium underline">Sales</h1>
+        <h1 className="text-4xl font-medium underline">{ct("sales")}</h1>
       </div>
       <div className="py-4 flex justify-between">
-        <Card title="Total Sales" value={stats.sales.totalSales} />
+        <Card title={cs("totalSales")} value={stats.sales.totalSales} />
       </div>
       <div className="admin-orders flex flex-col gap-5">
-        <h2 className="text-lg font-bold">Sales List</h2>
+        <h2 className="text-lg font-bold">{ct("salesList")}</h2>
         <table>
           <thead>
             <tr>
-              <th>Sale</th>
-              <th>Agent</th>
-              <th>Items</th>
-              <th>Total</th>
+              <th>{cs("sale")}</th>
+              <th>{cs("agent")}</th>
+              <th>{ct("items")}</th>
+              <th>{ct("total")}</th>
             </tr>
           </thead>
           <tbody>
