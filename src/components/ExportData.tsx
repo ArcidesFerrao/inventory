@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import React from "react";
 import { SelectExport, SupplierSelectExport } from "./SelectExport";
 
 export async function ExportData({ serviceId }: { serviceId: string }) {

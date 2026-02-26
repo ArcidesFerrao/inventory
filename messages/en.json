@@ -29,7 +29,7 @@
         "inventoryManagement": "Inventory Management"
 
     },
-    "supplier": {
+    "Supplier": {
         "supplierDetails": "Supplier Details",
         "companyName": "Company Name",
         "companyEmail": "Company Email",
@@ -37,7 +37,9 @@
         "establishedYear": "Established Year",
         "finalcials": "Finalcials",
         "customers": "Customers",
-        "totalCustomers": "Total Customers"
+        "totalCustomers": "Total Customers",
+        "suppliersList": "Suppliers List",
+        "noSuppliersFound": "No suppliers found"
     },
     "Item": {
         "editItem": "Edit Item",
@@ -66,6 +68,7 @@
         "averageSaleValue": "Avg. Value"
     },
     "Purchases": {
+        "purchase": "Purchase",
         "title": "Recent Purchases & Orders",
         "subtitle": "Manage your direct purchases and orders from suppliers",
         "newPurchase": "New Purchase",
@@ -73,7 +76,10 @@
         "totalSpent": "Total Spent",
         "itemsPurchased": "Items Purchased",
         "purchaseSummary": "Purchase Summary",
-        "noItems": "Add at least one item with a valid price."
+        "noItems": "Add at least one item with a valid price.",
+        "noPurchases": "No purchases found",
+        "totalOrderedItems": "Total Ordered",
+        "totalOrdersValue": "Total Value"
     },
     "Orders": {
         "order": "Order",
@@ -90,7 +96,11 @@
         "orderDetails": "Order Details",
         "totalOrders": "Total Orders",
         "ordered": "Ordered",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "noOrders": "No orders found",
+        "orderSummary": "Order Summary",
+        "recentOrders": "Recent Orders",
+        "completeOrder": "Complete Order"
 
     },
     "Delivery": {
@@ -100,7 +110,9 @@
         "rateDelivery": "Rate this delivery",
         "deliveryDetails": "Delivery Details",
         "deliveryNotProcessed": "Delivery not processed successfully",
-        "status": "Status"
+        "status": "Status",
+        "deliveredDate":"Delivered Date",
+        "deliveredTime":"Delivered Time"
     },
     "Expenses": {
         "expense": "Expense",
@@ -109,7 +121,8 @@
         "newExpense": "New Expense",
         "avgExpense": "Average Expense",
         "expenseItem": "Expense Item",
-        "saveExpense": "Save Expense"
+        "saveExpense": "Save Expense",
+        "noExpenses": "No expenses found"
     },
     "Audit": {
         "title": "Audit Logs",
@@ -134,7 +147,8 @@
         "totalLogs": "Total Logs",
         "activityDetails": "Activity Details",
         "actionType": "Action Type",
-        "entityType": "Entity Type"
+        "entityType": "Entity Type",
+        "noLogs": "No logs found"
     },
     "Settings": {
         "title": "Settings",
@@ -322,7 +336,21 @@
         "thisCannotBeUndone": "This cannot be undone.",
         "recipeItems": "Recipe Items",
         "unitQuantity": "Unit Quantity",
-        "updatedAt": "Updated At"
+        "updatedAt": "Updated At",
+        "stockQuantity": "Stock Quantity",
+        "all": "All",
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "inPreparation": "In Preparation",
+        "delivered": "Delivered",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "searchSuppliers": "Search suppliers...",
+        "endDate": "End Date",
+        "startDate": "Start Date",
+        "totalSpent":"Total Spent",
+        "amount": "Amount",
+        "view": "View"
 
     },
     "Notifications": {

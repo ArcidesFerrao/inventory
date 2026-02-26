@@ -4,6 +4,7 @@ import { createExpense } from "@/lib/actions/expenses";
 import { expenseSchema } from "@/schemas/schema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -33,6 +34,8 @@ export default function ExpenseForm({
     shouldRevalidate: "onSubmit",
   });
   const router = useRouter();
+  const t = useTranslations("Common");
+  const et = useTranslations("Expenses");
 
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: 0,
@@ -89,7 +92,7 @@ export default function ExpenseForm({
         min={0}
       />
       <div className=" flex gap-4 justify-between">
-        <label htmlFor="amount">Amount (MZN)</label>
+        <label htmlFor="amount">{t("amount")} (MZN)</label>
         <input
           type="number"
           name="amount"
@@ -102,7 +105,7 @@ export default function ExpenseForm({
       </div>
       {fields.amount.allErrors && <p>{fields.amount.errors}</p>}
       <div className="flex gap-4 justify-between">
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description">{t("description")}</label>
         <input
           type="text"
           id="description"
@@ -115,7 +118,7 @@ export default function ExpenseForm({
       </div>
       {fields.description.allErrors && <p>{fields.description.errors}</p>}
       <button type="submit" disabled={isPending}>
-        {isPending ? "Saving..." : "Save Expense"}
+        {isPending ? t("saving") : et("saveExpense")}
       </button>
     </form>
   );

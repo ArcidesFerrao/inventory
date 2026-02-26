@@ -127,6 +127,8 @@ export const PurchaseListItem = ({
 }: {
   purchases: PurchaseWithItems;
 }) => {
+  const t = useTranslations("Common");
+  const pt = useTranslations("Purchases");
   return (
     <li
       key={purchases.id}
@@ -135,7 +137,7 @@ export const PurchaseListItem = ({
       <div className="purchase-header flex justify-between">
         <div className="purchase-title flex flex-col gap-2">
           <h3 className="flex flex-col gap-2 text-xl font-medium">
-            Purchase
+            {pt("purchase")}
             <p className="text-sm font-light ">
               #{purchases.id.slice(0, 6)}...
             </p>
@@ -156,7 +158,7 @@ export const PurchaseListItem = ({
                   <span className="fluent--box-16-regular"></span>
                 </span>
                 <p className="text-sm font-light">
-                  {purchases.PurchaseItem.length} items
+                  {purchases.PurchaseItem.length} {t("items")}
                 </p>
               </div>
             )}
@@ -166,7 +168,7 @@ export const PurchaseListItem = ({
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Total Amount</p>
+          <p>{t("totalAmount")}</p>
           <h4 className="text-lg font-bold text-nowrap">
             MZN {purchases.total.toFixed(2)}
           </h4>
@@ -175,10 +177,10 @@ export const PurchaseListItem = ({
       <table>
         <thead>
           <tr>
-            <th>Quantity</th>
-            <th>Item</th>
-            <th className="unit-cost">Unit Cost</th>
-            <th>Total</th>
+            <th>{t("qty")}</th>
+            <th>{t("item")}</th>
+            <th className="unit-cost">{t("unitCost")}</th>
+            <th>{t("total")}</th>
           </tr>
         </thead>
         <tbody>
@@ -204,6 +206,8 @@ export const OrderListItem = ({
   };
 }) => {
   const { locale } = useParams();
+  const t = useTranslations("Common");
+  const ot = useTranslations("Orders");
 
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
@@ -216,7 +220,6 @@ export const OrderListItem = ({
         <div className="order-header flex flex-col gap-2">
           <Link href={`/${locale}/service/purchases/orders/${order.id}`}>
             <h3 className="order-title flex gap-2 items-center text-xl font-medium">
-              Order
               <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
             </h3>
           </Link>
@@ -235,7 +238,9 @@ export const OrderListItem = ({
         {order.status === "DRAFT" ||
           (order.status === "SUBMITTED" && (
             <div className="delivery-window flex flex-col gap-2">
-              <p className="text-sm font-light">Requested Delivery Window</p>
+              <p className="text-sm font-light">
+                {t("requestedDeliveryWindow")}
+              </p>
               <div className=" flex gap-2">
                 <p className="text-md font-medium">
                   {order.requestedStartDate.toLocaleDateString()}
@@ -296,7 +301,7 @@ export const OrderListItem = ({
           </div>
         </div>
         <div className="order-amount text-end py-2">
-          <p className="text-sm ">Order Total</p>
+          <p className="text-sm ">{ot("orderAmount")}</p>
           <h4 className="text-lg font-semibold  text-nowrap">
             MZN {order.total.toFixed(2)}
           </h4>
@@ -307,6 +312,9 @@ export const OrderListItem = ({
 };
 
 export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
+  const t = useTranslations("Common");
+  const st = useTranslations("Sales");
+
   return (
     <li
       key={sale.id}
@@ -315,7 +323,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
       <div className="sale-header flex justify-between">
         <div className="sale-title flex flex-col gap-2">
           <h3 className="flex flex-col gap-2  text-xl font-medium">
-            Sale
+            {st("sale")}
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
           <div className="sale-title-details flex gap-4">
@@ -334,7 +342,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
                   <span className="fluent--box-16-regular"></span>
                 </span>
                 <p className="text-sm font-light">
-                  {sale.SaleItem.length} items
+                  {sale.SaleItem.length} {t("items")}
                 </p>
               </div>
             )}
@@ -344,7 +352,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Total Amount</p>
+          <p>{t("totalAmount")}</p>
           <h4 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
           </h4>
@@ -353,10 +361,10 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
       <table>
         <thead>
           <tr>
-            <th>Qty</th>
-            <th>Item</th>
-            <th className="unit-cost">Unit Cost</th>
-            <th>Total</th>
+            <th>{t("qty")}</th>
+            <th>{t("item")}</th>
+            <th className="unit-cost">{t("unitCost")}</th>
+            <th>{t("total")}</th>
           </tr>
         </thead>
         <tbody>
@@ -411,6 +419,9 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
 };
 
 export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
+  const t = useTranslations("Common");
+  const et = useTranslations("Expenses");
+
   return (
     <li
       key={expense.id}
@@ -419,7 +430,7 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
       <div className="sale-header flex justify-between">
         <div className="expense-title flex  flex-col gap-2">
           <h3 className="flex gap-2 items-center text-lg font-medium">
-            Expense:
+            {et("expense")}:
             <p className="text-md font-light ">{expense.description}</p>
           </h3>
           <div className="expense-title-details flex gap-4">
@@ -438,7 +449,7 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Total Amount</p>
+          <p>{t("totalAmount")}</p>
           <h4 className="text-lg font-bold  text-nowrap">
             MZN {expense.amount.toFixed(2)}
           </h4>
@@ -453,6 +464,9 @@ export const SupplierSaleListItem = ({
 }: {
   sale: SupplierSaleWithItems;
 }) => {
+  const t = useTranslations("Common");
+  const st = useTranslations("Sales");
+
   const totalSoldItems = sale.SaleItem.reduce(
     (acc, item) => acc + item.quantity,
     0,
@@ -465,7 +479,7 @@ export const SupplierSaleListItem = ({
       <div className="sale-header flex justify-between">
         <div className="supplier-sale-title flex flex-col gap-2">
           <h3 className="flex gap-2 items-center text-xl font-medium">
-            Sale
+            {st("sale")}
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
           <div className="sale-title-details flex gap-4">
@@ -484,28 +498,32 @@ export const SupplierSaleListItem = ({
                   <span className="fluent--box-16-regular"></span>
                 </span>
                 <p className="text-sm font-light">
-                  {sale.SaleItem.length} items
+                  {sale.SaleItem.length} {t("items")}
                 </p>
               </div>
             )}
-            <p className="text-sm font-light">{totalSoldItems} items</p>
+            <p className="text-sm font-light">
+              {totalSoldItems} {t("items")}
+            </p>
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Total Amount</p>
+          <p>{t("totalAmount")}</p>
           <h4 className="text-lg font-bold  text-nowrap">
             MZN {sale.total.toFixed(2)}
           </h4>
-          <p className="text-sm font-light">Payment: {sale.paymentType}</p>
+          <p className="text-sm font-light">
+            {t("paymentType")}: {sale.paymentType}
+          </p>
         </div>
       </div>
       <table>
         <thead>
           <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th className="unit-cost">Unit Cost</th>
-            <th>Total</th>
+            <th>{t("item")}</th>
+            <th>{t("qty")}</th>
+            <th className="unit-cost">{t("unitCost")}</th>
+            <th>{t("total")}</th>
           </tr>
         </thead>
         <tbody>
@@ -539,6 +557,7 @@ export default function LogListItem({
   severity: string;
 }) {
   const { locale } = useParams();
+  const t = useTranslations("Common");
 
   return (
     <li className="list-logs flex justify-between ">
@@ -562,7 +581,7 @@ export default function LogListItem({
       <div>
         <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
           <span>{severity}</span>
-          <Link href={`/${locale}/service/logs/${id}`}>View</Link>
+          <Link href={`/${locale}/service/logs/${id}`}>{t("view")}</Link>
         </div>
       </div>
     </li>

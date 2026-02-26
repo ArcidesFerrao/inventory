@@ -1,10 +1,12 @@
 import PurchasesAndOrders from "@/components/PurchasesAndOrders";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 export default async function PurchasesPage() {
   const session = await auth();
+  const purchasesT = await getTranslations("Purchases");
 
   if (!session?.user) redirect("/login");
 
@@ -33,10 +35,8 @@ export default async function PurchasesPage() {
     <div className="flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
         <div className="list-title">
-          <h2 className="text-2xl font-medium">Recent Purchases & Orders</h2>
-          <p className="text-md font-extralight">
-            Manage your direct purchases and orders from suppliers
-          </p>
+          <h2 className="text-2xl font-medium">{purchasesT("title")}</h2>
+          <p className="text-md font-extralight">{purchasesT("subtitle")}</p>
         </div>
       </div>
       <PurchasesAndOrders purchases={purchases} orders={orders} />

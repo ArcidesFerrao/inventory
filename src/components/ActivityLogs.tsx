@@ -4,8 +4,11 @@ import {
 } from "@/types/types";
 import React from "react";
 import LogListItem, { SupplierLogListItem } from "./List";
+import { useTranslations } from "next-intl";
 
 export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
+  const t = useTranslations("Common");
+  const at = useTranslations("Activity");
   const totalLogs = logs.length;
   const infoLogs = logs.filter((log) => log.severity === "INFO");
   const warningLogs = logs.filter((log) => log.severity === "WARNING");
@@ -14,19 +17,19 @@ export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
     <div className="flex flex-col gap-5">
       <div className="activity-logs-info flex justify-between py-5">
         <div className=" flex flex-col gap-2">
-          <p>Total Logs</p>
+          <p>{at("totalLogs")}</p>
           <h2 className="text-xl font-bold">{totalLogs}</h2>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Info</p>
+          <p>{t("info")}</p>
           <h2 className="text-xl font-bold">{infoLogs.length}</h2>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Warnings</p>
+          <p>{t("warnings")}</p>
           <h2 className="text-xl font-bold">{warningLogs.length}</h2>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Errors</p>
+          <p>{t("errors")}</p>
           <h2 className="text-xl font-bold">{errorLogs.length}</h2>
         </div>
       </div>

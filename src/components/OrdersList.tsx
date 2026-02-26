@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createOrder } from "@/lib/actions/orders";
 import toast from "react-hot-toast";
 import { SupplierStockItems } from "@/types/types";
+import { useTranslations } from "next-intl";
 
 export const OrdersList = ({
   initialItems,
@@ -16,6 +17,8 @@ export const OrdersList = ({
   supplierId: string;
 }) => {
   const router = useRouter();
+  const t = useTranslations("Common");
+  const ot = useTranslations("Orders");
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -124,18 +127,18 @@ export const OrdersList = ({
         )}
       </div>
       <div className="order-summary flex flex-col gap-4 w-1/3">
-        <h2 className="text-xl font-medium">Order Summary</h2>
+        <h2 className="text-xl font-medium">{ot("orderSummary")}</h2>
         <div className="flex justify-between">
-          <h3>Items:</h3>
+          <h3>{t("items")}:</h3>
           <p>{totalItems}</p>
         </div>
         <div className="flex justify-between">
-          <h3>Total:</h3>
+          <h3>{t("total")}:</h3>
           <p>{totalPrice} MZN</p>
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
-            <h3>Start Date</h3>
+            <h3>{t(startDate)}</h3>
             <input
               type="date"
               value={startDate}
@@ -146,7 +149,7 @@ export const OrdersList = ({
             />
           </div>
           <div className="flex flex-col gap-1">
-            <h3>End Date</h3>
+            <h3>{t("endDate")}</h3>
             <input
               type="date"
               value={endDate}
@@ -164,7 +167,7 @@ export const OrdersList = ({
             disabled={loading}
             className="complete-btn border px-4 py-2 rounded mt-4"
           >
-            {loading ? "..." : "Order"}
+            {loading ? "..." : ot("completeOrder")}
           </button>
         </div>
       </div>

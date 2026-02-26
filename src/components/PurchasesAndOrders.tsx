@@ -6,6 +6,7 @@ import { useState } from "react";
 import { OrderListItem, PurchaseListItem } from "./List";
 import { Order, OrderItem } from "@/generated/prisma/client";
 import { useLocale } from "@/lib/useLocale";
+import { useTranslations } from "next-intl";
 
 export default function PurchasesAndOrders({
   purchases,
@@ -17,6 +18,9 @@ export default function PurchasesAndOrders({
   })[];
 }) {
   const locale = useLocale();
+  const t = useTranslations("Common");
+  const pt = useTranslations("Purchases");
+  const ot = useTranslations("Orders");
 
   const [view, setView] = useState<"purchases" | "orders">("purchases");
   const [orderFilter, setOrderFilter] = useState<
@@ -42,13 +46,13 @@ export default function PurchasesAndOrders({
   });
 
   const filters = [
-    { value: "ALL", label: "All" },
-    { value: "DRAFT", label: "Draft" },
-    { value: "SUBMITTED", label: "Submitted" },
-    { value: "IN_PREPARATION", label: "In Preparation" },
-    { value: "DELIVERED", label: "Delivered" },
-    { value: "CONFIRMED", label: "Confirmed" },
-    { value: "CANCELLED", label: "Cancelled" },
+    { value: "ALL", label: t("all") },
+    { value: "DRAFT", label: t("draft") },
+    { value: "SUBMITTED", label: t("submitted") },
+    { value: "IN_PREPARATION", label: t("inPreparation") },
+    { value: "DELIVERED", label: t("delivered") },
+    { value: "CONFIRMED", label: t("confirmed") },
+    { value: "CANCELLED", label: t("cancelled") },
   ];
 
   const totalPurchasedItems = purchases.reduce((acc, purchase) => {
@@ -76,7 +80,7 @@ export default function PurchasesAndOrders({
             }`}
             onClick={() => setView("purchases")}
           >
-            <span className="roentgen--bag"></span> Purchases
+            <span className="roentgen--bag"></span> {t("purchases")}
           </button>
           <button
             className={` flex items-center gap-2 px-4 py-2 text-xl ${
@@ -84,7 +88,7 @@ export default function PurchasesAndOrders({
             }`}
             onClick={() => setView("orders")}
           >
-            <span className="flowbite--cart-solid"></span> Orders
+            <span className="flowbite--cart-solid"></span> {t("orders")}
           </button>
         </div>
         <div className="flex gap-2 items-center">
@@ -94,7 +98,8 @@ export default function PurchasesAndOrders({
               className="add-product flex gap-1"
             >
               <span className="text-md px-2 flex items-center gap-2">
-                <span className="flowbite--cart-solid"></span>New Order
+                <span className="flowbite--cart-solid"></span>
+                {ot("newOrder")}
               </span>
             </Link>
           )}
@@ -104,7 +109,8 @@ export default function PurchasesAndOrders({
               className="add-product purchase-btn flex gap-1"
             >
               <span className="text-md px-2 flex items-center gap-2">
-                <span className="roentgen--bag"></span>New Purchase
+                <span className="roentgen--bag"></span>
+                {pt("newPurchase")}
               </span>
             </Link>
           )}
@@ -115,22 +121,22 @@ export default function PurchasesAndOrders({
         <div className="purchase-list flex flex-col gap-5">
           <div className="purchases-data flex justify-between w-full">
             <div className="purchase-total">
-              <p>Total Purchases</p>
+              <p>{pt("totalPurchases")}</p>
               <h2 className="text-2xl font-semibold">{purchases.length}</h2>
             </div>
             <div>
-              <p>Total Spent</p>
+              <p>{pt("totalSpent")}</p>
               <h4 className="text-2xl font-semibold">
                 MZN {purchases.reduce((acc, sale) => acc + sale.total, 0)}.00
               </h4>
             </div>
             <div>
-              <p>Items Purchased</p>
+              <p>{pt("itemsPurchased")}</p>
               <h2 className="text-2xl font-semibold">{totalPurchasedItems}</h2>
             </div>
           </div>
           {purchases.length === 0 ? (
-            <p>No purchases found...</p>
+            <p>{t("noPurchases")}...</p>
           ) : (
             <ul className="flex flex-col gap-4 w-full">
               {purchases.map((p) => (
@@ -144,11 +150,11 @@ export default function PurchasesAndOrders({
         <div className="orders-list flex flex-col gap-5">
           <div className="orders-data flex justify-between">
             <div className="flex flex-col ">
-              <p>Total Ordered</p>
+              <p>{pt("totalOrderedItems")}</p>
               <h2 className="text-2xl font-semibold">{totalOrderedItems}</h2>
             </div>
             <div className="flex flex-col text-end">
-              <p>Total Value</p>
+              <p>{pt("totalOrdersValue")}</p>
               <h4 className="text-2xl font-semibold">
                 MZN{" "}
                 {orders
@@ -160,7 +166,7 @@ export default function PurchasesAndOrders({
           </div>
 
           {orders.length === 0 ? (
-            <p>No orders found...</p>
+            <p>{ot("noOrders")}...</p>
           ) : (
             <ul className="flex flex-col gap-2">
               <select
@@ -179,7 +185,7 @@ export default function PurchasesAndOrders({
                 ))}
               </select>
               {filteredOrders.length === 0 ? (
-                <p>No orders found...</p>
+                <p>{ot("noOrders")}...</p>
               ) : (
                 <ul className="flex flex-col gap-2">
                   {filteredOrders.map((o) => (

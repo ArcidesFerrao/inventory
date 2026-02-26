@@ -8,6 +8,7 @@ import {
 } from "@/lib/actions/settings";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export function SettingsManagement({
   serviceId,
@@ -20,6 +21,9 @@ export function SettingsManagement({
   } | null;
 }) {
   const router = useRouter();
+  const t = useTranslations("Common");
+  const st = useTranslations("Settings");
+  const sert = useTranslations("Service");
   const [settings, setSettings] = useState({
     allowNegativeStock: serviceSettings?.allowNegativeStock || false,
     lowStockThreshold: serviceSettings?.lowStockThreshold || 5,
@@ -62,17 +66,15 @@ export function SettingsManagement({
   return (
     <div className="settings-section flex flex-col gap-2 p-4">
       <div className="flex justify-between">
-        <h3 className="text-lg font-normal">Inventory Management</h3>
+        <h3 className="text-lg font-normal">{sert("inventoryManagement")}</h3>
         <button type="button" onClick={handleSaveSettings}>
-          {isSaving ? "Saving..." : "Save Settings"}
+          {isSaving ? t("saving") : st("saveSettings")}
         </button>
       </div>
       <div className="flex justify-between">
         <div>
-          <p>Allow Negative Stock</p>
-          <p className="font-thin text-sm">
-            Permit sales even when stock quantity goes below zero
-          </p>
+          <p>{st("negativeStock")}</p>
+          <p className="font-thin text-sm">{st("negativeStockDetail")}</p>
         </div>
         <ToggleSwitch
           enabled={settings.allowNegativeStock}
@@ -81,10 +83,8 @@ export function SettingsManagement({
       </div>
       <div className="flex justify-between">
         <div>
-          <p>Low Stock Threshold</p>
-          <p className="font-thin text-sm">
-            Alert when inventory reaches this level
-          </p>
+          <p>{st("lowStock")}</p>
+          <p className="font-thin text-sm">{st("lowStockDetail")}</p>
         </div>
         <input
           type="number"

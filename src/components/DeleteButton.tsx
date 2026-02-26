@@ -57,6 +57,7 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
   const t = useTranslations("Notifications");
+  const ct = useTranslations("Common");
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -85,8 +86,8 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title={t("deleteItem")}
-        description={t("thisCannotBeUndone")}
+        title={ct("deleteItem")}
+        description={ct("thisCannotBeUndone")}
       />
       <button
         onClick={() => setIsDialogOpen(true)}

@@ -3,6 +3,7 @@
 import { SupplierWithItems } from "@/types/types";
 import { useState } from "react";
 import { OrdersList } from "./OrdersList";
+import { useTranslations } from "next-intl";
 
 export const ServiceOrder = ({
   serviceId,
@@ -11,6 +12,7 @@ export const ServiceOrder = ({
   serviceId: string;
   suppliers: SupplierWithItems[];
 }) => {
+  const t = useTranslations("Common");
   const [toggleSupplier, setToggleSupplier] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -29,7 +31,7 @@ export const ServiceOrder = ({
   const filteredSuppliers = suppliers.filter(
     (supplier) =>
       supplier.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      supplier.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      supplier.description?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -37,13 +39,13 @@ export const ServiceOrder = ({
       <div className="search-term flex items-center text-sm gap-2">
         <input
           type="text"
-          placeholder="Search suppliers..."
+          placeholder={t("searchSuppliers")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         {searchTerm && (
           <button className="text-gray-500" onClick={() => setSearchTerm("")}>
-            Clear
+            {t("clear")}
           </button>
         )}
       </div>
@@ -71,7 +73,8 @@ export const ServiceOrder = ({
             </button>
             {toggleSupplier !== supplier.id && (
               <p className=" text-nowrap text-sm opacity-50 font-light  flex items-center gap-1 pr-4 hover:opacity-70">
-                {`${supplier.StockItems.length} items`}
+                {`${supplier.StockItems.length} ${t("items")}`}{" "}
+                <span className="carbon--chevron-right"></span>
               </p>
             )}
             {toggleSupplier === supplier.id && (

@@ -1,10 +1,13 @@
 import { DeleteButton } from "@/components/DeleteButton";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
 type Params = Promise<{ id: string; locale: string }>;
 
 export default async function StockItemPage(props: { params: Params }) {
   const { id } = await props.params;
+  const t = await getTranslations("Common");
+
   // const { locale } = await props.params;
 
   const item = await db.serviceStockItem.findUnique({
@@ -40,23 +43,23 @@ export default async function StockItemPage(props: { params: Params }) {
         <div className="flex flex-col gap-5">
           <div className="flex gap-5 justify-between">
             <div className="flex flex-col gap-2">
-              <p>Unit Quantity</p>
+              <p>{t("unitQuantity")}</p>
               <h2 className="font-bold text-xl">{item?.stockItem.unitQty}</h2>
             </div>
             <div className="flex flex-col gap-2">
-              <p>Unit</p>
+              <p>{t("unit")}</p>
               <h2 className="font-bold text-xl">
                 {item?.stockItem.unit?.name}
               </h2>
             </div>
             <div className="flex flex-col gap-2">
-              <p>Stock</p>
+              <p>{t("stock")}</p>
               <h2 className="font-bold text-xl">{item?.stock}</h2>
             </div>
           </div>
           {item?.stockItem.unit?.name !== "unit" && (
             <div className="flex flex-col gap-2">
-              <p>Stock Quantity</p>
+              <p>{t("stockQuantity")}</p>
               <h2 className="font-bold text-xl">
                 {item?.stockQty}
                 {item?.stockItem.unit?.name}
@@ -70,14 +73,14 @@ export default async function StockItemPage(props: { params: Params }) {
             <h2 className="font-bold text-xl">{item?.type}</h2>
           </div> */}
           <div className="flex flex-col gap-2">
-            <p>Cost</p>
+            <p>{t("cost")}</p>
             <h4 className="font-bold text-xl">{item?.cost?.toFixed(2)} MZN</h4>
           </div>
         </div>
       </div>
       <div className="flex justify-between gap-4 w-full">
         <div className="flex flex-col gap-2">
-          <h2 className="font-semibold">Description </h2>
+          <h2 className="font-semibold">{t("description")} </h2>
           <span className="product-detail-desc p-2 text-md font-light">
             <p>{item?.stockItem.description}</p>
           </span>
@@ -96,10 +99,10 @@ export default async function StockItemPage(props: { params: Params }) {
 
         <div className="flex flex-col self-end gap-2 w-fit">
           <p className="text-xs font-thin">
-            Created At: {item?.createdAt.toLocaleDateString()}
+            {t("createdAt")}: {item?.createdAt.toLocaleDateString()}
           </p>
           <p className="text-xs font-thin">
-            Updated At: {item?.updatedAt.toLocaleDateString()}
+            {t("updatedAt")}: {item?.updatedAt.toLocaleDateString()}
           </p>
         </div>
       </div>

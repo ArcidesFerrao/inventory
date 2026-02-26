@@ -2,6 +2,7 @@ import { ExpenseFilters } from "@/components/ExpenseFilters";
 import { ExpenseListItem } from "@/components/List";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 type Params = Promise<{ id: string; locale: string }>;
@@ -32,6 +33,8 @@ export default async function ExpensesPage({
   if (!session.user.serviceId) redirect("/register/service");
 
   const { locale } = await params;
+  const t = await getTranslations("Common");
+  const et = await getTranslations("Expenses");
 
   const query = await searchParams;
   const searchQuery = query.search?.toLowerCase() || "";
@@ -88,30 +91,28 @@ export default async function ExpensesPage({
     <div className="products-list flex flex-col gap-4 w-full">
       <div className="list-header expense-list-header flex items-center justify-between w-full">
         <div className="sales-title">
-          <h2 className="text-2xl font-medium">Recent Expenses</h2>
-          <p className="text-md font-extralight">
-            Track and manage your expenses
-          </p>
+          <h2 className="text-2xl font-medium">{et("title")}</h2>
+          <p className="text-md font-extralight">{et("subtitle")}</p>
         </div>
         <Link
           href={`/${locale}/service/expenses/new`}
           className="add-product flex gap-1"
         >
-          <span className="text-md px-2">New Expense</span>
+          <span className="text-md px-2">{et("newExpense")}</span>
         </Link>
       </div>
 
       <div className="total-expense-info flex justify-between py-2">
         <div className="total-expense-title flex flex-col gap-2">
-          <p>Expenses</p>
+          <p>{t("expenses")}</p>
           <h4 className="text-xl font-bold">{filteredExpenses.length}</h4>
         </div>
         <div className="total-expense-title flex flex-col gap-2">
-          <p>Total Spent</p>
+          <p>{t("totalSpent")}</p>
           <h4 className="text-xl font-bold">MZN {totalAmount.toFixed(2)}</h4>
         </div>
         <div className="total-expense-title flex flex-col gap-2">
-          <p>Average Expense</p>
+          <p>{et("avgExpense")}</p>
           <h4 className="text-xl font-bold">MZN {averageExpense.toFixed(2)}</h4>
         </div>
       </div>
@@ -122,7 +123,7 @@ export default async function ExpensesPage({
         categories={categories}
       />
       {filteredExpenses.length === 0 ? (
-        <p>No expenses found...</p>
+        <p>{et("noExpenses")}...</p>
       ) : (
         <ul className="w-full flex flex-col gap-4">
           {filteredExpenses.map((expense) => (

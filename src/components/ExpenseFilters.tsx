@@ -1,6 +1,7 @@
 "use client";
 
 import { ExpenseCategory } from "@/generated/prisma";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -19,6 +20,7 @@ export const ExpenseFilters = ({
 }: ExpenseFiltersProps) => {
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("Common");
 
   const searchParams = useSearchParams();
 
