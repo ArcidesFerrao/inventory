@@ -35,6 +35,7 @@ import {
   editServiceStockItem,
   getServiceStockItems,
 } from "@/lib/actions/items";
+import { useTranslations } from "next-intl";
 
 type StockItemWithUnit = StockItem & {
   Unit: {
@@ -445,6 +446,9 @@ export const SupplierProductForm = ({
   stockItem?: StockItemWithUnit | null;
   supplierId: string;
 }) => {
+  const t = useTranslations("Common");
+  const it = useTranslations("Items");
+
   const actionFn = stockItem ? editStockItem : createStockItem;
   const [state, action, isPending] = useActionState(actionFn, undefined);
   const [form, fields] = useForm({
@@ -520,7 +524,8 @@ export const SupplierProductForm = ({
       className="flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
-        Fill the form to {stockItem ? "edit the" : "create a new"} Stock Item
+        Fill the form to {stockItem ? "edit the" : "create a new"}{" "}
+        {t("stockItem")}
       </h2>
       <section className="flex flex-col gap-4">
         {stockItem && (
@@ -534,13 +539,13 @@ export const SupplierProductForm = ({
         />
         <section className="form-name-unit flex gap-2 items-end ">
           <div className="flex w-full flex-col gap-1 relative">
-            <label htmlFor="name">Stock Item Name</label>
+            <label htmlFor="name">{t("name")}</label>
 
             <input
               type="text"
               name="name"
               id="name"
-              placeholder="Stock Item Name"
+              placeholder={`${t("stockItem")}`}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -567,7 +572,7 @@ export const SupplierProductForm = ({
           </div>
           <div className="flex gap-2">
             <div className="flex flex-col gap-1">
-              <label htmlFor="unitQty">Unit Qty.</label>
+              <label htmlFor="unitQty">{t("unit")} Qty.</label>
               <input
                 type="number"
                 name="unitQty"
@@ -580,7 +585,7 @@ export const SupplierProductForm = ({
               )}
             </div>
             <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="unit">Unit</label>
+              <label htmlFor="unit">{t("unit")}</label>
               <select
                 name="unitId"
                 id="unitId"
@@ -588,7 +593,7 @@ export const SupplierProductForm = ({
                 onChange={(e) => setUnitId(e.target.value)}
               >
                 <option value="" disabled>
-                  Select a unit
+                  {t("selectUnit")}
                 </option>
                 {units.map((unit) => (
                   <option key={unit.id} value={unit.id}>
@@ -605,7 +610,7 @@ export const SupplierProductForm = ({
         <div className="form-second-row flex flex-col gap-2 w-full ">
           <div className="flex gap-2">
             <div className="flex flex-col gap-1">
-              <label htmlFor="price">Price</label>
+              <label htmlFor="price">{t("price")}</label>
               <input
                 type="number"
                 name="price"
@@ -625,7 +630,7 @@ export const SupplierProductForm = ({
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="stock">Stock</label>
+              <label htmlFor="stock">{t("stock")}</label>
               <input
                 type="number"
                 name="stock"
@@ -639,7 +644,7 @@ export const SupplierProductForm = ({
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <label htmlFor="cost">Cost</label>
+              <label htmlFor="cost">{t("cost")}</label>
               <input
                 type="number"
                 name="cost"
@@ -663,12 +668,12 @@ export const SupplierProductForm = ({
           )}
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">{t("description")}</label>
 
           <textarea
             name="description"
             id="description"
-            placeholder="Description"
+            placeholder={t("description")}
             defaultValue={stockItem?.description || ""}
             className="min-w-80 min-h-40"
           />
@@ -686,7 +691,7 @@ export const SupplierProductForm = ({
       <input
         type="submit"
         disabled={isPending}
-        value={isPending ? "..." : stockItem ? "Edit Item" : "Add Item"}
+        value={isPending ? "..." : stockItem ? it("editItem") : t("addItem")}
         className="submit-button"
       />
     </form>

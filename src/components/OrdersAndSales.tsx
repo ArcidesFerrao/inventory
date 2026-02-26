@@ -3,6 +3,7 @@
 import { OrderWithStockItems, SupplierSaleWithItems } from "@/types/types";
 import { useState } from "react";
 import { SupplierSaleListItem, SupplierOrderListItem } from "./List";
+import { useTranslations } from "next-intl";
 
 export default function OrdersAndSales({
   orders,
@@ -12,6 +13,9 @@ export default function OrdersAndSales({
   sales: SupplierSaleWithItems[];
 }) {
   const [view, setView] = useState<"sales" | "orders">("orders");
+  const t = useTranslations("Common");
+  const ot = useTranslations("Orders");
+  const st = useTranslations("Sales");
 
   const pendingOrders = orders.filter((order) => order.status === "DRAFT");
   const approvedOrders = orders.filter((order) => order.status === "SUBMITTED");
@@ -38,7 +42,7 @@ export default function OrdersAndSales({
           }`}
           onClick={() => setView("orders")}
         >
-          <span className="flowbite--cart-solid"></span> Orders
+          <span className="flowbite--cart-solid"></span> {t("orders")}
         </button>
         <button
           className={`flex items-center gap-2 px-4 py-2 text-xl ${
@@ -46,30 +50,30 @@ export default function OrdersAndSales({
           }`}
           onClick={() => setView("sales")}
         >
-          <span className="roentgen--bag"></span> Sales
+          <span className="roentgen--bag"></span> {t("sales")}
         </button>
       </div>
       {view === "orders" && (
         <>
           <div className="orders-data flex justify-between">
             <div className="flex flex-col gap-1">
-              <p>Total Orders</p>
+              <p>{ot("totalOrders")}</p>
               <h2 className="text-xl font-bold">{orders.length}</h2>
             </div>
             <div className="flex flex-col  gap-1">
-              <p>Pending</p>
+              <p>{t("pending")}</p>
               <h2 className="text-xl font-bold">{pendingOrders.length}</h2>
             </div>
             <div className="orders-approved flex flex-col  gap-1">
-              <p>Approved</p>
+              <p>{t("approved")}</p>
               <h2 className="text-xl font-bold">{approvedOrders.length}</h2>
             </div>
             <div className="orders-delivered flex flex-col  gap-1">
-              <p>Delivered</p>
+              <p>{t("delivered")}</p>
               <h2 className="text-xl font-bold">{deliveredOrders.length}</h2>
             </div>
             <div className="flex flex-col text-end gap-1">
-              <p>Total Value</p>
+              <p>{t("totalValue")}</p>
               <h4 className="text-xl font-bold">
                 MZN{" "}
                 {orders
@@ -80,7 +84,7 @@ export default function OrdersAndSales({
             </div>
           </div>
           {orders.length === 0 ? (
-            <p>No orders found...</p>
+            <p>{ot("noOrders")}...</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {orders.map((order) => (
@@ -94,17 +98,17 @@ export default function OrdersAndSales({
         <>
           <div className="flex justify-between">
             <div className="flex flex-col gap-1">
-              <p>Total Sales</p>
+              <p>{st("totalSales")}</p>
               <h2 className="text-xl font-bold">{sales.length}</h2>
             </div>
             <div className="flex flex-col gap-1">
-              <p>Revenue</p>
+              <p>{t("revenue")}</p>
               <h4 className="text-xl font-bold">
                 MZN {sales.reduce((acc, sale) => acc + sale.total, 0)}.00
               </h4>
             </div>
             <div className="flex flex-col gap-1">
-              <p>Gross Profit</p>
+              <p>{t("grossProfit")}</p>
               <h4 className="text-xl font-bold">
                 MZN{" "}
                 {sales.reduce((acc, sale) => acc + sale.total, 0) -
@@ -114,7 +118,7 @@ export default function OrdersAndSales({
             </div>
           </div>
           {sales.length === 0 ? (
-            <p>No sales found</p>
+            <p>{st("noSales")}</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {sales.map((sale) => (

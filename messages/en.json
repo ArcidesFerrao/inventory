@@ -39,13 +39,19 @@
         "customers": "Customers",
         "totalCustomers": "Total Customers",
         "suppliersList": "Suppliers List",
-        "noSuppliersFound": "No suppliers found"
+        "noSuppliersFound": "No suppliers found",
+        "statsSubtitle": "metrics on orders, customers and profitability"
     },
     "Item": {
         "editItem": "Edit Item",
         "editing": "Editing",
         "subtitle": "Fill the form to edit the Stock Item",
-        "stockItemName": "Stock Item Name"
+        "description": "Manage your item catalog and inventory",
+        "stockItemName": "Stock Item Name",
+        "totalItems": "Total Items",
+        "lowStock": "Low Stock",
+        "outOfStock": "Out of Stock",
+        "addNewItem": "Add New Item"
     },
     "Stock": {
         "subtitle": "Manage your stock inventory",
@@ -100,7 +106,8 @@
         "noOrders": "No orders found",
         "orderSummary": "Order Summary",
         "recentOrders": "Recent Orders",
-        "completeOrder": "Complete Order"
+        "completeOrder": "Complete Order",
+        "avgOrderValue": "Avg. Order Value"
 
     },
     "Delivery": {

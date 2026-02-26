@@ -4,6 +4,7 @@ import { SearchInput } from "@/components/SearchInput";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 type SearchParams = {
   search?: string;
@@ -21,6 +22,8 @@ export default async function ProductsPage({
   params: Promise<Params>;
 }) {
   const session = await auth();
+  const t = await getTranslations("Common");
+  const it = await getTranslations("Items");
 
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");
@@ -48,30 +51,28 @@ export default async function ProductsPage({
     <div className="products-list flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
         <div className="list-title">
-          <h2 className="text-2xl font-medium">Items</h2>
-          <p className="text-md font-extralight">
-            Manage your item catalog and inventory
-          </p>
+          <h2 className="text-2xl font-medium">{t("items")}</h2>
+          <p className="text-md font-extralight">{it("description")}</p>
         </div>
         <Link
           href={`/${locale}/supply/products/new`}
           className="add-product flex gap-1"
         >
           <span>+</span>
-          <span className="text-md">Item</span>
+          <span className="text-md">{t("item")}</span>
         </Link>
       </div>
       <div className="state-products flex justify-between w-full">
         <div>
-          <p>Total Items</p>
+          <p>{it("totalItems")}</p>
           <h2 className="text-2xl font-medium">{items.length}</h2>
         </div>
         <div>
-          <p>Low Stock</p>
+          <p>{it("lowStock")}</p>
           <h2 className="text-2xl font-medium">{lowStockItems.length}</h2>
         </div>
         <div>
-          <p>Out of Stock</p>
+          <p>{it("outOfStock")}</p>
           <h2 className="text-2xl font-medium">0</h2>
         </div>
       </div>
@@ -79,7 +80,7 @@ export default async function ProductsPage({
       <SearchInput currentSearch={searchQuery} />
 
       {filteredItems.length === 0 ? (
-        <p>No items found...</p>
+        <p>{t("noItems")}...</p>
       ) : (
         <ViewList items={filteredItems} />
       )}

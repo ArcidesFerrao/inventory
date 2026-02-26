@@ -603,6 +603,7 @@ export function SupplierLogListItem({
   severity: string;
 }) {
   const { locale } = useParams();
+  const t = useTranslations("Common");
 
   return (
     <li className="list-logs flex justify-between ">
@@ -626,7 +627,7 @@ export function SupplierLogListItem({
       <div>
         <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
           <span>{severity}</span>
-          <Link href={`/${locale}/supply/logs/${id}`}>View</Link>
+          <Link href={`/${locale}/supply/logs/${id}`}>{t("view")}</Link>
         </div>
       </div>
     </li>
@@ -641,6 +642,8 @@ export const SupplierOrderListItem = ({
   // supplierOrder: SupplierOrderWithOrderAndItems;
 }) => {
   const { locale } = useParams();
+  const ot = useTranslations("Orders");
+  const t = useTranslations("Common");
 
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
@@ -656,7 +659,7 @@ export const SupplierOrderListItem = ({
             href={`/${locale}/supply/orders/${order.id}`}
             className="flex items-center gap-2"
           >
-            <h3 className="order-title  text-xl font-medium">Order</h3>
+            <h3 className="order-title  text-xl font-medium">{ot("order")}</h3>
             <p className="text-xs font-light">#{order.id.slice(0, 6)}...</p>
           </Link>
           <div className="order-info flex items-center gap-4">
@@ -682,7 +685,7 @@ export const SupplierOrderListItem = ({
           </div>
         ) : order.status === "CONFIRMED" && delivery ? (
           <div className="text-md font-medium">
-            <p className="text-sm font-light">Delivered at: </p>
+            <p className="text-sm font-light">{t("deliveredAt")}: </p>
             <div className="flex gap-1 text-md font-medium">
               <p>{order?.delivery.deliveredAt?.toLocaleDateString()},</p>
               <p>{order?.delivery.deliveredAt?.toLocaleTimeString()}</p>
@@ -693,7 +696,7 @@ export const SupplierOrderListItem = ({
         ) : (
           <div className="delivery-window flex flex-col gap-2">
             <p className="text-sm font-light">
-              {order?.Service?.businessName} - Requested Delivery Window
+              {order?.Service?.businessName} - {t("requestedDeliveryWindow")}
             </p>
             <div className=" flex gap-2">
               <p className="text-md font-medium">
@@ -717,11 +720,11 @@ export const SupplierOrderListItem = ({
               <span className="fluent--box-16-regular"></span>
             </span>
             {totalItemsOrdered}
-            <p className="">items</p>
+            <p className="">{t("items")}</p>
           </div>
         </div>
         <div className="order-amount text-end">
-          <p className="text-sm ">Order Total</p>
+          <p className="text-sm ">{ot("orderAmount")}</p>
           <h4 className="text-lg font-bold  text-nowrap">
             MZN {order?.total.toFixed(2)}
           </h4>
