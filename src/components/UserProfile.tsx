@@ -9,6 +9,8 @@ import { useState } from "react";
 export default function UserProfile({ user }: { user: UserProfile }) {
   const locale = useLocale();
   const t = useTranslations("Common");
+  const supt = useTranslations("Supplier");
+
   const [view, setView] = useState<"personal" | "detail" | "security">(
     "personal",
   );
@@ -113,16 +115,14 @@ export default function UserProfile({ user }: { user: UserProfile }) {
           {user.role === "SUPPLIER" && user.Supplier && (
             <div className="details-section flex flex-col gap-2">
               <div className="flex flex-col gap-2">
-                <p>{t("companyName")}</p>
+                <p>{supt("companyName")}</p>
                 <div className="flex items-center gap-2">
                   <span className="mdi--company"></span>
                   <h4>{user.Supplier.businessName}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>
-                  {t("company")} {t("emailAddress")}
-                </p>
+                <p>{supt("companyEmail")}</p>
                 <div className="flex items-center gap-2">
                   <span className="ic--round-mail"></span>
                   <h4>{user.Supplier.email}</h4>
@@ -136,23 +136,21 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>
-                  {t("company")} {t("phoneNumber")}
-                </p>
+                <p>{supt("companyPhone")}</p>
                 <div className="flex items-center gap-2">
                   <span className="solar--phone-bold"></span>
                   <h4>{user.Supplier.phoneNumber}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("website")}</p>
+                <p>Website</p>
                 <div className="flex items-center gap-2">
                   <span className="streamline-plump--web"></span>
                   <h4>{user.Supplier.website}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("establishedYear")}</p>
+                <p>{supt("establishedYear")}</p>
                 <div className="flex items-center gap-2">
                   <span className="proicons--document"></span>
                   <h4>{user.Supplier.establishedYear}</h4>
@@ -198,6 +196,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
 
 export function AdminUserProfile({ user }: { user: UserProfile }) {
   const t = useTranslations("Common");
+  const supt = useTranslations("Supplier");
 
   const [view, setView] = useState<"personal" | "detail" | "security">(
     "personal",
@@ -290,7 +289,7 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
             <div className="details-section flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-5">
-                  <p>{t("companyName")}</p>
+                  <p>{supt("companyName")}</p>
                   <button className="text-xs font-extralight border px-2 py-1">
                     {t("approve")}
                   </button>
@@ -301,9 +300,7 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>
-                  {t("company")}Company {t("emailAddress")}
-                </p>
+                <p>{supt("companyEmail")}</p>
                 <div className="flex items-center gap-2">
                   <span className="ic--round-mail"></span>
                   <h4>{user.Supplier.email}</h4>
@@ -317,23 +314,21 @@ export function AdminUserProfile({ user }: { user: UserProfile }) {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>
-                  {t("company")}Company {t("phoneNumber")}
-                </p>
+                <p>{supt("companyPhone")}</p>
                 <div className="flex items-center gap-2">
                   <span className="solar--phone-bold"></span>
                   <h4>{user.Supplier.phoneNumber}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("website")}Website</p>
+                <p>Website</p>
                 <div className="flex items-center gap-2">
                   <span className="streamline-plump--web"></span>
                   <h4>{user.Supplier.website}</h4>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("establishedYear")}</p>
+                <p>{supt("establishedYear")}</p>
                 <div className="flex items-center gap-2">
                   <span className="proicons--document"></span>
                   <h4>{user.Supplier.establishedYear}</h4>

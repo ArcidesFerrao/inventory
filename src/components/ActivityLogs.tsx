@@ -51,6 +51,9 @@ export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
   );
 }
 export function SupplierLogs({ logs }: { logs: ActivityLogsWithSupplier[] }) {
+  const t = useTranslations("Common");
+  const at = useTranslations("Activity");
+
   const totalLogs = logs.length;
   const infoLogs = logs.filter((log) => log.severity === "INFO");
   const warningLogs = logs.filter((log) => log.severity === "WARNING");
@@ -59,7 +62,7 @@ export function SupplierLogs({ logs }: { logs: ActivityLogsWithSupplier[] }) {
     <div className="flex flex-col gap-5">
       <div className="flex justify-between py-5">
         <div className="flex flex-col gap-2">
-          <p>Total Logs</p>
+          <p>{at("totalLogs")}</p>
           <h2 className="text-xl font-bold">{totalLogs}</h2>
         </div>
         <div className="flex flex-col gap-2">
@@ -67,11 +70,11 @@ export function SupplierLogs({ logs }: { logs: ActivityLogsWithSupplier[] }) {
           <h2 className="text-xl font-bold">{infoLogs.length}</h2>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Warnings</p>
+          <p>{t("warnings")}</p>
           <h2 className="text-xl font-bold">{warningLogs.length}</h2>
         </div>
         <div className="flex flex-col gap-2">
-          <p>Errors</p>
+          <p>{t("errors")}</p>
           <h2 className="text-xl font-bold">{errorLogs.length}</h2>
         </div>
       </div>

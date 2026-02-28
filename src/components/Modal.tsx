@@ -4,6 +4,7 @@ import { StockChange } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState, useTransition } from "react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface ModalProps {
   isOpen: boolean;
@@ -51,14 +52,21 @@ export function StockMovementModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const t = useTranslations("Common");
+  const mt = useTranslations("Modal");
+  const nt = useTranslations("Notifications");
 
   const stockChangeConfig = {
-    PURCHASE: { label: "Purchase", color: "text-green-600", symbol: "+" },
-    SALE: { label: "Sale", color: "text-blue-600", symbol: "-" },
-    WASTE: { label: "Waste", color: "text-red-600", symbol: "-" },
-    ADJUSTMENT: { label: "Adjustment", color: "text-yellow-600", symbol: "±" },
+    PURCHASE: { label: mt("purchase"), color: "text-green-600", symbol: "+" },
+    SALE: { label: mt("sale"), color: "text-blue-600", symbol: "-" },
+    WASTE: { label: mt("waste"), color: "text-red-600", symbol: "-" },
+    ADJUSTMENT: {
+      label: mt("adjustment"),
+      color: "text-yellow-600",
+      symbol: "±",
+    },
     RECONCILIATION: {
-      label: "Reconciliation",
+      label: mt("reconciliation"),
       color: "text-purple-600",
       symbol: "=",
     },
@@ -85,17 +93,17 @@ export function StockMovementModal({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || "Failed to record stock movement");
+        throw new Error(data.error || t("stockMovementError"));
       }
 
       setQuantity(0);
       setNotes("");
       onClose();
-      toast.success("Stock Recorder Successfully!");
+      toast.success(t("stockRecordSuccess"));
       router.refresh();
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : "Failed to record movement",
+        error instanceof Error ? error.message : t("stockMovementError"),
       );
     } finally {
       setLoading(false);
@@ -116,7 +124,7 @@ export function StockMovementModal({
     <div className=" stock-modal fixed left-4 inset-0 z-50 max-w-100 ">
       <div className="rounded-sm w-full p-5">
         <div className="flex justify-between items-center">
-          <h2>Record Stock Movement</h2>
+          <h2>{mt("recordStock")}</h2>
           <button className="close-modal" onClick={onClose}>
             x
           </button>
@@ -124,12 +132,12 @@ export function StockMovementModal({
 
         <form onSubmit={handleSubmit}>
           <div className="py-2 flex justify-between">
-            <label htmlFor="currentStock">Current Stock</label>
+            <label htmlFor="currentStock">{mt("currentStock")}</label>
             <span>{currentStock}</span>
           </div>
 
           <div className="flex flex-col gap-2 py-2">
-            <label htmlFor="changeType">ChangeType</label>
+            <label htmlFor="changeType">{mt("changeType")}</label>
             <div className="grid grid-cols-2 gap-2">
               {(Object.keys(stockChangeConfig) as StockChange[]).map((type) => (
                 <button
@@ -153,7 +161,7 @@ export function StockMovementModal({
 
           <div className=" flex items-center text-sm justify-between py-2">
             <label htmlFor="typeChange">
-              {changeType === "RECONCILIATION" ? "New Stock Level" : "Quantity"}
+              {changeType === "RECONCILIATION" ? mt("newStockLevel") : "Qty"}
             </label>
             <input
               type="number"
@@ -170,13 +178,15 @@ export function StockMovementModal({
 
           {changeType !== "RECONCILIATION" && (
             <div className="flex  justify-between py-2">
-              <h3>New Stock will be: </h3>
+              <h3>{mt("newStock")}: </h3>
               <span>{calculateNewStock()}</span>
             </div>
           )}
 
           <div className=" flex flex-col gap-2">
-            <label htmlFor="notes">Notes (optional)</label>
+            <label htmlFor="notes">
+              {mt("notes")} ({mt("optional")})
+            </label>
             <textarea
               name="notes"
               id="notes"
@@ -185,7 +195,7 @@ export function StockMovementModal({
                 setNotes(e.target.value)
               }
               rows={3}
-              placeholder="Add any notes about this stock movement"
+              placeholder={mt("addAnyNotes")}
             />
           </div>
 
@@ -197,10 +207,10 @@ export function StockMovementModal({
               onClick={onClose}
               disabled={loading}
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button className="px-4 py-1 border rounded-sm  hover:text-gray-800 hover:bg-gray-100">
-              {loading ? "Recording..." : "Record Movement"}
+              {loading ? mt("recording") : mt("recordMovement")}
             </button>
           </div>
         </form>
@@ -219,6 +229,8 @@ export const CreateCategoryModal = ({
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
+  const t = useTranslations("Common");
+  const mt = useTranslations("Modal");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -268,7 +280,7 @@ export const CreateCategoryModal = ({
 
       <div className="category-modal relative">
         <div>
-          <h2>Create Expense Category</h2>
+          <h2>{mt("createExpenseCategory")}</h2>
           <button onClick={handleClose} disabled={isPending}>
             x
           </button>
@@ -276,7 +288,7 @@ export const CreateCategoryModal = ({
 
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="category-name">Category Name</label>
+            <label htmlFor="category-name">{t("categoryName")}</label>
             <input
               type="text"
               name="category-name"
@@ -289,7 +301,7 @@ export const CreateCategoryModal = ({
             />
           </div>
           <div>
-            <label htmlFor="category-description">Description</label>
+            <label htmlFor="category-description">{t("description")}</label>
             <textarea
               name="category-description"
               id="category-description"
@@ -306,10 +318,10 @@ export const CreateCategoryModal = ({
           )}
           <div>
             <button type="button" onClick={handleClose} disabled={isPending}>
-              Cancel
+              {t("cancel")}
             </button>
             <button type="submit" disabled={isPending}>
-              {isPending ? "Creating..." : "Create"}
+              {isPending ? t("creating") : t("create")}
             </button>
           </div>
         </form>

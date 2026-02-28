@@ -79,7 +79,7 @@ export default async function SupplyPage({
             <h2 className="text-2xl font-semibold underline">
               {t("statistics")}
             </h2>
-            <p className="font-thin">{st("statsSubtitle")}</p>
+            <p className="font-thin">{t("statsDescription")}</p>
           </div>
           <div className="stats-details-container  flex justify-between">
             <div className=" flex flex-col gap-2">

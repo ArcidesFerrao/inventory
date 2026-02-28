@@ -35,7 +35,7 @@
         "companyEmail": "Company Email",
         "companyPhone": "Company Phone Number",
         "establishedYear": "Established Year",
-        "finalcials": "Finalcials",
+        "financials": "Financials",
         "customers": "Customers",
         "totalCustomers": "Total Customers",
         "suppliersList": "Suppliers List",
@@ -107,7 +107,8 @@
         "orderSummary": "Order Summary",
         "recentOrders": "Recent Orders",
         "completeOrder": "Complete Order",
-        "avgOrderValue": "Avg. Order Value"
+        "avgOrderValue": "Avg. Order Value",
+        "orderedItemsBy": "Ordered Items by"
 
     },
     "Delivery": {
@@ -119,7 +120,8 @@
         "deliveryNotProcessed": "Delivery not processed successfully",
         "status": "Status",
         "deliveredDate":"Delivered Date",
-        "deliveredTime":"Delivered Time"
+        "deliveredTime":"Delivered Time",
+        "deliveries": "Deliveries"
     },
     "Expenses": {
         "expense": "Expense",
@@ -180,18 +182,21 @@
         "greeting": "Welcome",
         "gotoDash": "Go To Dashboard",
         "pickDashboard": "Pick a dashboard",
+        "company": "Company",
         "users": "Users",
         "items": "Items",
         "orders": "Orders",
         "order": "Order",
         "sales": "Sales",
         "logs": "Logs",
+        "delivery": "Delivery",
         "settings": "Settings",
         "errors": "Errors",
         "info": "Info",
         "notes": "Notes",
         "warnings": "Warnings",
         "severity": "Severity",
+        "update": "Update",
         "signIn": "Sign In",
         "signOut": "Sign Out",
         "export": "Export",
@@ -205,6 +210,9 @@
         "memberSince": "Member Since",
         "lastUpdated": "Last Updated",
         "security": "Security",
+        "grossMargin": "Gross Margin",
+        "lowStock":"Low Stock",
+        "itemsOffered": "Items Offered",
         "personalInformation": "Personal Information",
         "underConstruction": "Under Construction",
         "backTo": "Back to",
@@ -352,6 +360,9 @@
         "delivered": "Delivered",
         "confirmed": "Confirmed",
         "cancelled": "Cancelled",
+        "pending": "pending",
+        "approved": "approved",
+        "paymentType": "Payment Type",
         "searchSuppliers": "Search suppliers...",
         "endDate": "End Date",
         "startDate": "Start Date",
@@ -366,6 +377,21 @@
         "stockUpdatedSuccess": "Stock item updated successfully",
         "stockUpdatedError": "Failed to update stock item",
         "stockDeletedSuccess": "Stock item deleted successfully",
-        "stockDeletedError": "Failed to delete stock item"
+        "stockDeletedError": "Failed to delete stock item",
+        "stockMovementError": "Failed to record stock movement",
+        "stockRecordSuccess": "Stock Recorder Successfully!"
+    },
+    "Modal": {
+        "recordStock": "Record Stock Movement",
+        "currentStock": "Current Stock",
+        "changeType": "Change Type",
+        "newStock": "New Stock will be",
+        "notes": "Notes",
+        "optional": "Optional",
+        "createExpenseCategory": "Create Expense Category",
+        "recordMovement": "Record Movement",
+        "recording": "Recording",
+        "addAnyNotes": "Add any notes about this stock movement",
+        "newStockLevel": "New Stock Level"
     }
 }

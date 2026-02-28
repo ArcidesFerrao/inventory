@@ -23,7 +23,7 @@ export default async function ProductsPage({
 }) {
   const session = await auth();
   const t = await getTranslations("Common");
-  const it = await getTranslations("Items");
+  const it = await getTranslations("Item");
 
   if (!session?.user) redirect("/login");
   if (!session?.user.supplierId) redirect("/register/supplier");

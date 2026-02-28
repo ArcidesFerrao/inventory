@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { StockMovementModal } from "./Modal";
+import { useTranslations } from "next-intl";
 
 export default function StockManagementButton({
   stockItemId,
@@ -11,13 +12,15 @@ export default function StockManagementButton({
   currentStock: number;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const t = useTranslations("Common");
+
   return (
     <>
       <button
         onClick={() => setModalOpen(true)}
         className="px-2 py-1 rounded text-xs stock-btn "
       >
-        Update
+        {t("update")}
       </button>
       <StockMovementModal
         isOpen={modalOpen}

@@ -117,10 +117,9 @@ export function SupplierSettingsManagement({
     minimumOrderValue: minimumOrderValue || 500,
   });
   const [isSaving, setIsSaving] = useState(false);
-
-  //   const handleToggle = (field: keyof typeof settings) => {
-  //     setSettings((prev) => ({ ...prev, [field]: !prev[field] }));
-  //   };
+  const t = useTranslations("Common");
+  const st = useTranslations("Settings");
+  const sert = useTranslations("Service");
 
   const handleChange = ({
     field,
@@ -154,9 +153,9 @@ export function SupplierSettingsManagement({
   return (
     <div className="settings-section flex flex-col gap-2 p-4">
       <div className="flex justify-between">
-        <h3 className="text-lg font-normal">Inventory Management</h3>
+        <h3 className="text-lg font-normal">{sert("inventoryManagement")}</h3>
         <button type="button" onClick={handleSaveSettings}>
-          {isSaving ? "Saving..." : "Save Settings"}
+          {isSaving ? t("saving") : st("saveSettings")}
         </button>
       </div>
       {/* <div className="flex justify-between">
@@ -173,10 +172,8 @@ export function SupplierSettingsManagement({
       </div> */}
       <div className="flex justify-between">
         <div>
-          <p>Low Stock Threshold</p>
-          <p className="font-thin text-sm">
-            Alert when inventory reaches this level
-          </p>
+          <p>{st("negativeStock")}</p>
+          <p className="font-thin text-sm">{st("negativeStockDetail")}</p>
         </div>
         <input
           type="number"
