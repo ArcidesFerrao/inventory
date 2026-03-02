@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPasswordResetToken } from "@/lib/verification";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { getTranslations } from "next-intl/server";
 
 export async function POST(req: NextRequest) {
+
+    const rt = await getTranslations("Responses")
+
     try {
         const body = await req.json();
         const { email } = body;
 
         if (!email) {
             return NextResponse.json(
-                { error: "Email is required" },
+                { error: rt("emailRequired") },
                 { status: 400 }
             );
         }
@@ -22,15 +26,15 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            message: "Password reset link sent to your email"
+            message: rt("passwordResetSent")
         });
 
     } catch (error) {
-        console.error("Password reset request error:", error);
+        console.error(rt("resetError"), error);
         // Don't reveal if email exists or not for security
         return NextResponse.json({
             success: true,
-            message: "If an account exists with this email, a reset link has been sent"
+            message: rt("willSendResetLink")
         });
     }
 }

@@ -394,5 +394,20 @@
         "recording": "Recording",
         "addAnyNotes": "Add any notes about this stock movement",
         "newStockLevel": "New Stock Level"
+    },
+    "Responses": {
+        "passwordResetSent": "Password reset link sent to your email",
+        "willSendResetLink": "If an account exists with this email, a reset link has been sent",
+        "emailRequired": "Email is required",
+        "tokenPassRequired": "Token and password are required",
+        "resetRequestError": "Password reset request error:",
+        "resetError": "Password reset error:",
+        "passwordRule": "Password must be at least 8 characters",
+        "resetSuccess": "Password reset successfully",
+        "resetFail": "Password reset failed",
+        "tokenRequired": "Token is required",
+        "validToken": "Token is valid",
+        "invalidToken": "Invalid or expired token"
+        
     }
 }

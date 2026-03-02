@@ -1,22 +1,24 @@
 // app/api/auth/reset-password/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { resetPassword, verifyPasswordResetToken } from "@/lib/verification";
+import { getTranslations } from "next-intl/server";
 
 export async function POST(req: NextRequest) {
+    const rt = await getTranslations("Responses");
     try {
         const body = await req.json();
         const { token, password } = body;
 
         if (!token || !password) {
             return NextResponse.json(
-                { error: "Token and password are required" },
+                { error: rt("tokenPassRequired") },
                 { status: 400 }
             );
         }
 
         if (password.length < 8) {
             return NextResponse.json(
-                { error: "Password must be at least 8 characters" },
+                { error: rt("passwordRule") },
                 { status: 400 }
             );
         }
@@ -25,13 +27,13 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            message: "Password reset successfully"
+            message: rt("resetSuccess") 
         });
 
     } catch (error) {
-        console.error("Password reset error:", error);
+        console.error(rt("resetError"), error);
         return NextResponse.json(
-            { error: error || "Password reset failed" },
+            { error: error || rt("resetFail") },
             { status: 400 }
         );
     }
@@ -39,12 +41,14 @@ export async function POST(req: NextRequest) {
 
 // Verify token validity (optional - for checking if token is still valid)
 export async function GET(req: NextRequest) {
+    const rt = await getTranslations("Responses");
+
     try {
         const token = req.nextUrl.searchParams.get("token");
 
         if (!token) {
             return NextResponse.json(
-                { error: "Token is required" },
+                { error: rt("tokenRequired")  },
                 { status: 400 }
             );
         }
@@ -53,12 +57,12 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            message: "Token is valid"
+            message: rt("validToken")
         });
 
     } catch (err) {
         return NextResponse.json(
-            { error: err || "Invalid or expired token" },
+            { error: err || rt("invalidToken") },
             { status: 400 }
         );
     }
