@@ -1,11 +1,14 @@
 "use client";
 
 import { StockMovement } from "@/generated/prisma/client";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 export default function StockHistory({ stockItemId }: { stockItemId: string }) {
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const st = useTranslations("Stock");
 
   useEffect(() => {
     fetch(`/api/stock-movement?stockItemId=${stockItemId}`)
@@ -17,16 +20,16 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
       .catch(() => setLoading(false));
   }, [stockItemId]);
 
-  if (loading) return <p>Loading History...</p>;
+  if (loading) return <p>{st("loadingHistory")}</p>;
 
   if (movements.length === 0) {
-    return <p>No stock movements recorded</p>;
+    return <p>{st("noStock")}</p>;
   }
 
   return (
     <div className="stock-movement rounded-sm overflow-hidden p-2">
       <div className="p-2 ">
-        <h2 className="text-md font-semibold">Stock Movement History</h2>
+        <h2 className="text-md font-semibold">{st("stockHistory")}</h2>
       </div>
       {/* <div className="divide-y"> */}
       {movements.map((movement) => (

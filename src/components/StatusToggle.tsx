@@ -1,6 +1,7 @@
 "use client";
 
 import { ItemStatus } from "@/generated/prisma/client";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -14,11 +15,14 @@ export default function StatusToggle({
   const [status, setStatus] = useState<ItemStatus>(initialStatus);
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+
+  const t = useTranslations("Common");
+  const nt = useTranslations("Notifications");
   //   const router = useRouter();
 
   const statusConfig = {
-    ACTIVE: { label: "Active", color: "bg-green-100 text-green-800" },
-    INACTIVE: { label: "Inactive", color: "bg-yellow-100 text-yellow-800" },
+    ACTIVE: { label: t("active"), color: "bg-green-100 text-green-800" },
+    INACTIVE: { label: t("inactive"), color: "bg-yellow-100 text-yellow-800" },
     // OUT_OF_STOCK: { label: "Out of Stock", color: "bg-red-100 text-red-800" },
   };
 
@@ -34,13 +38,13 @@ export default function StatusToggle({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update status");
+        throw new Error(nt("updateStatusError"));
       }
 
       setStatus(newStatus);
     } catch (error) {
-      console.error("Error updating status: ", error);
-      toast.error("Failed to update item status");
+      console.error(nt("updateStatusConsole"), error);
+      toast.error(nt("updateStatusError"));
       setStatus(status);
     } finally {
       setLoading(false);
@@ -69,7 +73,7 @@ export default function StatusToggle({
                   >
                     <span>{statusConfig[statusOption].label}</span>
                   </button>
-                )
+                ),
               )}
             </div>
           </div>

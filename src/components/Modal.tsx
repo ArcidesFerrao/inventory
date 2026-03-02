@@ -93,17 +93,17 @@ export function StockMovementModal({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || t("stockMovementError"));
+        throw new Error(data.error || nt("stockMovementError"));
       }
 
       setQuantity(0);
       setNotes("");
       onClose();
-      toast.success(t("stockRecordSuccess"));
+      toast.success(nt("stockRecordSuccess"));
       router.refresh();
     } catch (error) {
       setError(
-        error instanceof Error ? error.message : t("stockMovementError"),
+        error instanceof Error ? error.message : nt("stockMovementError"),
       );
     } finally {
       setLoading(false);

@@ -18,7 +18,6 @@
         "alreadyHaveAccount": "Already have an account? ",
         "signInHere": "Sign in here.",
         "pickRole": "Pick a role"
-
     },
     "Admin": {
         "title": "Admin Dashboard"
@@ -27,7 +26,6 @@
     "Service": {
         "serviceInfo": "Service Info",
         "inventoryManagement": "Inventory Management"
-
     },
     "Supplier": {
         "supplierDetails": "Supplier Details",
@@ -55,7 +53,10 @@
     },
     "Stock": {
         "subtitle": "Manage your stock inventory",
-        "history": "Stock Movement History"
+        "history": "Stock Movement History",
+        "loadingHistory": "Loading History...",
+        "noStockMovement": "No stock movements recorded",
+        "stockHistory": "Stock Movement History"
     },
     "Sales": {
         "subtitle": "Track and manage your sales transactions",
@@ -109,7 +110,6 @@
         "completeOrder": "Complete Order",
         "avgOrderValue": "Avg. Order Value",
         "orderedItemsBy": "Ordered Items by"
-
     },
     "Delivery": {
         "customerInfo": "Customer Information",
@@ -369,7 +369,6 @@
         "totalSpent":"Total Spent",
         "amount": "Amount",
         "view": "View"
-
     },
     "Notifications": {
         "stockAddedSuccess": "Stock item added successfully",
@@ -379,7 +378,9 @@
         "stockDeletedSuccess": "Stock item deleted successfully",
         "stockDeletedError": "Failed to delete stock item",
         "stockMovementError": "Failed to record stock movement",
-        "stockRecordSuccess": "Stock Recorder Successfully!"
+        "stockRecordSuccess": "Stock Recorder Successfully!",
+        "updateStatusError": "Failed to update status",
+        "updateStatusConsole": "Error updating status: "
     },
     "Modal": {
         "recordStock": "Record Stock Movement",
