@@ -2,6 +2,7 @@
 
 import { createPurchase } from "@/lib/actions/purchase";
 import { PurchasesProps } from "@/types/types";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -11,6 +12,10 @@ export const PurchasesList = ({
   serviceId,
 }: PurchasesProps) => {
   const router = useRouter();
+  const t = useTranslations("Common");
+  const pt = useTranslations("Purchase");
+  const rt = useTranslations("Responses");
+
   const [items, setItems] = useState(initialStockItems);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +26,7 @@ export const PurchasesList = ({
       (item) => item.quantity > 0 && (item.price ?? 0) > 0,
     );
     if (purchaseItems.length === 0) {
-      toast.error("Add at least one item with a valid price.");
+      toast.error(rt("addOneItem"));
       setLoading(false);
       return;
     }
@@ -29,10 +34,10 @@ export const PurchasesList = ({
 
     if (!result.success) {
       setLoading(false);
-      toast.error(result.message ?? "Purchase not processed successfully");
+      toast.error(result.message ?? rt("processPurchaseSuccess"));
     }
     if (result.success) {
-      toast.success("Purchase Completed");
+      toast.success(rt("completePurchase"));
       setTimeout(() => {
         setLoading(false);
         router.push("/service/purchases");
@@ -74,7 +79,7 @@ export const PurchasesList = ({
     <>
       <div className="products-selection flex flex-col gap-4 w-full">
         <div className="items">
-          <h2 className="text-xl font-medium  p-4">Items</h2>
+          <h2 className="text-xl font-medium  p-4">{t("items")}</h2>
           <ul>
             {items.map((item) => (
               <li key={item.id} className=" flex justify-between px-4 py-2">
@@ -84,7 +89,7 @@ export const PurchasesList = ({
                     className="flex gap-2 text-sm items-center"
                     htmlFor="price"
                   >
-                    Price:{" "}
+                    {t("price")}:{" "}
                     <input
                       className="max-w-20 text-xs"
                       type="number"
@@ -117,9 +122,9 @@ export const PurchasesList = ({
         </div>
       </div>
       <div className="order-summary flex flex-col gap-4 w-1/3">
-        <h2 className="text-xl font-medium">Purchase Summary</h2>
+        <h2 className="text-xl font-medium">{pt("purchaseSummary")}</h2>
         <div className="flex justify-between">
-          <h3>Items:</h3>
+          <h3>{t("items")}:</h3>
           <p>{totalItems}</p>
         </div>
         <div className="flex justify-between">
@@ -131,7 +136,7 @@ export const PurchasesList = ({
           disabled={loading}
           className="complete-btn border px-4 py-2 rounded mt-4"
         >
-          {loading ? "..." : "Complete"}
+          {loading ? "..." : t("complete")}
         </button>
       </div>
     </>

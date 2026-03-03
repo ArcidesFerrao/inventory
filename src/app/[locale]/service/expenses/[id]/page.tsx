@@ -1,9 +1,12 @@
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
 type Params = Promise<{ id: string }>;
 
 export default async function ExpensePage(props: { params: Params }) {
   const { id } = await props.params;
+  const t = await getTranslations("Common");
+
   const item = await db.expense.findUnique({
     where: {
       id,
@@ -18,13 +21,13 @@ export default async function ExpensePage(props: { params: Params }) {
       </div>
       <div className="flex flex-col gap-2 w-fit">
         <div className="flex flex-col gap-2">
-          <p>Amount</p>
+          <p>{t("amount")}</p>
           <h4 className="font-bold text-xl">{item?.amount.toFixed(2)} MZN</h4>
         </div>
       </div>
       <div className="flex justify-between gap-4 w-full">
         <div className="flex flex-col gap-2">
-          <h2 className="font-semibold">Description </h2>
+          <h2 className="font-semibold">{t("description")}</h2>
           <span className="product-detail-desc p-2 text-md font-light">
             <p>{item?.description}</p>
           </span>
@@ -32,7 +35,7 @@ export default async function ExpensePage(props: { params: Params }) {
 
         <div className="flex flex-col self-end gap-2 w-fit">
           <p className="text-xs font-thin">
-            Created At: {item?.createdAt.toLocaleDateString()}
+            {t("createdAt")}: {item?.createdAt.toLocaleDateString()}
           </p>
         </div>
       </div>

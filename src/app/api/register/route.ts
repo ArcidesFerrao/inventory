@@ -3,28 +3,31 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { sendVerificationEmail } from "@/lib/email";
 import { createEmailVerificationToken } from "@/lib/verification";
+import { getTranslations } from "next-intl/server";
 
 
 export async function POST(req: Request) {
+    const rt = await getTranslations("Responses");
+
     try {
         const body = await req.json();
         const { email, name, password, phonenumber, role } = body;
 
         if (!email || !name || !password || !phonenumber) {
-            return NextResponse.json({ message:"Missing fields"}, { status: 400 });
+            return NextResponse.json({ message: rt("missingFields")}, { status: 400 });
         }
 
         // Validate input
         if (!password || password.length < 8) {
             return NextResponse.json(
-                { error: "Password must be at least 8 characters" },
+                { error: rt("passwordRule") },
                 { status: 400 }
             );
         }
 
         if (!email && !phonenumber) {
             return NextResponse.json(
-                { error: "Either email or phone number is required" },
+                { error: rt("eitherRequired") },
                 { status: 400 }
             );
         }
@@ -42,13 +45,13 @@ export async function POST(req: Request) {
         if (existingUser) {
             if (existingUser.email === email) {
                 return NextResponse.json(
-                    { error: "Email already registered" },
+                    { error: rt("registeredEmailError") },
                     { status: 400 }
                 );
             }
             if (existingUser.phoneNumber === phonenumber) {
                 return NextResponse.json(
-                    { error: "Phone number already registered" },
+                    { error: rt("registeredNumberError") },
                     { status: 400 }
                 );
             }
@@ -74,11 +77,11 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
             success: true,
-            message: "User registered successfully. Please verify your email.",
+            message: rt("registerUserSuccess"),
             user
         });
     } catch (error) {
-        console.error("Registration error: ", error);
-        return new NextResponse("Internal Server Error", { status: 500 });
+        console.error(rt("registerError"), error);
+        return new NextResponse(rt("serverError"), { status: 500 });
     }
 }

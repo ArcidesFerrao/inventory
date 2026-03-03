@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { verifyToken } from "@/lib/verifyToken";
+import { getTranslations } from "next-intl/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -7,6 +8,8 @@ type Params = Promise<{id: string}>
 
 
 export async function PATCH(req: NextRequest, props:{ params: Params}) {
+  const rt = await getTranslations("Responses");
+  
   try {
     verifyToken(req);
     
@@ -17,7 +20,7 @@ export async function PATCH(req: NextRequest, props:{ params: Params}) {
     const { id } = await props.params
 
     const item = await db.item.findUnique({ where: { id } });
-    if (!item) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!item) return NextResponse.json({ error: rt("notFoundItem") }, { status: 404 });
 
     const newStock = operation === "decrement"
       ? (item.stock ?? 0)- quantity
@@ -28,8 +31,8 @@ export async function PATCH(req: NextRequest, props:{ params: Params}) {
       data: { stock: newStock },
     });
 
-    return NextResponse.json({ message: "Stock updated.", newStock: updated.stock });
+    return NextResponse.json({ message: rt("updateStockSuccessful"), newStock: updated.stock });
   } catch {
-    return NextResponse.json({ error: "Stock update failed" }, { status: 500 });
+    return NextResponse.json({ error: rt("updateStockFailed") }, { status: 500 });
   }
 }

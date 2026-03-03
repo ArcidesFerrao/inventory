@@ -2,7 +2,7 @@ import { SalesList } from "@/components/SalesList";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { SaleItemWithCatalogItems } from "@/types/types";
-
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -13,6 +13,7 @@ export default async function NewSale({
 }) {
   const { locale } = await params;
   const session = await auth();
+  const t = await getTranslations("Common");
 
   if (!session?.user.serviceId) redirect("/login");
 
@@ -45,17 +46,17 @@ export default async function NewSale({
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-bold">Catalog Items</h2>
+        <h2 className="text-2xl font-bold">{t("catalogItems")}</h2>
         <Link
           href={`/${locale}/service/sales`}
           className="add-product flex gap-1"
         >
-          <span className="text-md px-2">Cancel</span>
+          <span className="text-md px-2">{t("cancel")}</span>
         </Link>
       </div>
       <div className="sales-content flex justify-between gap-4">
         {items.length === 0 ? (
-          <p>No items found...</p>
+          <p>{t("notFoundItem")}...</p>
         ) : (
           <SalesList
             initialItems={mappedItems}

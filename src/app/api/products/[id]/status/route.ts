@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { getTranslations } from "next-intl/server"
 import { NextResponse } from "next/server"
 
 
@@ -13,6 +14,8 @@ export async function PATCH(request: Request, { params}: {params: Promise<{ id: 
 
     const { id } = await params
     const { status  } = await request.json();
+      const rt = await getTranslations("Responses");
+    
 
     try {
         const stockItem = await db.stockItem.update({
@@ -24,7 +27,7 @@ export async function PATCH(request: Request, { params}: {params: Promise<{ id: 
 
     } catch (error) {
         console.error(error)
-        return NextResponse.json({ error: "Failed to update item status"},
+        return NextResponse.json({ error:  rt("updateStatusFailed")},
             {status: 500 }
         )
     }

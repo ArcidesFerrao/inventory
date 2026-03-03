@@ -297,7 +297,7 @@ export const OrderListItem = ({
               <span className="fluent--box-16-regular"></span>
             </span>
             {totalItemsOrdered}
-            <p className="">items</p>
+            <p className="">{t("items")}</p>
           </div>
         </div>
         <div className="order-amount text-end py-2">

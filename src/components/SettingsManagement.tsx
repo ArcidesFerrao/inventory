@@ -118,6 +118,7 @@ export function SupplierSettingsManagement({
   });
   const [isSaving, setIsSaving] = useState(false);
   const t = useTranslations("Common");
+  const rt = useTranslations("Responses");
   const st = useTranslations("Settings");
   const sert = useTranslations("Service");
 
@@ -139,12 +140,12 @@ export function SupplierSettingsManagement({
     try {
       const result = await saveSupplierSettingsAction({ supplierId, settings });
       if (result.success) {
-        toast.success("Settings saved successfully");
+        toast.success(rt("saveSettingsSuccess"));
       }
-      console.log("Settings saved", settings);
+      // console.log("Settings saved", settings);
       router.refresh();
     } catch (error) {
-      console.error("Error saving settings:", error);
+      console.error(rt("saveSettingsError"), error);
     } finally {
       setIsSaving(false);
     }

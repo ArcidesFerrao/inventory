@@ -2,12 +2,16 @@
 
 import { createSale } from "@/lib/actions/sales";
 import { SaleProductsProps } from "@/types/types";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
   const router = useRouter();
+  const t = useTranslations("Common");
+  const st = useTranslations("Sales");
+
   const [loading, setLoading] = useState(false);
 
   const [items, setItems] = useState(
@@ -20,12 +24,12 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
     const result = await createSale(saleItems, serviceId);
 
     if (saleItems.length === 0) {
-      toast.error("Sale not processed successfully");
+      toast.error(st("processSaleSuccess"));
       setLoading(false);
     }
 
     if (result.success && !result.message) {
-      toast.success("Sale Completed");
+      toast.success(st("saleCompleted"));
       setTimeout(() => {
         setLoading(false);
         router.push("/service/sales");
@@ -48,7 +52,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
 
     if (recipe.length === 0) {
       if ((item.stock ?? 0) <= item.quantity) {
-        toast.error(`Not enough stock of ${item.name}`);
+        toast.error(`${t("notEnoughStock")} ${item.name}`);
         return;
       }
 
@@ -71,9 +75,9 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
 
       if (totalAvailable < totalNeeded) {
         toast.error(
-          `Not enough ${
-            recipeItem.serviceStockItem.stockItem.name ?? "ingredient"
-          } to make another ${item.name}`,
+          `${t("notEnough")} ${
+            recipeItem.serviceStockItem.stockItem.name ?? t("ingredient")
+          } ${t("toMakeAnother")} ${item.name}`,
         );
         return;
       }
@@ -144,7 +148,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
     <>
       <div className="products-selection flex flex-col gap-4 w-full p-4">
         <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">List</h3>
+          <h3 className="text-md font-medium underline">{t("list")}</h3>
           <ul>
             {items.map((item) => {
               return (
@@ -174,9 +178,9 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
         </div>
       </div>
       <div className="order-summary flex flex-col gap-4 w-1/3">
-        <h2 className="text-xl font-medium">Order Summary</h2>
+        <h2 className="text-xl font-medium">{st("orderSummary")}</h2>
         <div className="flex justify-between">
-          <h3>Items:</h3>
+          <h3>{t("items")}:</h3>
           <p>{totalItems}</p>
         </div>
         <div className="flex justify-between">
@@ -188,7 +192,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
           disabled={loading}
           className="complete-btn border px-4 py-2 rounded mt-4"
         >
-          {loading ? "..." : "Complete Sale"}
+          {loading ? "..." : st("completeSale")}
         </button>
       </div>
     </>

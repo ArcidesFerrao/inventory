@@ -12,7 +12,7 @@ export default async function SettingsPage() {
 
   const serviceId = session?.user.serviceId;
 
-  if (!serviceId) return <p>Access Denied</p>;
+  if (!serviceId) return <p>{t("accessDenied")}</p>;
 
   const serviceSettings = await db.serviceSettings.findUnique({
     where: { serviceId },

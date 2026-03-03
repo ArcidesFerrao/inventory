@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ProductsCategorySelect } from "./CategorySelect";
+import { useTranslations } from "next-intl";
 
 export const ItemForm = ({
   item,
@@ -37,6 +38,8 @@ export const ItemForm = ({
     defaultValue: item,
   });
   const router = useRouter();
+  const t = useTranslations("Common");
+
   const [type, setType] = useState(item ? item.type : "SERVICE");
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
@@ -115,7 +118,7 @@ export const ItemForm = ({
       className="new-item-form flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
-        Fill the form to {item ? "edit the" : "create a new"} Item
+        {t("fillFormTo")} {item ? t("editThe") : t("createNew")} {t("item")}
       </h2>
       <section className="flex flex-col gap-4">
         <input
@@ -132,13 +135,13 @@ export const ItemForm = ({
           <p className="text-xs font-light">{fields.id.errors}</p>
         )}
         <div className="flex w-full flex-col gap-1 relative">
-          <label htmlFor="name">Item Name</label>
+          <label htmlFor="name">{t("itemName")}</label>
 
           <input
             type="text"
             name="name"
             id="name"
-            placeholder="Item Name"
+            placeholder={t("itemName")}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -164,7 +167,7 @@ export const ItemForm = ({
         </div>
         <div className="flex gap-2 justify-between">
           <div className="flex flex-col gap-2">
-            <label htmlFor="type">Type</label>
+            <label htmlFor="type">{t("type")}</label>
             <select
               name="type"
               id="type"
@@ -173,10 +176,10 @@ export const ItemForm = ({
               aria-readonly
             >
               <option value="" disabled>
-                Select a type
+                {t("selectType")}
               </option>
               <option value="STOCK">Stock</option>
-              <option value="SERVICE">Service</option>
+              <option value="SERVICE">{t("service")}</option>
             </select>
             {fields.type.errors && (
               <p className="text-xs font-light">{fields.type.errors}</p>
@@ -185,7 +188,7 @@ export const ItemForm = ({
           <div className="flex flex-col gap-1 w-1/3">
             {type === "SERVICE" ? (
               <div hidden className="flex flex-col gap-2">
-                <label htmlFor="unitQty">Unit Quantity</label>
+                <label htmlFor="unitQty">{t("unitQuantity")}</label>
                 <input
                   type="number"
                   name="unitQty"
@@ -197,7 +200,7 @@ export const ItemForm = ({
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <label htmlFor="unitQty">Unit Quantity</label>
+                <label htmlFor="unitQty">{t("unitQuantity")}</label>
                 <input
                   type="number"
                   name="unitQty"
@@ -212,7 +215,7 @@ export const ItemForm = ({
           </div>
           <div className="flex flex-col gap-1">
             <div className="flex flex-col">
-              <label htmlFor="unit">Unit</label>
+              <label htmlFor="unit">{t("unit")}</label>
               <select
                 name="unitId"
                 id="unitId"
@@ -221,7 +224,7 @@ export const ItemForm = ({
                 onChange={(e) => setUnitId(e.target.value)}
               >
                 <option value="" disabled>
-                  Select a unit
+                  {t("selectUnit")}
                 </option>
                 {units.map((unit) => (
                   <option key={unit.id} value={unit.id}>
@@ -237,7 +240,7 @@ export const ItemForm = ({
         </div>
         <div className="flex gap-2 justify-between">
           <div hidden className="flex flex-col gap-1">
-            <label htmlFor="stock">Stock Quantity</label>
+            <label htmlFor="stock">Stock</label>
             <input
               type="hidden"
               name="stock"
@@ -253,7 +256,7 @@ export const ItemForm = ({
           {type === "SERVICE" && (
             <div className="flex gap-4 text-sm item-category-form">
               <div className="flex flex-col gap-1">
-                <label htmlFor="price">Price</label>
+                <label htmlFor="price">{t("price")}</label>
                 <input
                   type="number"
                   name="price"
@@ -281,7 +284,7 @@ export const ItemForm = ({
         </div>
         <div className="flex flex-col gap-4">
           <fieldset className="flex flex-col gap-4 p-4">
-            <legend className="font-semibold">Catalog Items</legend>
+            <legend className="font-semibold">{t("catalogItems")}</legend>
             {recipeItems.map((stockItem, index) => {
               return (
                 <div
@@ -332,12 +335,12 @@ export const ItemForm = ({
           </fieldset>
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">{t("description")}</label>
 
           <textarea
             name="description"
             id="description"
-            placeholder="Description"
+            placeholder={t("description")}
             defaultValue={item?.description || ""}
             className="min-w-80 min-h-40"
           />
@@ -355,7 +358,7 @@ export const ItemForm = ({
       <input
         type="submit"
         disabled={isPending}
-        value={isPending ? "..." : item ? "Edit Item" : "Add Item"}
+        value={isPending ? "..." : item ? t("editItem") : t("addItem")}
         className="submit-button"
       />
     </form>

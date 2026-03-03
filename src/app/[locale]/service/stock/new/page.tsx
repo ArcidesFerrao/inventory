@@ -1,5 +1,6 @@
 import { ServiceStockItemForm } from "@/components/ProductForm";
 import { auth } from "@/lib/auth";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -9,6 +10,7 @@ export default async function NewStockItemPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await getTranslations("Common");
 
   const session = await auth();
 
@@ -22,7 +24,7 @@ export default async function NewStockItemPage({
   return (
     <div className="flex flex-col gap-5 items-center w-full">
       <div className="flex items-center justify-between w-full">
-        <h1 className="text-xl font-semibold">Add New Stock Item</h1>
+        <h1 className="text-xl font-semibold">{t("addNewStockItem")}</h1>
         <Link href={`/${locale}/service/products`}>
           <span className="ep--back"></span>
         </Link>

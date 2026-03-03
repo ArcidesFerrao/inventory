@@ -7,16 +7,20 @@ import {
   ErrorDeliveryLogs,
   UpdateOrderLogs,
 } from "@/types/types";
-import React from "react";
+import { useTranslations } from "next-intl";
 
 export const ConfirmedDeliveryLogDetails = ({
   details,
 }: {
   details: ConfirmedDeliveryLogs;
 }) => {
+  const t = useTranslations("Common");
   return (
     <div className="flex flex-col gap-1">
-      <h4> {details.totalItems} Delivered Items:</h4>
+      <h4>
+        {" "}
+        {details.totalItems} {t("deliveredItems")}:
+      </h4>
       {typeof details === "object" && details ? (
         <ul className="text-sm font-extralight">
           {details.deliveryItems.map((item) => (
@@ -27,7 +31,7 @@ export const ConfirmedDeliveryLogDetails = ({
           ))}
         </ul>
       ) : (
-        <p>No extra details</p>
+        <p>{t("noExtraDetails")}</p>
       )}
     </div>
   );
@@ -37,9 +41,11 @@ export const ArrivedDeliveryLogDetails = ({
 }: {
   details: ArrivedDeliveryLogs;
 }) => {
+  const t = useTranslations("Common");
+
   return (
     <div className="flex flex-col gap-1">
-      <h4>Delivered At:</h4>
+      <h4>{t("deliveredAt")}:</h4>
       <p>
         {details.deliveredAt !== null &&
           details.deliveredAt.toLocaleDateString()}
@@ -47,16 +53,18 @@ export const ArrivedDeliveryLogDetails = ({
     </div>
   );
 };
+
 export const CreateDeliveryLogDetails = ({
   details,
 }: {
   details: CreateDeliveryLogs;
 }) => {
+  const t = useTranslations("Common");
   return (
     <div className="flex flex-col gap-1">
       <p>Order Id: {details.orderId}</p>
       <h4>
-        {details.totalItems} Delivery{" "}
+        {details.totalItems} {t("delivery")}
         {details.totalItems === 1 ? "Item" : "Items"}:
       </h4>
       {typeof details === "object" && details ? (
@@ -69,7 +77,7 @@ export const CreateDeliveryLogDetails = ({
           ))}
         </ul>
       ) : (
-        <p>No extra details</p>
+        <p>{t("noExtraDetails")}</p>
       )}
     </div>
   );
@@ -80,9 +88,10 @@ export const CreateOrderLogDetails = ({
 }: {
   details: CreateOrderLogs;
 }) => {
+  const t = useTranslations("Common");
   return (
     <div className="flex flex-col gap-1">
-      <h4>Order Items:</h4>
+      <h4>{t("orderItems")}:</h4>
       {typeof details === "object" && details ? (
         <div className="flex flex-col gap-1">
           {details.items.map((item) => (
@@ -94,7 +103,7 @@ export const CreateOrderLogDetails = ({
           ))}
         </div>
       ) : (
-        <p>No extra details</p>
+        <p>{t("noExtraDetails")}</p>
       )}
     </div>
   );
@@ -104,9 +113,11 @@ export const CreateSaleLogDetails = ({
 }: {
   details: CreateSaleLogs;
 }) => {
+  const t = useTranslations("Common");
+
   return (
     <div className="flex flex-col gap-1">
-      <h4>Sale Items:</h4>
+      <h4>{t("saleItems")}:</h4>
       {typeof details === "object" && details ? (
         <div className="flex flex-col gap-1">
           <ul className="text-sm font-extralight">
@@ -118,7 +129,7 @@ export const CreateSaleLogDetails = ({
           </ul>
         </div>
       ) : (
-        <p>No extra details</p>
+        <p>{t("noExtraDetails")}</p>
       )}
     </div>
   );
@@ -128,9 +139,11 @@ export const CreatePurchaseLogDetails = ({
 }: {
   details: CreateSaleLogs;
 }) => {
+  const t = useTranslations("Common");
+
   return (
     <div className="flex flex-col gap-1">
-      <h4>Purchase Items:</h4>
+      <h4>{t("purchaseItems")}:</h4>
       {typeof details === "object" && details ? (
         <div className="flex flex-col gap-1">
           <ul className="text-sm font-extralight">
@@ -142,7 +155,7 @@ export const CreatePurchaseLogDetails = ({
           </ul>
         </div>
       ) : (
-        <p>No extra details</p>
+        <p>{t("noExtraDetails")}</p>
       )}
     </div>
   );
@@ -153,10 +166,16 @@ export const UpdateOrderLogDetails = ({
 }: {
   details: UpdateOrderLogs;
 }) => {
+  const t = useTranslations("Common");
+
   return (
     <div className="flex flex-col gap-2 text-sm font-extralight">
-      <p>Supplier Order Id: {details.supplierOrderId}</p>
-      <p>Update: {details.update}</p>
+      <p>
+        {t("supplierOrderId")}: {details.supplierOrderId}
+      </p>
+      <p>
+        {t("update")}: {details.update}
+      </p>
     </div>
   );
 };
@@ -165,11 +184,20 @@ export const ErroDeliveryLogDetails = ({
 }: {
   details: ErrorDeliveryLogs;
 }) => {
+  const t = useTranslations("Common");
   return (
     <div className="flex flex-col gap-2 text-sm font-extralight">
-      {details.serviceId && <p>Service Id: {details.serviceId}</p>}
-      <p>Supplier Order Id: {details.supplierOrderId}</p>
-      <p>Update: {details.error}</p>
+      {details.serviceId && (
+        <p>
+          {t("serviceId")}: {details.serviceId}
+        </p>
+      )}
+      <p>
+        {t("supplierOrderId")}: {details.supplierOrderId}
+      </p>
+      <p>
+        {t("update")}: {details.error}
+      </p>
     </div>
   );
 };

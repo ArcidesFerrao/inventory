@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,6 +9,9 @@ export default function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const at = useTranslations("Auth");
+  const rt = useTranslations("Responses");
+  const lt = useTranslations("Loading");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,11 +37,11 @@ export default function ResetPasswordForm() {
         if (res.ok) {
           setTokenValid(true);
         } else {
-          setError(data.error || "Invalid or expired reset link");
+          setError(data.error || rt("invalidLink"));
         }
       } catch (err) {
         console.error(err);
-        setError("Failed to validate reset link");
+        setError(rt("validateLinkFail"));
       } finally {
         setValidating(false);
       }
@@ -53,12 +57,12 @@ export default function ResetPasswordForm() {
 
     // Validation
     if (password.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError(rt("passwordRule"));
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(rt("noMatchPassword"));
       return;
     }
 
@@ -76,16 +80,16 @@ export default function ResetPasswordForm() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage("Password reset successfully! Redirecting to login...");
+        setMessage(rt("resetPasswordSuccess"));
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {
-        setError(data.error || "Failed to reset password");
+        setError(data.error || rt("resetFail"));
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to reset password. Please try again.");
+      setError(rt("resetFail"));
     } finally {
       setLoading(false);
     }
@@ -94,7 +98,7 @@ export default function ResetPasswordForm() {
   if (validating) {
     return (
       <div className="flex flex-col gap-4 max-w-md mx-auto p-6">
-        <p className="text-center">Validating reset link...</p>
+        <p className="text-center">{lt("resetValidating")}</p>
       </div>
     );
   }
@@ -102,14 +106,14 @@ export default function ResetPasswordForm() {
   if (!tokenValid) {
     return (
       <div className="flex flex-col gap-4 max-w-md mx-auto p-6">
-        <h1 className="text-2xl text-center">Invalid Reset Link</h1>
+        <h1 className="text-2xl text-center">{at("invalidLink")}</h1>
         <p className="text-red-500 text-center">{error}</p>
         <p className="text-center">
           <Link
             href="/forgot-password"
             className="text-blue-600 hover:underline"
           >
-            Request a new reset link
+            {at("newLinkRequest")}
           </Link>
         </p>
       </div>
@@ -118,12 +122,12 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="flex flex-col gap-4 max-w-md mx-auto p-6">
-      <h1 className="text-2xl text-center">Reset Password</h1>
-      <p className="text-center text-gray-600">Enter your new password below</p>
+      <h1 className="text-2xl text-center">{at("resetPasswordTitle")}</h1>
+      <p className="text-center text-gray-600">{at("resetPasswordSubtitle")}</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <label htmlFor="password">New Password</label>
+          <label htmlFor="password">{at("newPassword")}</label>
           <input
             type="password"
             name="password"
@@ -137,12 +141,12 @@ export default function ResetPasswordForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="confirmPassword">Confirm Password</label>
+          <label htmlFor="confirmPassword">{at("confirmPassword")}</label>
           <input
             type="password"
             name="confirmPassword"
             id="confirmPassword"
-            placeholder="Re-enter your password"
+            placeholder={at("reEnter")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -154,7 +158,7 @@ export default function ResetPasswordForm() {
           disabled={loading}
           className="py-2 px-4 reset-btn border text-white rounded  disabled:opacity-50"
         >
-          {loading ? "Resetting..." : "Reset Password"}
+          {loading ? lt("reseting") : at("resetPassword")}
         </button>
 
         {message && <p className="text-green-600 text-center">{message}</p>}
@@ -163,7 +167,7 @@ export default function ResetPasswordForm() {
 
         <p className="text-center">
           <Link href="/login" className=" hover:underline">
-            Back to login
+            {at("backToLogin")}
           </Link>
         </p>
       </form>

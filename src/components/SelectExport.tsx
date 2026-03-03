@@ -17,6 +17,7 @@ import {
   ExportStock,
   ExportSupplierLogs,
 } from "@/lib/actions/exportData";
+import { useTranslations } from "next-intl";
 
 type PurchaseWithItems = Purchase & {
   PurchaseItem: {
@@ -61,6 +62,10 @@ export function SelectExport({
   sales,
   logs,
 }: Props) {
+  const et = useTranslations("Export");
+  const lt = useTranslations("Loading");
+  const t = useTranslations("Common");
+
   const [range, setRange] = useState<"today" | "weekly" | "all">("weekly");
   const [isExporting, setIsExporting] = useState(false);
 
@@ -71,27 +76,23 @@ export function SelectExport({
   const exportOptions = [
     {
       value: "sales",
-      label: "Sales Report",
-      description:
-        "Export sales transactions, revenue data, and customer purchase history.",
+      label: et("salesReport"),
+      description: et("salesDescription"),
     },
     {
       value: "purchases",
-      label: "Purchases Report",
-      description:
-        "Export all purchase orders, supplier transactions, and inventory restocking data.",
+      label: et("purchasesReport"),
+      description: et("purchasesDescription"),
     },
     {
       value: "stock",
-      label: "Stock Report",
-      description:
-        "Export current inventory levels, stock status, and product details.",
+      label: et("stockReport"),
+      description: et("stockDescription"),
     },
     {
       value: "logs",
-      label: "Activity Logs Report",
-      description:
-        "Export system activity logs, user actions, and transaction history.",
+      label: et("logsReport"),
+      description: et("logsDescription"),
     },
   ];
 
@@ -137,10 +138,10 @@ export function SelectExport({
 
   return (
     <div className="settings-section flex flex-col gap-4 p-4">
-      <h3 className="text-lg font-normal ">Data Export</h3>
+      <h3 className="text-lg font-normal ">{et("dataExport")}</h3>
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
-          <h4>Report Type</h4>
+          <h4>{et("recordType")}</h4>
           <select
             name="range"
             className="rounded"
@@ -150,9 +151,9 @@ export function SelectExport({
               setRange(e.target.value as "today" | "weekly" | "all")
             }
           >
-            <option value="today">Today</option>
-            <option value="weekly">Last 7 days</option>
-            <option value="all">All Time</option>
+            <option value="today">{t("today")}</option>
+            <option value="weekly">{t("weekly")}</option>
+            <option value="all">{t("all")}</option>
           </select>
         </div>
         <select
@@ -165,14 +166,14 @@ export function SelectExport({
             )
           }
         >
-          <option value="stock">Stock Report</option>
-          <option value="sales">Sales Report</option>
-          <option value="purchases">Purchases Report</option>
-          <option value="logs">Activity Logs Report</option>
+          <option value="stock">{et("stockReport")}</option>
+          <option value="sales">{et("salesReport")}</option>
+          <option value="purchases">{et("purchasesReport")}</option>
+          <option value="logs">{et("logsReport")}</option>
         </select>
 
         <button onClick={handleExport}>
-          {isExporting ? "Exporting..." : "Export Data"}
+          {isExporting ? lt("exporting") : et("dataExport")}
         </button>
 
         <div className="flex flex-col gap-2">
@@ -192,6 +193,9 @@ export function SupplierSelectExport({
   sales,
   logs,
 }: SupplierProps) {
+  const et = useTranslations("Export");
+  const lt = useTranslations("Loading");
+  const t = useTranslations("Common");
   const [range, setRange] = useState<"today" | "weekly" | "all">("weekly");
   const [isExporting, setIsExporting] = useState(false);
 
@@ -202,27 +206,23 @@ export function SupplierSelectExport({
   const exportOptions = [
     {
       value: "sales",
-      label: "Sales Report",
-      description:
-        "Export sales transactions, revenue data, and customer purchase history.",
+      label: et("salesReport"),
+      description: et("salesDescription"),
     },
     // {
     //   value: "purchases",
-    //   label: "Purchases Report",
-    //   description:
-    //     "Export all purchase orders, supplier transactions, and inventory restocking data.",
+    //   label: et("purchasesReport"),
+    //   description: et("purchasesDescription"),
     // },
     {
       value: "stock",
-      label: "Stock Report",
-      description:
-        "Export current inventory levels, stock status, and product details.",
+      label: et("stockReport"),
+      description: et("stockDescription"),
     },
     {
       value: "logs",
-      label: "Activity Logs Report",
-      description:
-        "Export system activity logs, user actions, and transaction history.",
+      label: et("logsReport"),
+      description: et("logsDescription"),
     },
   ];
 
@@ -268,10 +268,10 @@ export function SupplierSelectExport({
 
   return (
     <div className="settings-section flex flex-col gap-4 p-4">
-      <h3 className="text-lg font-normal ">Data Export</h3>
+      <h3 className="text-lg font-normal ">{et("dataExport")}</h3>
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
-          <h4>Report Type</h4>
+          <h4>{et("recordType")}</h4>
           <select
             name="range"
             className="rounded"
@@ -281,9 +281,9 @@ export function SupplierSelectExport({
               setRange(e.target.value as "today" | "weekly" | "all")
             }
           >
-            <option value="today">Today</option>
-            <option value="weekly">Last 7 days</option>
-            <option value="all">All Time</option>
+            <option value="today">{t("today")}</option>
+            <option value="weekly">{t("weekly")}</option>
+            <option value="all">{t("all")}</option>
           </select>
         </div>
         <select
@@ -294,14 +294,14 @@ export function SupplierSelectExport({
             setSelectedReport(e.target.value as "stock" | "sales" | "logs")
           }
         >
-          <option value="stock">Stock Report</option>
-          <option value="sales">Sales Report</option>
-          {/* <option value="purchases">Purchases Report</option> */}
-          <option value="logs">Activity Logs Report</option>
+          <option value="stock">{et("stockReport")}</option>
+          <option value="sales">{et("salesReport")}</option>
+          {/* <option value="purchases">{et("purchasesReport")}</option> */}
+          <option value="logs">{et("logsReport")}</option>
         </select>
 
         <button onClick={handleExport}>
-          {isExporting ? "Exporting..." : "Export Data"}
+          {isExporting ? lt("exporting") : et("exportData")}
         </button>
 
         <div className="flex flex-col gap-2">

@@ -1,10 +1,13 @@
 import { ItemForm } from "@/components/ItemForm";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
 type Params = Promise<{ id: string }>;
 
 export default async function EditProductPage(props: { params: Params }) {
   const { id } = await props.params;
+  const t = await getTranslations("Common");
+
   const item = await db.item.findUnique({
     where: {
       id,
@@ -14,11 +17,13 @@ export default async function EditProductPage(props: { params: Params }) {
       unit: true,
     },
   });
-  if (!item) return <div>Product not found</div>;
+  if (!item) return <div>{t("notFoundItem")}</div>;
 
   return (
     <div className="flex flex-col gap-2 items-center w-full">
-      <h1 className="text-xl font-semibold">Edit Item: {item.name}</h1>
+      <h1 className="text-xl font-semibold">
+        {t("editItem")}: {item.name}
+      </h1>
       <ItemForm
         serviceId={item.serviceId}
         item={{

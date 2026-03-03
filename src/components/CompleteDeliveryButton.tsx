@@ -1,8 +1,9 @@
 "use client";
 
 import { arrivedDelivery, completeDelivery } from "@/lib/actions/deliveries";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import React, { useTransition } from "react";
+import { useTransition } from "react";
 import toast from "react-hot-toast";
 
 export const CompleteDeliveryButton = ({
@@ -16,6 +17,8 @@ export const CompleteDeliveryButton = ({
   deliveryId: string;
   orderId: string;
 }) => {
+  const t = useTranslations("Common");
+
   return (
     <button
       onClick={async () => {
@@ -29,7 +32,7 @@ export const CompleteDeliveryButton = ({
         deliveryStatus === "COMPLETED" ? "hidden" : "delivery-btn fullfill-btn"
       }
     >
-      Complete Delivery
+      {t("completeDelivery")}
     </button>
   );
 };
@@ -50,6 +53,8 @@ export const ConfirmDeliveryButton = ({
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
+  const lt = useTranslations("Loading");
+  const rt = useTranslations("Responses");
 
   async function handleConfirmDelivery() {
     startTransition(async () => {
@@ -64,13 +69,10 @@ export const ConfirmDeliveryButton = ({
             deliveryId,
           );
           if (arrivingConfirmation.success) {
-            toast.success("Delivery marked as arrived.");
+            toast.success(rt("markArrivedSuccess"));
             router.refresh();
           } else if (!arrivingConfirmation.success) {
-            toast.error(
-              arrivingConfirmation.error ||
-                "Failed to mark delivery as arrived.",
-            );
+            toast.error(arrivingConfirmation.error || rt("markArrivedFail"));
             setTimeout(() => {
               router.refresh();
             }, 100);
@@ -83,7 +85,7 @@ export const ConfirmDeliveryButton = ({
           });
 
           if (confirmation.success) {
-            toast.success("Delivery confirmed successfully.");
+            toast.success(rt("confirmSuccess"));
             router.refresh();
           }
           if (!confirmation.success && confirmation.error) {
@@ -91,18 +93,18 @@ export const ConfirmDeliveryButton = ({
           }
         }
       } catch (error) {
-        console.error("Error confirming delivery:", error);
-        toast.error("Failed to confirm delivery. Please try again.");
+        console.error(rt("confirmDeliveryError"), error);
+        toast.error(rt("confirmDeliveryFail"));
       }
     });
   }
 
   const label =
     role === "SUPPLIER" && status !== "ARRIVED" && status !== "COMPLETED"
-      ? "Mark as arrived"
+      ? rt("markArrived")
       : role === "SERVICE" && status === "ARRIVED"
-        ? "Confirm Delivery"
-        : "Delivery Completed";
+        ? rt("confirmDelivery")
+        : rt("deliveryCompleted");
 
   const isDisabled = status === "COMPLETED" || isPending;
 
@@ -114,7 +116,7 @@ export const ConfirmDeliveryButton = ({
         isPending || status === "COMPLETED" ? "opacity-50" : ""
       } `}
     >
-      {isPending ? "Processing..." : label}
+      {isPending ? lt("processing") : label}
     </button>
   );
 };

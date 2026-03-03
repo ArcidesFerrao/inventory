@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 
 
@@ -12,6 +13,9 @@ export async function POST(request: Request) {
     }
 
     const { stockItemId, changeType, quantity, notes } = await request.json();
+    
+    const rt = await getTranslations("Responses");
+
 
     try {
         const stockItem = await db.stockItem.findUnique({
@@ -21,7 +25,7 @@ export async function POST(request: Request) {
         });
 
         if (!stockItem) {
-            return NextResponse.json({ error: "Stock Item not found"}, { status: 404})
+            return NextResponse.json({ error: rt("notFoundItem")}, { status: 404})
         };
 
         const currentStock = stockItem.stock ?? 0;
@@ -57,9 +61,9 @@ export async function POST(request: Request) {
         
 
     } catch (error) {
-        console.error("Error recording stock movement",error);
+        console.error(rt("recordMovementError"),error);
         return NextResponse.json(
-            {error: "Failed to record stock movement"}, 
+            {error: rt("recordMovementFail")}, 
             { status: 500 })
     }
 }
@@ -74,6 +78,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
 
     const stockItemId = searchParams.get("stockItemId");
+    const rt = await getTranslations("Responses");
+
 
     if (!stockItemId) {
         return NextResponse.json({error: "Missing stockItemId"}, { status: 400});
@@ -88,9 +94,9 @@ export async function GET(request: Request) {
 
         return NextResponse.json(movements)
     } catch (error) {
-        console.error("Error fetching stock movements:", error )
+        console.error(rt("fetchMovementError"), error )
         return NextResponse.json(
-            {error: "Failed fetching stock movements"},
+            {error: rt("recordMovementfail")},
             { status: 500 }
         )
     }

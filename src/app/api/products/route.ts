@@ -1,10 +1,13 @@
 import { db } from "@/lib/db";
 import { verifyToken } from "@/lib/verifyToken";
+import { getTranslations } from "next-intl/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
 
 export async function GET(req: NextRequest) {
+    const rt = await getTranslations("Responses")
+
     try {
         const {searchParams } = new URL(req.url);
         const page = parseInt(searchParams.get("page") || "1");
@@ -30,11 +33,14 @@ export async function GET(req: NextRequest) {
         });
     } catch (err) {
         console.error('❌ Error in GET /api/items:', err);
-        return NextResponse.json({ error: `Error fetching items: ${err}`}, { status: 500})
+        return NextResponse.json({ error: `${rt("fetchItemError")} ${err}`}, { status: 500})
     }
 }
 
 export async function POST(req: NextRequest) {
+    const rt = await getTranslations("Response")
+
+    
     try {
         verifyToken(req);
         const body = await req.json();
@@ -53,10 +59,10 @@ export async function POST(req: NextRequest) {
             }
         })
         return NextResponse.json({
-            message: "Item created successfully.",
+            message: rt("createItemFail"),
             itemId: item.id,
         })
     } catch (err) {
-        return NextResponse.json({ error: `Failed to create item: ${err}` }, { status: 500 })
+        return NextResponse.json({ error: `${rt("createItemFail")} ${err}` }, { status: 500 })
     }
 }
