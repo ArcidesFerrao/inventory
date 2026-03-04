@@ -13,6 +13,7 @@ export default function OrdersAndSales({
   sales: SupplierSaleWithItems[];
 }) {
   const [view, setView] = useState<"sales" | "orders">("orders");
+
   const t = useTranslations("Common");
   const ot = useTranslations("Orders");
   const st = useTranslations("Sales");

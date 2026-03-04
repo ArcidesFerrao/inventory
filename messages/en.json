@@ -69,6 +69,7 @@
     },
     "Orders": {
         "order": "Order",
+        "subtitle": "Manage customer orders, deliveries and view sales",
         "totalItemsOrdered": "Total Items",
         "newOrder": "New Order",
         "orderAmount": "Order Total",
@@ -84,11 +85,13 @@
         "ordered": "Ordered",
         "delivery": "Delivery",
         "noOrders": "No orders found",
+        "orderNotFound": "Order not found",
         "orderSummary": "Order Summary",
         "recentOrders": "Recent Orders",
         "completeOrder": "Complete Order",
         "avgOrderValue": "Avg. Order Value",
-        "orderedItemsBy": "Ordered Items by"
+        "orderedItemsBy": "Ordered Items by",
+        "scheduleDelivery": "Schedule New Delivery"
     },
     "Delivery": {
         "customerInfo": "Customer Information",
@@ -373,7 +376,9 @@
         "ingredient": "ingredient",
         "toMakeAnother": "to make another",
         "list": "List",
-        "accessDenied": "Access Denied"
+        "accessDenied": "Access Denied",
+        "selectCreateCategory": "Select or create category",
+        "createCategory": "Create new Category"
     },
     "Notifications": {
         "stockAddedSuccess": "Stock item added successfully",
@@ -491,7 +496,16 @@
         "completePurchase": "Purchase Completed",
         "processSaleSuccess": "Sale not processed successfully",
         "saveSettingsSuccess": "Settings saved successfully",
-        "saveSettingsError": "Error saving settings"        
+        "saveSettingsError": "Error saving settings",
+        "editStockSuccess":  "Stock Item edited successfully!",       
+        "createStockSuccess":  "Stock Item created successfully!",       
+        "editItemSuccess":  "Stock Item edited successfully!",
+        "editItemFail": "Failed to edit Item",
+        "addItemFail": "Failed to add Item!",
+        "createCategorySuccess": "Category created successfully",      
+        "createCategoryFail": "Failed to create new Category",
+        "setDateTime": "Please set both date and time!",
+        "scheduleDeliverySuccess": "Delivery scheduled successfully!"      
     },
     "Loading": {
         "reseting": "Resetting...",

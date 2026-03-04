@@ -21,6 +21,7 @@ type Params = Promise<{ id: string; locale: string }>;
 export default async function ActividyDetailsPage(props: { params: Params }) {
   const { id } = await props.params;
   const { locale } = await props.params;
+
   const at = await getTranslations("Activity");
   const t = await getTranslations("Common");
 

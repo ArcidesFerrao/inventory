@@ -7,6 +7,7 @@ import { Modal } from "./Modal";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Category } from "@/generated/prisma/client";
+import { useTranslations } from "next-intl";
 
 export function CategorySelect({
   categoryId,
@@ -22,7 +23,10 @@ export function CategorySelect({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [cId, setCId] = useState(categoryId || "");
+
   const router = useRouter();
+  const t = useTranslations("Common");
+  const rt = useTranslations("Responses");
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +37,10 @@ export function CategorySelect({
     });
 
     if (createdCategory?.success) {
-      toast.success("Category created successfully");
+      toast.success(rt("createCategorySuccess"));
       router.refresh();
     } else {
-      toast.error("Failed to create new Category");
+      toast.error(rt("createCategorFailuccess"));
     }
 
     setNewCategoryName("");
@@ -44,7 +48,7 @@ export function CategorySelect({
   };
   return (
     <div className="self-start flex flex-col gap-1">
-      <label htmlFor="categoryId">Category</label>
+      <label htmlFor="categoryId">{t("category")}</label>
       <div className="flex gap-2">
         <select
           name="categoryId"
@@ -52,7 +56,7 @@ export function CategorySelect({
           value={cId}
           onChange={(e) => setCId(e.target.value)}
         >
-          <option value="">Select or create category</option>
+          <option value="">{t("selectCreateCategory")}</option>
           {categories?.map((c: { id: string; name: string }) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -69,7 +73,7 @@ export function CategorySelect({
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Create new Category"
+          title={t("createCategory")}
         >
           <input
             className="w-full"
@@ -85,7 +89,7 @@ export function CategorySelect({
             onClick={handleAddCategory}
             className="p-2 hover:bg-blue-700"
           >
-            Save
+            {t("save")}
           </button>
         </Modal>
       </div>
@@ -115,7 +119,10 @@ export function ProductsCategorySelect({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [cId, setCId] = useState(categoryId || "");
+
   const router = useRouter();
+  const t = useTranslations("Common");
+  const rt = useTranslations("Responses");
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,10 +133,10 @@ export function ProductsCategorySelect({
     });
 
     if (createdCategory?.success) {
-      toast.success("Category created successfully");
+      toast.success(rt("createCategorySuccess"));
       router.refresh();
     } else {
-      toast.error("Failed to create new Category");
+      toast.error(rt("createCategorFailuccess"));
     }
 
     setNewCategoryName("");
@@ -138,7 +145,7 @@ export function ProductsCategorySelect({
 
   return (
     <div className="self-start flex flex-col gap-1">
-      <label htmlFor="categoryId">Category</label>
+      <label htmlFor="categoryId">{t("category")}</label>
       <div className="flex gap-2">
         <select
           {...field}
@@ -150,7 +157,7 @@ export function ProductsCategorySelect({
           // id={field.name}
           // value={cId}
         >
-          <option value="">Select or create category</option>
+          <option value="">{t("selectCreateCategory")}</option>
           {categories?.map((c: { id: string; name: string }) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -167,7 +174,7 @@ export function ProductsCategorySelect({
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Create new Category"
+          title={t("createCategory")}
         >
           <input
             className="w-full"
@@ -183,7 +190,7 @@ export function ProductsCategorySelect({
             onClick={handleAddCategory}
             className="p-2 hover:bg-blue-700"
           >
-            Save
+            {t("save")}
           </button>
         </Modal>
       </div>

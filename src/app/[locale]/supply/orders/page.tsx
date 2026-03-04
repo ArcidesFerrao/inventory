@@ -46,9 +46,7 @@ export default async function OrdersPage() {
           <h2 className="text-2xl font-medium">
             {ot("recentOrders")} {t("and")} {t("sales")}
           </h2>
-          <p className="text-sm font-extralight">
-            Manage customer orders, deliveries and view sales
-          </p>
+          <p className="text-sm font-extralight">{ot("subtitle")}</p>
         </div>
       </div>
       <OrdersAndSales
