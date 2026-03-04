@@ -5,6 +5,7 @@ import { Order, OrderItem, StockItem } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export const SupplierDelivery = ({
   order,
@@ -22,11 +23,14 @@ export const SupplierDelivery = ({
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
+  const t = useTranslations("Common");
+  const dt = useTranslations("Delivery");
+  const rt = useTranslations("Responses");
 
   const handleCreateDelivery = async () => {
     setLoading(true);
     if (!deliveryDate || !deliveryTime) {
-      setError("Please set both date and time!");
+      setError(rt("setDateTime"));
       setLoading(false);
       return;
     }
@@ -42,7 +46,7 @@ export const SupplierDelivery = ({
     const delivery = await createNewDelivery(deliveryData);
 
     if (delivery.success) {
-      toast.success("Delivery scheduled successfully!");
+      toast.success(rt("scheduleDeliverySuccess"));
       setTimeout(() => {
         setLoading(false);
         router.push("/supply/orders");
@@ -59,7 +63,7 @@ export const SupplierDelivery = ({
   return (
     <div className="schedule flex flex-col gap-5  w-full">
       <div className="schedule-info">
-        <h4 className="font-semibold">Requested Delivery Window:</h4>
+        <h4 className="font-semibold">{dt("requestedWindow")}:</h4>
         <div className="flex gap-2">
           <p>{order.requestedStartDate.toLocaleDateString()}</p>
           <p>-</p>
@@ -68,7 +72,7 @@ export const SupplierDelivery = ({
       </div>
       <div className="delivery-schedule flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <h4>Delivery Date*</h4>
+          <h4>{dt("deliveryDate")}*</h4>
           <input
             type="date"
             name="deliveryDate"
@@ -80,7 +84,7 @@ export const SupplierDelivery = ({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <h4>Delivery Time*</h4>
+          <h4>{dt("deliveryTime")}*</h4>
           <input
             type="time"
             name="deliveryTime"
@@ -92,21 +96,21 @@ export const SupplierDelivery = ({
           />
         </div>
         <ul className="flex flex-col gap-2">
-          <h3 className="text-lg font-semibold">Delivery Items</h3>
+          <h3 className="text-lg font-semibold">{dt("deliveryItems")}</h3>
           {items.map((i) => (
             <li key={i.id} className="delivery-item flex justify-between ">
               <div>
                 <h3>{i.stockItem.name}</h3>
                 <p className="font-light text-sm">
-                  Quantities: {i.orderedQty} units
+                  {t("qunaitites")}: {i.orderedQty} {t("units")}
                 </p>
               </div>
-              <p>Full Delivery</p>
+              <p>{dt("fullDelivery")}</p>
             </li>
           ))}
         </ul>
         <div className="flex flex-col gap-2">
-          <h4>Delivery Notes</h4>
+          <h4>{dt("deliveryNotes")}</h4>
           <textarea
             name="notes"
             id="notes"
@@ -121,7 +125,7 @@ export const SupplierDelivery = ({
         className="schedule-button py-2"
         disabled={loading}
       >
-        {loading ? "..." : "Schedule Delivery"}
+        {loading ? "..." : dt("scheduleDelivery")}
       </button>
     </div>
   );

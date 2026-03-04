@@ -9,6 +9,7 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
   const [loading, setLoading] = useState(false);
 
   const st = useTranslations("Stock");
+  const t = useTranslations("Common");
 
   useEffect(() => {
     fetch(`/api/stock-movement?stockItemId=${stockItemId}`)
@@ -36,7 +37,9 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
         <div className="stock-history-info px-2 py-1" key={movement.id}>
           <div className=" flex items-center gap-2 text-sm">
             <span>{movement.changeType}</span>
-            <span>Quantity: {movement.quantity}</span>
+            <span>
+              {t("quantity")}: {movement.quantity}
+            </span>
             {movement.notes && <span>{movement.notes}</span>}
           </div>
           <span className="text-xs">

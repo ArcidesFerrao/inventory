@@ -1,5 +1,6 @@
 import { SupplierProductForm } from "@/components/ProductForm";
 import { db } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 type Params = Promise<{ id: string; locale: string }>;
@@ -10,6 +11,8 @@ export default async function EditSupplierProductPage(props: {
   const { id } = await props.params;
   const { locale } = await props.params;
 
+  const t = await getTranslations("Common");
+
   const stockItem = await db.stockItem.findUnique({
     where: {
       id,
@@ -19,13 +22,13 @@ export default async function EditSupplierProductPage(props: {
       category: true,
     },
   });
-  if (!stockItem) return <div>Item not found</div>;
+  if (!stockItem) return <div>{t("notFoundItem")}</div>;
 
   return (
     <div className="flex flex-col gap-5  w-full">
       <div className="edit-product-header flex justify-between gap-5">
         <div className="flex flex-col">
-          <h1 className="text-xl font-semibold">Edit Item</h1>
+          <h1 className="text-xl font-semibold">{t("editItem")}</h1>
           <p className="text-xs font-extralight">Id: {id}</p>
         </div>
         <Link href={`/${locale}/supply/products`}>
