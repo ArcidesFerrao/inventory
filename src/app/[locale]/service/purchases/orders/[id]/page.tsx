@@ -11,6 +11,7 @@ export default async function OrderPage(props: { params: Params }) {
   const { locale } = await props.params;
   const t = await getTranslations("Common");
   const ot = await getTranslations("Orders");
+  const dt = await getTranslations("Delivery");
 
   const order = await db.order.findUnique({
     where: {
@@ -168,11 +169,11 @@ export default async function OrderPage(props: { params: Params }) {
                 {order.delivery.status === "COMPLETED" && (
                   <>
                     <p className="text-xs font-light ">
-                      {ot("deliverededDate")}:{" "}
+                      {dt("deliveredDate")}:{" "}
                       {order.delivery.deliveredAt?.toLocaleDateString()}
                     </p>
                     <p className="text-xs font-light ">
-                      {ot("deliverededTime")}:{" "}
+                      {dt("deliveredTime")}:{" "}
                       {order.delivery.deliveredAt?.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",

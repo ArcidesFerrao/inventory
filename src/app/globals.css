@@ -325,10 +325,11 @@ select {
   padding: 0.4rem 0.8rem;
   border-radius: 0.2rem;
 }
-.profile-sections
+
+/* .profile-sections, */
 .google-signin {
   background-color: var(--foreground);
-  color: var(--background);
+  color: var(--admin-card);
   padding: 0.4rem 0.8rem;
   border-radius: 0.2rem;
 }
@@ -964,4 +965,9 @@ nav {
 .stock-history-info:hover {
   background-color: var(--input-bg);
   border-radius: 0.2rem;
+}
+
+.stats-details-container {
+  /* flex-wrap: wrap; */
+  gap: 0.5rem;
 }

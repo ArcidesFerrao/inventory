@@ -2,6 +2,7 @@
 
 import { rateDelivery } from "@/lib/actions/deliveries";
 import { acceptOrder, denyOrder } from "@/lib/actions/orders";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -14,18 +15,21 @@ export const AcceptButton = ({
   orderId: string;
 }) => {
   const router = useRouter();
+
+  const t = useTranslations("Common");
+  const rt = useTranslations("Responses");
+
   const [loading, setLoading] = useState(false);
+
   const handleOnClick = async () => {
     setLoading(true);
     const acceptedOrder = await acceptOrder({ orderId });
     if (acceptedOrder?.success) {
-      toast.success("Order accepted successfully");
+      toast.success(rt("acceptOrderSuccess"));
       router.refresh();
     }
     if (!acceptedOrder?.success) {
-      toast.error(
-        acceptedOrder?.error || "There was an error accepting the order",
-      );
+      toast.error(acceptedOrder?.error || rt("acceptingOrderError"));
     }
     setLoading(false);
   };
@@ -35,22 +39,27 @@ export const AcceptButton = ({
       onClick={() => handleOnClick()}
       className="accept-btn text-green-300"
     >
-      {loading ? "..." : "Accept"}
+      {loading ? "..." : t("accept")}
     </button>
   );
 };
 export const DenyButton = ({ orderId }: { orderId: string }) => {
   const router = useRouter();
+
+  const t = useTranslations("Common");
+  const rt = useTranslations("Responses");
+
   const [loading, setLoading] = useState(false);
+
   const handleOnClick = async () => {
     setLoading(true);
     const deniedOrder = await denyOrder({ orderId });
     if (deniedOrder?.success) {
-      toast.success("Order denied successfully");
+      toast.success(rt("denyOrder"));
       router.refresh();
     }
     if (!deniedOrder?.success) {
-      toast.error(deniedOrder?.error || "There was an error denying the order");
+      toast.error(deniedOrder?.error || rt("denyOrder"));
     }
     setLoading(false);
   };
@@ -60,13 +69,16 @@ export const DenyButton = ({ orderId }: { orderId: string }) => {
       onClick={() => handleOnClick()}
       className="accept-btn text-red-300"
     >
-      {loading ? "..." : "Deny"}
+      {loading ? "..." : t("accept")}
     </button>
   );
 };
 
 export const RateButtons = ({ deliveryId }: { deliveryId: string }) => {
   const router = useRouter();
+
+  const rt = useTranslations("Responses");
+
   const [loading, setLoading] = useState(false);
   const handleRateDelivery = async (star: number) => {
     setLoading(true);
@@ -74,13 +86,13 @@ export const RateButtons = ({ deliveryId }: { deliveryId: string }) => {
       const ratedDelivery = await rateDelivery(deliveryId, star);
 
       if (ratedDelivery.success) {
-        toast.success("Delivery rated successfully!");
+        toast.success(rt("rateDeliverySuccess"));
         setLoading(false);
         router.refresh();
       }
     } catch (error) {
       console.error("Error rating delivery: ", error);
-      toast.error("Error rating delivery!");
+      toast.error(rt("rateDeliveryError"));
       setLoading(false);
     }
   };

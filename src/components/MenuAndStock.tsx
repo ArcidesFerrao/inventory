@@ -43,7 +43,7 @@ export default function MenuAndStock({
               ? t("services")
               : businessType === "STORE"
                 ? t("items")
-                : t("menu")}
+                : "Menu"}
           </button>
           <button
             className={` flex items-center gap-2 px-4 py-2 text-xl ${
@@ -59,7 +59,7 @@ export default function MenuAndStock({
             href={
               view === "list"
                 ? `/${locale}/service/products/new`
-                : `/${locale}/service/stock/new"`
+                : `/${locale}/service/stock/new`
             }
             className="add-product flex gap-1"
           >

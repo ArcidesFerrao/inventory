@@ -10,6 +10,7 @@ export default function LoginPage() {
   const session = sessionHook.data;
   const status = sessionHook.status;
   const a = useTranslations("Auth");
+  const lt = useTranslations("Loading");
 
   const [loading, setLoading] = useState(false);
   const [loginValue, setLoginValue] = useState("");
@@ -63,7 +64,7 @@ export default function LoginPage() {
   };
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <p>{lt("loading")}</p>;
   }
   return (
     <form onSubmit={handleSubmit} className="login-form flex flex-col gap-4 ">

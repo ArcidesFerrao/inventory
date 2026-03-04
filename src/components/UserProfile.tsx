@@ -167,7 +167,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
           {user.role === "SERVICE" && user.Service && (
             <div className="details-section flex flex-col gap-2">
               <div className="flex flex-col gap-2">
-                <p>{t("companyName")}</p>
+                <p>{supt("companyName")}</p>
                 <h4>{user.Service.businessName}</h4>
               </div>
               <div className="flex flex-col gap-2">
@@ -175,11 +175,11 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 <h4>{user.Service.location}</h4>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("website")}</p>
+                <p>Website</p>
                 <h4>{user.Service.website}</h4>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{t("businessType")}</p>
+                <p>{supt("businessType")}</p>
                 <h4>{user.Service.businessType}</h4>
               </div>
               <div className="flex flex-col gap-2">

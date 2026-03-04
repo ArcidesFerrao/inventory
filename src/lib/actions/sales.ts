@@ -5,11 +5,14 @@ import {  SaleItemWithCatalogItems } from "@/types/types";
 import { logActivity } from "./logs";
 import { createAuditLog } from "./auditLogs";
 import { Prisma } from "@/generated/prisma";
+import { getTranslations } from "next-intl/server";
 
 export async function createSale(
     saleItems: SaleItemWithCatalogItems[], serviceId: string
-) {    
-    if (saleItems.length === 0) return {success: false, message: "No sale items"}
+) { 
+    const rt = await getTranslations("Responses");
+       
+    if (saleItems.length === 0) return {success: false, message: rt("noSaleItems")}
 
     const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
@@ -61,7 +64,7 @@ export async function createSale(
                 if (!stock) continue;
 
                 if ((stock.stockQty ?? 0) < totalQty) {
-                    throw new Error(`Insufficient stock for item ${stock.stockItem?.name}`);
+                    throw new Error(`${rt("notEnoughStock")} ${stock.stockItem?.name}`);
                 }
 
                 const data: Prisma.ServiceStockItemUpdateInput ={
@@ -100,12 +103,8 @@ export async function createSale(
                     });
                     console.log(updated)
                 }
-
-
             }
-
             // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)
-
             const newSale = await tx.sale.create({
                 data: {
                     serviceId,
@@ -124,7 +123,6 @@ export async function createSale(
                     SaleItem: true,
                 },
             });
-
             for (const [stockId, qty] of Object.entries(stockUsage).filter(([,qty]) => qty > 0)) {
 
                 await tx.stockMovement.create({
@@ -137,13 +135,10 @@ export async function createSale(
                     })
                 
             }
-
             // console.log("COGS:", cogs);
             return newSale
 
         }, { timeout: 15000 }  );   
-        
-        
 
         await logActivity(
             serviceId,
@@ -174,21 +169,17 @@ export async function createSale(
                 details: {}
             }
         })
-        
-        
-        
         return { success: true, saleId: result.id, cogs: result.cogs};
     } catch (error) {
-        console.error("Error creating sale:", error);
+        console.error(rt("creatingSaleError"), error);
         await logActivity(
                             serviceId,
                             null,
                             "ERROR",
                             "Sale",
                             null,
-                            `Error while creating sale`,
+                            rt("creatingSaleError"),
                             {
-                                
                                 error: error instanceof Error ? error.message : String(error),
                             },
                             null,
@@ -202,7 +193,7 @@ export async function createSale(
                                     entityName: "Service",
                                     details: {
                                         metadata: {
-                                            error: (error as string).toString() || "Error creating sale"
+                                            error: (error as string).toString() || rt("creatingSaleError")
                                         }
                                     }
                                 });
