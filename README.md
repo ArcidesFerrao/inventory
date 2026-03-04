@@ -167,9 +167,11 @@ Run development server:
 
 ```bash
 npm run dev
+```
 
 Build production:
 
+```bash
 npm run build
 npm start
 ```
