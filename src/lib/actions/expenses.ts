@@ -7,8 +7,10 @@ import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { logActivity } from "./logs";
+import { getTranslations } from "next-intl/server";
 
 export async function createExpense(prevState: unknown, formData: FormData) {
+    const rt = await getTranslations("Responses")
     const session = await auth()
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: expenseSchema });
@@ -37,7 +39,7 @@ export async function createExpense(prevState: unknown, formData: FormData) {
                     "CREATE",
                     "Expense",
                     expense.id,
-                    `Expense amount MZN ${expense.amount.toFixed(2)} created`,
+                    `${rt("expenseAmount")} ${expense.amount.toFixed(2)} ${rt("created")}`,
                     {
                         
                         timeStamp: expense.timestamp,
@@ -71,20 +73,22 @@ export async function createExpense(prevState: unknown, formData: FormData) {
                 entityName: "service",
                 details: {
                     metadata: {
-                        error: (error as string).toString() || "Error creating expense"
+                        error: (error as string).toString() || rt("createExpenseError")
                     } 
                 }
             }
         })
         return {
             status: "error",
-            error: { general: ["Failed to create Expense"]}
+            error: { general: [rt("createExpenseFail")]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
 export async function createCategoryExpense({name, description}:{name: string; description: string | undefined}) {
     const session = await auth()
+    const rt = await getTranslations("Responses")
+
     if (!session?.user.serviceId) redirect("/login");
     
     try {
@@ -103,7 +107,7 @@ export async function createCategoryExpense({name, description}:{name: string; d
                     "CREATE",
                     "Category Expense",
                     category.id,
-                    `Expense category ${category.name} created`,
+                    `${rt("expenseCategory")} ${category.name} ${rt("created")}`,
                     {                    },
                     null,
                     'INFO',
@@ -124,7 +128,7 @@ export async function createCategoryExpense({name, description}:{name: string; d
         })
    return {status: "success"} 
     } catch (error) {
-        console.error("Failed to create Expense", error);
+        console.error(rt("createExpenseCategoryFail"), error);
         await db.auditLog.create({
             data: {
                 action: "ERROR",
@@ -135,14 +139,14 @@ export async function createCategoryExpense({name, description}:{name: string; d
                     metadata: {
                         name,
                         description,
-                        error: (error as string).toString() || "Error creating expense category"
+                        error: (error as string).toString() || rt("createExpenseCategoryError")
                     } 
                 }
             }
         })
         return {
             status: "error",
-            error: "Failed to create Expense"
+            error: rt("createExpenseCategoryFail")
         } 
     }
 }

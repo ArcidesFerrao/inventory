@@ -87,19 +87,17 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
     } catch (error) {
         console.error("Failed to create Stock Item", error);
         await logActivity(
-        submission.value.serviceId,
-        null,
-        "ERROR",
-        "ServiceStockItem",
-        submission.value.id || "",
-        `Error creating ${submission.value.name} from inventory`,
-        {
-            
-                    },
-        null,
-        "ERROR",
-        null
-    );
+            submission.value.serviceId,
+            null,
+            "ERROR",
+            "ServiceStockItem",
+            submission.value.id || "",
+            `Error creating ${submission.value.name} from inventory`,
+            {},
+            null,
+            "ERROR",
+            null
+        );
         await createAuditLog({
             action: "ERROR",
             entityType: "Stock Item",
@@ -219,9 +217,7 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
         "ServiceStockItem",
         submission.value.id || "",
         `Error updating ${submission.value.name} from inventory`,
-        {
-            
-                    },
+        {},
         null,
         "ERROR",
         null

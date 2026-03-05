@@ -155,6 +155,7 @@ export async function getStockItems(supplierId: string) {
     return [];
   }
 }
+
 export async function getSelectedStockItems(supplierId: string) {
   try {
     const stockItems = await db.stockItem.findMany({

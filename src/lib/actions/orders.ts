@@ -7,6 +7,7 @@ import { auth} from "@/lib/auth";
 import { createNotification } from "./notifications";
 import { StockItem } from "@/generated/prisma/client";
 import { createAuditLog } from "./auditLogs";
+import { getTranslations } from "next-intl/server";
 
 
 // type GroupedItems = {
@@ -36,18 +37,16 @@ export async function createOrder(
     notes?: string
 ) {    
     const session = await auth()
+    const rt = await getTranslations("Responses")
 
     if (!session?.user) redirect("/login");
 
-    if (items.length === 0) return {success: false, error: "No order items"}
+    if (items.length === 0) return {success: false, error: rt("noOrderItems")}
 
     const total = items.reduce(
             (sub, item) => sub + ((item.price ?? 0) * item.quantity), 0
         );
-        
-
     try {
-
         const serviceStockItems = await Promise.all(
             items.map(async (item) => {
                 const existingByName = await db.serviceStockItem.findFirst({
@@ -150,8 +149,8 @@ export async function createOrder(
         await createNotification({
             userId: order.supplier.userId,
             type: "ORDER",
-            title: "New Order",
-            message: `${order.Service?.businessName} placed a new order.`,
+            title: rt("newOrder"),
+            message: `${order.Service?.businessName} ${rt("placedNewOrder")}`,
             link: `/supply/orders/${order.id}`
         })
         
@@ -197,7 +196,7 @@ export async function createOrder(
 }
 
 export async function acceptOrder({ orderId}: { orderId: string;}) {
-
+    const rt = await getTranslations("Responses")
     try {
         const result = await db.$transaction(async (tx) => {
             const order = await tx.order.update({
@@ -270,8 +269,8 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
         await createNotification({
             userId: result.order.Service?.userId ?? "",
             type: "ORDER",
-            title: "Order Accepted",
-            message: `${result.order.supplier.businessName} accepteded the order.`,
+            title: rt("acceptedOrder"),
+            message: `${result.order.supplier.businessName} ${rt("acceptedTheOrder")}`,
             link: `/service/purchases/orders/${result.order.id}`
         })
 
@@ -292,14 +291,14 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
         return { success: true, ...result};
         
     } catch (error) {
-        console.error("Error accepting order", error);
+        console.error(rt("acceptOrderError"), error);
         await logActivity(
                     orderId,
                     null,
                     "UPDATE",
                     "Order",
                     orderId,
-                    `Error accepting  the order`,
+                    rt("acceptOrderError"),
                     {
                     },
                     null,
@@ -313,16 +312,16 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
                     entityName:  "",
                     details: {
                         metadata: {
-                            error: (error as string).toString() || "Error accepting  the order"
+                            error: (error as string).toString() || rt("acceptOrderError")
                         }
                 }
                     });
-        return { success: false, error: "Failed to accept order" };
+        return { success: false, error: rt("acceptOrderFail") };
     }
 }
 
 export async function denyOrder({orderId}: { orderId: string;}) {
-    
+    const rt = await getTranslations("Responses")
     try {
         const result = await db.$transaction(async (tx) => {
             const order = await tx.order.update({
@@ -344,10 +343,10 @@ export async function denyOrder({orderId}: { orderId: string;}) {
                     "UPDATE",
                     "Order",
                     order.id,
-                    `Supplier denied the order`,
+                    rt("denyOrder"),
                     {
                         orderId,
-                        update: `Order status to "REJECTED" by the Supplier`
+                        update: rt("updateOrderStatusRejected")
                     },
                     null,
                     'INFO',
@@ -374,14 +373,14 @@ export async function denyOrder({orderId}: { orderId: string;}) {
         return {success: true, ...result}
 
     } catch (error) {
-        console.error("Error denying order", error);
+        console.error(rt("denyOrderError"), error);
         await logActivity(
                     orderId,
                     null,
                     "UPDATE",
                     "Order",
                     orderId,
-                    `Error denying the order`,
+                    rt("denyOrderError"),
                     {
                     },
                     null,
@@ -395,11 +394,11 @@ export async function denyOrder({orderId}: { orderId: string;}) {
                     entityName:  "",
                     details: {
                         metadata: {
-                            error: (error as string).toString() || "Error denying the order"
+                            error: (error as string).toString() || rt("denyOrderError")
                         }
                 }
                     });
         
-        return { success: false, error: "Failed to deny order" };
+        return { success: false, error: rt("denyOrderFail") };
     }
 }
