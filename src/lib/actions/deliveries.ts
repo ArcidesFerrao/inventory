@@ -11,15 +11,17 @@ import {  OrderItemWithStockItems } from "@/types/types";
 import { revalidatePath } from "next/cache";
 import { createAuditLog } from "./auditLogs";
 import { Prisma } from "@/generated/prisma";
+import { getTranslations } from "next-intl/server";
 
 export async function createDelivery({  orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: { itemId: string;
      deliveredQty: number;
 }[]}) {
     const session = await auth()
+    const rt = await getTranslations("Responses")
     
     if (!session?.user.supplierId) redirect("/login");
 
-    if (items.length === 0) return {success:false, message: "No delivery items"}
+    if (items.length === 0) return {success:false, message: rt("noDeliveryItems")}
 
     try {
         const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`)
@@ -78,7 +80,7 @@ export async function createDelivery({  orderId, deliveryDate, deliveryTime,note
             "CREATE",
             "Delivery",
             orderId,
-            `Scheduled delivery for Order`,
+            rt("schedulingDelivery"),
             {
                 orderId,
                 scheduledAt: delivery.scheduledAt,
@@ -116,17 +118,21 @@ export async function createDelivery({  orderId, deliveryDate, deliveryTime,note
                     details: {
                         metadata: {
                             orderId,
-                            error: (error as string).toString() || "Error creeating delivery for the order"
+                            error: (error as string).toString() || rt("createDeliveryError")
                         }
                     }
                 });
-        return { success: false, error: "Failed to create delivery" };
+        return { success: false, error: rt("createDeliveryFail") };
     }
 }
 
 export async function completeDelivery({serviceId, deliveryId, orderId}:{serviceId:string, deliveryId:string, orderId:string}) {
   const session = await auth()
-    
+
+    const t = await getTranslations("Common")
+    const nt = await getTranslations("Notifications")
+    const rt = await getTranslations("Responses")
+
     if (!session?.user) redirect("/login");
 
     try {
@@ -205,7 +211,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         changeType: "SALE",
                         quantity,
                         referenceId: deliveryItem.id,
-                        notes: `Delivery #${delivery.id.slice(0,8)}... completed, deducted from supplier stock`,
+                        notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${t("completed")}, ${rt("deductedFrom")}`,
                     }
                 })
 
@@ -291,7 +297,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                             changeType: "PURCHASE",
                             quantity,
                             referenceId: deliveryItem.id,
-                            notes: `Delivery #${delivery.id.slice(0,8)}... completed, added to service stock`,
+                            notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${t("completed")}, ${rt("addedTo")}`,
                         }
                     });
                 } else {
@@ -359,7 +365,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                             changeType: "PURCHASE",
                             quantity,
                             referenceId: deliveryItem.id,
-                            notes: `Delivery #${delivery.id.slice(0,8)}... completed, added to service stock`,
+                            notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${t("completed")}, ${rt("addedTo")}`,
                         }
                     });
                 } 
@@ -419,7 +425,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
             "CONFIRMED",
             "Delivery",
             delivery.id,
-            `Delivery marked as Completed`,
+            rt("markCompletedDelivery"),
             {
                 deliveryId,
                 orderId,
@@ -435,8 +441,8 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         await createNotification({
             userId: order.supplier.userId ?? "",
             type: "DELIVERY",
-            title: "Delivery Confirmed",
-            message: `${order.Service?.businessName} confirmed delivery!`,
+            title: nt("deliveryConfirmed"),
+            message: `${order.Service?.businessName} ${rt("confirmedDelivery")}`,
             link: `/supply/orders/${orderId}`
         })
 
@@ -468,7 +474,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
             "ERROR",
             "Delivery",
             deliveryId,
-            `Error while completing delivery`,
+            rt("completeDeliveryError"),
             {
                 serviceId,
                 orderId,
@@ -487,17 +493,20 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     details: {
                         metadata: {
                             orderId,
-                            error: (error as string).toString() || "Error updating delivery for the order"
+                            error: (error as string).toString() || rt("updateDeliveryError")
                         }
                     }
                 });
 
-        return {success: false, error: "Error confirming delivery"}
+        return {success: false, error: rt("confirmDeliveryError")}
     }
 }
 
 export async function arrivedDelivery(orderId: string, deliveryId: string,) {
     const session = await auth()
+    const nt = await getTranslations("Notifications")
+    const rt = await getTranslations("Responses");
+
     if (!session?.user) redirect("/login");
 
     try {
@@ -531,9 +540,8 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
             "ARRIVED",
             "Delivery",
             delivery.id,
-            `Delivery marked as Arrived by Supplier`,
+            rt("markedArrivedDelivery"),
             {
-                
                 deliveryId,
                 orderId,
                 deliveredAt: delivery.deliveredAt,
@@ -546,8 +554,8 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
         await createNotification({
             userId: order.Service?.userId ?? "",
             type: "DELIVERY",
-            title: "Delivery Arrived",
-            message: `${order.supplier?.businessName} awaiting confirmation!`,
+            title: nt("deliveryArrived"),
+            message: `${order.supplier?.businessName} ${rt("awaitingConfirmation")}`,
             link: `/service/purchases/orders/${order.id}`
         })
 
@@ -573,7 +581,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
             "ERROR",
             "Delivery",
             deliveryId,
-            `Error while completing delivery`,
+            rt("completeDeliveryError"),
             {
                 orderId,
                 error: error instanceof Error ? error.message : String(error),
@@ -585,12 +593,12 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
 
         
             // throw new Error("Failed to mark delivery as arrived");
-        return {success: false, error: "Error marking delivery as arrived"}
+        return {success: false, error: rt("markArrivedError")}
     }
 }
 
 export async function  rateDelivery(deliveryId: string, star: number) {
-    
+    const rt = await getTranslations("Responses")
     try {
 
         const ratedDelivery = await db.delivery.update({
@@ -613,11 +621,11 @@ export async function  rateDelivery(deliveryId: string, star: number) {
             details: {
                 metadata: {
                     star: star.toString(),
-                    error: (error as string).toString() || "Error rating delivery for the order"
+                    error: (error as string).toString() || rt("ratingDeliveryError")
                 }
             }
         });
-        return {success: false, message: "Error rating delivery", error}
+        return {success: false, message: rt("ratingDeliveryError"), error}
     }
 
 }
@@ -626,10 +634,13 @@ export async function  rateDelivery(deliveryId: string, star: number) {
 export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,notes, items}:{  orderId: string; deliveryDate: string; deliveryTime: string; notes: string; items: OrderItemWithStockItems[]}) {
 
     const session = await auth()
+    const rt = await getTranslations("Responses")
+    const nt = await getTranslations("Notifications")
+
     if (!session?.user.supplierId) redirect("/login");
 
     if (items.length === 0) 
-        return { success: false, error: "No delivery items"};
+        return { success: false, error: rt("noDeliveryItems")};
 
     try {
         const scheduledAt = new Date(`${deliveryDate}T${deliveryTime}`);
@@ -684,7 +695,7 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
             "CREATE",
             "Delivery",
             orderId,
-            `Scheduled delivery for Order`,
+            rt("schedulingDelivery"),
             {
                 orderId,
                 scheduledAt: delivery.scheduledAt,
@@ -699,8 +710,8 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
         await createNotification({
             userId: updatedOrder.Service?.userId ?? "",
             type: "DELIVERY",
-            title: "New Delivery Scheduled",
-            message: `${updatedOrder.supplier?.businessName} scheduled a delivery`,
+            title: nt("deliveryScheduled"),
+            message: `${updatedOrder.supplier?.businessName} ${rt("scheduledDelivery")}`,
             link: `/service/purchases/orders/${updatedOrder.id}`}
         )
 
@@ -728,7 +739,7 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
             "ERROR",
             "Order",
             orderId,
-            `Error while creating delivery`,
+            rt("createDeliveryError"),
             {
                 orderId,
                 error: error instanceof Error ? error.message : String(error),
@@ -744,11 +755,11 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
                     entityName: "",
                     details: {
                         metadata: {
-                            error: (error as string).toString() || "Error creating delivery for the order"
+                            error: (error as string).toString() || rt("createDeliveryError")
                         }
                     }
                 });
-        return {success: false, error: "Failed to create delivery"}
+        return {success: false, error: rt("createDeliveryFail")}
     }
 
 }

@@ -166,18 +166,6 @@
         "stockReportDetail": "Export current inventory levels, stock status, and product details.",
         "settingsNote": "Note: Changes to these settings will affect all future transactions. Existing records will remain unchanged."
     },
-    "Notifications": {
-        "stockAddedSuccess": "Stock item added successfully",
-        "stockAddedError": "Failed to add stock item",
-        "stockUpdatedSuccess": "Stock item updated successfully",
-        "stockUpdatedError": "Failed to update stock item",
-        "stockDeletedSuccess": "Stock item deleted successfully",
-        "stockDeletedError": "Failed to delete stock item",
-        "stockMovementError": "Failed to record stock movement",
-        "stockRecordSuccess": "Stock Recorder Successfully!",
-        "updateStatusError": "Failed to update status",
-        "updateStatusConsole": "Error updating status: "
-    },
     "Modal": {
         "recordStock": "Record Stock Movement",
         "currentStock": "Current Stock",
@@ -221,6 +209,21 @@
         "confirmPassword": "Confirm Password",
         "reEnter": "Re-enter your password",
         "backToLogin": "Back to login"
+    },
+    "Notifications": {
+        "stockAddedSuccess": "Stock item added successfully",
+        "stockAddedError": "Failed to add stock item",
+        "stockUpdatedSuccess": "Stock item updated successfully",
+        "stockUpdatedError": "Failed to update stock item",
+        "stockDeletedSuccess": "Stock item deleted successfully",
+        "stockDeletedError": "Failed to delete stock item",
+        "stockMovementError": "Failed to record stock movement",
+        "stockRecordSuccess": "Stock Recorder Successfully!",
+        "updateStatusError": "Failed to update status",
+        "updateStatusConsole": "Error updating status: ",
+        "deliveryScheduled": "New Delivery Scheduled",
+        "deliveryArrived": "Delivery Arrived",
+        "deliveryConfirmed": "Delivery Confirmed"
     },
     "Responses": {
         "passwordResetSent": "Password reset link sent to your email",
@@ -269,8 +272,9 @@
         "resetPasswordSuccess": "Password reset successfully! Redirecting to login...",
         "invalidLink": "Invalid or expired reset link",
         "markArrived": "Mark as arrived",
-        "markArrivedSuccess": "Delivery marked as arrived.",
-        "markArrivedFail": "Failed to mark delivery as arrived.",
+        "markArrivedSuccess": "Delivery marked as arrived",
+        "markArrivedFail": "Failed to mark delivery as arrived",
+        "markArrivedError": "Error marking delivery as arrived",
         "confirmDelivery": "Confirm Delivery",
         "deliveryCompleted":"Delivery Completed",
         "confirmSuccess": "Delivery confirmed successfully",
@@ -318,7 +322,20 @@
         "itemUpdatedSuccess": "Item updated successfully",
         "itemUpdatedError": "Failed to update item",
         "itemDeletedSuccess": "Item deleted successfully",
-        "itemDeletedError": "Failed to delete item"       
+        "itemDeletedError": "Failed to delete item",
+        "noDeliveryItems": "No delivery items",
+        "schedulingDelivery": "Scheduled delivery for Order",
+        "createDeliveryError": "Error creeating delivery for the order",
+        "createDeliveryFail": "Failed to create delivery",
+        "deductedFrom": "deducted from supplier stock",
+        "addedTo": "added to service stock",
+        "markCompletedDelivery": "Delivery marked as Completed",
+        "updateDeliveryError":  "Error updating delivery for the order",
+        "confirmedDelivery": "confirmed delivery!",
+        "awaitingConfirmation": "awaiting confirmation!",
+        "markedArrivedDelivery": "Delivery marked as Arrived by Supplier",
+        "scheduledDelivery": "scheduled a delivery",
+        "completeDeliveryError": "Error while completing delivery"
     },
     "Loading": {
         "loading": "Loading...",
