@@ -30,7 +30,11 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                     },
                 },
                 include: {
-                    PurchaseItem: true,
+                    PurchaseItem: {
+                        include: {
+                            stockItem: true
+                        }
+                    },
                 },
             })
             await Promise.all(
@@ -39,12 +43,11 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                         where: { id: serviceStockItem.id },
                         data: {
                             stock: { increment: serviceStockItem.quantity },
+                            stockQty: { increment: serviceStockItem.quantity * serviceStockItem.stockItem.unitQty },
                         }
                     })
                 )
             )
-            
-            
             return purchase
         })
 

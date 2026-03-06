@@ -108,14 +108,24 @@ export const OrdersList = ({
               </div>
 
               <div className="amount-input flex gap-4 items-center max-w-6/12">
-                <div className="amount-btn flex gap-2 items-center px-2">
-                  <button onClick={() => handleDecrement(item.id)}>-</button>
+                <div className="amount-btn flex gap-2 items-center ">
+                  <button
+                    className="px-2 py-1"
+                    onClick={() => handleDecrement(item.id)}
+                  >
+                    -
+                  </button>
                   <span className="w-12 text-center text-sm">
                     {item.quantity}
                   </span>
-                  <button onClick={() => handleIncrement(item.id)}>+</button>
+                  <button
+                    className="px-2 py-1"
+                    onClick={() => handleIncrement(item.id)}
+                  >
+                    +
+                  </button>
                 </div>
-                <span className="min-w-28">
+                <span className="min-w-20">
                   <p>{((item.price ?? 0) * item.quantity).toFixed(2)} MZN</p>
                 </span>
               </div>

@@ -109,7 +109,7 @@ export default async function OrderPage(props: { params: Params }) {
             <div className="order-buttons flex flex-col ">
               <Link
                 className="delivery-btn bg-blue-600 text-center"
-                href={`${locale}/supply/orders/${order?.id}/deliveries/new`}
+                href={`/${locale}/supply/orders/${order?.id}/deliveries/new`}
               >
                 {t("delivery")}
               </Link>
@@ -160,7 +160,7 @@ export default async function OrderPage(props: { params: Params }) {
                   href={`/${locale}/supply/orders/delivery/${order?.delivery.id}`}
                 >
                   <h3 className="font-medium py-2">
-                    {dt("delivery")} #{order?.delivery.id.slice(0, 5)}...
+                    {t("delivery")} #{order?.delivery.id.slice(0, 5)}...
                   </h3>
                 </Link>
                 <p className="text-sm font-extralight">

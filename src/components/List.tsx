@@ -384,6 +384,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
 
 export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
   const t = useTranslations("Common");
+  const st = useTranslations("Sales");
   return (
     <li
       key={sale.id}
@@ -392,7 +393,7 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
       <div className="sale-header flex justify-between">
         <div className="sale-title flex flex-col gap-2">
           <h3 className="flex gap-2 items-center ">
-            {t("sale")}
+            {st("sale")}
             <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
           <div className="sale-title-details flex gap-4">
@@ -696,7 +697,7 @@ export const SupplierOrderListItem = ({
         ) : (
           <div className="delivery-window flex flex-col gap-2">
             <p className="text-sm font-light">
-              {order?.Service?.businessName} - {t("requestedDeliveryWindow")}
+              {order?.Service?.businessName} - {ot("requestedDeliveryWindow")}
             </p>
             <div className=" flex gap-2">
               <p className="text-md font-medium">

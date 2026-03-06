@@ -38,6 +38,7 @@ export async function createOrder(
 ) {    
     const session = await auth()
     const rt = await getTranslations("Responses")
+    const ot = await getTranslations("Orders")
 
     if (!session?.user) redirect("/login");
 
@@ -149,8 +150,8 @@ export async function createOrder(
         await createNotification({
             userId: order.supplier.userId,
             type: "ORDER",
-            title: rt("newOrder"),
-            message: `${order.Service?.businessName} ${rt("placedNewOrder")}`,
+            title: ot("newOrder"),
+            message: `${order.Service?.businessName} ${ot("placedNewOrder")}`,
             link: `/supply/orders/${order.id}`
         })
         

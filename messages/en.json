@@ -51,7 +51,8 @@
         "agent":"Agent",
         "saleDetails": "Sale Details",
         "recentSales": "Recent Sales",
-        "averageSaleValue": "Avg. Value"
+        "averageSaleValue": "Avg. Value",
+    "saleCompleted": "Venda Concluida"
     },
     "Purchases": {
         "purchase": "Purchase",
@@ -62,6 +63,7 @@
         "totalSpent": "Total Spent",
         "itemsPurchased": "Items Purchased",
         "purchaseSummary": "Purchase Summary",
+        "purchaseItems": "Purchase Items",
         "noItems": "Add at least one item with a valid price.",
         "noPurchases": "No purchases found",
         "totalOrderedItems": "Total Ordered",
@@ -91,7 +93,8 @@
         "completeOrder": "Complete Order",
         "avgOrderValue": "Avg. Order Value",
         "orderedItemsBy": "Ordered Items by",
-        "scheduleDelivery": "Schedule New Delivery"
+        "scheduleDelivery": "Schedule New Delivery",
+        "requestedDeliveryWindow": "Requested Delivery Window"
     },
     "Delivery": {
         "customerInfo": "Customer Information",
@@ -100,7 +103,7 @@
         "confirmDelivery": "Confirm Delivery",
         "rateDelivery": "Rate this delivery",
         "deliveryDetails": "Delivery Details",
-        "fullDalivery": "Full Delivery",
+        "fullDelivery": "Full Delivery",
         "status": "Status",
         "deliveries": "Deliveries",
         "deliveredDate":"Delivered Date",
@@ -110,7 +113,8 @@
         "deliveryItems":"Delivery Items",
         "deliveryNotes":"Delivery Notes",
         "requestedWindow": "Requested Delivery Window",
-        "deliveryNotProcessed": "Delivery not processed successfully"
+        "deliveryNotProcessed": "Delivery not processed successfully",
+        "deliveryArrived": "Delivery Arrived"
     },
     "Expenses": {
         "expense": "Expense",
@@ -226,6 +230,7 @@
         "deliveryConfirmed": "Delivery Confirmed"
     },
     "Responses": {
+        "completed": "Completed",
         "passwordResetSent": "Password reset link sent to your email",
         "willSendResetLink": "If an account exists with this email, a reset link has been sent",
         "emailRequired": "Email is required",
@@ -277,6 +282,7 @@
         "markArrivedError": "Error marking delivery as arrived",
         "confirmDelivery": "Confirm Delivery",
         "deliveryCompleted":"Delivery Completed",
+        "deliveryConfirmed": "Delivery Confirmed",
         "confirmSuccess": "Delivery confirmed successfully",
         "completedDelivery": "Delivery Completed",
         "confirmDeliveryFail": "Failed to confirm delivery. Please try again.",
@@ -426,6 +432,7 @@
         "salesList": "Sales List",
         "role": "Role",
         "status": "Status",
+        "complete": "Complete",
         "active": "Active",
         "createdAt": "Created At",
         "from": "From",

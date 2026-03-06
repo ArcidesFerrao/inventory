@@ -15,6 +15,7 @@ export const StockItemDeleteButton = ({
   const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();
+  const ct = useTranslations("Common");
   const t = useTranslations("Notifications");
 
   const handleDelete = () => {
@@ -38,8 +39,8 @@ export const StockItemDeleteButton = ({
         isOpen={isDialogOpen}
         onConfirm={handleDelete}
         onCancel={() => setIsDialogOpen(false)}
-        title={t("deleteItem")}
-        description={t("thisCannotBeUndone")}
+        title={ct("deleteItem")}
+        description={ct("thisCannotBeUndone")}
       />
       <button
         onClick={() => setIsDialogOpen(true)}

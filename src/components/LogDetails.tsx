@@ -140,10 +140,11 @@ export const CreatePurchaseLogDetails = ({
   details: CreateSaleLogs;
 }) => {
   const t = useTranslations("Common");
+  const pt = useTranslations("Purchases");
 
   return (
     <div className="flex flex-col gap-1">
-      <h4>{t("purchaseItems")}:</h4>
+      <h4>{pt("purchaseItems")}:</h4>
       {typeof details === "object" && details ? (
         <div className="flex flex-col gap-1">
           <ul className="text-sm font-extralight">

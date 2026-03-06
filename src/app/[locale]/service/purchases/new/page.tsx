@@ -12,6 +12,7 @@ export default async function NewPurchase({
 }) {
   const { locale } = await params;
   const t = await getTranslations("Common");
+  const pt = await getTranslations("Purchases");
 
   const session = await auth();
 
@@ -29,7 +30,7 @@ export default async function NewPurchase({
   return (
     <div className="sales-section flex flex-col gap-5 w-full">
       <div className="list-header flex items-center justify-between w-full">
-        <h2 className="text-2xl font-medium">{t("newPurchase")}</h2>
+        <h2 className="text-2xl font-medium">{pt("newPurchase")}</h2>
         <Link
           href={`/${locale}/service/purchases`}
           className="add-product flex gap-1"

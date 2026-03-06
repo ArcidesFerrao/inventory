@@ -102,7 +102,7 @@ export const SupplierDelivery = ({
               <div>
                 <h3>{i.stockItem.name}</h3>
                 <p className="font-light text-sm">
-                  {t("qunaitites")}: {i.orderedQty} {t("units")}
+                  {t("quantity")}: {i.orderedQty} {t("units")}
                 </p>
               </div>
               <p>{dt("fullDelivery")}</p>

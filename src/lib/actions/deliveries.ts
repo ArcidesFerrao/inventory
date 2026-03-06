@@ -130,7 +130,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
   const session = await auth()
 
     const t = await getTranslations("Common")
-    const nt = await getTranslations("Notifications")
+    // const nt = await getTranslations("Notifications")
     const rt = await getTranslations("Responses")
 
     if (!session?.user) redirect("/login");
@@ -441,7 +441,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         await createNotification({
             userId: order.supplier.userId ?? "",
             type: "DELIVERY",
-            title: nt("deliveryConfirmed"),
+            title: rt("confirmedDelivery"),
             message: `${order.Service?.businessName} ${rt("confirmedDelivery")}`,
             link: `/supply/orders/${orderId}`
         })
@@ -504,8 +504,9 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
 
 export async function arrivedDelivery(orderId: string, deliveryId: string,) {
     const session = await auth()
-    const nt = await getTranslations("Notifications")
+    // const nt = await getTranslations("Notifications")
     const rt = await getTranslations("Responses");
+    const dt = await getTranslations("Delivery");
 
     if (!session?.user) redirect("/login");
 
@@ -554,7 +555,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
         await createNotification({
             userId: order.Service?.userId ?? "",
             type: "DELIVERY",
-            title: nt("deliveryArrived"),
+            title: dt("deliveryArrived"),
             message: `${order.supplier?.businessName} ${rt("awaitingConfirmation")}`,
             link: `/service/purchases/orders/${order.id}`
         })

@@ -39,7 +39,7 @@ export async function createExpense(prevState: unknown, formData: FormData) {
                     "CREATE",
                     "Expense",
                     expense.id,
-                    `${rt("expenseAmount")} ${expense.amount.toFixed(2)} ${rt("created")}`,
+                    `${rt("expenseAmount")} ${expense.amount.toFixed(2)} ${rt("expenseAmountCreated")}`,
                     {
                         
                         timeStamp: expense.timestamp,

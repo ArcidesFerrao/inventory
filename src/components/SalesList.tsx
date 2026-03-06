@@ -156,12 +156,18 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
                   <h3>{item.name}</h3>
 
                   <div className="sales-amount flex gap-4 items-center max-w-6/12">
-                    <div className="amount-btn flex gap-2 items-center px-2 py-1">
-                      <button onClick={() => handleDecrement(item.id)}>
+                    <div className="amount-btn flex gap-2 items-center ">
+                      <button
+                        className="px-2 py-1"
+                        onClick={() => handleDecrement(item.id)}
+                      >
                         -
                       </button>
                       <span className="w-12 text-center">{item.quantity}</span>
-                      <button onClick={() => handleIncrement(item.id)}>
+                      <button
+                        className="px-2 py-1"
+                        onClick={() => handleIncrement(item.id)}
+                      >
                         +
                       </button>
                     </div>

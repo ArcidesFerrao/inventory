@@ -13,7 +13,7 @@ export const PurchasesList = ({
 }: PurchasesProps) => {
   const router = useRouter();
   const t = useTranslations("Common");
-  const pt = useTranslations("Purchase");
+  const pt = useTranslations("Purchases");
   const rt = useTranslations("Responses");
 
   const [items, setItems] = useState(initialStockItems);
@@ -107,10 +107,20 @@ export const PurchasesList = ({
                   </label>
                 </div>
                 <div className="flex flex-col gap-2 items-center text-sm">
-                  <div className="amount-btn flex gap-4  px-2 ">
-                    <button onClick={() => handleDecrement(item.id)}>-</button>
+                  <div className="amount-btn flex items-center">
+                    <button
+                      className="px-4 py-1"
+                      onClick={() => handleDecrement(item.id)}
+                    >
+                      -
+                    </button>
                     <span className="w-10 text-center">{item.quantity}</span>
-                    <button onClick={() => handleIncrement(item.id)}>+</button>
+                    <button
+                      className="px-4 py-1"
+                      onClick={() => handleIncrement(item.id)}
+                    >
+                      +
+                    </button>
                   </div>
                   <span className="self-end">
                     <p>{((item.price ?? 0) * item.quantity).toFixed(2)} MZN</p>
