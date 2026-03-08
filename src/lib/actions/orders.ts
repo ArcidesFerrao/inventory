@@ -80,7 +80,7 @@ export async function createOrder(
                         serviceId,
                         stockItemId: item.id,
                         stock: 0,
-                        cost: item.cost || item.price || 0,
+                        cost: item.price || 0,
                         status: "ACTIVE"
                     },
                     include: {

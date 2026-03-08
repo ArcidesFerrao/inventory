@@ -727,7 +727,7 @@ export const ServiceStockItemForm = ({
 
   const t = useTranslations("Common");
   const rt = useTranslations("Responses");
-  const it = useTranslations("Items");
+  const it = useTranslations("Item");
 
   const supplierId = "directPurchase";
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
@@ -793,8 +793,8 @@ export const ServiceStockItemForm = ({
       className="flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
-        {t("fillFormTo")} {stockItem ? t("editThe") : t("createNew")}
-        {t("stockItem")}
+        {t("fillFormTo")} {stockItem ? t("editThe") : t("createNew")}{" "}
+        {it("stockItem")}
       </h2>
       <section className="flex flex-col gap-4">
         {stockItem && (

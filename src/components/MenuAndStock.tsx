@@ -54,20 +54,18 @@ export default function MenuAndStock({
             <span className="flowbite--cart-solid"></span> {t("stock")}
           </button>
         </div>
-        <div className="flex gap-2 items-center">
-          <Link
-            href={
-              view === "list"
-                ? `/${locale}/service/products/new`
-                : `/${locale}/service/stock/new`
-            }
-            className="add-product flex gap-1"
-          >
-            <span className="text-md px-2 flex items-center gap-2">
-              {t("new")} {view === "stock" && t("stock")} {t("item")}
-            </span>
-          </Link>
-        </div>
+        {view === "list" && (
+          <div className="flex gap-2 items-center">
+            <Link
+              href={`/${locale}/service/products/new`}
+              className="add-product flex gap-1"
+            >
+              <span className="text-md px-2 flex items-center gap-2">
+                {t("new")} {t("item")}
+              </span>
+            </Link>
+          </div>
+        )}
       </div>
       {view === "list" && (
         <>

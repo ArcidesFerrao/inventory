@@ -219,7 +219,8 @@ export const OrderListItem = ({
       <div className="flex flex-col gap-5">
         <div className="order-header flex flex-col gap-2">
           <Link href={`/${locale}/service/purchases/orders/${order.id}`}>
-            <h3 className="order-title flex gap-2 items-center text-xl font-medium">
+            <h3 className="order-title flex flex-col gap-2  text-xl font-medium">
+              {ot("order")}
               <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
             </h3>
           </Link>
