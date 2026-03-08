@@ -28,7 +28,7 @@ export async function createItem(prevState: unknown, formData: FormData) {
 
         await db.$transaction(async (tx) => {
 
-            await assertCanAddProduct(tx, values.serviceId, undefined);
+            await assertCanAddProduct(tx, values.serviceId);
 
             
             await tx.item.create({
@@ -323,10 +323,10 @@ export async function getProductLimits() : Promise<ProductLimits> {
 export async function assertCanAddProduct(
     tx: Prisma.TransactionClient,
     serviceId?: string,
-    supplierId?: string
+    // supplierId?: string
 ) {
 
-    const service = await tx.service.findUnique({
+    const service = serviceId ? await tx.service.findUnique({
         where: {
             id: serviceId
         },
@@ -338,27 +338,33 @@ export async function assertCanAddProduct(
                 }
             }
         }
-    })
-    const supplier = await tx.supplier.findUnique({
-        where: {
-            id: supplierId
-        },
-        include: {
-            user: {
-                select: {
-                    profileStatus: true,
-                    role: true
-                }
-            }
-        }
-    })
+    }) : null;
 
-    if (!service || !supplier) throw new Error("USER_NOT_FOUND")
-    if (service.user.role === "ADMIN" || supplier.user.role === "ADMIN") return
+    // const supplier = await tx.supplier.findUnique({
+    //     where: {
+    //         id: supplierId
+    //     },
+    //     include: {
+    //         user: {
+    //             select: {
+    //                 profileStatus: true,
+    //                 role: true
+    //             }
+    //         }
+    //     }
+    // })
+
+    if (!serviceId || !service) throw new Error("USER_NOT_FOUND")
+    // if (!supplierId || !supplier) throw new Error("USER_NOT_FOUND")
 
     const limits = await getProductLimits()
+        
+    
     if (service) {
+        if (service.user.role === "ADMIN" ) return
+        
         const limit = limits[service.user.profileStatus]
+        
         if (limit === -1) return
     
         if (limit === 0) {
@@ -376,22 +382,22 @@ export async function assertCanAddProduct(
         }
     } 
 
-    if (supplier) {
-        const limit = limits[supplier.user.profileStatus]
-        if (limit === -1) return
-        if (limit === 0) {
-            throw new Error("PRODUCT_CREATION_NOT_ALLOWED")
-        }
+    // if (supplier) {
+    //     const limit = limits[supplier.user.profileStatus]
+    //     if (limit === -1) return
+    //     if (limit === 0) {
+    //         throw new Error("PRODUCT_CREATION_NOT_ALLOWED")
+    //     }
 
-        const count = await tx.stockItem.count({
-            where: {
-                supplierId
-            }
-        })
-        if (count >= limit) {
-            throw new Error("PRODUCT_LIMIT_EXCEEDED")
-        }
+    //     const count = await tx.stockItem.count({
+    //         where: {
+    //             supplierId
+    //         }
+    //     })
+    //     if (count >= limit) {
+    //         throw new Error("PRODUCT_LIMIT_EXCEEDED")
+    //     }
 
-    }
+    // }
 
 }

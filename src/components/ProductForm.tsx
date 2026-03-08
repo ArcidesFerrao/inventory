@@ -356,61 +356,64 @@ export const ProductForm = ({
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-4">
-          <fieldset className="flex flex-col gap-4 p-4">
-            <legend className="font-semibold">{t("recipeItems")}</legend>
-            {recipeItems.map((stockItem, index) => {
-              const isActive = Number(stockItem.unitQty) > 0;
-              return (
-                <div
-                  key={stockItem.id}
-                  className="flex items-center justify-between"
-                >
-                  <label
-                    className="pl-2 py-1 font-light "
-                    htmlFor={`CatalogItems[${index}].quantity`}
+        {type !== "STOCK" && (
+          <div className="flex flex-col gap-4">
+            <fieldset className="flex flex-col gap-4 p-4">
+              <legend className="font-semibold">{t("recipeItems")}</legend>
+              {recipeItems.map((stockItem, index) => {
+                const isActive = Number(stockItem.unitQty) > 0;
+                return (
+                  <div
+                    key={stockItem.id}
+                    className="flex items-center justify-between"
                   >
-                    {stockItem.stockItem.name}
-                  </label>
-                  <input
-                    type="number"
-                    className="max-w-1/3 text-sm"
-                    min={0}
-                    name={`CatalogItems[${index}].quantity`}
-                    value={stockItem.unitQty}
-                    onChange={(e) => {
-                      const newQuantity = Number(e.target.value);
-                      setRecipeItems((prev) =>
-                        prev.map((ri) =>
-                          ri.id === stockItem.id
-                            ? {
-                                ...ri,
-                                unitQty: newQuantity,
-                              }
-                            : ri,
-                        ),
-                      );
-                    }}
-                  />
-                  {isActive && (
-                    <>
-                      <input
-                        type="hidden"
-                        name={`CatalogItems[${index}].serviceStockItemId`}
-                        value={stockItem.id}
-                      />
-                      <input
-                        type="hidden"
-                        name={`CatalogItems[${index}].stockItemId`}
-                        value={stockItem.stockItemId}
-                      />
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </fieldset>
-        </div>
+                    <label
+                      className="pl-2 py-1 font-light "
+                      htmlFor={`CatalogItems[${index}].quantity`}
+                    >
+                      {stockItem.stockItem.name}
+                    </label>
+                    <input
+                      type="number"
+                      className="max-w-1/3 text-sm"
+                      min={0}
+                      name={`CatalogItems[${index}].quantity`}
+                      value={stockItem.unitQty}
+                      onChange={(e) => {
+                        const newQuantity = Number(e.target.value);
+                        setRecipeItems((prev) =>
+                          prev.map((ri) =>
+                            ri.id === stockItem.id
+                              ? {
+                                  ...ri,
+                                  unitQty: newQuantity,
+                                }
+                              : ri,
+                          ),
+                        );
+                      }}
+                    />
+                    {isActive && (
+                      <>
+                        <input
+                          type="hidden"
+                          name={`CatalogItems[${index}].serviceStockItemId`}
+                          value={stockItem.id}
+                        />
+                        <input
+                          type="hidden"
+                          name={`CatalogItems[${index}].stockItemId`}
+                          value={stockItem.stockItemId}
+                        />
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </fieldset>
+          </div>
+        )}
+
         <div className="flex flex-col gap-1">
           <label htmlFor="description">{t("description")}</label>
 
@@ -451,7 +454,7 @@ export const SupplierProductForm = ({
 }) => {
   const t = useTranslations("Common");
   const rt = useTranslations("Responses");
-  const it = useTranslations("Items");
+  const it = useTranslations("Item");
 
   const actionFn = stockItem ? editStockItem : createStockItem;
   const [state, action, isPending] = useActionState(actionFn, undefined);
@@ -526,8 +529,8 @@ export const SupplierProductForm = ({
       className="flex flex-col gap-4 min-w-md"
     >
       <h2 className="font-extralight">
-        {t("fillFormTo")} {stockItem ? t("editThe") : t("createNew")}
-        {t("stockItem")}
+        {`${t("fillFormTo")} ${stockItem ? t("editThe") : t("createNew")}`}{" "}
+        {it("stockItem")}
       </h2>
       <section className="flex flex-col gap-4">
         {stockItem && (
@@ -547,7 +550,7 @@ export const SupplierProductForm = ({
               type="text"
               name="name"
               id="name"
-              placeholder={t("stockItem")}
+              placeholder={it("stockItem")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />

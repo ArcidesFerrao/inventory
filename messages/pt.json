@@ -25,6 +25,7 @@
     "subtitle": "Preencha o formulário para editar o item em stock",
     "description": "Gerir o catálogo de itens e inventário",
     "stockItemName": "Nome do Item em Stock",
+    "stockItem": "Item em Stock",
     "totalItems": "Total de Itens",
     "lowStock": "Stock Baixo",
     "outOfStock": "Sem Stock",
@@ -67,7 +68,8 @@
     "noItems": "Adicione pelo menos um item com preço válido.",
     "noPurchases": "Nenhuma compra encontrada",
     "totalOrderedItems": "Total Encomendado",
-    "totalOrdersValue": "Valor Total"
+    "totalOrdersValue": "Valor Total",
+    "completePurchase":"Concluir Compra"
   },
   "Orders": {
     "order": "Pedido",
@@ -181,7 +183,10 @@
     "stockMovementError": "Falha ao registar movimento de stock",
     "stockRecordSuccess": "Movimento de stock registado com sucesso!",
     "updateStatusError": "Falha ao atualizar estado",
-    "updateStatusConsole": "Erro ao atualizar estado: "
+    "updateStatusConsole": "Erro ao atualizar estado: ",
+    "deliveryScheduled": "Nova entrega agendada",
+    "deliveryArrived": "Entrega chegou",
+    "deliveryConfirmed": "Entrega confirmada"
   },
   "Modal": {
     "recordStock": "Registar Movimento de Stock",
@@ -336,6 +341,7 @@
     "markCompletedDelivery": "Entrega marcada como Concluída",
     "updateDeliveryError": "Erro ao atualizar entrega do pedido",
     "confirmedDelivery": "entrega confirmada!",
+    "confirmationDelivery": "Entrega Confirmada",
     "awaitingConfirmation": "aguardando confirmação!",
     "markedArrivedDelivery": "Entrega marcada como Chegada pelo Fornecedor",
     "scheduledDelivery": "agendou uma entrega",
@@ -579,6 +585,7 @@
     "cancelled": "Cancelado",
     "pending": "Pendente",
     "approved": "Aprovado",
+        "topOrdered": "Mais Pedidos",
     "paymentType": "Tipo de Pagamento",
     "searchSuppliers": "Pesquisar fornecedores...",
     "endDate": "Data Final",

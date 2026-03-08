@@ -150,8 +150,8 @@ export async function createOrder(
         await createNotification({
             userId: order.supplier.userId,
             type: "ORDER",
-            title: ot("newOrder"),
-            message: `${order.Service?.businessName} ${ot("placedNewOrder")}`,
+            title: `${ot("newOrder")}`,
+            message: `${order.Service?.businessName} ${rt("placedNewOrder")}`,
             link: `/supply/orders/${order.id}`
         })
         
@@ -270,7 +270,7 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
         await createNotification({
             userId: result.order.Service?.userId ?? "",
             type: "ORDER",
-            title: rt("acceptedOrder"),
+            title: `${rt("acceptedOrder")}`,
             message: `${result.order.supplier.businessName} ${rt("acceptedTheOrder")}`,
             link: `/service/purchases/orders/${result.order.id}`
         })

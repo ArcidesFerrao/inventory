@@ -211,7 +211,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         changeType: "SALE",
                         quantity,
                         referenceId: deliveryItem.id,
-                        notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${t("completed")}, ${rt("deductedFrom")}`,
+                        notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${rt("completed")}, ${rt("deductedFrom")}`,
                     }
                 })
 
@@ -297,7 +297,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                             changeType: "PURCHASE",
                             quantity,
                             referenceId: deliveryItem.id,
-                            notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${t("completed")}, ${rt("addedTo")}`,
+                            notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${rt("completed")}, ${rt("addedTo")}`,
                         }
                     });
                 } else {
@@ -365,7 +365,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                             changeType: "PURCHASE",
                             quantity,
                             referenceId: deliveryItem.id,
-                            notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${t("completed")}, ${rt("addedTo")}`,
+                            notes: `${t("delivery")} #${delivery.id.slice(0,8)}... ${rt("completed")}, ${rt("addedTo")}`,
                         }
                     });
                 } 
@@ -441,7 +441,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         await createNotification({
             userId: order.supplier.userId ?? "",
             type: "DELIVERY",
-            title: rt("confirmedDelivery"),
+            title: `${rt("confirmationDelivery")}`,
             message: `${order.Service?.businessName} ${rt("confirmedDelivery")}`,
             link: `/supply/orders/${orderId}`
         })
@@ -555,7 +555,7 @@ export async function arrivedDelivery(orderId: string, deliveryId: string,) {
         await createNotification({
             userId: order.Service?.userId ?? "",
             type: "DELIVERY",
-            title: dt("deliveryArrived"),
+            title: `${dt("deliveryArrived")}`,
             message: `${order.supplier?.businessName} ${rt("awaitingConfirmation")}`,
             link: `/service/purchases/orders/${order.id}`
         })
@@ -711,7 +711,7 @@ export async function createNewDelivery({ orderId, deliveryDate, deliveryTime,no
         await createNotification({
             userId: updatedOrder.Service?.userId ?? "",
             type: "DELIVERY",
-            title: nt("deliveryScheduled"),
+            title: `${nt("deliveryScheduled")}`,
             message: `${updatedOrder.supplier?.businessName} ${rt("scheduledDelivery")}`,
             link: `/service/purchases/orders/${updatedOrder.id}`}
         )

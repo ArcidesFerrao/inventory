@@ -165,9 +165,7 @@ export default async function SupplyPage({
         )}
         {stats.topItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
-            <h2 className="text-2xl font-bold">
-              {t("topOrdered")} {t("items")}
-            </h2>
+            <h2 className="text-2xl font-bold">{t("topOrdered")}</h2>
             <ul className="flex flex-col gap-1">
               {stats.topItems.map((item) => (
                 <li key={item.id} className="flex justify-between w-60">

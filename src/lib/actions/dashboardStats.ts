@@ -315,10 +315,6 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                 const stockItem = await db.stockItem.findUnique({
                     where: {
                         id: item.stockItemId!,
-                        createdAt: {
-                            gte: startDate,
-                            lte: endDate,
-                        }
                     },
                     select: {
                         id: true,
@@ -329,10 +325,11 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
 
                 return {
                     ...stockItem,
-                    quantity: item._sum?.orderedQty ?? 0
+                    quantity: item._sum?.orderedQty ?? 0,
                 }
             }))
-
+            
+            // console.log(topItems)
             return { 
                 supplier: supplier.businessName,
                 stockItemCount, 

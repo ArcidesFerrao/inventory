@@ -25,6 +25,7 @@
         "subtitle": "Fill the form to edit the Stock Item",
         "description": "Manage your item catalog and inventory",
         "stockItemName": "Stock Item Name",
+        "stockItem": "Stock Item",
         "totalItems": "Total Items",
         "lowStock": "Low Stock",
         "outOfStock": "Out of Stock",
@@ -67,7 +68,8 @@
         "noItems": "Add at least one item with a valid price.",
         "noPurchases": "No purchases found",
         "totalOrderedItems": "Total Ordered",
-        "totalOrdersValue": "Total Value"
+        "totalOrdersValue": "Total Value",
+        "completePurchase":"Complete Purchase"
     },
     "Orders": {
         "order": "Order",
@@ -581,6 +583,7 @@
         "cancelled": "Cancelled",
         "pending": "pending",
         "approved": "approved",
+        "topOrdered": "Top Ordered",
         "paymentType": "Payment Type",
         "searchSuppliers": "Search suppliers...",
         "endDate": "End Date",

@@ -146,7 +146,7 @@ export const PurchasesList = ({
           disabled={loading}
           className="complete-btn border px-4 py-2 rounded mt-4"
         >
-          {loading ? "..." : t("complete")}
+          {loading ? "..." : pt("completePurchase")}
         </button>
       </div>
     </>

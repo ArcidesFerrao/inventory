@@ -11,7 +11,7 @@ export default async function NewProductPage({
 }) {
   const { locale } = await params;
 
-  const it = await getTranslations("Items");
+  const it = await getTranslations("Item");
 
   const session = await auth();
 
