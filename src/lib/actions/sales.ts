@@ -20,26 +20,43 @@ export async function createSale(
         const result = await db.$transaction(async (tx) => {
                
             let cogs = 0;
+            let qtyUsedInBaseUnits = 0;
             
             const stockUsage: Record<string, number> = {};
 
             const stockIds = saleItems.flatMap(item => 
                 ( item.CatalogItems ?? []).map(recipe => recipe.serviceStockItem.id) 
             );
+
+            console.log(stockIds)
+
             const stocks = await tx.serviceStockItem.findMany({
                 where: {
                     id: { in: stockIds}
                 },
-                select: { id: true, stock: true, stockQty: true, cost: true,
-
-                    stockItem: { select: { unit: { select: { name: true } }, unitQty:true, name: true} }
+                select: { 
+                    id: true, 
+                    stock: true, 
+                    stockQty: true, 
+                    cost: true,
+                    stockItem: { 
+                        select: { 
+                            unitQty:true, 
+                            name: true,
+                            unit: { 
+                                select: { 
+                                    name: true 
+                                } 
+                            }
+                        } 
+                    }
                  },
             })
 
-
+            console.log(stocks)
 
             for (const saleItem of saleItems) {
-                // console.log("Processing saleItem:", saleItem.name);
+                console.log("Processing saleItem:", saleItem.name);
                 const itemRecipes = saleItem.CatalogItems || [];
                 
                 for (const recipeItem of itemRecipes) {
@@ -48,19 +65,22 @@ export async function createSale(
                     if (!stockProduct) continue;
                         
                     const qtyUsed = saleItem.quantity * recipeItem.quantity;
+                    qtyUsedInBaseUnits = qtyUsed * stockProduct.stockItem.unitQty
                     // stockUsage[serviceStockItemId] += qtyUsed;
-                    stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsed;
+                    stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsedInBaseUnits;
 
                     const costPerBaseUnit = (stockProduct.cost ?? 0) / (stockProduct.stockItem?.unitQty ?? 1);
 
                     cogs += qtyUsed * costPerBaseUnit;
-
-                    // console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                    console.log(qtyUsedInBaseUnits)
+                    console.log(stockUsage)
+                    console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
                 }
             }
 
             for (const [stockId, totalQty] of Object.entries(stockUsage)) {
                 const stock = stocks.find(s => s.id === stockId);
+                
                 if (!stock) continue;
 
                 if ((stock.stockQty ?? 0) < totalQty) {
@@ -73,11 +93,13 @@ export async function createSale(
                     }
                 }
 
-                const remainingBaseUnits = (stock.stockQty ?? 0) - totalQty;
+                const remainingBaseUnits = (stock.stockQty ?? 0)  - totalQty;
 
-                const newStockQty = Math.trunc((remainingBaseUnits ?? 1)/stock.stockItem.unitQty);
-
-                console.log("New stock qty in base units:", newStockQty);
+                const newStock = Math.trunc((remainingBaseUnits ?? 1)/stock.stockItem.unitQty);
+                // const newStockQty = newStock * 
+                console.log("New stock :", newStock);
+                console.log("New stock qty:", remainingBaseUnits);
+                // console.log("New stock qty in base units:", newStockQty);
                 
                 
                 if (stock.stockItem?.unit?.name !== "unit") {
@@ -88,7 +110,7 @@ export async function createSale(
                     const updated = await tx.serviceStockItem.update({
                         where: { id: stockId },
                         data: {
-                            stock: newStockQty,
+                            stock: newStock,
                             stockQty: remainingBaseUnits,
                         }
                     });
@@ -124,16 +146,15 @@ export async function createSale(
                 },
             });
             for (const [stockId, qty] of Object.entries(stockUsage).filter(([,qty]) => qty > 0)) {
-
                 await tx.stockMovement.create({
                     data: {
                         serviceStockItemId:  stockId,
                         quantity: qty,
                         changeType: "SALE",
                         referenceId: newSale.id,
-                        notes: `${rt("soldProducts")}`}
-                    })
-                
+                        notes: `${rt("soldProducts")}`
+                    }
+                })
             }
             // console.log("COGS:", cogs);
             return newSale
@@ -148,13 +169,13 @@ export async function createSale(
             result.id,
             `${rt("createdSaleTotaling")} ${totalPrice.toFixed(2)}`,
             {
-                        totalPrice,
-                        items: saleItems.map(i => ({
-                            id: i.id, 
-                            name: i.name, 
-                            quantity: i.quantity, 
-                            price: i.price}))
-                    },
+                totalPrice,
+                items: saleItems.map(i => ({
+                    id: i.id, 
+                    name: i.name, 
+                    quantity: i.quantity, 
+                    price: i.price}))
+            },
             null,
             'INFO',
             null

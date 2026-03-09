@@ -38,7 +38,6 @@ export async function ExportData({ serviceId }: { serviceId: string }) {
   const serviceStockItems = await db.serviceStockItem.findMany({
     where: {
       serviceId,
-      // type: "STOCK",
     },
     include: {
       stockItem: {
