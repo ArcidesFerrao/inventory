@@ -7,7 +7,9 @@ import { getTranslations } from "next-intl/server";
 
 export default async function SettingsPage() {
   const session = await auth();
+
   const supplierId = session?.user.supplierId;
+
   const t = await getTranslations("Common");
   const st = await getTranslations("Settings");
   const set = await getTranslations("Service");
@@ -38,7 +40,7 @@ export default async function SettingsPage() {
               <p>{session.user.name}</p>
             </div>
             <div className="flex gap-2">
-              <h4 className="font-medium">{t("email")}: </h4>
+              <h4 className="font-medium">Email: </h4>
               <p>{session.user.email}</p>
             </div>
             <div className="flex gap-2">
@@ -56,26 +58,6 @@ export default async function SettingsPage() {
       <div className="settings-note p-3 border">
         <p className="text-sm">{st("settingsNote")}</p>
       </div>
-      {/* <h2 className="text-2xl font-bold">Settings</h2>
-      <div className="flex flex-col gap-4">
-        <div className="flex gap-2">
-          <h4 className="font-medium">Username: </h4>
-          <p>{session.user.name}</p>
-        </div>
-        <div className="flex gap-2">
-          <h4 className="font-medium">Email: </h4>
-          <p>{session.user.email}</p>
-        </div>
-        <div className="flex gap-2">
-          <h4 className="font-medium">Phone Number: </h4>
-          <p>{session.user.phoneNumber}</p>
-        </div>
-        <SupplierExportSelection
-          stockItem={stockProducts}
-          sales={sales}
-          logs={logs}
-        />
-      </div> */}
     </section>
   );
 }

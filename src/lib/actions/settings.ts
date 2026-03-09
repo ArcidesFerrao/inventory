@@ -3,8 +3,6 @@
 import { db } from "@/lib/db";
 
 export async function saveSettingsAction({ serviceId, settings }: { serviceId: string; settings: { allowNegativeStock: boolean; lowStockThreshold: number } }) {
-
-
     try {
         await db.serviceSettings.upsert({
             where: { serviceId },
@@ -25,8 +23,6 @@ export async function saveSettingsAction({ serviceId, settings }: { serviceId: s
     }
 }
 export async function saveSupplierSettingsAction({ supplierId, settings }: { supplierId: string; settings: { minimumOrderValue: number } }) {
-
-
     try {
         await db.supplierSettings.upsert({
             where: { supplierId },

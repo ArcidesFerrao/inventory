@@ -23,7 +23,9 @@ export function SettingsManagement({
   const router = useRouter();
   const t = useTranslations("Common");
   const st = useTranslations("Settings");
+  const rt = useTranslations("Responses");
   const sert = useTranslations("Service");
+
   const [settings, setSettings] = useState({
     allowNegativeStock: serviceSettings?.allowNegativeStock || false,
     lowStockThreshold: serviceSettings?.lowStockThreshold || 5,
@@ -52,12 +54,13 @@ export function SettingsManagement({
     try {
       const result = await saveSettingsAction({ serviceId, settings });
       if (result.success) {
-        toast.success("Settings saved successfully");
+        toast.success(rt("saveSettingsSuccess"));
       }
       console.log("Settings saved", settings);
       router.refresh();
     } catch (error) {
-      console.error("Error saving settings:", error);
+      toast.error(rt("saveSettingsError"));
+      console.error(rt("saveSettingsError"), error);
     } finally {
       setIsSaving(false);
     }
@@ -145,6 +148,7 @@ export function SupplierSettingsManagement({
       // console.log("Settings saved", settings);
       router.refresh();
     } catch (error) {
+      toast.error(rt("saveSettingsError"));
       console.error(rt("saveSettingsError"), error);
     } finally {
       setIsSaving(false);
@@ -159,22 +163,10 @@ export function SupplierSettingsManagement({
           {isSaving ? t("saving") : st("saveSettings")}
         </button>
       </div>
-      {/* <div className="flex justify-between">
-        <div>
-          <p>Allow Negative Stock</p>
-          <p className="font-thin text-sm">
-            Permit sales even when stock quantity goes below zero
-          </p>
-        </div>
-        <ToggleSwitch
-          enabled={settings.allowNegativeStock}
-          onChange={() => handleToggle("allowNegativeStock")}
-        />
-      </div> */}
       <div className="flex justify-between">
         <div>
-          <p>{st("negativeStock")}</p>
-          <p className="font-thin text-sm">{st("negativeStockDetail")}</p>
+          <p>{st("lowStock")}</p>
+          <p className="font-thin text-sm">{st("lowStockDetail")}</p>
         </div>
         <input
           type="number"
