@@ -432,18 +432,18 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         })
 
         await createAuditLog({
-                    action: "UPDATE",
-                    entityType: "Delivery",
-                    entityId: serviceId,
-                    entityName: order.Service?.businessName || "Service",
-                    details: {
-                        metadata: {
-                            orderId,
-                            deliveryId,
-                            deliveredAt: delivery.deliveredAt?.toDateString() ?? ""
-                        }
-                    }
-                });
+            action: "UPDATE",
+            entityType: "Delivery",
+            entityId: serviceId,
+            entityName: order.Service?.businessName || "Service",
+            details: {
+                metadata: {
+                    orderId,
+                    deliveryId,
+                    deliveredAt: delivery.deliveredAt?.toDateString() ?? ""
+                }
+            }
+        });
 
         revalidatePath(`/supply/orders/delivery/${deliveryId}`)
         revalidatePath(`/supply/orders/${orderId}`)
@@ -453,6 +453,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         
     } catch (error) {
         console.error("Error completing delivery:", error);
+
         await logActivity(
             serviceId,
             null,
@@ -471,17 +472,17 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
         )
             
         await createAuditLog({
-                    action: "ERROR",
-                    entityType: "Delivery",
-                    entityId: deliveryId,
-                    entityName: "",
-                    details: {
-                        metadata: {
-                            orderId,
-                            error: (error as string).toString() || rt("updateDeliveryError")
-                        }
-                    }
-                });
+            action: "ERROR",
+            entityType: "Delivery",
+            entityId: deliveryId,
+            entityName: "",
+            details: {
+                metadata: {
+                    orderId,
+                    error: (error as string).toString() || rt("updateDeliveryError")
+                }
+            }
+        });
 
         return {success: false, error: rt("confirmDeliveryError")}
     }

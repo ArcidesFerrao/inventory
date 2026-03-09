@@ -207,7 +207,7 @@ export function ExportStock({
   et
 }: {
   stockItems?: (StockItem & { unit: Unit | null })[] 
-  serviceStockItems?: (ServiceStockItem & { stockItem: StockItem })[];
+  serviceStockItems?: (ServiceStockItem & { stockItem: (StockItem & { unit: Unit | null })})[];
   et: (key: string) => string 
 }) {
   try {
@@ -221,19 +221,22 @@ export function ExportStock({
       autoTable(doc, {
         startY: 30,
         head: [["Item", `${et("quantity")}`, `${et("stockQuantity")}`, `${et("cost")}`]],
-        body: serviceStockItems?.map((s) => [
+        body: [...serviceStockItems].sort((a, b) =>
+      (a.stockItem?.name ?? "").localeCompare(b.stockItem?.name ?? "")).map((s) => [
           s.stockItem?.name ,
           s.stock,
+          `${s.stockQty} ${s.stockItem.unit?.name !== "unit" ? s.stockItem.unit?.name : ""}`,
           s.stockItem.price?.toFixed(2) || "0.00",
         ]),
       });
       doc.save("stock_report.pdf");
     }
+
     if (stockItems) {
       autoTable(doc, {
         startY: 30,
         head: [["Item", `${et("quantity")}`, `${et("cost")}`]],
-        body: stockItems?.map((s) => [
+        body: [...stockItems].sort((a, b) => (a.name ?? "").localeCompare(b.name ?? "")).map((s) => [
           s.name,
           s.stock,
           s.cost?.toFixed(2) || "0.00",

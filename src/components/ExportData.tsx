@@ -41,7 +41,11 @@ export async function ExportData({ serviceId }: { serviceId: string }) {
       // type: "STOCK",
     },
     include: {
-      stockItem: true,
+      stockItem: {
+        include: {
+          unit: true,
+        },
+      },
     },
   });
 

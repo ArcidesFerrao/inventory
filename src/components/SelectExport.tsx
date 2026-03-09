@@ -44,7 +44,9 @@ type SaleWithItems = Sale & {
 type LogWithItems = ActivityLog;
 
 type Props = {
-  serviceStockItems: (ServiceStockItem & { stockItem: StockItem })[];
+  serviceStockItems: (ServiceStockItem & {
+    stockItem: StockItem & { unit: Unit | null };
+  })[];
   purchases: PurchaseWithItems[];
   sales: SaleWithItems[];
   logs: LogWithItems[];
