@@ -18,6 +18,7 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                     paymentType: "CASH",
                     serviceId,
                     sourceType: "DIRECT",
+                    sourceId: "directPurchase",
                     PurchaseItem: {
                         create: purchaseItems.map((serviceStockItem) => ({
                             stockItemId: serviceStockItem.stockItem.id,
@@ -83,7 +84,6 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
             null,
             `Error while creating purchase`,
             {
-                
                 error: error instanceof Error ? error.message : String(error),
             },
             null,

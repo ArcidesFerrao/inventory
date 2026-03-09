@@ -215,8 +215,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     }
                 })
 
-                let serviceStockItem:
-                    | Prisma.ServiceStockItemGetPayload<{
+                let serviceStockItem: | Prisma.ServiceStockItemGetPayload<{
                         include: {
                             stockItem: {
                                 include: {
@@ -224,8 +223,10 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                                 };
                             };
                         };
-                        }>
-                    | null = deliveryItem.orderItem.serviceStockItem;
+                        }> | null = deliveryItem.orderItem.serviceStockItem;
+                    
+                    console.log(serviceStockItem?.stockItem.unit?.name)
+                    console.log(serviceStockItem)
 
                 if (!serviceStockItem) {
                     serviceStockItem = await tx.serviceStockItem.findFirst({
@@ -258,29 +259,28 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     });
                 }
 
+                const isUnitBased = serviceStockItem?.stockItem.unit?.name === "unit"
+
                 const updateData: Prisma.ServiceStockItemUpdateInput = {
                     cost: supplierStockItem.price,
                     stock: {
                         increment: quantity,
+                    },
+                    stockQty: {
+                        increment: isUnitBased ? quantity : quantity * supplierStockItem.unitQty
                     }
                 }
 
-                if (serviceStockItem?.stockItem.unit?.name === "unit") {
-                    // updateData.stock = {
-                    //     increment: quantity,
-                    // };
-                    updateData.stockQty = {
-                        increment: quantity,
-                    };
-                } else {
-                    // updateData.stock = {
-                    //     increment: quantity,
-                    // };
-                    updateData.stockQty = {
-                        increment: quantity * supplierStockItem.unitQty,
-                    };
-                }
 
+                // if (serviceStockItem?.stockItem.unit?.name === "unit") {
+                //                         updateData.stockQty = {
+                //         increment: quantity,
+                //     };
+                // } else {
+                //                        updateData.stockQty = {
+                //         increment: quantity * supplierStockItem.unitQty,
+                //     };
+                // }
 
 
                 if (serviceStockItem) {
@@ -336,8 +336,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                             }
                         });
                     }
-
-                     await tx.serviceStockItem.create({
+                    await tx.serviceStockItem.create({
                         data: {
                             // stock: quantity,
                             cost: supplierStockItem.price,
