@@ -47,7 +47,7 @@ export async function getSupplierCategories(supplierId: string) {
 }
 
 export async function createNewSupplierCategory({newCategoryName, supplierId, }:{newCategoryName: string; supplierId: string}) {
-  console.log("creating category", newCategoryName)
+  // console.log("creating category", newCategoryName)
   try{
 
     const existing = await db.category.findFirst({

@@ -4,10 +4,12 @@ import { db } from "@/lib/db";
 import { logActivity } from "./logs";
 import { ServiceStockProduct } from "@/types/types";
 import { createAuditLog } from "./auditLogs";
+import { getTranslations } from "next-intl/server";
 
 export async function createPurchase(purchaseItems: ServiceStockProduct[], serviceId: string) {
+    const rt = await getTranslations("Responses")
     // console.log(purchaseItems)
-    if (purchaseItems.length === 0) return {success: false, message: "No purchase items"}
+    if (purchaseItems.length === 0) return {success: false, message: `${rt("noPurchaseItems")}`}
     
     const total = purchaseItems.reduce((sum, serviceStockItem) => sum + ((serviceStockItem.price || 0) * serviceStockItem.quantity), 0);
     try {
@@ -58,7 +60,7 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
             "CREATE",
             "Purchase",
             result.id,
-            `Purchase totaling MZN ${total.toFixed(2)}`,
+            `${rt("createdPurchaseTotaling")} ${total.toFixed(2)}`,
             {
                 total,
                 stockItems: purchaseItems.map(i => ({
@@ -82,7 +84,7 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
             "ERROR",
             "Purchase",
             null,
-            `Error while creating purchase`,
+            `${rt("errorCreatingPurchase")}`,
             {
                 error: error instanceof Error ? error.message : String(error),
             },
@@ -101,7 +103,7 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
                 }
             }
         });
-        return {success: false, message: "Failed to create purchase"}
+        return {success: false, message: `${rt("createPurchaseFail")}`}
 
     }
 }

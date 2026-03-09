@@ -117,11 +117,11 @@ export function SelectExport({
 
     try {
       const exportMap = {
-        stock: () => ExportStock({ serviceStockItems }),
+        stock: () => ExportStock({ serviceStockItems, et }),
         purchases: () =>
-          ExportPurchases({ purchases: filterByRange(purchases) }),
-        sales: () => ExportSales({ sales: filterByRange(sales) }),
-        logs: () => ExportLogs({ logs: filterByRange(logs) }),
+          ExportPurchases({ purchases: filterByRange(purchases), et }),
+        sales: () => ExportSales({ sales: filterByRange(sales), et }),
+        logs: () => ExportLogs({ logs: filterByRange(logs), et }),
       };
 
       exportMap[selectedReport]();
@@ -247,11 +247,11 @@ export function SupplierSelectExport({
 
     try {
       const exportMap = {
-        stock: () => ExportStock({ stockItems }),
+        stock: () => ExportStock({ stockItems, et }),
         // purchases: () =>
         // ExportPurchases({ purchases: filterByRange(purchases) }),
-        sales: () => ExportSales({ sales: filterByRange(sales) }),
-        logs: () => ExportSupplierLogs({ logs: filterByRange(logs) }),
+        sales: () => ExportSales({ sales: filterByRange(sales), et }),
+        logs: () => ExportSupplierLogs({ logs: filterByRange(logs), et }),
       };
 
       exportMap[selectedReport]();

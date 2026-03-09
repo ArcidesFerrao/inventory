@@ -40,7 +40,7 @@ export default async function SettingsPage() {
               <p>{session.user.name}</p>
             </div>
             <div className="flex gap-2">
-              <h4 className="font-medium">{t("email")}: </h4>
+              <h4 className="font-medium">Email: </h4>
               <p>{session.user.email}</p>
             </div>
             <div className="flex gap-2">

@@ -65,6 +65,7 @@ export async function createExpense(prevState: unknown, formData: FormData) {
    return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Expense", error);
+        
         await db.auditLog.create({
             data: {
                 action: "ERROR",

@@ -130,7 +130,7 @@ export async function createOrder(
             "CREATE",
             "Order",
             order.id,
-            `Order totaling MZN ${total.toFixed(2)} created`,
+            `${rt("createdOrderTotaling")} ${total.toFixed(2)}`,
             {
                 total,
                 timeStamp: order.timestamp,
@@ -169,35 +169,37 @@ export async function createOrder(
         return { success: true, order};
     } catch (error) {
         console.error("Error creating order:", error);
+
         await logActivity(
-                    serviceId,
-                    supplierId,
-                    "CREATE",
-                    "Order",
-                    null,
-                    `Error creating the order`,
-                    {                    },
-                    null,
-                    'ERROR',
-                    null
-                );
-                await createAuditLog({
-                        action: "ERROR",
-                        entityType: "Order",
-                    entityId: serviceId || "",
-                    entityName:  "",
-                    details: {
-                        metadata: {
-                            error: (error as string).toString() || "Error creating the order"
-                        }
+            serviceId,
+            supplierId,
+            "CREATE",
+            "Order",
+            null,
+            `${rt("createOrderError")}`,
+            {                    },
+            null,
+            'ERROR',
+            null
+        );
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Order",
+            entityId: serviceId || "",
+            entityName:  "",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || "Error creating the order"
                 }
-                    });
-        return { success: false, error: "Failed to create order" };
+            }
+        });
+        return { success: false, error: `${rt("createOrderFail")}` };
     }
 }
 
 export async function acceptOrder({ orderId}: { orderId: string;}) {
     const rt = await getTranslations("Responses")
+
     try {
         const result = await db.$transaction(async (tx) => {
             const order = await tx.order.update({
@@ -240,13 +242,8 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
                             }]
                         }
                     }
-                    
                 })
-
-                
             };
-            
-            
             
             return {order}
         }, {timeout: 15000 })
@@ -257,10 +254,10 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
             "UPDATE",
             "Order",
             result.order.id,
-            `Order accepted by supplier`,
+            `${rt("acceptOrderSuccess")}`,
             {
                 orderId,
-                update: `Order status to "Submitted"`
+                update: `${rt("updateOrderStatus")}`
             },
             null,
             'INFO',
@@ -293,36 +290,38 @@ export async function acceptOrder({ orderId}: { orderId: string;}) {
         
     } catch (error) {
         console.error(rt("acceptOrderError"), error);
+
         await logActivity(
-                    orderId,
-                    null,
-                    "UPDATE",
-                    "Order",
-                    orderId,
-                    rt("acceptOrderError"),
-                    {
-                    },
-                    null,
-                    'ERROR',
-                    null
-                );
-                await createAuditLog({
-                        action: "ERROR",
-                        entityType: "Order",
-                    entityId: orderId || "",
-                    entityName:  "",
-                    details: {
-                        metadata: {
-                            error: (error as string).toString() || rt("acceptOrderError")
-                        }
+            orderId,
+            null,
+            "UPDATE",
+            "Order",
+            orderId,
+            rt("acceptOrderError"),
+            {
+            },
+            null,
+            'ERROR',
+            null
+        );
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Order",
+            entityId: orderId || "",
+            entityName:  "",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || rt("acceptOrderError")
                 }
-                    });
+            }
+        });
         return { success: false, error: rt("acceptOrderFail") };
     }
 }
 
 export async function denyOrder({orderId}: { orderId: string;}) {
     const rt = await getTranslations("Responses")
+
     try {
         const result = await db.$transaction(async (tx) => {
             const order = await tx.order.update({
@@ -358,47 +357,45 @@ export async function denyOrder({orderId}: { orderId: string;}) {
         })
 
         if (result) {
-
-                        await createAuditLog({
-                        action: "UPDATE",
-                        entityType: "Order",
-                    entityId: result.order.supplierId || "",
-                    entityName: result.order.supplier.businessName || "",
-                    details: {
-                        metadata: {orderId}
+            await createAuditLog({
+                action: "UPDATE",
+                entityType: "Order",
+                entityId: result.order.supplierId || "",
+                entityName: result.order.supplier.businessName || "",
+                details: {
+                    metadata: {orderId}
                 }
-                    });
-
-    }
+            });
+        }
          
         return {success: true, ...result}
 
     } catch (error) {
         console.error(rt("denyOrderError"), error);
         await logActivity(
-                    orderId,
-                    null,
-                    "UPDATE",
-                    "Order",
-                    orderId,
-                    rt("denyOrderError"),
-                    {
-                    },
-                    null,
-                    'ERROR',
-                    null
-                );
-                await createAuditLog({
-                        action: "ERROR",
-                        entityType: "Order",
-                    entityId: orderId || "",
-                    entityName:  "",
-                    details: {
-                        metadata: {
-                            error: (error as string).toString() || rt("denyOrderError")
-                        }
+            orderId,
+            null,
+            "UPDATE",
+            "Order",
+            orderId,
+            rt("denyOrderError"),
+            {
+            },
+            null,
+            'ERROR',
+            null
+        );
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Order",
+            entityId: orderId || "",
+            entityName:  "",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || rt("denyOrderError")
                 }
-                    });
+            }
+        });
         
         return { success: false, error: rt("denyOrderFail") };
     }

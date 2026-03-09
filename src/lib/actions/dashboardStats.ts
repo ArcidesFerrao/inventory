@@ -88,49 +88,6 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
                 }
             })
         
-            // const sales = await db.saleItem.findMany({
-            //     where: {
-            //         sale: {
-            //             serviceId: service?.id,
-            //             timestamp: {
-            //                 gte: startDate,
-            //                 lte: endDate,
-            //             }
-            //         },
-                    
-            //     },
-            //     include: {
-            //         item: {
-            //             include: {
-            //             CatalogItems: {
-            //                     include:{
-            //                         stockItem: true
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // })
-        
-            // let totalCogs = 0
-            // // calculate cogs
-            // for (const saleItem of sales) {
-            //     let cogsForItem = 0
-            //     if (saleItem.item) {
-            //         if (saleItem.item?.CatalogItems || saleItem.item.CatalogItems.length > 0) {
-            //             for (const recipe of saleItem.item.CatalogItems) {
-            //                 cogsForItem += recipe.quantity * (recipe.stockItem?.price || 0);
-            //             }
-            //         } else {
-            //             cogsForItem += saleItem.item.price || 0;
-            //         }
-            //     } else {
-            //         console.warn(`SaleItem ${saleItem.id} has no menu items`)
-            //     }
-            //     cogsForItem *= saleItem.quantity;
-            //     totalCogs += cogsForItem;
-            // }
-        
             const totalCogs = await db.sale.aggregate({
                 where: {
                     serviceId: service?.id,

@@ -66,17 +66,17 @@ type LogItem = {
 type SupplierLogItem = DeliveryItem & { stockItem: StockItem | null };
 
 
-export function ExportLogs({ logs }: { logs: LogWithItems[] }) {
+export function ExportLogs({ logs, et }: { logs: LogWithItems[]; et: (key: string) => string }) {
   
     try {
         const doc = new jsPDF();
         
             doc.setFontSize(16);
-            doc.text("Activity Logs Report", 14, 20);
+            doc.text(`${et("logsReport")}`, 14, 20);
         
             autoTable(doc, {
               startY: 30,
-              head: [["Action", "Description", "Details", "Timestamp"]],
+              head: [[`${et("action")}`, `${et("description")}`, `${et("details")}`, `${et("timestamp")}`]],
               body: (logs ?? []).map((log) => {
                 const parsedDetails = log.details as ParsedDetails;
                 return [
@@ -97,23 +97,25 @@ export function ExportLogs({ logs }: { logs: LogWithItems[] }) {
               }),
             });
         
-            doc.save("logs_report.pdf");
+            doc.save(`${et("logsReportPDF")}`);
     } catch (error) {
         console.error("Error exporting logs to PDF:", error);
     }
 }
 
 
-export function ExportSales({ sales }: { sales: SaleWithItems[] }) {
+export function ExportSales({ sales, et }: { sales: SaleWithItems[]; et: (key: string) => string }) {
+  // const et = useTranslations("Export")
+
     try{
         const doc = new jsPDF();
 
         doc.setFontSize(16);
-        doc.text("Sales Report", 14, 20);
+        doc.text(`${et("salesReport")}`, 14, 20);
 
         autoTable(doc, {
         startY: 30,
-        head: [["Date", "Total Amount (MZN)", "Cost of Goods Sold (MZN)"]],
+        head: [[`${et("date")}`, `${et("totalAmount")}`, `${et("cogs")}`]],
         body: sales.map((sale) => [
             new Date(sale.timestamp).toLocaleDateString(),
             sale.total.toFixed(2),
@@ -127,22 +129,22 @@ export function ExportSales({ sales }: { sales: SaleWithItems[] }) {
 
         doc.setFontSize(14);
         doc.text(
-            `Items for sale on ${new Date(sale.timestamp).toLocaleDateString()}`,
+            `${et("itemsForSaleOn")} ${new Date(sale.timestamp).toLocaleDateString()}`,
             14,
             startY
         );
 
         autoTable(doc, {
             startY: startY + 5,
-            head: [["Item", "Quantity", "Price (MZN)"]],
+            head: [["Item", `${et("quantity")}`, `${et("price")}`]],
             body: sale.SaleItem.map((i) => [
-            i.item?.name || "Unknown",
+            i.item?.name ||  `${et("unknown")}`,
             i.quantity,
             i.price.toFixed(2),
             ]),
         });
         });
-        doc.save("sales_report.pdf");
+        doc.save(`${et("salesReportPDF")}`);
     } catch (error) {
         console.error("Error exporting sales to PDF:", error);
     }
@@ -150,18 +152,20 @@ export function ExportSales({ sales }: { sales: SaleWithItems[] }) {
 
 export function ExportPurchases({
   purchases,
+  et
 }: {
   purchases: PurchaseWithItems[];
+  et: (key: string) => string 
 }) {
   try {
     const doc = new jsPDF();
 
     doc.setFontSize(16);
-    doc.text("Purchases Report", 14, 20);
+    doc.text(`${et("purchasesReport")}`, 14, 20);
 
     autoTable(doc, {
       startY: 30,
-      head: [["Date", "Total Amount (MZN)"]],
+      head: [[`${et("date")}`, `${et("totalAmount")}`]],
       body: purchases.map((purchase) => [
         new Date(purchase.timestamp).toLocaleDateString(),
         purchase.total.toFixed(2),
@@ -174,7 +178,7 @@ export function ExportPurchases({
 
       doc.setFontSize(14);
       doc.text(
-        `Items for sale on ${new Date(
+        `${et("itemsPurchasedOn")} ${new Date(
           purchase.timestamp
         ).toLocaleDateString()}`,
         14,
@@ -183,15 +187,15 @@ export function ExportPurchases({
 
       autoTable(doc, {
         startY: startY + 5,
-        head: [["Item", "Quantity", "Cost (MZN)"]],
+        head: [["Item", `${et("quantity")}`, `${et("cost")}`]],
         body: purchase.PurchaseItem.map((i) => [
-          i.stockItem?.name || i.item?.name || "Unknown",
+          i.stockItem?.name || i.item?.name || `${et("unknown")}`,
           i.quantity,
           i.stockItem?.price?.toFixed(2) || i.item?.price || "0.00",
         ]),
       });
     });
-    doc.save("purchases_report.pdf");
+    doc.save(`${et("purchasesReportPDF")}`);
   }catch (error) {
     console.error("Error exporting purchases to PDF:", error);
   }
@@ -200,21 +204,23 @@ export function ExportPurchases({
 export function ExportStock({
   serviceStockItems,
   stockItems,
+  et
 }: {
   stockItems?: (StockItem & { unit: Unit | null })[] 
   serviceStockItems?: (ServiceStockItem & { stockItem: StockItem })[];
+  et: (key: string) => string 
 }) {
   try {
     const doc = new jsPDF();
 
     doc.setFontSize(16);
-    doc.text("Stock Report", 14, 20);
+    doc.text(`${et("stockReport")}`, 14, 20);
 
     if (serviceStockItems) {
       
       autoTable(doc, {
         startY: 30,
-        head: [["Item", "Quantity", "Cost (MZN)"]],
+        head: [["Item", `${et("quantity")}`, `${et("stockQuantity")}`, `${et("cost")}`]],
         body: serviceStockItems?.map((s) => [
           s.stockItem?.name ,
           s.stock,
@@ -226,14 +232,14 @@ export function ExportStock({
     if (stockItems) {
       autoTable(doc, {
         startY: 30,
-        head: [["Item", "Quantity", "Cost (MZN)"]],
+        head: [["Item", `${et("quantity")}`, `${et("cost")}`]],
         body: stockItems?.map((s) => [
           s.name,
           s.stock,
           s.cost?.toFixed(2) || "0.00",
         ]),
       });
-      doc.save("stock_report.pdf");
+      doc.save(`${et("stockReportPDF")}`);
     }
   } catch (error) {
     console.error("Error exporting stock to PDF:", error);
@@ -243,17 +249,17 @@ export function ExportStock({
 
 
 
-export function ExportSupplierLogs({ logs }: { logs: LogWithItems[] }) {
+export function ExportSupplierLogs({ logs, et }: { logs: LogWithItems[]; et: (key: string) => string }) {
   
     try {
         const doc = new jsPDF();
         
             doc.setFontSize(16);
-            doc.text("Activity Logs Report", 14, 20);
+            doc.text(`${et("logsReport")}`, 14, 20);
         
             autoTable(doc, {
               startY: 30,
-              head: [["Action", "Description", "Details", "Timestamp"]],
+              head: [[`${et("action")}`, `${et("description")}`, `${et("details")}`, `${et("timestamp")}`]],
               body: (logs ?? []).map((log) => {
                 const parsedDetails = log.details as ParsedSupplierDetails;
                 return [
@@ -273,23 +279,23 @@ export function ExportSupplierLogs({ logs }: { logs: LogWithItems[] }) {
               }),
             });
         
-            doc.save("logs_report.pdf");
+            doc.save(`${et("logsReport")}`);
     } catch (error) {
         console.error("Error exporting logs to PDF:", error);
     }
 }
 
 
-export function ExportSupplierSales({ sales }: { sales: SupplierSaleWithItems[] }) {
+export function ExportSupplierSales({ sales, et }: { sales: SupplierSaleWithItems[]; et: (key: string) => string }) {
     try{
         const doc = new jsPDF();
 
         doc.setFontSize(16);
-        doc.text("Sales Report", 14, 20);
+        doc.text(`${et("salesReport")}`, 14, 20);
 
         autoTable(doc, {
         startY: 30,
-        head: [["Date", "Total Amount (MZN)", "Cost of Goods Sold (MZN)"]],
+        head: [[`${et("date")}`, `${et("totalAmount")}`, `${et("cogs")}`]],
         body: sales.map((sale) => [
             new Date(sale.timestamp).toLocaleDateString(),
             sale.total.toFixed(2),
@@ -303,22 +309,22 @@ export function ExportSupplierSales({ sales }: { sales: SupplierSaleWithItems[] 
 
         doc.setFontSize(14);
         doc.text(
-            `Items for sale on ${new Date(sale.timestamp).toLocaleDateString()}`,
+            `${et("itemsForSaleOn")} ${new Date(sale.timestamp).toLocaleDateString()}`,
             14,
             startY
         );
 
         autoTable(doc, {
             startY: startY + 5,
-            head: [["Item", "Quantity", "Price (MZN)"]],
+            head: [["Item", `${et("quantity")}`, `${et("price")}`]],
             body: sale.SaleItem.map((i) => [
-            i.stockItem?.name || "Unknown",
+            i.stockItem?.name || `${et("unknown")}`,
             i.quantity,
             i.price.toFixed(2),
             ]),
         });
         });
-        doc.save("sales_report.pdf");
+        doc.save(`${et("salesReportPDF")}`);
     } catch (error) {
         console.error("Error exporting sales to PDF:", error);
     }

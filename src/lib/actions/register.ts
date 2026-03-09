@@ -7,10 +7,12 @@ import { SubmissionResult } from "@conform-to/react";
 import { redirect } from "next/navigation";
 import { serviceSchema, supplierSchema } from "@/schemas/roleSchema";
 import { createAuditLog } from "./auditLogs";
+import { getTranslations } from "next-intl/server";
 
 
 export async function registerService(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses");
     
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: serviceSchema });
@@ -57,12 +59,13 @@ export async function registerService(prevState: unknown, formData: FormData) {
         });
         return {
             status: "error",
-            error: { general: ["Failed to create Service"]}
+            error: { general: [`${rt("createServiceFail")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
 export async function registerSupplier(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses");
     
     if (!session?.user) redirect("/login");
     
@@ -111,7 +114,7 @@ export async function registerSupplier(prevState: unknown, formData: FormData) {
         });
         return {
             status: "error",
-            error: { general: ["Failed to create Supplier"]}
+            error: { general: [`${rt("createSupplierFail")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }

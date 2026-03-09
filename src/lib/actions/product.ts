@@ -6,10 +6,13 @@ import { db } from "@/lib/db";
 import { itemSchema, stockItemSchema } from "@/schemas/schema";
 import { SubmissionResult } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 
 export async function createItem(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses");
+
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: itemSchema });
     if (submission.status !== "success") return submission.reply();
@@ -30,7 +33,6 @@ export async function createItem(prevState: unknown, formData: FormData) {
 
             await assertCanAddProduct(tx, values.serviceId);
 
-            
             await tx.item.create({
                 data: {
                 name: values.name,
@@ -59,13 +61,15 @@ export async function createItem(prevState: unknown, formData: FormData) {
         console.error("Failed to create Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to create Item"]}
+            error: { general: [`${rt("createItemFailed")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
 export async function editItem(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses");
+
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: itemSchema });
     if (submission.status !== "success") return submission.reply();
@@ -108,7 +112,7 @@ export async function editItem(prevState: unknown, formData: FormData) {
         console.error("Failed to update Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to update Item"]}
+            error: { general: [`${rt("updateItemFailed")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
@@ -184,6 +188,8 @@ export async function getSelectedStockItems(supplierId: string) {
 
 export async function createStockItem(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses");
+
     if (!session?.user) redirect("/login");
     // if (!session?.user.supplyId) redirect("/register/supplier");
     const submission = parseWithZod(formData, { schema: stockItemSchema });
@@ -214,13 +220,15 @@ export async function createStockItem(prevState: unknown, formData: FormData) {
         console.error("Failed to create Stock Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to create Stock Item"]}
+            error: { general: [`${rt("createItemFailed")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
 export async function editStockItem(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses");
+
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: stockItemSchema
         });
@@ -254,12 +262,13 @@ export async function editStockItem(prevState: unknown, formData: FormData) {
         console.error("Failed to update Stock Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to update Stock Item"]}
+            error: { general: [`${rt("updateItemFailed")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
 
 export async function deleteStockItem(stockItemId: string) {
+    const rt = await getTranslations("Responses");
 
     try {
         await db.stockItem.delete({
@@ -273,7 +282,7 @@ export async function deleteStockItem(stockItemId: string) {
         console.error("Failed to delete Stock Item", error);
         return {
             status: "error",
-            error: { general: ["Failed to delete Stock Item"]}
+            error: { general: [`${rt("deleteItemFailed")}`]}
         } satisfies SubmissionResult<string[]>
     }
 

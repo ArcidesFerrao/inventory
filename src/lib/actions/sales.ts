@@ -131,7 +131,7 @@ export async function createSale(
                         quantity: qty,
                         changeType: "SALE",
                         referenceId: newSale.id,
-                        notes: "Sold Products"}
+                        notes: `${rt("soldProducts")}`}
                     })
                 
             }
@@ -146,7 +146,7 @@ export async function createSale(
             "CREATE",
             "Sale",
             result.id,
-            `Sale totaling MZN ${totalPrice.toFixed(2)}`,
+            `${rt("createdSaleTotaling")} ${totalPrice.toFixed(2)}`,
             {
                         totalPrice,
                         items: saleItems.map(i => ({
@@ -173,30 +173,30 @@ export async function createSale(
     } catch (error) {
         console.error(rt("creatingSaleError"), error);
         await logActivity(
-                            serviceId,
-                            null,
-                            "ERROR",
-                            "Sale",
-                            null,
-                            rt("creatingSaleError"),
-                            {
-                                error: error instanceof Error ? error.message : String(error),
-                            },
-                            null,
-                            'ERROR',
-                            null
-                        )
-                        await createAuditLog({
-                                    action: "ERROR",
-                                    entityType: "Sale",
-                                    entityId: serviceId,
-                                    entityName: "Service",
-                                    details: {
-                                        metadata: {
-                                            error: (error as string).toString() || rt("creatingSaleError")
-                                        }
-                                    }
-                                });
+            serviceId,
+            null,
+            "ERROR",
+            "Sale",
+            null,
+            rt("creatingSaleError"),
+            {
+                error: error instanceof Error ? error.message : String(error),
+            },
+            null,
+            'ERROR',
+            null
+        )
+        await createAuditLog({
+            action: "ERROR",
+            entityType: "Sale",
+            entityId: serviceId,
+            entityName: "Service",
+            details: {
+                metadata: {
+                    error: (error as string).toString() || rt("creatingSaleError")
+                }
+            }
+        });
         return { success: false, message: error}
     }
 }

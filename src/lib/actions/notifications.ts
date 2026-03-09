@@ -2,8 +2,6 @@
 
 import { db } from "@/lib/db";
 
-
-
 export async function createNotification({userId,  type, title, message, link}: {userId: string;  type: string; title: string; message: string; link?: string}) {
 
     return await db.notification.create({

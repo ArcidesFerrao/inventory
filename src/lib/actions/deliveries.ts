@@ -271,18 +271,6 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     }
                 }
 
-
-                // if (serviceStockItem?.stockItem.unit?.name === "unit") {
-                //                         updateData.stockQty = {
-                //         increment: quantity,
-                //     };
-                // } else {
-                //                        updateData.stockQty = {
-                //         increment: quantity * supplierStockItem.unitQty,
-                //     };
-                // }
-
-
                 if (serviceStockItem) {
                     await tx.serviceStockItem.update({
                         where: {
@@ -369,8 +357,6 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                     });
                 } 
                 
-
-                // return { serviceId, supplierId: updatedStockItem.supplierId, deliveryId}
             }));
             console.log(updatedItems)
             // Create Sale + purchase with their items
@@ -609,7 +595,6 @@ export async function  rateDelivery(deliveryId: string, star: number) {
                 rating: star
             }
         })
-
         
         return {success: true, ratedDelivery}
     } catch (error) {

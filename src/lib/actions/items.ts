@@ -7,6 +7,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { createAuditLog } from "./auditLogs";
 import { logActivity } from "./logs";
+import { getTranslations } from "next-intl/server";
 
 
 export async function getServiceStockItems(serviceId: string) {
@@ -31,6 +32,8 @@ export async function getServiceStockItems(serviceId: string) {
 
 export async function createServiceStockItem(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses")
+
     if (!session?.user) redirect("/login");
     // if (!session?.user.supplyId) redirect("/register/supplier");
     const submission = parseWithZod(formData, { schema: serviceStockItemSchema });
@@ -86,13 +89,14 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Stock Item", error);
+
         await logActivity(
             submission.value.serviceId,
             null,
             "ERROR",
             "ServiceStockItem",
             submission.value.id || "",
-            `Error creating ${submission.value.name} from inventory`,
+            `${rt("errorCreating")} ${submission.value.name} ${rt("fromInventory")}`,
             {},
             null,
             "ERROR",
@@ -111,7 +115,7 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
         });
         return {
             status: "error",
-            error: { general: ["Failed to create Stock Item"]}
+            error: { general: [`${rt("createItemFail")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
@@ -119,6 +123,8 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
 
 export async function editServiceStockItem(prevState: unknown, formData: FormData) {
     const session = await auth()
+    const rt = await getTranslations("Responses")
+
     if (!session?.user) redirect("/login");
     const submission = parseWithZod(formData, { schema: serviceStockItemSchema
         });
@@ -139,7 +145,7 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
         if (!oldStockItem) {
             return {
                 status: "error",
-                error: { general: ["Stock item not found"] }
+                error: { general: [`${rt("notFoundItem")}`] }
             } satisfies SubmissionResult<string[]>;
         }
 
@@ -195,7 +201,7 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
                 actionType: "STOCK_UPDATED",
                 entityType: "ServiceStockItem",
                 entityId: serviceStockItem.id,
-                description: `Stock updated for ${oldStockItem.stockItem.name}`,
+                description: `${rt("stockUpdatedFor")} ${oldStockItem.stockItem.name}`,
                 details: {
                     oldStock: oldStockItem.stock,
                     newStock: serviceStockItem.stock,
@@ -211,17 +217,17 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
     } catch (error) {
         console.error("Failed to update Service Stock Item", error);
         await logActivity(
-        submission.value.serviceId,
-        null,
-        "ERROR",
-        "ServiceStockItem",
-        submission.value.id || "",
-        `Error updating ${submission.value.name} from inventory`,
-        {},
-        null,
-        "ERROR",
-        null
-    );
+            submission.value.serviceId,
+            null,
+            "ERROR",
+            "ServiceStockItem",
+            submission.value.id || "",
+            `${rt("errorUpdating")} ${submission.value.name}`,
+            {},
+            null,
+            "ERROR",
+            null
+        );
         await createAuditLog({
             action: "ERROR",
             entityType: "Stock Item",
@@ -235,7 +241,7 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
         });
         return {
             status: "error",
-            error: { general: ["Failed to update Service Stock Item"]}
+            error: { general: [`${rt("stockItemUpdateFail")}`]}
         } satisfies SubmissionResult<string[]>
     }
 }
@@ -243,6 +249,8 @@ export async function editServiceStockItem(prevState: unknown, formData: FormDat
 
 export async function deleteServiceStockItem(stockItemId: string) {
     const session = await auth();
+    const rt = await getTranslations("Responses")
+
     if (!session?.user?.serviceId) redirect("/login");
 
     const stockItem = await db.serviceStockItem.findUnique({
@@ -259,9 +267,9 @@ export async function deleteServiceStockItem(stockItemId: string) {
 
         // Audit Log (save full details for recovery)
         await createAuditLog({
-                action: "DELETE",
-                entityType: "ServiceStockItem",
-                entityId: stockItemId,
+            action: "DELETE",
+            entityType: "ServiceStockItem",
+            entityId: stockItemId,
             entityName: stockItem.stockItem.name,
             details: {
                 oldValues: {
@@ -275,22 +283,22 @@ export async function deleteServiceStockItem(stockItemId: string) {
             }
         });
 
-    // Activity Log
-    await logActivity(
-        session.user.serviceId,
-        null,
-        "STOCK_REMOVED",
-        "ServiceStockItem",
-        stockItemId,
-        `Removed ${stockItem.stockItem.name} from inventory`,
-        {
-            lastStock: stockItem.stock,
-            lastCost: stockItem.cost,
-        },
-        null,
-        "WARN",
-        null
-    );
+        // Activity Log
+        await logActivity(
+            session.user.serviceId,
+            null,
+            "STOCK_REMOVED",
+            "ServiceStockItem",
+            stockItemId,
+            `${rt("removed")} ${stockItem.stockItem.name} ${rt("fromInventory")}`,
+            {
+                lastStock: stockItem.stock,
+                lastCost: stockItem.cost,
+            },
+            null,
+            "WARN",
+            null
+        );
     } catch (error ) {
         await logActivity(
         session.user.serviceId,
@@ -298,7 +306,7 @@ export async function deleteServiceStockItem(stockItemId: string) {
         "ERROR",
         "ServiceStockItem",
         stockItemId,
-        `Error Removing ${stockItem.stockItem.name} from inventory`,
+        `${rt("errorRemoving")} ${stockItem.stockItem.name} ${rt("fromInventory")}`,
         {
             lastStock: stockItem.stock,
             lastCost: stockItem.cost,
