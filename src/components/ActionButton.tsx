@@ -69,7 +69,7 @@ export const DenyButton = ({ orderId }: { orderId: string }) => {
       onClick={() => handleOnClick()}
       className="accept-btn text-red-300"
     >
-      {loading ? "..." : t("accept")}
+      {loading ? "..." : t("deny")}
     </button>
   );
 };

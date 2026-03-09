@@ -755,7 +755,7 @@ nav {
   translate: 0 -2px;
 }
 
-.order-details button {
+.status-btn {
   background-color: var(--input-bg);
 }
 
@@ -971,4 +971,8 @@ nav {
 .stats-details-container {
   /* flex-wrap: wrap; */
   gap: 0.5rem;
+}
+
+.confirm-delivery-btn {
+  background-color: #086636;
 }

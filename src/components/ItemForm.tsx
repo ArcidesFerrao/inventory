@@ -39,6 +39,7 @@ export const ItemForm = ({
   });
   const router = useRouter();
   const t = useTranslations("Common");
+  const nt = useTranslations("Notifications");
 
   const [type, setType] = useState(item ? item.type : "SERVICE");
 
@@ -53,9 +54,7 @@ export const ItemForm = ({
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [name, setName] = useState(item?.name || "");
-  const [unitId, setUnitId] = useState(
-    units.find((u) => u.name === "unit")?.id,
-  );
+  const [unitId, setUnitId] = useState(item?.Unit?.id);
 
   useEffect(() => {
     if (!name || name.trim() === "") {
@@ -90,12 +89,12 @@ export const ItemForm = ({
   useEffect(() => {
     if (state?.status === "success") {
       toast.success(
-        item ? "Item edited successfully!" : "Item created successfully!",
+        item ? `${nt("itemEditSuccess")}` : `${nt("itemCreateSuccess")}`,
       );
       router.push("/service/products");
     }
     if (state?.status === "error") {
-      toast.error(item ? "Failed to edit Item" : "Failed to add Item!");
+      toast.error(item ? `${nt("itemEditFail")}` : `${nt("itemAddFail")}`);
     }
 
     const fetchCategories = async () => {
@@ -136,7 +135,6 @@ export const ItemForm = ({
         )}
         <div className="flex w-full flex-col gap-1 relative">
           <label htmlFor="name">{t("itemName")}</label>
-
           <input
             type="text"
             name="name"

@@ -82,7 +82,7 @@ export default async function OrderPage(props: { params: Params }) {
         <div className="flex flex-col justify-between">
           <button
             disabled
-            className="text-sm font-light text-center px-4 py-2 rounded-sm "
+            className=" status-btn text-sm font-light text-center px-4 py-2 rounded-sm "
           >
             {order?.status}
           </button>

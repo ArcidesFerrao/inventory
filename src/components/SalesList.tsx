@@ -20,13 +20,14 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
 
   const handleCompleteSale = async () => {
     setLoading(true);
-    const saleItems = items.filter((item) => item.quantity > 0);
-    const result = await createSale(saleItems, serviceId);
 
+    const saleItems = items.filter((item) => item.quantity > 0);
     if (saleItems.length === 0) {
       toast.error(st("processSaleSuccess"));
       setLoading(false);
     }
+
+    const result = await createSale(saleItems, serviceId);
 
     if (result.success && !result.message) {
       toast.success(st("saleCompleted"));

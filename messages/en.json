@@ -229,7 +229,11 @@
         "updateStatusConsole": "Error updating status: ",
         "deliveryScheduled": "New Delivery Scheduled",
         "deliveryArrived": "Delivery Arrived",
-        "deliveryConfirmed": "Delivery Confirmed"
+        "deliveryConfirmed": "Delivery Confirmed",
+        "itemEditSuccess": "Item edited successfully!",
+        "itemCreateSuccess": "Item edited successfully!",
+        "itemEditFail": "Failed to edit Item",
+        "itemAddFail": "Failed to add Item!"
     },
     "Responses": {
         "completed": "Completed",
@@ -384,7 +388,10 @@
         "createServiceFail": "Failed to create Service",
         "createSupplierFail": "Failed to create Supplier",
         "noPurchaseItems": "No purchase items",
-        "soldProducts": "Sold Products"
+        "soldProducts": "Sold Products",
+        "datesRequired": "Start and End dates required",
+        "processOrderError": "Order not processed successfully",
+        "placeOrderSuccess": "Order Placed Successfuly"
     },
     "Loading": {
         "loading": "Loading...",

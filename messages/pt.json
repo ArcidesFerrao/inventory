@@ -186,7 +186,11 @@
     "updateStatusConsole": "Erro ao atualizar estado: ",
     "deliveryScheduled": "Nova entrega agendada",
     "deliveryArrived": "Entrega chegou",
-    "deliveryConfirmed": "Entrega confirmada"
+    "deliveryConfirmed": "Entrega confirmada",
+    "itemEditSuccess": "Item editado com sucesso!",
+    "itemCreateSuccess": "Item criado com sucesso!",
+    "itemEditFail": "Falha ao editar item",
+    "itemAddFail": "Falha ao adicionar item!"
   },
   "Modal": {
     "recordStock": "Registar Movimento de Stock",

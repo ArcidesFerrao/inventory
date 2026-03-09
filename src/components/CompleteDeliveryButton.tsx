@@ -113,7 +113,9 @@ export const ConfirmDeliveryButton = ({
       disabled={isDisabled}
       onClick={handleConfirmDelivery}
       className={`delivery-btn text-sm  confirm-delivery-btn ${
-        isPending || status === "COMPLETED" ? "opacity-50" : ""
+        isPending || status === "COMPLETED"
+          ? "opacity-50"
+          : "opacity-80 hover:opacity-100"
       } `}
     >
       {isPending ? lt("processing") : label}

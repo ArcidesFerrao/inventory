@@ -12,7 +12,7 @@ export async function createSale(
 ) { 
     const rt = await getTranslations("Responses");
        
-    if (saleItems.length === 0) return {success: false, message: rt("noSaleItems")}
+    if (saleItems.length === 0) return {success: false, message: `${rt("noSaleItems")}`}
 
     const totalPrice = saleItems.reduce((sum, item) => sum + ((item.price ?? 0) * item.quantity), 0);
 
@@ -28,7 +28,7 @@ export async function createSale(
                 ( item.CatalogItems ?? []).map(recipe => recipe.serviceStockItem.id) 
             );
 
-            console.log(stockIds)
+            // console.log(stockIds)
 
             const stocks = await tx.serviceStockItem.findMany({
                 where: {
@@ -53,10 +53,10 @@ export async function createSale(
                  },
             })
 
-            console.log(stocks)
+            // console.log(stocks)
 
             for (const saleItem of saleItems) {
-                console.log("Processing saleItem:", saleItem.name);
+                // console.log("Processing saleItem:", saleItem.name);
                 const itemRecipes = saleItem.CatalogItems || [];
                 
                 for (const recipeItem of itemRecipes) {
@@ -72,9 +72,9 @@ export async function createSale(
                     const costPerBaseUnit = (stockProduct.cost ?? 0) / (stockProduct.stockItem?.unitQty ?? 1);
 
                     cogs += qtyUsed * costPerBaseUnit;
-                    console.log(qtyUsedInBaseUnits)
-                    console.log(stockUsage)
-                    console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                    // console.log(qtyUsedInBaseUnits)
+                    // console.log(stockUsage)
+                    // console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
                 }
             }
 
@@ -97,8 +97,8 @@ export async function createSale(
 
                 const newStock = Math.trunc((remainingBaseUnits ?? 1)/stock.stockItem.unitQty);
                 // const newStockQty = newStock * 
-                console.log("New stock :", newStock);
-                console.log("New stock qty:", remainingBaseUnits);
+                // console.log("New stock :", newStock);
+                // console.log("New stock qty:", remainingBaseUnits);
                 // console.log("New stock qty in base units:", newStockQty);
                 
                 
@@ -107,23 +107,27 @@ export async function createSale(
                     //     decrement: Math.ceil(totalQty / (stock.stockItem?.unitQty ?? 1))
                     // }
 
-                    const updated = await tx.serviceStockItem.update({
+                    // const updated = 
+                    await tx.serviceStockItem.update({
                         where: { id: stockId },
                         data: {
                             stock: newStock,
                             stockQty: remainingBaseUnits,
                         }
                     });
-                    console.log(updated)
+
+                    // console.log(updated)
                 } else {
                     data.stock = {
                         decrement: totalQty
                     }
-                    const updated = await tx.serviceStockItem.update({
+                    // const updated = 
+                    await tx.serviceStockItem.update({
                         where: { id: stockId },
                         data
                     });
-                    console.log(updated)
+                    
+                    // console.log(updated)
                 }
             }
             // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)
@@ -192,14 +196,14 @@ export async function createSale(
         })
         return { success: true, saleId: result.id, cogs: result.cogs};
     } catch (error) {
-        console.error(rt("creatingSaleError"), error);
+        console.error(`${rt("creatingSaleError")}`, error);
         await logActivity(
             serviceId,
             null,
             "ERROR",
             "Sale",
             null,
-            rt("creatingSaleError"),
+            `${rt("creatingSaleError")}`,
             {
                 error: error instanceof Error ? error.message : String(error),
             },
@@ -214,10 +218,11 @@ export async function createSale(
             entityName: "Service",
             details: {
                 metadata: {
-                    error: (error as string).toString() || rt("creatingSaleError")
+                    error: (error as string).toString() || `${rt("creatingSaleError")}`
                 }
             }
         });
-        return { success: false, message: error}
+
+        return { success: false, message: `${rt("creatingSaleError")}`, error}
     }
 }

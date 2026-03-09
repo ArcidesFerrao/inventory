@@ -225,8 +225,8 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                         };
                         }> | null = deliveryItem.orderItem.serviceStockItem;
                     
-                    console.log(serviceStockItem?.stockItem.unit?.name)
-                    console.log(serviceStockItem)
+                    // console.log(serviceStockItem?.stockItem.unit?.name)
+                    // console.log(serviceStockItem)
 
                 if (!serviceStockItem) {
                     serviceStockItem = await tx.serviceStockItem.findFirst({
@@ -358,7 +358,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                 } 
                 
             }));
-            console.log(updatedItems)
+            // console.log(updatedItems)
             // Create Sale + purchase with their items
             const total = delivery.deliveryItems.reduce((sum, item) => sum + item.orderItem.price * item.quantity, 0);
 
@@ -400,7 +400,7 @@ export async function completeDelivery({serviceId, deliveryId, orderId}:{service
                 }
             })
 
-            return { delivery,  order, supplierSale, servicePurchase};
+            return { delivery,  order, supplierSale, servicePurchase, updatedItems };
 
         }, { timeout: 20000});
 

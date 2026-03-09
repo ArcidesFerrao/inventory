@@ -18,6 +18,7 @@ export const OrdersList = ({
 }) => {
   const router = useRouter();
   const t = useTranslations("Common");
+  const rt = useTranslations("Responses");
   const ot = useTranslations("Orders");
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
@@ -33,14 +34,14 @@ export const OrdersList = ({
     // console.log("creating order");
     setLoading(true);
     if (startDate === "" || endDate === "") {
-      setError("Start and End dates required");
+      setError(rt("datesRequired"));
     } else {
       setError(null);
     }
     const orderItems = items.filter((item) => item.quantity > 0);
 
     if (orderItems.length === 0) {
-      setListError("No order items");
+      setListError(rt("noOrderItems"));
     } else {
       setError(null);
     }
@@ -54,12 +55,12 @@ export const OrdersList = ({
     );
 
     if (result.error || !result.success) {
-      toast.error(result.error ?? "Order not processed successfully");
+      toast.error(result.error ?? rt("processOrderError"));
       setLoading(false);
     }
 
     if (result.success) {
-      toast.success("Order Placed Successfuly");
+      toast.success(rt("placeOrderSuccess"));
       setTimeout(() => {
         setLoading(false);
         router.push("/service/purchases");
