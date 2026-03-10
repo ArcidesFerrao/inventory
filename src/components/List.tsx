@@ -606,14 +606,17 @@ export function SupplierLogListItem({
 }) {
   const { locale } = useParams();
   const t = useTranslations("Common");
+  const st = useTranslations("Status");
 
   return (
     <li className="list-logs flex justify-between ">
       <div className="flex flex-col gap-2">
         <div className="log-info flex gap-2 items-center">
-          <span className="text-xs text-gray-400">{actionType}</span>
+          <span className="text-xs text-gray-400">
+            {st(actionType.toLocaleLowerCase())}
+          </span>
           <span className="text-xs text-blue-400">
-            {entityType.toUpperCase()}
+            {st(entityType.toLocaleLowerCase())}
           </span>
         </div>
         <p className="log-desc ">{description}</p>
@@ -628,7 +631,13 @@ export function SupplierLogListItem({
       </div>
       <div>
         <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
-          <span>{severity}</span>
+          <span
+            className={
+              severity === "INFO" ? "text-blue-400" : "text-yellow-400"
+            }
+          >
+            {severity}
+          </span>
           <Link href={`/${locale}/supply/logs/${id}`}>{t("view")}</Link>
         </div>
       </div>

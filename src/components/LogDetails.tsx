@@ -172,7 +172,7 @@ export const UpdateOrderLogDetails = ({
   return (
     <div className="flex flex-col gap-2 text-sm font-extralight">
       <p>
-        {t("supplierOrderId")}: {details.supplierOrderId}
+        {t("supplierOrderId")}: {details.orderId}
       </p>
       <p>
         {t("update")}: {details.update}

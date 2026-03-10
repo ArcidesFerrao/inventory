@@ -166,7 +166,7 @@ export type CreateDeliveryLogs = {
 };
 
 export type UpdateOrderLogs = {
-  supplierOrderId: string;
+  orderId: string;
   update: string;
 }
 

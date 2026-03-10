@@ -23,6 +23,7 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
   const { locale } = await props.params;
 
   const at = await getTranslations("Activity");
+  const st = await getTranslations("Status");
   const t = await getTranslations("Common");
 
   const log = await db.activityLog.findUnique({
@@ -50,19 +51,25 @@ export default async function ActividyDetailsPage(props: { params: Params }) {
             <p className="font-extralight text-gray-400 text-sm">
               {at("actionType")}
             </p>
-            <h2>{log?.actionType}</h2>
+            <h2>{st(log?.actionType.toLocaleLowerCase())}</h2>
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-extralight text-gray-400 text-sm">
               {at("entityType")}
             </p>
-            <h2>{log?.entityType}</h2>
+            <h2>{st(log?.entityType.toLocaleLowerCase())}</h2>
           </div>
           <div className="flex flex-col gap-2">
             <p className="font-extralight text-gray-400 text-sm">
               {t("severity")}
             </p>
-            <h2>{log?.severity}</h2>
+            <h2
+              className={
+                log?.severity === "INFO" ? "text-blue-400" : "text-yellow-400"
+              }
+            >
+              {log?.severity}
+            </h2>
           </div>
         </section>
         <section className="grid grid-cols-3 gap-4">

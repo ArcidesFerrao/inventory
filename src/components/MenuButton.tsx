@@ -10,9 +10,11 @@ import { LogOutButton } from "./LogOutButton";
 export const MenuButton = ({
   userId,
   userName,
+  count,
 }: {
   userId?: string | null;
   userName?: string | null;
+  count: number;
 }) => {
   const pathname = usePathname();
   const locale = pathname.split("/")[1] || "pt";
@@ -22,7 +24,7 @@ export const MenuButton = ({
     <div className="nav-menu-btn absolute z-10 top-8  right-4">
       {!showMenu ? (
         <div className="flex gap-2">
-          <NotificationBell locale={locale} />
+          <NotificationBell locale={locale} count={count} />
           <button
             onClick={() => setShowMenu(true)}
             className="header-menu-btn flex items-center"

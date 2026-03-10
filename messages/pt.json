@@ -658,5 +658,30 @@
     "selectCreateCategory": "Selecionar ou criar categoria",
     "createCategory": "Criar nova Categoria",
     "businessType": "Tipo de Negócio"
-  }
+  },
+  "Status": {
+  "delivery_arrived": "ENTREGA_CHEGOU",
+  "delivery_confirmed": "ENTREGA_CONFIRMADA",
+  "delivery": "Entrega",
+  "order": "Pedido",
+  "update": "ATUALIZAÇÃO",
+  "create": "CRIAÇÃO",
+  "Error": "ERRO",
+  "arrived": "CHEGOU",
+  "pending": "PENDENTE",
+  "suspended": "SUSPENSO",
+  "active": "ATIVO",
+  "verified": "VERIFICADO",
+  "pro": "PRO",
+  "elite": "ELITE",
+  "draft": "RASCUNHO",
+  "submitted": "SUBMETIDO",
+  "completed": "CONCLUÍDO",
+  "confirmed": "CONFIRMADO",
+  "in_preparation": "EM_PREPARAÇÃO",
+  "in_delivery": "EM_ENTREGA",
+  "delivered": "ENTREGUE",
+  "cancelled": "CANCELADO",
+  "failed": "FALHOU"
+}
 }

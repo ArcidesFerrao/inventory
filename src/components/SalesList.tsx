@@ -72,8 +72,10 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
       //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
       const serviceStock = recipeItem.serviceStockItem;
       const totalAvailable = serviceStock?.stockQty ?? 0;
-      const totalNeeded = (item.quantity + 1) * recipeItem.quantity;
-
+      const totalNeeded = Number(item.quantity + 1) * recipeItem.quantity;
+      console.log(totalAvailable);
+      console.log(totalNeeded);
+      console.log(recipeItem.quantity);
       if (totalAvailable < totalNeeded) {
         toast.error(
           `${t("notEnough")} ${

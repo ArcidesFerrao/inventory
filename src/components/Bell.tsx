@@ -1,21 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export const NotificationBell = ({ locale }: { locale: string }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    async function fetchCount() {
-      const res = await fetch("/api/notifications/unread-count");
-      const data = await res.json();
-      setCount(data.unread);
-    }
-
-    fetchCount();
-  }, []);
-
+export const NotificationBell = ({
+  locale,
+  count,
+}: {
+  locale: string;
+  count: number;
+}) => {
   return (
     <Link
       href={`/${locale}/notifications`}

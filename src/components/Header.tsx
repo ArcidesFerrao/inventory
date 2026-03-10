@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { MenuButton } from "./MenuButton";
 import { NotificationBell } from "./Bell";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 export const Header = () => {
   const { data: session, status } = useSession();
@@ -15,6 +16,17 @@ export const Header = () => {
   const locale = pathname.split("/")[1] || "pt";
   const t = useTranslations("Common");
 
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    async function fetchCount() {
+      const res = await fetch("/api/notifications/unread-count");
+      const data = await res.json();
+      setCount(data.unread);
+    }
+
+    fetchCount();
+  }, []);
   const showMenu =
     pathname?.startsWith(`/${locale}/supply`) ||
     pathname?.startsWith(`/${locale}/service`);
@@ -33,7 +45,7 @@ export const Header = () => {
         </div>
       </Link>
       <div className="header-greetings flex items-center gap-4">
-        {session?.user && <NotificationBell locale={locale} />}
+        {session?.user && <NotificationBell locale={locale} count={count} />}
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
         ) : !session?.user ? (
@@ -48,7 +60,11 @@ export const Header = () => {
         )}
       </div>
       {showMenu && (
-        <MenuButton userId={session?.user.id} userName={session?.user.name} />
+        <MenuButton
+          count={count}
+          userId={session?.user.id}
+          userName={session?.user.name}
+        />
       )}
     </header>
   );

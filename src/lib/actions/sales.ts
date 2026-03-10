@@ -72,9 +72,10 @@ export async function createSale(
                     const costPerBaseUnit = (stockProduct.cost ?? 0) / (stockProduct.stockItem?.unitQty ?? 1);
 
                     cogs += qtyUsed * costPerBaseUnit;
-                    // console.log(qtyUsedInBaseUnits)
-                    // console.log(stockUsage)
-                    // console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                    console.log(qtyUsed)
+                    console.log(qtyUsedInBaseUnits)
+                    console.log(stockUsage)
+                    console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
                 }
             }
 
@@ -82,7 +83,7 @@ export async function createSale(
                 const stock = stocks.find(s => s.id === stockId);
                 
                 if (!stock) continue;
-
+                console.log(totalQty)
                 if ((stock.stockQty ?? 0) < totalQty) {
                     throw new Error(`${rt("notEnoughStock")} ${stock.stockItem?.name}`);
                 }
