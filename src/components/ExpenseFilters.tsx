@@ -88,7 +88,7 @@ export const ExpenseFilters = ({
             name="category"
             id="category"
           >
-            <option value="all">All Categories</option>
+            <option value="all">{t("allCategories")}</option>
             {categories.map((category) => (
               <option value={category.id} key={category.id}>
                 {category.name}
@@ -108,10 +108,10 @@ export const ExpenseFilters = ({
           name="period"
           id="period"
         >
-          <option value="all">All Time</option>
-          <option value="daily">last 24 hours</option>
-          <option value="weekly">Last 7 days</option>
-          <option value="monthly">Last 30 days</option>
+          <option value="all">{t("allTime")}</option>
+          <option value="daily">{t("today")}</option>
+          <option value="weekly">{t("weekly")}</option>
+          <option value="monthly">{t("monthly")}</option>
         </select>
       </div>
 
