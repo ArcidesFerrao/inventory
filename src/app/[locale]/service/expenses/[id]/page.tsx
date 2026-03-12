@@ -1,9 +1,16 @@
 import { db } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
 type Params = Promise<{ id: string }>;
 
 export default async function ExpensePage(props: { params: Params }) {
+  const session = await auth();
+
+  if (!session?.user) redirect("/login");
+  if (!session.user.serviceId) redirect("/register/service");
+
   const { id } = await props.params;
   const t = await getTranslations("Common");
 

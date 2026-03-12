@@ -3,13 +3,21 @@ import StatusToggle from "@/components/StatusToggle";
 import StockHistory from "@/components/StockHistory";
 import StockManagementButton from "@/components/StockManagementButton";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+
 type Params = Promise<{ id: string; locale: string }>;
 
 export default async function ProductPage(props: { params: Params }) {
+  const session = await auth();
+
   const { id } = await props.params;
   const { locale } = await props.params;
+
+  if (!session?.user) redirect("/login");
+  if (!session?.user.supplierId) redirect("/register/supplier");
 
   const t = await getTranslations("Common");
 

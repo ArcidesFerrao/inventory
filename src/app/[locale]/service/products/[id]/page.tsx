@@ -2,10 +2,17 @@ import { DeleteButton } from "@/components/DeleteButton";
 import { db } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
 type Params = Promise<{ id: string }>;
 
 export default async function ItemPage(props: { params: Params }) {
+  const session = await auth();
+
+  if (!session?.user) redirect("/login");
+  if (!session.user.serviceId) redirect("/register/service");
+
   const t = await getTranslations("Common");
   const { id } = await props.params;
   const item = await db.item.findUnique({

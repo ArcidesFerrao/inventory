@@ -29,7 +29,6 @@ export default async function ExpensesPage({
   const session = await auth();
 
   if (!session?.user) redirect("/login");
-
   if (!session.user.serviceId) redirect("/register/service");
 
   const { locale } = await params;

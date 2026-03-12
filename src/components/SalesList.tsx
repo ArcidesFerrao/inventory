@@ -151,24 +151,24 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
     <>
       <div className="products-selection flex flex-col gap-4 w-full p-4">
         <div className="flex flex-col">
-          <h3 className="text-md font-medium underline">{t("list")}</h3>
+          <h3 className="text-md font-medium underline py-2">{t("list")}</h3>
           <ul>
             {items.map((item) => {
               return (
                 <li key={item.id} className="flex justify-between items-center">
                   <h3>{item.name}</h3>
 
-                  <div className="sales-amount flex gap-4 items-center max-w-6/12">
-                    <div className="amount-btn flex gap-2 items-center ">
+                  <div className="sales-amount flex flex-wrap gap-2 items-center max-w-6/12">
+                    <div className="amount-btn flex items-center min-w-fit">
                       <button
-                        className="px-2 py-1"
+                        className="px-3 py-1"
                         onClick={() => handleDecrement(item.id)}
                       >
                         -
                       </button>
                       <span className="w-12 text-center">{item.quantity}</span>
                       <button
-                        className="px-2 py-1"
+                        className="px-3 py-1"
                         onClick={() => handleIncrement(item.id)}
                       >
                         +

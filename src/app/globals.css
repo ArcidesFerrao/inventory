@@ -84,6 +84,9 @@ body {
 }
 
 @media (max-width: 640px) {
+  .item-form-details {
+    flex-direction: column;
+  }
   .new-item-form textarea {
     min-width: fit-content;
   }

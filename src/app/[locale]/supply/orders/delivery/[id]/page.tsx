@@ -6,14 +6,21 @@ import {
 import { db } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 type Params = Promise<{ id: string; locale: string }>;
 
 export default async function DeliveryPage(props: { params: Params }) {
+  const session = await auth();
+
   const { id } = await props.params;
   const { locale } = await props.params;
   const t = await getTranslations("Common");
   const dt = await getTranslations("Delivery");
+
+  if (!session?.user) redirect("/login");
+  if (!session?.user.supplierId) redirect("/register/supplier");
 
   const delivery = await db.delivery.findUnique({
     where: {

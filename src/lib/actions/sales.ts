@@ -53,7 +53,7 @@ export async function createSale(
                  },
             })
 
-            // console.log(stocks)
+            console.log(stocks)
 
             for (const saleItem of saleItems) {
                 // console.log("Processing saleItem:", saleItem.name);

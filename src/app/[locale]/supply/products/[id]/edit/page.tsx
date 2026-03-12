@@ -1,5 +1,7 @@
 import { SupplierProductForm } from "@/components/ProductForm";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
@@ -8,6 +10,11 @@ type Params = Promise<{ id: string; locale: string }>;
 export default async function EditSupplierProductPage(props: {
   params: Params;
 }) {
+  const session = await auth();
+
+  if (!session?.user) redirect("/login");
+  if (!session?.user.supplierId) redirect("/register/supplier");
+
   const { id } = await props.params;
   const { locale } = await props.params;
 

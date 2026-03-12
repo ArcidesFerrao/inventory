@@ -1,12 +1,19 @@
 import { RateButtons } from "@/components/ActionButton";
 import { ConfirmDeliveryButton } from "@/components/CompleteDeliveryButton";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 type Params = Promise<{ id: string; locale: string }>;
 
 export default async function OrderPage(props: { params: Params }) {
+  const session = await auth();
+
+  if (!session?.user) redirect("/login");
+  if (!session.user.serviceId) redirect("/register/service");
+
   const { id } = await props.params;
   const { locale } = await props.params;
   const t = await getTranslations("Common");

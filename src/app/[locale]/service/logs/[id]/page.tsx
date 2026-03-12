@@ -19,6 +19,8 @@ import {
 } from "@/types/types";
 
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -26,6 +28,11 @@ import { getTranslations } from "next-intl/server";
 type Params = Promise<{ id: string; locale: string }>;
 
 export default async function LogPage(props: { params: Params }) {
+  const session = await auth();
+
+  if (!session?.user) redirect("/login");
+  if (!session.user.serviceId) redirect("/register/service");
+
   const { id } = await props.params;
   const { locale } = await props.params;
   const t = await getTranslations("Common");

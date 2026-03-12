@@ -163,7 +163,7 @@ export const ItemForm = ({
             </ul>
           )}
         </div>
-        <div className="flex gap-2 justify-between">
+        <div className="item-form-details flex gap-2 justify-between">
           <div className="flex flex-col gap-2">
             <label htmlFor="type">{t("type")}</label>
             <select
@@ -298,7 +298,7 @@ export const ItemForm = ({
                     </label>
                     <input
                       type="number"
-                      className="max-w-1/3 text-sm"
+                      className="max-w-1/4 text-sm"
                       min={0}
                       name={`CatalogItems[${index}].quantity`}
                       value={stockItem.unitQty}

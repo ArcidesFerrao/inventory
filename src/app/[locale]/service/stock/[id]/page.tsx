@@ -1,10 +1,17 @@
 import { DeleteButton } from "@/components/DeleteButton";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 
 type Params = Promise<{ id: string; locale: string }>;
 
 export default async function StockItemPage(props: { params: Params }) {
+  const session = await auth();
+
+  if (!session?.user) redirect("/login");
+  if (!session.user.serviceId) redirect("/register/service");
+
   const { id } = await props.params;
   const t = await getTranslations("Common");
 

@@ -6,6 +6,10 @@ import {
   UpdateOrderLogDetails,
 } from "@/components/LogDetails";
 import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
+
+import { redirect } from "next/navigation";
+
 import {
   // ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
@@ -18,9 +22,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ id: string; locale: string }>;
+
 export default async function ActividyDetailsPage(props: { params: Params }) {
+  const session = await auth();
+
   const { id } = await props.params;
   const { locale } = await props.params;
+
+  if (!session?.user) redirect("/login");
+  if (!session?.user.supplierId) redirect("/register/supplier");
 
   const at = await getTranslations("Activity");
   const st = await getTranslations("Status");
