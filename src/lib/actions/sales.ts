@@ -1,11 +1,14 @@
 "use server";
 
 import { db } from "@/lib/db";
-import {  SaleItemWithCatalogItems } from "@/types/types";
+import {  SaleItemWithCatalogItems, StockUsage } from "@/types/types";
 import { logActivity } from "./logs";
 import { createAuditLog } from "./auditLogs";
-import { Prisma } from "@/generated/prisma";
+// import { Prisma } from "@/generated/prisma";
 import { getTranslations } from "next-intl/server";
+
+
+
 
 export async function createSale(
     saleItems: SaleItemWithCatalogItems[], serviceId: string
@@ -20,9 +23,8 @@ export async function createSale(
         const result = await db.$transaction(async (tx) => {
                
             let cogs = 0;
-            let qtyUsedInBaseUnits = 0;
             
-            const stockUsage: Record<string, number> = {};
+            const stockUsage: Record<string, StockUsage> = {};
 
             const stockIds = saleItems.flatMap(item => 
                 ( item.CatalogItems ?? []).map(recipe => recipe.serviceStockItem.id) 
@@ -64,39 +66,63 @@ export async function createSale(
                     const stockProduct = stocks.find(s => s.id === serviceStockItemId)
                     if (!stockProduct) continue;
                         
-                    const qtyUsed = saleItem.quantity * recipeItem.quantity;
-                    qtyUsedInBaseUnits = qtyUsed * stockProduct.stockItem.unitQty
-                    // stockUsage[serviceStockItemId] += qtyUsed;
-                    stockUsage[serviceStockItemId] = (stockUsage[serviceStockItemId] ?? 0) + qtyUsedInBaseUnits;
+                    if (recipeItem.usageType !== "UNIT") {
+                        const qtyUsed = recipeItem.quantity * saleItem.quantity;
+                        console.log(qtyUsed)
+                        
+                        const cost = qtyUsed * (recipeItem.serviceStockItem.cost || 0) / recipeItem.serviceStockItem.stockItem.unitQty
+                        // console.log(cost)
+                        
+                        cogs += cost
+                        
+                        stockUsage[serviceStockItemId] ??= { baseQty: 0, units: 0} ;
+                        stockUsage[serviceStockItemId].baseQty += qtyUsed
+                        console.log(`Stock Usage: ` + stockUsage)
 
-                    const costPerBaseUnit = (stockProduct.cost ?? 0) / (stockProduct.stockItem?.unitQty ?? 1);
+                        console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${( cost ?? 0)} MZN`);
+                    } else {
+                        const unitsUsed = saleItem.quantity * recipeItem.quantity;
+                        console.log(unitsUsed)
 
-                    cogs += qtyUsed * costPerBaseUnit;
-                    console.log(qtyUsed)
-                    console.log(qtyUsedInBaseUnits)
-                    console.log(stockUsage)
-                    console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${qtyUsed * (stockProduct.cost ?? 0)}`);
+                        const baseQty = unitsUsed * recipeItem.serviceStockItem.stockItem.unitQty;
+                        
+                        
+                        const cost = unitsUsed * (stockProduct.cost ?? 0)
+                        // console.log(`Cost: ` + cost)
+                        
+                        cogs += cost;
+                        
+                        stockUsage[serviceStockItemId] ??= { baseQty: 0, units: 0};
+                        
+                        stockUsage[serviceStockItemId].units += unitsUsed
+                        stockUsage[serviceStockItemId].baseQty += baseQty
+                        
+                        console.log(`Stock Usage: ` + stockUsage)
+                        console.log(` - Using ${unitsUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${cost}`);
+                    }
                 }
             }
 
-            for (const [stockId, totalQty] of Object.entries(stockUsage)) {
+            for (const [stockId, usage] of Object.entries(stockUsage)) {
                 const stock = stocks.find(s => s.id === stockId);
-                
+                console.log(`Processing item: ` + stock?.stockItem.name)
+
                 if (!stock) continue;
-                console.log(totalQty)
-                if ((stock.stockQty ?? 0) < totalQty) {
+
+                console.log(usage.baseQty)
+
+                
+
+                const remainingBaseUnits = (stock.stockQty ?? 0) - usage.baseQty
+
+                if (remainingBaseUnits < 0) {
                     throw new Error(`${rt("notEnoughStock")} ${stock.stockItem?.name}`);
                 }
+                console.log(remainingBaseUnits)
+                
+                // const remainingBaseUnits = (stock.stockQty ?? 0)  - (qtyUsed * stock.stockItem.unitQty);
 
-                const data: Prisma.ServiceStockItemUpdateInput ={
-                    stockQty: {
-                        decrement: totalQty,
-                    }
-                }
-
-                const remainingBaseUnits = (stock.stockQty ?? 0)  - totalQty;
-
-                const newStock = Math.trunc((remainingBaseUnits ?? 1)/stock.stockItem.unitQty);
+                // const newStock = Math.trunc((remainingBaseUnits ?? 1)/stock.stockItem.unitQty);
                 // const newStockQty = newStock * 
                 // console.log("New stock :", newStock);
                 // console.log("New stock qty:", remainingBaseUnits);
@@ -104,31 +130,34 @@ export async function createSale(
                 
                 
                 if (stock.stockItem?.unit?.name !== "unit") {
-                    // data.stock = {
-                    //     decrement: Math.ceil(totalQty / (stock.stockItem?.unitQty ?? 1))
-                    // }
+                    
+                    // const newStock = Math.floor(remainingBaseUnits / stock.stockItem.unitQty)
 
-                    // const updated = 
-                    await tx.serviceStockItem.update({
+                    const updated = await tx.serviceStockItem.update({
                         where: { id: stockId },
                         data: {
-                            stock: newStock,
+                            stock: {
+                                    decrement: usage.units,
+                                },
                             stockQty: remainingBaseUnits,
                         }
                     });
 
-                    // console.log(updated)
+                    console.log(updated)
                 } else {
-                    data.stock = {
-                        decrement: totalQty
-                    }
-                    // const updated = 
-                    await tx.serviceStockItem.update({
+                    const updated = await tx.serviceStockItem.update({
                         where: { id: stockId },
-                        data
+                        data: {
+                            stock: {
+                                decrement: usage.units,
+                            },
+                            stockQty: {
+                                decrement: usage.baseQty
+                            }
+                        }
                     });
                     
-                    // console.log(updated)
+                    console.log(updated)
                 }
             }
             // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)
@@ -150,11 +179,11 @@ export async function createSale(
                     SaleItem: true,
                 },
             });
-            for (const [stockId, qty] of Object.entries(stockUsage).filter(([,qty]) => qty > 0)) {
+            for (const [stockId, usage] of Object.entries(stockUsage).filter(([,usage]) => usage.units > 0)) {
                 await tx.stockMovement.create({
                     data: {
                         serviceStockItemId:  stockId,
-                        quantity: qty,
+                        quantity: usage.units,
                         changeType: "SALE",
                         referenceId: newSale.id,
                         notes: `${rt("soldProducts")}`

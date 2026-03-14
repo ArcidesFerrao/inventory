@@ -1,6 +1,9 @@
 import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Item, StockItem, Order, OrderItem,  Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier, User, ServiceStockItem, AuditLog} from "@/generated/prisma/client";
 
-
+export type StockUsage = {
+  baseQty: number;
+  units: number
+}
 export type SaleItemWithCatalogItems = Item & {
   quantity: number;
   CatalogItems: (RecipeItem & {serviceStockItem: ServiceStockItem & {

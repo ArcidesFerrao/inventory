@@ -71,18 +71,35 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
       // const ingredientStock =
       //   recipeItem.serviceStockItem.stockItem?.stock ?? 0;
       const serviceStock = recipeItem.serviceStockItem;
+      const totalStock = Number(serviceStock.stock);
       const totalAvailable = serviceStock?.stockQty ?? 0;
-      const totalNeeded = Number(item.quantity + 1) * recipeItem.quantity;
+      const totalStockNeeded = (item.quantity + 1) * recipeItem.quantity;
+      const totalNeeded =
+        (item.quantity + 1) * recipeItem.quantity * item.unitQty;
+      console.log(totalStock);
       console.log(totalAvailable);
+      console.log(totalStockNeeded);
       console.log(totalNeeded);
       console.log(recipeItem.quantity);
-      if (totalAvailable < totalNeeded) {
-        toast.error(
-          `${t("notEnough")} ${
-            recipeItem.serviceStockItem.stockItem.name ?? t("ingredient")
-          } ${t("toMakeAnother")} ${item.name}`,
-        );
-        return;
+
+      if (recipeItem.usageType === "UNIT") {
+        if (totalStock < totalStockNeeded) {
+          toast.error(
+            `${t("notEnough")} ${
+              recipeItem.serviceStockItem.stockItem.name ?? t("ingredient")
+            } ${t("toMakeAnother")} ${item.name}`,
+          );
+          return;
+        }
+      } else {
+        if (totalAvailable < totalNeeded) {
+          toast.error(
+            `${t("notEnough")} ${
+              recipeItem.serviceStockItem.stockItem.name ?? t("ingredient")
+            } ${t("toMakeAnother")} ${item.name}`,
+          );
+          return;
+        }
       }
     }
 

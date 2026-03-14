@@ -156,6 +156,7 @@ model StockItem {
 model RecipeItem {
   id                 String           @id @default(cuid())
   quantity           Int
+  usageType          UsageType        @default(UNIT)
   itemId             String
   serviceStockItemId String
   catalogItem        Item             @relation("CatalogItems", fields: [itemId], references: [id], onDelete: Cascade)
@@ -621,6 +622,11 @@ enum ItemStatus {
 enum ItemType {
   SERVICE
   STOCK
+}
+
+enum UsageType {
+  UNIT
+  QUANTITY
 }
 
 enum OrderStatus {
