@@ -27,6 +27,27 @@ export async function getServiceStockItems(serviceId: string) {
     return [];
   }
 }
+export async function getServiceStockItemsWithUnit(serviceId: string) {
+  try {
+    const items = await db.serviceStockItem.findMany({
+            where: {
+                serviceId,
+        },
+        include: {
+            stockItem: {
+                include: {
+                    unit: true
+                }
+            }
+        }
+    }
+    );
+    return items;
+  } catch (error) {
+    console.error("Failed to fetch items:", error);
+    return [];
+  }
+}
 
 
 

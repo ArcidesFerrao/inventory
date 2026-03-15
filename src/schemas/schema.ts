@@ -79,10 +79,11 @@ export const itemSchema = z.object({
     serviceId: z.string(),
     type: z.enum(["STOCK", "SERVICE"]).default("STOCK"),
     CatalogItems: z.array(
-        z.object({
-            serviceStockItemId: z.string().min(1, "Stock item is required"),
-            stockItemId: z.string().min(1, "Stock item is required"),
-            quantity: z.coerce.number(),
+      z.object({
+        serviceStockItemId: z.string().min(1, "Stock item is required"),
+        stockItemId: z.string().min(1, "Stock item is required"),
+        quantity: z.coerce.number(),
+        usageType: z.enum(["UNIT", "QUANTITY"]).default("UNIT"),
         })
     ).optional(),
 })

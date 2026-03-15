@@ -1,14 +1,17 @@
 "use client";
 
 import { getServiceCategories } from "@/lib/actions/categories";
-import { getServiceStockItems } from "@/lib/actions/items";
+import {
+  // getServiceStockItems,
+  getServiceStockItemsWithUnit,
+} from "@/lib/actions/items";
 import {
   createItem,
   editItem,
   getStockItemsNames,
 } from "@/lib/actions/product";
 import { getUnits } from "@/lib/actions/units";
-import { ServiceStockItem, StockItem } from "@/generated/prisma/client";
+import { ServiceStockItem, StockItem, Unit } from "@/generated/prisma/client";
 import { itemSchema } from "@/schemas/schema";
 import { ItemWithUnit } from "@/types/types";
 import { useForm } from "@conform-to/react";
@@ -49,8 +52,15 @@ export const ItemForm = ({
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
 
   const [recipeItems, setRecipeItems] = useState<
-    (ServiceStockItem & { stockItem: StockItem; unitQty: number })[]
+    (ServiceStockItem & {
+      stockItem: StockItem & { unit: Unit | null };
+      quantity: number;
+      usageType: "UNIT" | "QUANTITY";
+    })[]
   >([]);
+  // const [recipeItems, setRecipeItems] = useState<
+  //   (ServiceStockItem & { stockItem: StockItem; unitQty: number })[]
+  // >([]);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [name, setName] = useState(item?.name || "");
@@ -73,12 +83,13 @@ export const ItemForm = ({
 
   useEffect(() => {
     const fetchItems = async () => {
-      const serviceStockItems = await getServiceStockItems(serviceId);
+      const serviceStockItems = await getServiceStockItemsWithUnit(serviceId);
 
       setRecipeItems(
         serviceStockItems.map((p) => ({
           ...p,
-          unitQty: 0,
+          quantity: 0,
+          usageType: "UNIT" as const,
         })),
       );
     };
@@ -218,7 +229,12 @@ export const ItemForm = ({
                 name="unitId"
                 id="unitId"
                 // disabled
-                value={unitId}
+                value={
+                  type === "SERVICE" ? "01KB8ABVGS65QBKBAN0D3YVCN4" : unitId
+                }
+                // defaultValue={
+                //   type === "SERVICE" ? "01KB8ABVGS65QBKBAN0D3YVCN4" : ""
+                // }
                 onChange={(e) => setUnitId(e.target.value)}
               >
                 <option value="" disabled>
@@ -296,26 +312,52 @@ export const ItemForm = ({
                     >
                       {stockItem.stockItem.name}
                     </label>
-                    <input
-                      type="number"
-                      className="max-w-1/4 text-sm"
-                      min={0}
-                      name={`CatalogItems[${index}].quantity`}
-                      value={stockItem.unitQty}
-                      onChange={(e) => {
-                        const newQuantity = Number(e.target.value);
-                        setRecipeItems((prev) =>
-                          prev.map((ri) =>
-                            ri.id === stockItem.id
-                              ? {
-                                  ...ri,
-                                  unitQty: newQuantity,
-                                }
-                              : ri,
-                          ),
-                        );
-                      }}
-                    />
+
+                    <div className="max-w-1/4 text-sm">
+                      <input
+                        type="number"
+                        className=""
+                        min={0}
+                        name={`CatalogItems[${index}].quantity`}
+                        value={stockItem.quantity}
+                        onChange={(e) => {
+                          const q = Number(e.target.value);
+                          setRecipeItems((prev) =>
+                            prev.map((ri) =>
+                              ri.id === stockItem.id
+                                ? {
+                                    ...ri,
+                                    quantity: q,
+                                  }
+                                : ri,
+                            ),
+                          );
+                        }}
+                      />
+                      <select
+                        name={`CatalogItems[${index}].usageType`}
+                        className="flex flex-col w-full"
+                        value={stockItem.usageType}
+                        onChange={(e) => {
+                          const type = e.target.value as "UNIT" | "QUANTITY";
+
+                          setRecipeItems((prev) =>
+                            prev.map((ri) =>
+                              ri.id === stockItem.id
+                                ? { ...ri, usageType: type }
+                                : ri,
+                            ),
+                          );
+                        }}
+                      >
+                        <option value="UNIT">Unit</option>
+                        {stockItem.stockItem.unit?.name !== "unit" && (
+                          <option value="QUANTITY">
+                            {stockItem.stockItem.unit?.name}
+                          </option>
+                        )}
+                      </select>
+                    </div>
                     <>
                       <input
                         type="hidden"

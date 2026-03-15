@@ -47,6 +47,7 @@ export async function createItem(prevState: unknown, formData: FormData) {
                 serviceId: values.serviceId,
                 CatalogItems: {
                     create: activeCatalogItems.map((r) => ({
+                        usageType: r.usageType,
                         quantity: r.quantity,
                         serviceStockItemId: r.serviceStockItemId,
                         stockItemId: r.stockItemId
