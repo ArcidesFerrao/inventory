@@ -27,7 +27,8 @@ Chart.register(
 type DataPoint = {
   label: string;
   revenue: number;
-  purchases: number;
+  purchases?: number;
+  orders?: number;
 };
 
 interface RevenueTrendChartProps {
@@ -46,9 +47,19 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
     const gridColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
     const tickColor = isDark ? "#9c9a92" : "#73726c";
 
+    // Determine mode from whichever field is present in the first data point
+    const isOrderMode = data[0]?.orders !== undefined;
+    const secondaryValues = data.map((d) =>
+      isOrderMode ? (d.orders ?? 0) : (d.purchases ?? 0),
+    );
+    const secondaryLabel = isOrderMode ? "Pedidos" : "Compras";
+    const netValues = isOrderMode
+      ? null // order count can't be subtracted from revenue meaningfully
+      : data.map((d) => d.revenue - (d.purchases ?? 0));
+
     if (chartRef.current) chartRef.current.destroy();
 
-    const netProfit = data.map((d) => d.revenue - d.purchases);
+    // const netProfit = data.map((d) => d.revenue - d.purchases);
 
     chartRef.current = new Chart(canvasRef.current, {
       type: "line",
@@ -65,10 +76,11 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
             pointRadius: 3,
             pointHoverRadius: 5,
             borderWidth: 2,
+            yAxisID: "y",
           },
           {
-            label: "Compras",
-            data: data.map((d) => d.purchases),
+            label: secondaryLabel,
+            data: secondaryValues,
             borderColor: "#EF9F27",
             backgroundColor: "rgba(239,159,39,0.06)",
             tension: 0.35,
@@ -76,19 +88,26 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
             pointRadius: 3,
             pointHoverRadius: 5,
             borderWidth: 2,
+            // Orders use a separate right axis since they're counts, not MZN
+            yAxisID: isOrderMode ? "y2" : "y",
           },
-          {
-            label: "Lucro Líquido",
-            data: netProfit,
-            borderColor: "#378ADD",
-            backgroundColor: "transparent",
-            tension: 0.35,
-            fill: false,
-            pointRadius: 3,
-            pointHoverRadius: 5,
-            borderWidth: 1.5,
-            borderDash: [4, 3],
-          },
+          ...(netValues
+            ? [
+                {
+                  label: "Lucro Líquido",
+                  data: netValues,
+                  borderColor: "#378ADD",
+                  backgroundColor: "transparent",
+                  tension: 0.35,
+                  fill: false,
+                  pointRadius: 3,
+                  pointHoverRadius: 5,
+                  borderWidth: 1.5,
+                  borderDash: [4, 3],
+                  yAxisID: "y",
+                },
+              ]
+            : []),
         ],
       },
       options: {
@@ -121,8 +140,14 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
             borderWidth: 1,
             padding: 10,
             callbacks: {
-              label: (ctx) =>
-                ` ${ctx.dataset.label}: MZN ${(ctx.parsed.y ?? 0).toFixed(2)}`,
+              label: (ctx) => {
+                const val = ctx.parsed.y ?? 0;
+                // Orders axis: show as integer count, not MZN
+                if (ctx.dataset.yAxisID === "y2") {
+                  return ` ${ctx.dataset.label}: ${Math.round(val)}`;
+                }
+                return ` ${ctx.dataset.label}: MZN ${val.toFixed(2)}`;
+              },
             },
           },
         },
@@ -147,6 +172,21 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
             },
             border: { display: false },
           },
+          // Second Y axis for order counts — only registered when in order mode
+          ...(isOrderMode
+            ? {
+                y2: {
+                  position: "right" as const,
+                  grid: { drawOnChartArea: false },
+                  ticks: {
+                    color: tickColor,
+                    font: { size: 11 },
+                    precision: 0,
+                  },
+                  border: { display: false },
+                },
+              }
+            : {}),
         },
       },
     });

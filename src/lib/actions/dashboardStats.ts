@@ -257,6 +257,29 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                 where: { supplierId }
             })
 
+            const lowStockCount = await db.stockItem.count({
+                where: {
+                    supplierId,
+                    status: "ACTIVE",
+                    stock: { not: null, lt: 10 },
+                }
+            })
+            
+            const lowStockItems = await db.stockItem.findMany({
+                where: {
+                    supplierId,
+                    status: "ACTIVE",
+                    stock: { not: null, lt: 10 },
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    stock: true
+                },
+                orderBy: {stock: "asc" },
+                take: 5
+            })
+
             const customerCount = await db.supplierCustomer.count({
                 where: { supplierId, createdAt: {
                             gte: startDate,
@@ -284,13 +307,31 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                 }
             })
 
+            const cogsLines = await db.orderItem.findMany({
+                where: {
+                    order: {
+                        supplierId,
+                        timestamp: {
+                            gte: startDate,
+                            lte: endDate
+                        }
+                    }
+                },
+                select: {
+                    price: true,
+                    orderedQty: true
+                }
+            })
+
+            const totalCogsValue = cogsLines.reduce((sum,item) => sum + item.price * item.orderedQty, 0)
+
             const revenue = totalRevenue._sum.total || 0;
 
             const earnings = revenue;
 
-            const totalCogs = 0;
+            // const totalCogs = 0;
 
-            const profit = earnings - totalCogs;
+            const profit = earnings - totalCogsValue;
             const averageOrderValue = saleCount > 0 ? earnings / saleCount : 0;
             const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
 
@@ -334,6 +375,49 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                 }
             }))
             
+                        // Trend data: bucket orders and revenue by day
+            const [trendOrders, trendRevenue] = await Promise.all([
+                db.order.findMany({
+                    where: {
+                        supplierId,
+                        timestamp: { gte: startDate, lte: endDate },
+                    },
+                    select: { timestamp: true },
+                }),
+                db.sale.findMany({
+                    where: {
+                        supplierId,
+                        timestamp: { gte: startDate, lte: endDate },
+                    },
+                    select: { timestamp: true, total: true },
+                }),
+            ])
+ 
+            const buckets: Record<string, { revenue: number; orders: number }> = {}
+            const dayLabel = (date: Date) =>
+                `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}`
+ 
+            for (const sale of trendRevenue) {
+                const key = dayLabel(new Date(sale.timestamp))
+                if (!buckets[key]) buckets[key] = { revenue: 0, orders: 0 }
+                buckets[key].revenue += Number(sale.total ?? 0)
+            }
+            for (const order of trendOrders) {
+                const key = dayLabel(new Date(order.timestamp))
+                if (!buckets[key]) buckets[key] = { revenue: 0, orders: 0 }
+                buckets[key].orders += 1
+            }
+ 
+            const trendData = Object.entries(buckets)
+                .sort(([a], [b]) => {
+                    const toNum = (s: string) => {
+                        const [d, m] = s.split("/")
+                        return Number(m) * 100 + Number(d)
+                    }
+                    return toNum(a) - toNum(b)
+                })
+                .map(([label, values]) => ({ label, ...values }))
+
             // console.log(topItems)
             return { 
                 supplier: supplier.businessName,
@@ -344,7 +428,10 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                 profit, 
                 averageOrderValue, 
                 grossMargin, 
-                topItems 
+                topItems,
+                trendData,
+                lowStockCount,
+                lowStockItems 
             };
         },
         [`dashboard-stats-${session.user.id}-${period}`],

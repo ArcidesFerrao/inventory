@@ -390,7 +390,8 @@
     "soldProducts": "Produtos vendidos",
     "datesRequired": "Data Inicial e Final necessarias",
         "processOrderError": "Pedido nao processado",
-        "placeOrderSuccess": "Pedido Criado com Sucesso"
+        "placeOrderSuccess": "Pedido Criado com Sucesso",
+        "New customers": "Novos clientes"
   },
   "Loading": {
     "loading": "A carregar...",
@@ -443,6 +444,7 @@
     "orders": "Pedidos",
     "order": "Pedido",
     "sales": "Vendas",
+    "clients": "Clientes",
     "logs": "Registos",
     "delivery": "Entrega",
     "settings": "Configurações",
@@ -520,6 +522,8 @@
     "totalAmount": "Valor Total",
     "cashFlow": "Fluxo de Caixa",
     "revenue": "Receita",
+    "revenueTrend": "Fluxo da Receita",
+    "customers": "Clientes",
     "purchases": "Compras",
     "expenses": "Despesas",
     "netPosition": "Posição Líquida",
