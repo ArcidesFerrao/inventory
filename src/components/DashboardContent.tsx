@@ -5,6 +5,7 @@ import { CashFlowChart } from "@/components/CashFlowChart";
 import { RecentActivity } from "@/components/RecentActivity";
 import { getServiceDashBoardStats } from "@/lib/actions/dashboardStats";
 import { getTranslations } from "next-intl/server";
+import RevenueTrendChart from "./RevenueTrendChart";
 
 type SearchParams = {
   period?: "daily" | "weekly" | "monthly";
@@ -43,10 +44,10 @@ export default async function ServicePage({
         <DateFilter currentPeriod={period} />
       </div>
 
-      <div className="service-stats flex gap-4 my-4">
+      <div className="service-stats flex flex-col gap-4 my-4">
         <div className="stats profit-stats p-4 h-fit flex flex-col gap-2 min-w-52">
           <h2 className="text-2xl font-bold underline">{t("cashFlow")}</h2>
-          <div className="flex flex-col cash-stats-container gap-2">
+          <div className="flex cash-stats-container justify-between gap-2">
             <div>
               <h3 className="label-text text-lg font-normal">{t("revenue")}</h3>
               <h4 className="text-lg py-1 whitespace-nowrap font-bold">
@@ -84,6 +85,7 @@ export default async function ServicePage({
               </h4>
             </div>
           </div>
+          <RevenueTrendChart data={stats.trendData} />
         </div>
         <div className="stats stats-details flex w-full flex-col p-4 justify-between">
           <div className="stats-header flex flex-col gap-2">

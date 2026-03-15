@@ -165,11 +165,59 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
                   timestamp: "desc",
                 },
                 take: 5,
-              });
+            });
             
+                        const [trendSales, trendPurchases] = await Promise.all([
+                db.sale.findMany({
+                    where: {
+                        serviceId: service?.id,
+                        timestamp: { gte: startDate, lte: endDate },
+                    },
+                    select: { timestamp: true, total: true },
+                }),
+                db.purchase.findMany({
+                    where: {
+                        serviceId: service?.id,
+                        timestamp: { gte: startDate, lte: endDate },
+                    },
+                    select: { timestamp: true, total: true },
+                }),
+            ]);
+ 
+            // Group by day label "DD/MM"
+            const buckets: Record<string, { revenue: number; purchases: number }> = {};
+ 
+            const dayLabel = (date: Date) =>
+                `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}`;
+ 
+            for (const sale of trendSales) {
+                const key = dayLabel(new Date(sale.timestamp));
+                if (!buckets[key]) buckets[key] = { revenue: 0, purchases: 0 };
+                buckets[key].revenue += Number(sale.total ?? 0);
+            }
+ 
+            for (const purchase of trendPurchases) {
+                const key = dayLabel(new Date(purchase.timestamp));
+                if (!buckets[key]) buckets[key] = { revenue: 0, purchases: 0 };
+                buckets[key].purchases += Number(purchase.total ?? 0);
+            }
+ 
+            // Sort chronologically and shape into the array the chart expects
+            const trendData = Object.entries(buckets)
+                .sort(([a], [b]) => {
+                    // Parse "DD/MM" back to a sortable number MMDD
+                    const toNum = (s: string) => {
+                        const [d, m] = s.split("/");
+                        return Number(m) * 100 + Number(d);
+                    };
+                    return toNum(a) - toNum(b);
+                })
+                .map(([label, values]) => ({ label, ...values }));
+            // ─────────────────────────────────────────────────────────────
+
             //   console.log("Cache Miss: Calculating stats")
         
-            return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems, recentSales };
+            return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems, recentSales, trendData };
 
 
         },
