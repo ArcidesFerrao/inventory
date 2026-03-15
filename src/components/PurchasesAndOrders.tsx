@@ -11,11 +11,15 @@ import { useTranslations } from "next-intl";
 export default function PurchasesAndOrders({
   purchases,
   orders,
+  purchaseCount,
+  orderCount,
 }: {
   purchases: PurchaseWithItems[];
   orders: (Order & {
     orderItems: OrderItem[];
   })[];
+  purchaseCount: number;
+  orderCount: number;
 }) {
   const locale = useLocale();
   const t = useTranslations("Common");
@@ -122,7 +126,7 @@ export default function PurchasesAndOrders({
           <div className="purchases-data flex justify-between w-full">
             <div className="purchase-total">
               <p>{pt("totalPurchases")}</p>
-              <h2 className="text-2xl font-semibold">{purchases.length}</h2>
+              <h2 className="text-2xl font-semibold">{purchaseCount}</h2>
             </div>
             <div>
               <p>{pt("totalSpent")}</p>
@@ -149,6 +153,10 @@ export default function PurchasesAndOrders({
       {view === "orders" && (
         <div className="orders-list flex flex-col gap-5">
           <div className="orders-data flex justify-between">
+            <div className="flex flex-col ">
+              <p>{t("orders")}</p>
+              <h2 className="text-2xl font-semibold">{orderCount}</h2>
+            </div>
             <div className="flex flex-col ">
               <p>{pt("totalOrderedItems")}</p>
               <h2 className="text-2xl font-semibold">{totalOrderedItems}</h2>

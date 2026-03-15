@@ -17,7 +17,7 @@ export default async function SupplyPage({
 }) {
   const session = await auth();
   const t = await getTranslations("Common");
-  const st = await getTranslations("Supplier");
+  // const st = await getTranslations("Supplier");
   // const ot = await getTranslations("Orders");
 
   if (!session) {
@@ -47,11 +47,11 @@ export default async function SupplyPage({
         <DateFilter currentPeriod={period} />
       </div>
 
-      <div className="supply-stats flex flex-col gap-4 my-8">
-        <div className="stats profit-stats p-4 flex flex-col gap-2 min-w-52">
-          <h2 className="text-2xl font-semibold underline">
+      <div className="supply-stats stats flex flex-col my-8">
+        <div className=" profit-stats p-4 flex flex-col gap-2 min-w-52">
+          {/* <h2 className="text-2xl font-semibold underline">
             {st("financials")}
-          </h2>
+          </h2> */}
           <div className="flex  stats-container justify-between gap-1">
             <div>
               <h3 className="text-lg font-normal">{t("revenue")}</h3>
@@ -166,19 +166,17 @@ export default async function SupplyPage({
             </div>
           </div>
         </div> */}
-      </div>
-
-      <div className="suppliertop-list flex flex-col  w-full gap-4">
         {stats.trendData.length > 0 && (
-          <div className="stats p-4 flex flex-col gap-2">
-            <h2 className="text-lg font-semibold">{t("revenueTrend")}</h2>
+          <div className="pb-4 px-4 flex flex-col gap-2 w-full">
+            {/* <h2 className="text-lg font-semibold">{t("revenueTrend")}</h2> */}
             <RevenueTrendChart data={stats.trendData} />
           </div>
         )}
+      </div>
 
-        {/* Bottom grid: top ordered + low stock */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* <div className="items-list flex flex-col  p-4 gap-4">
+      {/* Bottom grid: top ordered + low stock */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* <div className="items-list flex flex-col  p-4 gap-4">
             <h2 className="text-xl font-bold">Resumo do Catalogo</h2>
             <ul className="flex flex-col w-full gap-1">
               <li className="flex justify-between items-center w-full gap-2">
@@ -195,52 +193,52 @@ export default async function SupplyPage({
               </li>
             </ul>
           </div> */}
-          {stats.topItems.length > 0 && (
-            <div className="items-list flex flex-col p-4 gap-4">
-              <h2 className="text-xl font-bold">{t("topOrdered")}</h2>
-              <ul className="flex flex-col w-full gap-1">
-                {stats.topItems.map(
-                  (item) =>
-                    item && (
-                      <li
-                        key={item.id}
-                        className="flex justify-between items-center w-full gap-2"
-                      >
-                        {/* <span className="text-base-content/40 text-sm w-4 shrink-0">
+        {stats.topItems.length > 0 && (
+          <div className="items-list flex flex-col p-4 gap-4">
+            <h2 className="text-xl font-bold">{t("topOrdered")}</h2>
+            <ul className="flex flex-col w-full gap-1">
+              {stats.topItems.map(
+                (item) =>
+                  item && (
+                    <li
+                      key={item.id}
+                      className="flex justify-between items-center w-full gap-2"
+                    >
+                      {/* <span className="text-base-content/40 text-sm w-4 shrink-0">
                           {i + 1}
                         </span> */}
-                        <span className="flex-1">{item.name}</span>
-                        <span className="font-medium">{item.quantity}</span>
-                      </li>
-                    ),
-                )}
-              </ul>
-            </div>
-          )}
+                      <span className="flex-1">{item.name}</span>
+                      <span className="font-medium">{item.quantity}</span>
+                    </li>
+                  ),
+              )}
+            </ul>
+          </div>
+        )}
 
-          {stats.lowStockItems.length > 0 && (
-            <div className="items-list flex flex-col p-4 gap-4">
-              <h2 className="text-xl font-bold">
-                {t("lowStock")} {t("items")}
-              </h2>
-              <ul className="flex flex-col w-full gap-1">
-                {stats.lowStockItems.map((item) => (
-                  <li key={item.id} className="flex justify-between w-full">
-                    <span>{item.name}</span>
-                    <span
-                      className={`font-medium ${
-                        (item.stock ?? 0) === 0 ? "text-error" : "text-warning"
-                      }`}
-                    >
-                      {item.stock ?? 0}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-        {/* {filteredItems.length > 0 && (
+        {stats.lowStockItems.length > 0 && (
+          <div className="items-list flex flex-col p-4 gap-4">
+            <h2 className="text-xl font-bold">
+              {t("lowStock")} {t("items")}
+            </h2>
+            <ul className="flex flex-col w-full gap-1">
+              {stats.lowStockItems.map((item) => (
+                <li key={item.id} className="flex justify-between w-full">
+                  <span>{item.name}</span>
+                  <span
+                    className={`font-medium ${
+                      (item.stock ?? 0) === 0 ? "text-error" : "text-warning"
+                    }`}
+                  >
+                    {item.stock ?? 0}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      {/* {filteredItems.length > 0 && (
           <div className="items-list flex flex-col p-4 w-fit gap-4 justify-start items-start">
             <h2 className="text-2xl font-bold">
               {t("lowStock")} {t("items")}
@@ -268,7 +266,6 @@ export default async function SupplyPage({
             </ul>
           </div>
         )} */}
-      </div>
     </section>
   );
 }

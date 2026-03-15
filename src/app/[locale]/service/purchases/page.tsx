@@ -10,8 +10,20 @@ export default async function PurchasesPage() {
 
   if (!session?.user) redirect("/login");
 
+  const purchasesCount = await db.purchase.count({
+    where: {
+      serviceId: session.user.serviceId,
+    },
+  });
+  const ordersCount = await db.order.count({
+    where: {
+      serviceId: session.user.serviceId,
+    },
+  });
   const purchases = await db.purchase.findMany({
-    where: { serviceId: session.user.serviceId },
+    where: {
+      serviceId: session.user.serviceId,
+    },
     include: {
       PurchaseItem: {
         include: {
@@ -21,6 +33,7 @@ export default async function PurchasesPage() {
       },
     },
     orderBy: { timestamp: "desc" },
+    take: 10,
   });
 
   const orders = await db.order.findMany({
@@ -29,6 +42,7 @@ export default async function PurchasesPage() {
       orderItems: true,
     },
     orderBy: { timestamp: "desc" },
+    take: 10,
   });
 
   return (
@@ -39,7 +53,12 @@ export default async function PurchasesPage() {
           <p className="text-md font-extralight">{purchasesT("subtitle")}</p>
         </div>
       </div>
-      <PurchasesAndOrders purchases={purchases} orders={orders} />
+      <PurchasesAndOrders
+        purchases={purchases}
+        orders={orders}
+        orderCount={ordersCount}
+        purchaseCount={purchasesCount}
+      />
     </div>
   );
 }

@@ -126,10 +126,11 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
               color: tickColor,
               font: { size: 11 },
               boxWidth: 8,
-              boxHeight: 8,
+              boxHeight: 5,
               usePointStyle: true,
               pointStyle: "circle",
-              padding: 10,
+              padding: 5,
+              textAlign: "center",
             },
           },
           tooltip: {
@@ -198,8 +199,6 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
 
   if (!data?.length) return null;
   return (
-    <div className="w-full mt-2">
       <canvas ref={canvasRef} />
-    </div>
   );
 }

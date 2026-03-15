@@ -27,6 +27,7 @@ export default async function SalesPage({
       },
     },
     orderBy: { timestamp: "desc" },
+    take: 10,
   });
 
   return (
@@ -45,7 +46,7 @@ export default async function SalesPage({
       </div>
       <div className="flex justify-between">
         <div className="total-sales-title flex flex-col gap-2">
-          <p>{st("totalSales")}</p>
+          <p>{t("sales")}</p>
           <h4 className="text-xl font-bold">{sales.length}</h4>
         </div>
         <div className="flex flex-col gap-2">
