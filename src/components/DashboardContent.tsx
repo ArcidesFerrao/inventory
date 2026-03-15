@@ -178,12 +178,12 @@ export default async function ServicePage({
 
       <div className="dash-stats-details grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-2">
-          <CashFlowChart
+          {/* <CashFlowChart
             revenue={stats.earnings}
             purchases={stats.purchases}
             expenses={stats.expenses}
             balance={stats.balance}
-          />
+          /> */}
           <RecentActivity sales={stats.recentSales} />
         </div>
         <div className="flex flex-col gap-4 w-full">

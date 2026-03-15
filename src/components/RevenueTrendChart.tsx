@@ -110,7 +110,7 @@ export default function RevenueTrendChart({ data }: RevenueTrendChartProps) {
               boxHeight: 8,
               usePointStyle: true,
               pointStyle: "circle",
-              padding: 16,
+              padding: 10,
             },
           },
           tooltip: {
