@@ -87,12 +87,14 @@ export default async function OrderPage(props: { params: Params }) {
           </div>
         </div>
         <div className="flex flex-col justify-between">
-          <button
-            disabled
-            className=" status-btn text-sm font-light text-center px-4 py-2 rounded-sm "
-          >
-            {order?.status}
-          </button>
+          {order?.status && (
+            <button
+              disabled
+              className=" status-btn text-sm font-light text-center px-4 py-2 rounded-sm "
+            >
+              {t(order.status.toLocaleLowerCase()).toUpperCase()}
+            </button>
+          )}
           {order?.status === "DELIVERED" ||
             (order?.status === "IN_DELIVERY" && (
               <ConfirmDeliveryButton

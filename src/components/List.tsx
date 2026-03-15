@@ -311,7 +311,7 @@ export const OrderListItem = ({
               order.status === "DELIVERED" ? "text-green-400" : ""
             }`}
           >
-            {order.status}
+            {t(order.status.toLocaleLowerCase()).toUpperCase()}
           </button>
           <div className="flex items-center gap-2 text-sm font-light">
             <span className="flex items-center">
