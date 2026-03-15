@@ -291,6 +291,15 @@ table {
   overflow: hidden;
 }
 
+.text-error p {
+  background-color: #086636;
+  border-radius: 0.5rem;
+  padding: 0 0.4rem;
+}
+.text-green p {
+  background-color: #086636;
+}
+
 .label-text {
   color: var(--label-font);
 }

@@ -318,17 +318,25 @@ export async function getSupplierDashBoardStats(period: Period = 'monthly') {
                     }
                 },
                 select: {
-                    price: true,
+                    stockItem: {
+                        select: {
+                            cost: true,
+                            unitQty: true
+                        }
+                    },
                     orderedQty: true
                 }
             })
 
-            const totalCogsValue = cogsLines.reduce((sum,item) => sum + item.price * item.orderedQty, 0)
-
+            const totalCogsValue = cogsLines.reduce((sum,item) => {
+                const unitCost = (item.stockItem.cost ?? 0) / (item.stockItem.unitQty)
+                return sum + unitCost * item.orderedQty
+            }, 0)
+            // console.log(totalCogsValue)
             const revenue = totalRevenue._sum.total || 0;
 
             const earnings = revenue;
-
+            // console.log(earnings)
             // const totalCogs = 0;
 
             const profit = earnings - totalCogsValue;

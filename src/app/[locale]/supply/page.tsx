@@ -54,31 +54,43 @@ export default async function SupplyPage({
           </h2>
           <div className="flex  stats-container justify-between gap-1">
             <div>
-              <h3 className="text-lg font-normal">Revenue</h3>
+              <h3 className="text-lg font-normal">{t("revenue")}</h3>
               <h4 className="text-xl py-1 whitespace-nowrap font-medium">
                 MZN {stats.revenue.toFixed(2)}
               </h4>
-              <p className="text-xs text-base-content/50">
+              <p className="text-xs text-base-content/50 opacity-60">
                 {stats.saleCount} {t("sales")} este período
               </p>
             </div>
             <div>
               <h3 className="text-lg font-normal">{t("grossProfit")}</h3>
               <h4 className="text-xl py-1 whitespace-nowrap font-medium">
-                MZN {stats.grossMargin.toFixed(2)}
+                MZN {stats.profit.toFixed(2)}
               </h4>
-              <p className="text-xs text-base-content/50">
+              <p className="text-xs text-base-content/50  opacity-60">
                 {t("grossMargin")}: {stats.grossMargin.toFixed(1)}%
               </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-normal">{t("items")}</h3>
+              <h4 className="text-xl py-1 whitespace-nowrap font-medium">
+                {stats.stockItemCount}
+              </h4>
+              <span
+                className={`text-xs text-base-content/50  opacity-60 ${
+                  (stats.lowStockCount ?? 0) === 0 ? "text-error" : "text-green"
+                }`}
+              >
+                <p>
+                  {t("lowStock")} {stats.lowStockCount ?? 0}
+                </p>
+              </span>
             </div>
             <div>
               <h3 className="text-lg font-normal">{t("clients")}</h3>
               <h4 className="text-xl py-1 whitespace-nowrap font-medium">
                 {stats.customerCount}
               </h4>
-              <p className="text-xs text-base-content/50">
-                {t("new")} {t("customers")} este período
-              </p>
             </div>
           </div>
         </div>
@@ -166,6 +178,23 @@ export default async function SupplyPage({
 
         {/* Bottom grid: top ordered + low stock */}
         <div className="grid grid-cols-2 gap-4">
+          {/* <div className="items-list flex flex-col  p-4 gap-4">
+            <h2 className="text-xl font-bold">Resumo do Catalogo</h2>
+            <ul className="flex flex-col w-full gap-1">
+              <li className="flex justify-between items-center w-full gap-2">
+                <span>Itens no catalogo</span>
+                <span>{stats.stockItemCount}</span>
+              </li>
+              <li className="flex justify-between items-center w-full gap-2">
+                <span>Stock baixo</span>
+                <span>{stats.lowStockCount}</span>
+              </li>
+              <li className="flex justify-between items-center w-full gap-2">
+                <span>Margem bruta</span>
+                <span>{stats.grossMargin.toFixed(1)} MZN</span>
+              </li>
+            </ul>
+          </div> */}
           {stats.topItems.length > 0 && (
             <div className="items-list flex flex-col p-4 gap-4">
               <h2 className="text-xl font-bold">{t("topOrdered")}</h2>
