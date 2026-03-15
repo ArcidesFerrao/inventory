@@ -88,7 +88,7 @@ export default async function ServicePage({
           <RevenueTrendChart data={stats.trendData} />
         </div>
         <div className="stats stats-details flex w-full flex-col p-4 justify-between">
-          <div className="stats-header flex flex-col gap-2">
+          <div className="stats-header flex flex-col gap-2 pb-2">
             <h2 className="text-2xl font-bold underline">{t("statistics")}</h2>
             <p className="font-thin">{t("statsDescription")}</p>
           </div>

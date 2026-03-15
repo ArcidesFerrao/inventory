@@ -108,8 +108,10 @@ export default async function ItemPage(props: { params: Params }) {
             <p>{item?.description}</p>
           </span>
           {item?.type === "SERVICE" && (
-            <ul className="flex flex-col recipe-items-list p-2">
-              <h2 className="font-semibold underline">{t("recipeItems")}</h2>
+            <ul className="flex flex-col recipe-items-list ">
+              <h2 className="font-semibold underline py-2">
+                {t("recipeItems")}
+              </h2>
               {item.CatalogItems.filter((i) => i.quantity > 0).map((i) => (
                 <li className="flex justify-between py-1" key={i.id}>
                   <p className="font-light">{i.stockItem?.name}</p>

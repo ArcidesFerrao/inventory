@@ -313,6 +313,10 @@ table {
   color: var(--label-font);
 }
 
+/* a:hover {
+  text-decoration: underline;
+} */
+
 .dash-menu button,
 .login-button,
 .user-page button {
@@ -412,6 +416,9 @@ button:active {
   color: var(--dash-bg);
 }
 
+select:hover {
+  cursor: pointer;
+}
 select {
   padding: 0.4rem 0.8rem;
   background-color: var(--input-bg);
@@ -711,13 +718,14 @@ nav {
 }
 
 /* .list-orders, */
-.list-logs,
-.list-purchases {
+.list-logs {
   border: var(--list-bg) 1px solid;
   padding: 1rem;
   border-radius: 0.4rem;
   background-color: var(--list-bg);
 }
+
+.list-purchases,
 .list-orders {
   transition: all 300ms ease-in;
   border: var(--admin-card) 2px solid;
@@ -726,6 +734,7 @@ nav {
   /* background-color: var(--list-bg); */
 }
 
+.list-purchases:hover,
 .list-orders:hover {
   cursor: pointer;
   translate: 0 -2px;
@@ -746,7 +755,13 @@ nav {
   border-radius: 0.16rem;
 }
 
-.recipe-items-list,
+.recipe-items-list {
+  border: var(--admin-card) 2px solid;
+
+  padding: 0.6rem 1rem;
+
+  border-radius: 0.4rem;
+}
 .product-detail-desc {
   background-color: var(--input-bg);
   border-radius: 0.4rem;
