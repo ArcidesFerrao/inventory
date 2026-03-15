@@ -20,6 +20,7 @@ export async function getUserNotification(userId: string) {
         where: {
             userId,
         },
+        take: 10,
         orderBy: {
             createdAt: "desc"
         }

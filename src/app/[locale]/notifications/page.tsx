@@ -24,7 +24,7 @@ export default async function NotificationsPage() {
       {notifications.length === 0 ? (
         <p className="text-gray-400">{t("noNotifications")}</p>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2 py-5">
           {notifications.map((n) => (
             <NotificationListItem key={n.id} n={n} />
           ))}

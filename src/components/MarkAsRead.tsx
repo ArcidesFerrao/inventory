@@ -19,7 +19,7 @@ export default function MarkAsRead({ userId }: { userId: string }) {
 
   return (
     <button
-      className="fixed right-20 flex items-center gap-2"
+      className="fixed right-20 top-36 flex items-center gap-2"
       onClick={markAsRead}
       disabled={isPending}
     >

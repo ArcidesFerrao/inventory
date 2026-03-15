@@ -39,7 +39,7 @@ export const Header = () => {
             src="/evolure-box-w.png"
             width={22}
             height={22}
-            alt="Innovante"
+            alt="EVOLURE"
           />
           <h1 className="font-bold text-2xl uppercase ">CONTELA</h1>
         </div>
