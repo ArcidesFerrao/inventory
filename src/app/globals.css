@@ -522,11 +522,21 @@ nav {
   border-radius: 0.8rem;
 }
 
-.items-list,
+/* .items-list, */
 .balance,
 .stats {
   background-color: var(--input-bg);
   border-radius: 0.4rem;
+}
+.items-list {
+  /* background-color: var(--input-bg); */
+  border: var(--admin-card) 2px solid;
+  border-radius: 0.4rem;
+}
+
+.items-list ul li:hover {
+  translate: 0 -2px;
+  background-color: var(--input-bg);
 }
 
 .divider {
@@ -691,15 +701,27 @@ nav {
   border-radius: 0.4rem;
 }
 
+/* .list-orders, */
 .list-logs,
-.list-orders,
 .list-purchases {
   border: var(--list-bg) 1px solid;
   padding: 1rem;
   border-radius: 0.4rem;
   background-color: var(--list-bg);
 }
+.list-orders {
+  transition: all 300ms ease-in;
+  border: var(--admin-card) 2px solid;
+  padding: 0.6rem 1rem;
+  border-radius: 0.4rem;
+  /* background-color: var(--list-bg); */
+}
 
+.list-orders:hover {
+  cursor: pointer;
+  translate: 0 -2px;
+  box-shadow: 3px 3px 0px rgba(28, 28, 28, 10);
+}
 .orders-filter div {
   padding: 0.4rem 0.6rem;
   border: 1px solid var(--border-list);

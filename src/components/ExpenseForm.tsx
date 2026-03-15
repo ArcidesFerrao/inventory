@@ -36,6 +36,7 @@ export default function ExpenseForm({
   const router = useRouter();
   const t = useTranslations("Common");
   const et = useTranslations("Expenses");
+  const rt = useTranslations("Responses");
 
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: 0,
@@ -59,7 +60,7 @@ export default function ExpenseForm({
 
   useEffect(() => {
     if (state?.status === "success") {
-      toast.success("Item created successfully!");
+      toast.success(rt("createExpenseSuccess"));
       router.push("/service/expenses");
     }
     if (state?.status === "error") {

@@ -177,15 +177,7 @@ export default async function ServicePage({
       </div>
 
       <div className="dash-stats-details grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-2">
-          {/* <CashFlowChart
-            revenue={stats.earnings}
-            purchases={stats.purchases}
-            expenses={stats.expenses}
-            balance={stats.balance}
-          /> */}
-          <RecentActivity sales={stats.recentSales} />
-        </div>
+        <RecentActivity sales={stats.recentSales} />
         <div className="flex flex-col gap-4 w-full">
           {lowStockItems.length > 0 && (
             <div className="items-list flex flex-col p-4 w-full gap-4 justify-between items-start">

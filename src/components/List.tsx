@@ -386,6 +386,7 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
 export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
   const t = useTranslations("Common");
   const st = useTranslations("Sales");
+
   return (
     <li
       key={sale.id}
