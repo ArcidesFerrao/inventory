@@ -387,7 +387,10 @@
     "createServiceFail": "Falha ao criar serviço",
     "createSupplierFail": "Falha ao criar fornecedor",
     "noPurchaseItems": "Nenhum item de compra",
-    "soldProducts": "Produtos vendidos"
+    "soldProducts": "Produtos vendidos",
+    "datesRequired": "Data Inicial e Final necessarias",
+        "processOrderError": "Pedido nao processado",
+        "placeOrderSuccess": "Pedido Criado com Sucesso"
   },
   "Loading": {
     "loading": "A carregar...",
