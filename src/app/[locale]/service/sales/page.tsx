@@ -54,12 +54,6 @@ export default async function SalesPage({
             MZN {sales.reduce((acc, sale) => acc + sale.total, 0).toFixed(2)}
           </h4>
         </div>
-        <div className="total-sales-title flex flex-col gap-2">
-          <p>{t("cogs")}</p>
-          <h4 className="text-xl font-bold">
-            MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0).toFixed(2)}
-          </h4>
-        </div>
         <div className="flex flex-col gap-2">
           <p>{t("grossProfit")}</p>
           <h4 className="text-xl font-bold">
@@ -68,6 +62,12 @@ export default async function SalesPage({
               sales.reduce((acc, sale) => acc + sale.total, 0) -
               sales.reduce((acc, sale) => acc + sale.cogs, 0)
             ).toFixed(2)}
+          </h4>
+        </div>
+        <div className="total-sales-title flex flex-col gap-2 max-w-50">
+          <p>{t("cogs")}</p>
+          <h4 className="text-xl font-bold">
+            MZN {sales.reduce((acc, sale) => acc + sale.cogs, 0).toFixed(2)}
           </h4>
         </div>
       </div>

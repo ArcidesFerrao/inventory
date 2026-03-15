@@ -141,10 +141,10 @@ export default async function ServicePage({
                 </div>
                 <div>
                   <h3 className="label-text text-lg font-normal">
-                    {t("remaining")}
+                    Stock {t("remaining")}
                   </h3>
                   <h4 className="text-xl py-1 whitespace-nowrap font-bold">
-                    {stats.inventoryPercentage.toFixed(1)}%
+                    {stats.inventoryCount}
                   </h4>
                 </div>
               </div>

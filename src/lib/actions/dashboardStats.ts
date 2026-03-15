@@ -113,11 +113,11 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
                 const unitCost = (item.stockItem.cost || 0) / (item.stockItem.unitQty || 1);
                 return sum + (unitCost * (item.stockQty || 0));
             }, 0)
-            
+            const inventoryCount = serviceStockItems.reduce((sum, item) => sum + (item.stock || 0), 0)
             // extra metrics
             const averageSaleValue = salesCount > 0 ? earnings / salesCount : 0;
             const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
-            const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases) * 100 : 0;
+            // const inventoryPercentage = purchases > 0 ? (inventoryValue / purchases * 100) : 0;
             
             const mostPaidItems = await db.saleItem.groupBy({
                 by: ['itemId'],
@@ -217,7 +217,7 @@ export async function getServiceDashBoardStats(period: Period = 'monthly') {
 
             //   console.log("Cache Miss: Calculating stats")
         
-            return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryPercentage, topItems, serviceStockItems, recentSales, trendData };
+            return { service: service?.businessName || "Service", itemCount, salesCount, balance , earnings, profit, netProfit, expenses, inventoryValue, purchases, grossMargin, averageSaleValue, inventoryCount, topItems, serviceStockItems, recentSales, trendData };
 
 
         },

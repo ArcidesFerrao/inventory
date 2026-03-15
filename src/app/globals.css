@@ -691,7 +691,8 @@ nav {
 }
 
 .order-details {
-  background-color: var(--border-list);
+  border: var(--admin-card) 2px solid;
+  /* background-color: var(--border-list); */
   border-radius: 0.4rem;
 }
 

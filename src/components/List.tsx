@@ -148,8 +148,15 @@ export const PurchaseListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {purchases.timestamp.toLocaleDateString()} ,{" "}
-                {purchases.timestamp.toLocaleTimeString()}
+                {purchases.timestamp.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}{" "}
+                ,{" "}
+                {purchases.timestamp.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
             {purchases.PurchaseItem.length > 1 && (
@@ -230,8 +237,15 @@ export const OrderListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {order.timestamp.toLocaleDateString()},{" "}
-                {order.timestamp.toLocaleTimeString()}
+                {order.timestamp.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}
+                ,{" "}
+                {order.timestamp.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
           </div>
@@ -244,11 +258,17 @@ export const OrderListItem = ({
               </p>
               <div className=" flex gap-2">
                 <p className="text-md font-medium">
-                  {order.requestedStartDate.toLocaleDateString()}
+                  {order.requestedStartDate.toLocaleDateString(undefined, {
+                    day: "2-digit",
+                    month: "2-digit",
+                  })}
                 </p>
                 -
                 <p className="text-md font-medium">
-                  {order.requestedEndDate.toLocaleDateString()}
+                  {order.requestedEndDate.toLocaleDateString(undefined, {
+                    day: "2-digit",
+                    month: "2-digit",
+                  })}
                 </p>
               </div>
             </div>
@@ -333,8 +353,15 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {sale.timestamp.toLocaleDateString()} ,{" "}
-                {sale.timestamp.toLocaleTimeString()}
+                {sale.timestamp.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}{" "}
+                ,{" "}
+                {sale.timestamp.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
             {sale.SaleItem.length > 1 && (
@@ -404,8 +431,15 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {new Date(sale.timestamp).toLocaleDateString()} ,{" "}
-                {new Date(sale.timestamp).toLocaleTimeString()}
+                {new Date(sale.timestamp).toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}{" "}
+                ,{" "}
+                {new Date(sale.timestamp).toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
           </div>
@@ -442,8 +476,15 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {expense.timestamp.toLocaleDateString()} ,{" "}
-                {expense.timestamp.toLocaleTimeString()}
+                {expense.timestamp.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}{" "}
+                ,{" "}
+                {expense.timestamp.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
             <div className="flex items-center">
@@ -491,8 +532,15 @@ export const SupplierSaleListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {sale.timestamp.toLocaleDateString()} ,{" "}
-                {sale.timestamp.toLocaleTimeString()}
+                {sale.timestamp.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}{" "}
+                ,{" "}
+                {sale.timestamp.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
             {sale.SaleItem.length > 1 && (
@@ -574,10 +622,16 @@ export default function LogListItem({
         <p className="log-desc text-sm ">{description}</p>
         <div className="log-date flex gap-2 items-center">
           <p className="font-extralight text-gray-400 text-xs">
-            {timestamp.toLocaleDateString()}
+            {timestamp.toLocaleDateString(undefined, {
+              day: "2-digit",
+              month: "2-digit",
+            })}
           </p>
           <p className="font-extralight text-gray-400 text-xs">
-            {timestamp.toLocaleTimeString()}
+            {timestamp.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </p>
         </div>
       </div>
@@ -623,10 +677,16 @@ export function SupplierLogListItem({
         <p className="log-desc ">{description}</p>
         <div className="log-date flex gap-2 items-center">
           <p className="font-extralight text-gray-400 text-xs">
-            {timestamp.toLocaleDateString()}
+            {timestamp.toLocaleDateString(undefined, {
+              day: "2-digit",
+              month: "2-digit",
+            })}
           </p>
           <p className="font-extralight text-gray-400 text-xs">
-            {timestamp.toLocaleTimeString()}
+            {timestamp.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </p>
         </div>
       </div>
@@ -680,8 +740,15 @@ export const SupplierOrderListItem = ({
                 <span className="formkit--date"></span>
               </span>
               <p className="text-sm font-light">
-                {order?.timestamp.toLocaleDateString()},{" "}
-                {order?.timestamp.toLocaleTimeString()}
+                {order?.timestamp.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}
+                ,{" "}
+                {order?.timestamp.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
             </div>
           </div>
@@ -699,8 +766,19 @@ export const SupplierOrderListItem = ({
           <div className="text-md font-medium">
             <p className="text-sm font-light">{t("deliveredAt")}: </p>
             <div className="flex gap-1 text-md font-medium">
-              <p>{order?.delivery.deliveredAt?.toLocaleDateString()},</p>
-              <p>{order?.delivery.deliveredAt?.toLocaleTimeString()}</p>
+              <p>
+                {order?.delivery.deliveredAt?.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}
+                ,
+              </p>
+              <p>
+                {order?.delivery.deliveredAt?.toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
             </div>
           </div>
         ) : order.status === "CANCELLED" ? (
@@ -712,11 +790,17 @@ export const SupplierOrderListItem = ({
             </p>
             <div className=" flex gap-2">
               <p className="text-md font-medium">
-                {order?.requestedStartDate.toLocaleDateString()}
+                {order?.requestedStartDate.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}
               </p>
               -
               <p className="text-md font-medium">
-                {order?.requestedEndDate.toLocaleDateString()}
+                {order?.requestedEndDate.toLocaleDateString(undefined, {
+                  day: "2-digit",
+                  month: "2-digit",
+                })}
               </p>
             </div>
           </div>
