@@ -29,7 +29,8 @@
         "totalItems": "Total Items",
         "lowStock": "Low Stock",
         "outOfStock": "Out of Stock",
-        "addNewItem": "Add New Item"
+        "addNewItem": "Add New Item",
+        "newItemPlaceHolder": "Cheese Burguer"
     },
     "Stock": {
         "subtitle": "Manage your stock inventory",

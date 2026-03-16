@@ -87,6 +87,28 @@ export const itemSchema = z.object({
         })
     ).optional(),
 })
+
+export const catalogItemSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1, "Name is required"),
+    description: z.string().optional(),
+    price: z.coerce.number().min(0).optional(),
+    unitQty: z.number().positive("Quantity must be greater than 0").default(1),
+    stock: z.coerce.number().int().optional(),
+    unitId: z.string().min(1),
+    categoryId: z.string().optional(),
+    serviceId: z.string(),
+    type: z.enum(["STOCK", "SERVICE"]).default("SERVICE"),
+    CatalogItems: z.array(
+      z.object({
+        serviceStockItemId: z.string().min(1, "Stock item is required"),
+        stockItemId: z.string().min(1, "Stock item is required"),
+        quantity: z.coerce.number(),
+        usageType: z.enum(["UNIT", "QUANTITY"]).default("UNIT"),
+        })
+    ).optional(),
+})
+
 export const expenseSchema = z.object({
     id: z.string().optional(),
     description: z.string().optional(),

@@ -1,4 +1,7 @@
-import { ItemForm } from "@/components/ItemForm";
+import {
+  CatalogItemForm,
+  // ItemForm
+} from "@/components/ItemForm";
 // import { ProductForm } from "@/components/ProductForm";
 import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
@@ -32,7 +35,8 @@ export default async function NewProductPage({
           <span className="ep--back"></span>
         </Link>
       </div>
-      <ItemForm serviceId={session?.user.serviceId} />
+      {/* <ItemForm serviceId={session?.user.serviceId} /> */}
+      <CatalogItemForm serviceId={session?.user.serviceId} />
     </div>
   );
 }

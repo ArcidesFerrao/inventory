@@ -29,7 +29,9 @@
     "totalItems": "Total de Itens",
     "lowStock": "Stock Baixo",
     "outOfStock": "Sem Stock",
-    "addNewItem": "Adicionar Novo Item"
+    "addNewItem": "Adicionar Novo Item",
+    "newItemPlaceHolder": "Hamburguer Completo"
+
   },
   "Stock": {
     "subtitle": "Gerir o inventário de stock",

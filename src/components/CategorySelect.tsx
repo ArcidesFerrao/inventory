@@ -144,7 +144,7 @@ export function ProductsCategorySelect({
   };
 
   return (
-    <div className="self-start flex flex-col gap-1">
+    <div className="self-start flex flex-col gap-1 w-full">
       <label htmlFor="categoryId">{t("category")}</label>
       <div className="flex gap-2">
         <select
