@@ -173,9 +173,12 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
             {items.map((item) => {
               return (
                 <li key={item.id} className="flex justify-between items-center">
-                  <h3>{item.name}</h3>
+                  <div className="flex flex-col">
+                    <h3>{item.name}</h3>
+                    <p>{(item.price ?? 0).toFixed(2)} MZN</p>
+                  </div>
 
-                  <div className="sales-amount flex flex-wrap gap-2 items-center max-w-6/12">
+                  <div className="sales-amount flex gap-2 items-center max-w-6/12">
                     <div className="amount-btn flex items-center min-w-fit">
                       <button
                         className="px-3 py-1"
@@ -191,7 +194,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
                         +
                       </button>
                     </div>
-                    <span className="min-w-28">
+                    <span className="min-w-20">
                       <p>
                         {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
                       </p>
@@ -215,7 +218,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
         </div>
         <button
           onClick={() => handleCompleteSale()}
-          disabled={loading}
+          disabled={loading || totalItems === 0}
           className="complete-btn border px-4 py-2 rounded mt-4"
         >
           {loading ? "..." : st("completeSale")}

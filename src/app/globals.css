@@ -387,13 +387,27 @@ select {
   border-radius: 0.3rem;
 }
 
+/* .delete-button:hover, */
+.user-header a:hover,
+.complete-btn:hover,
+.edit-button:hover,
+.submit-button:hover,
+.add-product:hover {
+  translate: 0 -2px;
+  border-radius: 0;
+  border: solid 1px var(--foreground);
+  background-color: var(--hover-bg);
+}
+
 /* input:read-only, */
 
 .complete-btn:disabled,
 input[type="submit"]:disabled {
-  background-color: var(--foreground);
+  background-color: transparent;
   border: solid 1px var(--input-bg);
-  color: var(--input-bg);
+  opacity: 0.5;
+  translate: none;
+  /* color: var(--input-bg); */
 }
 
 /* .innovante {
@@ -486,18 +500,6 @@ fieldset div {
   border: solid 1px var(--input-bg);
   background-color: var(--input-bg);
   height: fit-content;
-}
-
-/* .delete-button:hover, */
-.user-header a:hover,
-.complete-btn:hover,
-.edit-button:hover,
-.submit-button:hover,
-.add-product:hover {
-  translate: 0 -2px;
-  border-radius: 0;
-  border: solid 1px var(--foreground);
-  background-color: var(--hover-bg);
 }
 
 li a {
@@ -924,7 +926,7 @@ nav {
 }
 .products-selection li {
   font-size: smaller;
-  padding-left: 0.2rem;
+  padding: 0.2rem;
 }
 .products-selection li:hover {
   background-color: var(--list-bg);

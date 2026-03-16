@@ -34,6 +34,9 @@ export default async function NewSale({
       },
       category: true,
     },
+    orderBy: {
+      name: "asc",
+    },
   });
 
   const mappedItems: SaleItemWithCatalogItems[] = items.map((item) => ({
