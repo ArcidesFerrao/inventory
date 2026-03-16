@@ -194,9 +194,11 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
                         +
                       </button>
                     </div>
-                    <span className="min-w-20">
+                    <span className="min-w-20 text-right">
                       <p>
-                        {((item.price ?? 0) * item.quantity).toFixed(2)} MZN
+                        {item.quantity === 0
+                          ? "—"
+                          : `${((item.price ?? 0) * item.quantity).toFixed(2)} MZN`}
                       </p>
                     </span>
                   </div>

@@ -297,84 +297,78 @@ export const ItemForm = ({
           )}
         </div>
         {type !== "STOCK" && (
-          <div className="flex flex-col gap-4">
-            <fieldset className="flex flex-col gap-4 p-4">
-              <legend className="font-semibold">{t("catalogItems")}</legend>
-              {recipeItems.map((stockItem, index) => {
-                return (
-                  <div
-                    key={stockItem.id}
-                    className="flex items-center justify-between"
+          <fieldset className="flex flex-col gap-4 p-4">
+            <legend className="font-semibold">{t("catalogItems")}</legend>
+            {recipeItems.map((stockItem, index) => {
+              return (
+                <div key={stockItem.id} className="flex justify-between">
+                  <label
+                    className="pl-2 py-1 font-light "
+                    htmlFor={`CatalogItems[${index}].quantity`}
                   >
-                    <label
-                      className="pl-2 py-1 font-light "
-                      htmlFor={`CatalogItems[${index}].quantity`}
+                    {stockItem.stockItem.name}
+                  </label>
+
+                  <div className="flex flex-col max-w-1/4 text-sm">
+                    <input
+                      type="number"
+                      className=""
+                      min={0}
+                      name={`CatalogItems[${index}].quantity`}
+                      value={stockItem.quantity}
+                      onChange={(e) => {
+                        const q = Number(e.target.value);
+                        setRecipeItems((prev) =>
+                          prev.map((ri) =>
+                            ri.id === stockItem.id
+                              ? {
+                                  ...ri,
+                                  quantity: q,
+                                }
+                              : ri,
+                          ),
+                        );
+                      }}
+                    />
+                    <select
+                      name={`CatalogItems[${index}].usageType`}
+                      value={stockItem.usageType}
+                      onChange={(e) => {
+                        const type = e.target.value as "UNIT" | "QUANTITY";
+
+                        setRecipeItems((prev) =>
+                          prev.map((ri) =>
+                            ri.id === stockItem.id
+                              ? { ...ri, usageType: type }
+                              : ri,
+                          ),
+                        );
+                      }}
                     >
-                      {stockItem.stockItem.name}
-                    </label>
-
-                    <div className="max-w-1/4 text-sm">
-                      <input
-                        type="number"
-                        className=""
-                        min={0}
-                        name={`CatalogItems[${index}].quantity`}
-                        value={stockItem.quantity}
-                        onChange={(e) => {
-                          const q = Number(e.target.value);
-                          setRecipeItems((prev) =>
-                            prev.map((ri) =>
-                              ri.id === stockItem.id
-                                ? {
-                                    ...ri,
-                                    quantity: q,
-                                  }
-                                : ri,
-                            ),
-                          );
-                        }}
-                      />
-                      <select
-                        name={`CatalogItems[${index}].usageType`}
-                        className="flex flex-col w-full"
-                        value={stockItem.usageType}
-                        onChange={(e) => {
-                          const type = e.target.value as "UNIT" | "QUANTITY";
-
-                          setRecipeItems((prev) =>
-                            prev.map((ri) =>
-                              ri.id === stockItem.id
-                                ? { ...ri, usageType: type }
-                                : ri,
-                            ),
-                          );
-                        }}
-                      >
-                        <option value="UNIT">Unit</option>
-                        {stockItem.stockItem.unit?.name !== "unit" && (
-                          <option value="QUANTITY">
-                            {stockItem.stockItem.unit?.name}
-                          </option>
-                        )}
-                      </select>
-                    </div>
-                    <>
-                      <input
-                        type="hidden"
-                        name={`CatalogItems[${index}].serviceStockItemId`}
-                        value={stockItem.id}
-                      />
-                      <input
-                        type="hidden"
-                        name={`CatalogItems[${index}].stockItemId`}
-                        value={stockItem.stockItemId}
-                      />
-                    </>
+                      <option value="UNIT">Unit</option>
+                      {stockItem.stockItem.unit?.name !== "unit" && (
+                        <option value="QUANTITY">
+                          {stockItem.stockItem.unit?.name}
+                        </option>
+                      )}
+                    </select>
                   </div>
-                );
-              })}
-            </fieldset>
-          </div>
+                  <>
+                    <input
+                      type="hidden"
+                      name={`CatalogItems[${index}].serviceStockItemId`}
+                      value={stockItem.id}
+                    />
+                    <input
+                      type="hidden"
+                      name={`CatalogItems[${index}].stockItemId`}
+                      value={stockItem.stockItemId}
+                    />
+                  </>
+                </div>
+              );
+            })}
+          </fieldset>
         )}
 
         <div className="flex flex-col gap-1">

@@ -23,9 +23,11 @@ export default async function NewProductPage({
     redirect("/register/service");
   }
   return (
-    <div className="flex flex-col gap-5 items-center w-full">
+    <div className="flex flex-col items-center w-full">
       <div className="flex items-center justify-between w-full">
-        <h1 className="text-xl font-semibold">{t("addNewItem")}</h1>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-xl font-semibold">{t("addNewItem")}</h1>
+        </div>
         <Link href={`/${locale}/service/products`}>
           <span className="ep--back"></span>
         </Link>
