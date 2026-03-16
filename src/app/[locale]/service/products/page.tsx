@@ -18,7 +18,11 @@ export default async function ItemsPage() {
     include: {
       category: true,
     },
+    orderBy: {
+      name: "asc",
+    },
   });
+
   const serviceStockItems = await db.serviceStockItem.findMany({
     where: {
       serviceId: session.user.serviceId,
