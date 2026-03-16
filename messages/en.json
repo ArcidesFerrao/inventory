@@ -392,7 +392,11 @@
         "soldProducts": "Sold Products",
         "datesRequired": "Start and End dates required",
         "processOrderError": "Order not processed successfully",
-        "placeOrderSuccess": "Order Placed Successfuly"
+        "placeOrderSuccess": "Order Placed Successfuly",
+        "autoCalculated": "Auto Calculated",
+        "addIngredientsToCalculate": "Add Ingredients to Calculate",
+        "noIngredientsYet": "No Ingredients Yet",
+        "addIngredient":"Add Ingredient"
     },
     "Loading": {
         "loading": "Loading...",

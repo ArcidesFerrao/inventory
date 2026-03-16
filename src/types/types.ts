@@ -1,4 +1,4 @@
-import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Item, StockItem, Order, OrderItem,  Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier, User, ServiceStockItem, AuditLog} from "@/generated/prisma/client";
+import { ActivityLog, BusinessType, Category, Delivery, DeliveryItem, Item, StockItem, Order, OrderItem,  Purchase, PurchaseItem, RecipeItem, Sale, SaleItem,  Service,  Supplier, User, ServiceStockItem, AuditLog, Unit} from "@/generated/prisma/client";
 
 export type StockUsage = {
   baseQty: number;
@@ -217,6 +217,30 @@ export type ItemWithUnit = Item & {
     id: string;
     // type: $Enums.CategoryType;
   } | null;
+  CatalogItems?: {
+    serviceStockItemId: string;
+    quantity: number;
+    usageType: string;
+  }[];
+};
+export type ItemWithUnitAndCatalog = Item & {
+  Unit: {
+    name: string;
+    id: string;
+    description: string | null;
+  } | null;
+  Category: {
+    name: string;
+    id: string;
+    // type: $Enums.CategoryType;
+  } | null;
+  CatalogItems: (RecipeItem & {
+    serviceStockItem: ServiceStockItem & {
+      stockItem: StockItem & {
+        Unit: Unit
+      }
+    }
+  })[]
 };
 
 

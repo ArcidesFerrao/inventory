@@ -393,7 +393,13 @@
     "datesRequired": "Data Inicial e Final necessarias",
         "processOrderError": "Pedido nao processado",
         "placeOrderSuccess": "Pedido Criado com Sucesso",
-        "New customers": "Novos clientes"
+        "New customers": "Novos clientes",
+        "autoCalculated": "Calculado automaticamente",
+        "addIngredientsToCalculate": "Adiciona ingredientes para calcular",
+        "noIngredientsYet": "Nenhum ingrediente adicionado",
+        "addIngredient":"Adicionar ingrediente",
+        "usageType": "Uso",
+        "ingredients": "Ingredientes"
   },
   "Loading": {
     "loading": "A carregar...",

@@ -1,4 +1,7 @@
-import { ItemForm } from "@/components/ItemForm";
+import {
+  CatalogItemForm,
+  //  ItemForm
+} from "@/components/ItemForm";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -22,6 +25,19 @@ export default async function EditProductPage(props: { params: Params }) {
     include: {
       category: true,
       unit: true,
+      CatalogItems: {
+        include: {
+          serviceStockItem: {
+            include: {
+              stockItem: {
+                include: {
+                  unit: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
   if (!item) return <div>{t("notFoundItem")}</div>;
@@ -31,7 +47,7 @@ export default async function EditProductPage(props: { params: Params }) {
       <h1 className="text-xl font-semibold">
         {t("editItem")}: {item.name}
       </h1>
-      <ItemForm
+      <CatalogItemForm
         serviceId={item.serviceId}
         item={{
           ...item,
