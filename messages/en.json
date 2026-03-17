@@ -486,6 +486,7 @@
         "role": "Role",
         "status": "Status",
         "complete": "Complete",
+        "completed": "Completed",
         "active": "Active",
         "createdAt": "Created At",
         "from": "From",

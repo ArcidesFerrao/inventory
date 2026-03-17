@@ -168,30 +168,6 @@ export default async function OrderPage(props: { params: Params }) {
               </div>
             </div>
             <div className="delivery-settings flex flex-col justify-between">
-              <div className="delivery-status flex flex-col gap-1">
-                <button
-                  disabled
-                  className="text-sm font-light text-center max-h-fit"
-                >
-                  {order.delivery.status}
-                </button>
-                {order.delivery.status === "COMPLETED" && (
-                  <>
-                    <p className="text-xs font-light ">
-                      {dt("deliveredDate")}:{" "}
-                      {order.delivery.deliveredAt?.toLocaleDateString()}
-                    </p>
-                    <p className="text-xs font-light ">
-                      {dt("deliveredTime")}:{" "}
-                      {order.delivery.deliveredAt?.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                    </p>
-                  </>
-                )}
-              </div>
               {order.delivery.status === "COMPLETED" && (
                 <div>
                   {order.delivery.rating !== null ? (
@@ -220,6 +196,34 @@ export default async function OrderPage(props: { params: Params }) {
                   )}
                 </div>
               )}
+              <div className="delivery-status flex flex-col gap-1">
+                {order.delivery.status !== "COMPLETED" && (
+                  <button
+                    disabled
+                    className="text-sm font-light text-center max-h-fit"
+                  >
+                    {t(
+                      order.delivery.status.toLocaleLowerCase(),
+                    ).toLocaleUpperCase()}
+                  </button>
+                )}
+                {order.delivery.status === "COMPLETED" && (
+                  <>
+                    <p className="text-xs font-light ">
+                      {dt("deliveredDate")}:{" "}
+                      {order.delivery.deliveredAt?.toLocaleDateString()}
+                    </p>
+                    <p className="text-xs font-light ">
+                      {dt("deliveredTime")}:{" "}
+                      {order.delivery.deliveredAt?.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>

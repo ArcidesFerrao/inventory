@@ -77,7 +77,7 @@ export const ServiceNav = () => {
         />
         <NavLink
           href={`/${base}/service/logs`}
-          label={t("activityLogs")}
+          label={t("logs")}
           icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
@@ -118,7 +118,7 @@ export const SupplyNav = () => {
         />
         <NavLink
           href={`/${base}/supply/logs`}
-          label={t("activityLogs")}
+          label={t("logs")}
           icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
@@ -168,7 +168,7 @@ export const AdminNav = () => {
         />
         <NavLink
           href={`/${base}/admin/activity`}
-          label={t("activityLogs")}
+          label={t("logs")}
           icon={<span className="icon-park-twotone--log"></span>}
         />
         <NavLink
