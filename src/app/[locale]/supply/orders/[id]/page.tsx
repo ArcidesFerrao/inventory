@@ -166,7 +166,7 @@ export default async function OrderPage(props: { params: Params }) {
                   // className="flex"
                   href={`/${locale}/supply/orders/delivery/${order?.delivery.id}`}
                 >
-                  <h3 className="font-medium py-2">
+                  <h3 className="font-medium pb-2">
                     {t("delivery")} #{order?.delivery.id.slice(0, 5)}...
                   </h3>
                 </Link>
@@ -185,11 +185,11 @@ export default async function OrderPage(props: { params: Params }) {
                   </p>
                 )}
               </div>
-              <button disabled className="text-sm font-light text-center">
+              <button disabled className="text-sm font-light h-fit text-center">
                 {order?.delivery.status}
               </button>
             </div>
-            <div className="delivery-items px-4 py-2">
+            <div className="delivery-items py-2">
               <h4 className="font-medium">{t("items")}:</h4>
               <ul className="flex flex-col gap-2">
                 {order?.delivery.deliveryItems.map((item) => (

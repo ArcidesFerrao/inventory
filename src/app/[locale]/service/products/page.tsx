@@ -49,7 +49,7 @@ export default async function ItemsPage() {
             & {t("stockProducts")}
           </h2>
           <p className="text-md font-extralight">
-            Manage your{" "}
+            {t("manage")}{" "}
             {session.user.businessType === "SHOP"
               ? t("services")
               : session.user.businessType === "STORE"

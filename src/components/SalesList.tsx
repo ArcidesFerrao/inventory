@@ -87,7 +87,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
           toast.error(
             `${t("notEnough")} ${
               recipeItem.serviceStockItem.stockItem.name ?? t("ingredient")
-            } ${t("toMakeAnother")} ${item.name}`,
+            } `,
           );
           return;
         }
@@ -96,7 +96,7 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
           toast.error(
             `${t("notEnough")} ${
               recipeItem.serviceStockItem.stockItem.name ?? t("ingredient")
-            } ${t("toMakeAnother")} ${item.name}`,
+            }`,
           );
           return;
         }
@@ -172,7 +172,10 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
           <ul>
             {items.map((item) => {
               return (
-                <li key={item.id} className="flex justify-between items-center">
+                <li
+                  key={item.id}
+                  className={`${item.quantity === 0 ? "" : "product-selected"} flex justify-between items-center`}
+                >
                   <div className="flex flex-col">
                     <h3>{item.name}</h3>
                     <p>{(item.price ?? 0).toFixed(2)} MZN</p>
@@ -208,8 +211,9 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
           </ul>
         </div>
       </div>
-      <div className="order-summary flex flex-col gap-4 w-1/3">
-        <h2 className="text-xl font-medium">{st("orderSummary")}</h2>
+      <div className="order-summary flex flex-col gap-4 w-96">
+        <h2 className="text-lg font-medium">{st("orderSummary")}</h2>
+        {totalItems > 0}
         <div className="flex justify-between">
           <h3>{t("items")}:</h3>
           <p>{totalItems}</p>

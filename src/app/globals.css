@@ -928,6 +928,7 @@ nav {
   font-size: smaller;
   padding: 0.2rem;
 }
+.product-selected,
 .products-selection li:hover {
   background-color: var(--list-bg);
   border-radius: 0.4rem;

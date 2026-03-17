@@ -509,6 +509,7 @@
         "type": "Type",
         "entity": "Entity",
         "details": "Details",
+        "manage": "Manage",
         "timestamp": "Timestamp",
         "viewDetail": "View Detail",
         "search": "Search",
