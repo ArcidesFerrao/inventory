@@ -19,11 +19,13 @@ export const NavLink = ({ href, icon, label }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className={`py-2 px-6 flex items-center gap-2 ${
+      className={`py-2 px-4 flex items-center gap-2 ${
         isActivated ? "is-active" : ""
       } `}
     >
-      {icon}
+      <NavDot />
+
+      {/* {icon} */}
       <li className="whitespace-nowrap">{label}</li>
     </Link>
   );
@@ -35,12 +37,17 @@ export const HomeNavLink = ({ href, icon, label }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className={`py-2 px-6 flex items-center gap-2 ${
+      className={`py-2 px-4 flex items-center gap-2 ${
         isActive ? "is-active" : ""
       } `}
     >
-      {icon}
+      <NavDot />
+      {/* {icon} */}
       <li className="whitespace-nowrap">{label}</li>
     </Link>
   );
+};
+
+const NavDot = () => {
+  return <div className="nav-dot"></div>;
 };

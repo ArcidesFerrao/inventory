@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 export default async function ItemsPage() {
   const session = await auth();
   const t = await getTranslations("Common");
+  const iMsg = await getTranslations("Item");
 
   if (!session?.user.serviceId) redirect("/login");
 
@@ -48,15 +49,7 @@ export default async function ItemsPage() {
                 : t("menu")}{" "}
             & {t("stockProducts")}
           </h2>
-          <p className="text-md font-extralight">
-            {t("manage")}{" "}
-            {session.user.businessType === "SHOP"
-              ? t("services")
-              : session.user.businessType === "STORE"
-                ? t("items")
-                : t("menu")}{" "}
-            {t("and")} {t("stock")} {t("inventory")}
-          </p>
+          <p className="text-md font-extralight">{iMsg("itemSubtitle")}</p>
         </div>
       </div>
       <MenuAndStock

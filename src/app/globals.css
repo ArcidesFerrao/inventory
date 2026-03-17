@@ -1038,3 +1038,14 @@ nav {
 .confirm-delivery-btn {
   background-color: #086636;
 }
+
+.is-active .nav-dot {
+  opacity: 0.3;
+}
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--foreground);
+  opacity: 0;
+}

@@ -22,6 +22,7 @@
     "Item": {
         "editItem": "Edit Item",
         "editing": "Editing",
+        "itemSubtitle": "Easily manage your inventory",
         "subtitle": "Fill the form to edit the Stock Item",
         "description": "Manage your item catalog and inventory",
         "stockItemName": "Stock Item Name",

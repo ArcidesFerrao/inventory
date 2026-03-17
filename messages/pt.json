@@ -22,6 +22,8 @@
   "Item": {
     "editItem": "Editar Item",
     "editing": "A editar",
+        "itemSubtitle": "Gerencie e consulte seu inventário com facilidade",
+    
     "subtitle": "Preencha o formulário para editar o item em stock",
     "description": "Gerir o catálogo de itens e inventário",
     "stockItemName": "Nome do Item em Stock",
