@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { HomeNavLink, NavLink } from "./NavLink";
 import { NotificationBell } from "./Bell";
 import { LogOutButton } from "./LogOutButton";
@@ -22,6 +22,8 @@ export const MenuButton = ({
   const t = useTranslations("Common");
 
   const [showMenu, setShowMenu] = useState(false);
+
+  const closeMenu = () => setShowMenu(false);
   return (
     <div className="nav-menu-btn absolute z-10 top-8  right-4">
       {!showMenu ? (
@@ -53,30 +55,28 @@ export const MenuButton = ({
               <ul className="flex flex-col gap-2">
                 <HomeNavLink
                   href={`/${locale}/supply`}
+                  onClick={() => setShowMenu(false)}
                   label={t("dashboard")}
-                  icon={<span className="mage--dashboard-fill"></span>}
                 />
                 <NavLink
                   href={`/${locale}/supply/products`}
                   label="Stock"
-                  icon={<span className="ant-design--product-filled"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/supply/orders`}
                   label={t("orders")}
-                  icon={<span className="carbon--sales-ops"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/supply/logs`}
                   label={t("logs")}
-                  icon={<span className="icon-park-twotone--log"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/supply/settings`}
                   label={t("settings")}
-                  icon={
-                    <span className="icon-park-outline--setting-one"></span>
-                  }
+                  onClick={closeMenu}
                 />
               </ul>
             )}
@@ -85,39 +85,37 @@ export const MenuButton = ({
                 <HomeNavLink
                   href={`/${locale}/service`}
                   label={t("dashboard")}
-                  icon={<span className="mage--dashboard-fill"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/service/products`}
                   label={t("items")}
-                  icon={<span className="ant-design--product-filled"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/service/purchases`}
                   label={t("purchases")}
-                  icon={<span className="bxs--purchase-tag"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/service/sales`}
+                  onClick={closeMenu}
                   label={t("sales")}
-                  icon={<span className="carbon--sales-ops"></span>}
                 />
                 <NavLink
                   href={`/${locale}/service/expenses`}
                   label={t("expenses")}
-                  icon={<span className="mdi--cart-sale"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/service/logs`}
                   label={t("logs")}
-                  icon={<span className="icon-park-twotone--log"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/service/settings`}
                   label={t("settings")}
-                  icon={
-                    <span className="icon-park-outline--setting-one"></span>
-                  }
+                  onClick={closeMenu}
                 />
               </ul>
             )}
@@ -126,34 +124,32 @@ export const MenuButton = ({
                 <HomeNavLink
                   href={`/${locale}/admin`}
                   label={t("dashboard")}
-                  icon={<span className="mage--dashboard-fill"></span>}
+                  onClick={() => setShowMenu(false)}
                 />
                 <NavLink
                   href={`/${locale}/admin/users`}
+                  onClick={closeMenu}
                   label={t("users")}
-                  icon={<span className="ant-design--product-filled"></span>}
                 />
                 <NavLink
                   href={`/${locale}/admin/products`}
                   label={t("items")}
-                  icon={<span className="carbon--sales-ops"></span>}
+                  onClick={closeMenu}
                 />
                 <NavLink
                   href={`/${locale}/admin/orders`}
+                  onClick={closeMenu}
                   label={t("orders")}
-                  icon={<span className="carbon--sales-ops"></span>}
                 />
                 <NavLink
                   href={`/${locale}/admin/activity`}
+                  onClick={closeMenu}
                   label={t("logs")}
-                  icon={<span className="icon-park-twotone--log"></span>}
                 />
                 <NavLink
                   href={`/${locale}/admin/settings`}
                   label={t("settings")}
-                  icon={
-                    <span className="icon-park-outline--setting-one"></span>
-                  }
+                  onClick={closeMenu}
                 />
               </ul>
             )}

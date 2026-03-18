@@ -68,7 +68,7 @@ ProductsStockProps) => {
         <h4 className="text-md font-bold  text-nowrap">MZN {price},00</h4>
         <div className="flex items-center gap-2">
           <span
-            className={`span-dot w-2 h-2 rounded-full ${indicator.dot} flex-shrink-0`}
+            className={`span-dot w-2 h-2 rounded-full ${indicator.dot} shrink-0`}
           />
           <p className={`text-xs font-light ${indicator.text}`}>
             Stock: {stock}
