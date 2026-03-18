@@ -237,6 +237,10 @@ body {
   }
 }
 
+main {
+  gap: 1rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -1048,4 +1052,8 @@ nav {
   border-radius: 50%;
   background: var(--foreground);
   opacity: 0;
+}
+
+.span-dot {
+  opacity: 0.35;
 }

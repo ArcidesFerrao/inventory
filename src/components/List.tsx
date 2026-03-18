@@ -43,17 +43,39 @@ export const ListStockItem = ({
 ProductsStockProps) => {
   const { locale } = useParams();
 
+  const getStockIndicator = (stock: number) => {
+    if (stock === 0)
+      return { dot: "bg-red-500", text: "text-red-500", label: "Esgotado" };
+    if (stock <= 5)
+      return {
+        dot: "bg-amber-400",
+        text: "text-amber-400",
+        label: "Stock baixo",
+      };
+    return { dot: "bg-emerald-500", text: "text-emerald-500", label: null };
+  };
+
+  const indicator = getStockIndicator(stock);
+
   return (
     <li key={id} className="listing-stock-item flex p-4 justify-between">
       <div className="flex  gap-4 justify-between ">
         <Link href={`/${locale}/service/stock/${id}`}>
-          <h3 className="text-lg font-medium">{name}</h3>
+          <h3 className="text-md font-medium">{name}</h3>
         </Link>
       </div>
       <div className="flex flex-col items-end gap-1">
-        <h4 className="text-lg font-bold  text-nowrap">MZN {price},00</h4>
-        <div className="flex gap-2">
-          <p className="text-sm font-light">Stock: {stock}</p>
+        <h4 className="text-md font-bold  text-nowrap">MZN {price},00</h4>
+        <div className="flex items-center gap-2">
+          <span
+            className={`span-dot w-2 h-2 rounded-full ${indicator.dot} flex-shrink-0`}
+          />
+          <p className={`text-xs font-light ${indicator.text}`}>
+            Stock: {stock}
+            {indicator.label && (
+              <span className="ml-1 opacity-75">· {indicator.label}</span>
+            )}
+          </p>
           {/* <p className="text-sm font-light">
             Quantity: {stockQty} {unit}
           </p> */}
@@ -73,7 +95,7 @@ export const ListItem = ({ id, name, price }: ProductsProps) => {
       </Link>
       {/* </div> */}
       {/* <div className="flex flex-col items-end gap-2"> */}
-      <h4 className="text-lg font-bold text-nowrap ">MZN {price},00</h4>
+      <h4 className="text-md font-bold text-nowrap ">MZN {price},00</h4>
       {/* </div> */}
     </li>
   );
