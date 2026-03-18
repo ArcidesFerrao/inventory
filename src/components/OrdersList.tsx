@@ -102,13 +102,14 @@ export const OrdersList = ({
           {items.map((item) => (
             <li
               key={item.id}
-              className="flex justify-between items-center py-2"
+              className={`${item.quantity === 0 ? "" : "product-selected"} flex justify-between`}
             >
-              <div>
+              <div className="flex flex-col justify-between">
                 <h3>{item.name}</h3>
+                <p>{item.price?.toFixed(2) ?? 0} MZN</p>
               </div>
 
-              <div className="amount-input flex gap-4 items-center max-w-6/12">
+              <div className="amount-input flex gap-1 items-center max-w-6/12">
                 <div className="amount-btn flex gap-2 items-center ">
                   <button
                     className="px-2 py-1"

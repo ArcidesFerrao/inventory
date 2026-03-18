@@ -204,12 +204,12 @@ body {
   .menu-products {
     flex-direction: column;
   }
-  .products-selection li {
-    padding: 1rem !important;
-  }
   .dash-stats-details {
     grid-template-columns: 1fr !important;
   }
+  /* .products-selection li {
+    padding: 1rem !important;
+  } */
 }
 @media (max-width: 980px) {
   .amount-input,
@@ -930,7 +930,7 @@ nav {
 }
 .products-selection li {
   font-size: smaller;
-  padding: 0.2rem;
+  padding: 0.4rem;
 }
 .product-selected,
 .products-selection li:hover {
