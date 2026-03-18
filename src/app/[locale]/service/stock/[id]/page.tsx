@@ -63,6 +63,24 @@ export default async function StockItemPage(props: { params: Params }) {
   const unitName = item?.stockItem.unit?.name ?? "";
   const totalQty = item?.stockQty ?? 0;
 
+  // Movement type config — maps StockChange enum to label + color
+  const movementConfig: Record<string, { label: string; classes: string }> = {
+    PURCHASE: {
+      label: t("purchase"),
+      classes: "bg-emerald-500/10 text-emerald-500",
+    },
+    SALE: { label: t("sale"), classes: "bg-blue-500/10 text-blue-400" },
+    WASTE: { label: t("waste"), classes: "bg-red-500/10 text-red-400" },
+    ADJUSTMENT: {
+      label: t("adjustment"),
+      classes: "bg-amber-400/10 text-amber-400",
+    },
+    RECONCILIATION: {
+      label: t("reconciliation"),
+      classes: "bg-purple-500/10 text-purple-400",
+    },
+  };
+
   return (
     <div className="flex flex-col gap-4 w-full">
       <div className="flex justify-between w-full">
@@ -179,42 +197,58 @@ export default async function StockItemPage(props: { params: Params }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="text-left font-normal">{t("type")}</th>
                 <th className="text-left font-normal">{t("date")}</th>
+                <th className="text-left font-normal">{t("type")}</th>
                 <th className="text-left font-normal">{t("reference")}</th>
                 <th className="text-right font-normal">{t("quantity")}</th>
               </tr>
             </thead>
             <tbody>
-              {item?.stockMovements.map((mov) => (
-                <tr key={mov.id} className="border-t border-border/30">
-                  <td className="py-2 text-muted-foreground">
-                    {mov.timestamp.toLocaleDateString()}
-                  </td>
-                  <td className="py-2">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full ${
-                        mov.quantity > 0
-                          ? "bg-emerald-500/10 text-emerald-500"
-                          : "bg-red-500/10 text-red-400"
-                      }`}
-                    >
-                      {mov.quantity > 0 ? t("entry") : t("exit")}
-                    </span>
-                  </td>
-                  <td className="py-2 text-muted-foreground text-2xs">
-                    {`${mov.referenceId?.slice(0, 6) ?? "—"}...`}
-                  </td>
-                  <td
-                    className={`py-2 text-right font-medium ${
-                      mov.quantity > 0 ? "text-emerald-500" : "text-red-400"
-                    }`}
-                  >
-                    {mov.quantity > 0 ? "+" : ""}
-                    {mov.quantity}
-                  </td>
-                </tr>
-              ))}
+              {item?.stockMovements.map((mov) => {
+                const config = movementConfig[mov.changeType] ?? {
+                  label: mov.changeType,
+                  classes: "bg-muted text-muted-foreground",
+                };
+                const isPositive = ["PURCHASE"].includes(mov.changeType);
+                const isNegative = ["SALE", "WASTE"].includes(mov.changeType);
+                // ADJUSTMENT and RECONCILIATION can be either — keep the actual sign
+
+                const displayQty = isPositive
+                  ? `+${mov.quantity}`
+                  : isNegative
+                    ? `-${mov.quantity}`
+                    : mov.quantity > 0
+                      ? `+${mov.quantity}`
+                      : `${mov.quantity}`;
+
+                const qtyColor = isPositive
+                  ? "text-emerald-500"
+                  : isNegative
+                    ? "text-red-400"
+                    : mov.quantity >= 0
+                      ? "text-emerald-500"
+                      : "text-red-400";
+                return (
+                  <tr key={mov.id} className="border-t border-border/30">
+                    <td className="py-2 text-muted-foreground">
+                      {mov.timestamp.toLocaleDateString("pt-MZ")}
+                    </td>
+                    <td className="py-2">
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full ${config.classes}`}
+                      >
+                        {config.label}
+                      </span>
+                    </td>
+                    <td className="py-2 text-muted-foreground text-2xs">
+                      {mov.referenceId?.slice(0, 6)}...
+                    </td>
+                    <td className={`py-2 text-right font-medium ${qtyColor}`}>
+                      {displayQty}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <Link

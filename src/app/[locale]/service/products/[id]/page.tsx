@@ -35,10 +35,12 @@ export default async function ItemPage(props: { params: Params }) {
         orderBy: {
           timestamp: "desc",
         },
-        take: 1,
+        take: 5,
       },
     },
   });
+
+  if (!item) return <p>{t("notFoundItem")}</p>;
 
   const recipeItems = item?.CatalogItems.filter((i) => i.quantity > 0) ?? [];
 
@@ -64,7 +66,7 @@ export default async function ItemPage(props: { params: Params }) {
       </div>
 
       <div className="grid grid-cols-3 gap-3 w-full">
-        <div className="listing-stock-item p-4 rounded-lg flex flex-col gap-1">
+        <div className="listing-stock-item p-4 rounded-lg flex flex-col  justify-between gap-2">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">
             {t("status")}
           </p>
@@ -86,7 +88,7 @@ export default async function ItemPage(props: { params: Params }) {
           </span>
         </div>
 
-        <div className="listing-stock-item p-4 rounded-lg flex flex-col gap-1">
+        <div className="listing-stock-item p-4 rounded-lg flex flex-col justify-between gap-2">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">
             {t("category")}
           </p>
@@ -97,11 +99,11 @@ export default async function ItemPage(props: { params: Params }) {
           </p>
         </div>
 
-        <div className="listing-stock-item p-4 rounded-lg flex flex-col gap-1">
+        <div className="listing-stock-item p-4 rounded-lg flex flex-col gap-2">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">
             {t("type")}
           </p>
-          <span className="inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full w-fit bg-primary/10 text-primary border border-primary/20">
+          <span className="opacity-60 inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full w-fit bg-primary/10 text-primary border border-primary/20">
             {item?.type === "SERVICE" ? t("service") : t("stock")}
           </span>
         </div>
@@ -114,25 +116,47 @@ export default async function ItemPage(props: { params: Params }) {
             {t("price")}
           </p>
           <p className="text-xl font-semibold">{item?.price?.toFixed(2)} MZN</p>
-          <Link
-            href={`/service/products/${id}/price-history`}
-            className="text-xs text-primary hover:underline mt-1"
-          >
-            {t("viewPriceHistory")} ›
-          </Link>
+          {(item?.priceHistories.length ?? 0) > 0 && (
+            <div className="mt-2 flex flex-col gap-1">
+              <p className="text-xs text-muted-foreground">
+                {t("recentChanges")}:
+              </p>
+              {item?.priceHistories.map((h) => (
+                <div
+                  key={h.id}
+                  className="flex justify-between items-center text-xs"
+                >
+                  <span className="text-muted-foreground">
+                    {h.timestamp.toLocaleDateString("pt-MZ")}
+                  </span>
+                  <span className="text-muted-foreground line-through">
+                    {h.oldPrice.toFixed(2)}
+                  </span>
+                  <span className="text-emerald-500 font-medium">
+                    {h.newPrice.toFixed(2)} MZN
+                  </span>
+                  {h.reason && (
+                    <span className="text-muted-foreground/50 italic">
+                      {h.reason}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
-      <div className="listing-stock-item p-4 rounded-lg flex flex-col gap-1">
-        <p className="text-xs uppercase tracking-wider text-muted-foreground">
-          {t("recipeItems")}
-        </p>
-        <p className="text-xl font-semibold">{recipeItems.length}</p>
-        <p className="text-xs text-muted-foreground">{t("ingredients")}</p>
+        <div className="listing-stock-item p-4 rounded-lg flex flex-col gap-1">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">
+            {t("recipeItems")}
+          </p>
+          <p className="text-xl font-semibold">{recipeItems.length}</p>
+          <p className="text-xs text-muted-foreground">{t("ingredients")}</p>
+        </div>
       </div>
       {/* Recipe items table */}
       {item?.type === "SERVICE" && recipeItems.length > 0 && (
         <div className="listing-stock-item p-4 rounded-lg w-full">
-          <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
+          <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 opacity-85">
             {t("recipeItems")}
           </h3>
           <table className="w-full text-sm">
@@ -141,14 +165,16 @@ export default async function ItemPage(props: { params: Params }) {
                 <th className="text-left pb-2 font-normal">
                   {t("ingredient")}
                 </th>
-                <th className="text-right pb-2 font-normal">{t("quantity")}</th>
+                <th className="text-right pb-2 font-normal ">
+                  {t("quantity")}
+                </th>
               </tr>
             </thead>
             <tbody>
               {recipeItems.map((i) => (
                 <tr key={i.id} className="border-t border-border/30">
                   <td className="py-2">{i.stockItem?.name}</td>
-                  <td className="py-2 text-right font-medium text-primary">
+                  <td className="py-2  font-medium text-primary">
                     {i.quantity}
                   </td>
                 </tr>
@@ -161,15 +187,15 @@ export default async function ItemPage(props: { params: Params }) {
       {/* Description + dates */}
       {item?.description && (
         <div className="flex flex-col gap-2 flex-1">
-          <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+          <h3 className="text-xs uppercase tracking-wider text-muted-foreground opacity-85">
             {t("description")}
           </h3>
-          <div className="listing-stock-item p-3 rounded-lg text-sm text-muted-foreground">
+          <span className="product-detail-desc p-3 text-md min-h-20 font-light">
             {item.description}
-          </div>
+          </span>
         </div>
       )}
-      <div className="flex flex-col self-end gap-2 w-fit">
+      <div className="flex justify-between gap-2 opacity-65">
         <p className="text-xs font-thin">
           {t("createdAt")}: {item?.createdAt.toLocaleDateString()}
         </p>
