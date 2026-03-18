@@ -93,7 +93,7 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
       <button
         onClick={() => setIsDialogOpen(true)}
         disabled={isPending}
-        className="delete-button px-2 py-2 flex items-center"
+        className="delete-button px-2 py-2 flex w-fit h-max items-center"
       >
         <span className="mdi--delete"></span>
       </button>

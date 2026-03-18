@@ -179,10 +179,10 @@ export default async function StockItemPage(props: { params: Params }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="text-left pb-2 font-normal">{t("date")}</th>
-                <th className="text-left pb-2 font-normal">{t("type")}</th>
-                <th className="text-left pb-2 font-normal">{t("reference")}</th>
-                <th className="text-right pb-2 font-normal">{t("quantity")}</th>
+                <th className="text-left font-normal">{t("type")}</th>
+                <th className="text-left font-normal">{t("date")}</th>
+                <th className="text-left font-normal">{t("reference")}</th>
+                <th className="text-right font-normal">{t("quantity")}</th>
               </tr>
             </thead>
             <tbody>
@@ -202,8 +202,8 @@ export default async function StockItemPage(props: { params: Params }) {
                       {mov.quantity > 0 ? t("entry") : t("exit")}
                     </span>
                   </td>
-                  <td className="py-2 text-muted-foreground text-xs">
-                    {mov.referenceId ?? "—"}
+                  <td className="py-2 text-muted-foreground text-2xs">
+                    {`${mov.referenceId?.slice(0, 6) ?? "—"}...`}
                   </td>
                   <td
                     className={`py-2 text-right font-medium ${
