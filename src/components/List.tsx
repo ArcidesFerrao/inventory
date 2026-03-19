@@ -616,6 +616,29 @@ export const SupplierSaleListItem = ({
   );
 };
 
+const ENTITY_STYLES: Record<string, string> = {
+  SALE: "bg-green-400/10 text-green-400",
+  ORDER: "bg-blue-400/10 text-blue-400",
+  PURCHASE: "bg-amber-400/10 text-amber-400",
+  DELIVERY: "bg-purple-400/10 text-purple-400",
+  EXPENSE: "bg-red-400/10 text-red-400",
+  ITEM: "bg-base-content/10 text-base-content/60",
+};
+
+const SEVERITY_STYLES: Record<string, string> = {
+  INFO: "bg-base-content/5 text-base-content/40 border border-base-content/10",
+  WARNING: "bg-amber-400/10 text-amber-400",
+  ERROR: "bg-red-400/10 text-red-400",
+  SUCCESS: "bg-green-400/10 text-green-400",
+};
+
+// const DOT_STYLES: Record<string, string> = {
+//   INFO: "bg-base-content/30",
+//   WARNING: "bg-amber-400",
+//   ERROR: "bg-red-400",
+//   SUCCESS: "bg-green-400",
+// };
+
 export default function LogListItem({
   id,
   actionType,
@@ -633,37 +656,43 @@ export default function LogListItem({
 }) {
   const { locale } = useParams();
   const t = useTranslations("Common");
+  const entity = entityType.toUpperCase();
 
   return (
     <li className="list-logs flex justify-between ">
       <div className="flex flex-col gap-2">
         <div className="log-info flex gap-2 items-center">
           <span className="text-xs text-gray-400 text-wrap">{actionType}</span>
-          <span className="text-xs text-blue-400">
-            {entityType.toUpperCase()}
+          <span
+            className={`text-xs font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${
+              ENTITY_STYLES[entity] ?? "bg-base-content/10 text-base-content/60"
+            }`}
+          >
+            {entity}
           </span>
         </div>
-        <p className="log-desc text-sm ">{description}</p>
-        <div className="log-date flex gap-2 items-center">
-          <p className="font-extralight text-gray-400 text-xs">
-            {timestamp.toLocaleDateString(undefined, {
-              day: "2-digit",
-              month: "2-digit",
-            })}
-          </p>
-          <p className="font-extralight text-gray-400 text-xs">
-            {timestamp.toLocaleTimeString(undefined, {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
-        </div>
+        <p className="log-desc text-sm truncate ">{description}</p>
+        <p className="font-extralight text-gray-400 text-xs">
+          {timestamp.toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
       </div>
-      <div>
-        <div className="severity-logs  flex gap-2 p-1 text-xs font-extralight">
-          <span>{severity}</span>
-          <Link href={`/${locale}/service/logs/${id}`}>{t("view")}</Link>
-        </div>
+      <div className=" flex flex-col justify-between gap-2 p-1 text-xs font-extralight">
+        <span
+          className={`text-xs font-semibold px-1.5 py-0.5 rounded shrink-0 ${
+            SEVERITY_STYLES[severity] ?? SEVERITY_STYLES.INFO
+          }`}
+        >
+          {severity}
+        </span>
+        <Link
+          className="hover:underline"
+          href={`/${locale}/service/logs/${id}`}
+        >
+          {t("view")} →
+        </Link>
       </div>
     </li>
   );
