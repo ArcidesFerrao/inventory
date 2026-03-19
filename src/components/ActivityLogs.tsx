@@ -115,7 +115,7 @@ export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
             key={k.value}
             type="button"
             onClick={() => setSeverityFilter(k.value)}
-            className={`stats p-4 flex flex-col justify-between gap-1 text-left transition-all border ${
+            className={`stats p-3 flex flex-col justify-between gap-1 text-left transition-all border ${
               severityFilter === k.value
                 ? "border-base-content/30"
                 : "border-transparent"
