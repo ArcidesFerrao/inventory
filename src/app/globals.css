@@ -737,7 +737,7 @@ nav {
 .list-orders {
   transition: all 300ms ease-in;
   border: var(--admin-card) 2px solid;
-  padding: 0.6rem 1rem;
+  padding: 1rem;
   border-radius: 0.4rem;
   /* background-color: var(--list-bg); */
 }

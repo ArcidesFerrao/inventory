@@ -151,51 +151,42 @@ export const PurchaseListItem = ({
   purchases: PurchaseWithItems;
 }) => {
   const t = useTranslations("Common");
-  const pt = useTranslations("Purchases");
+  // const pt = useTranslations("Purchases");
   return (
     <li
       key={purchases.id}
       className="list-purchases flex flex-col gap-5 w-full"
     >
       <div className="purchase-header flex justify-between">
-        <div className="purchase-title flex flex-col gap-2">
-          <h3 className="flex flex-col gap-2 text-xl font-medium">
+        <div className="purchase-title flex flex-col justify-between gap-2">
+          {/* <h3 className="flex flex-col gap-2 text-xl font-medium">
             {pt("purchase")}
-            <p className="text-sm font-light ">
-              #{purchases.id.slice(0, 6)}...
-            </p>
-          </h3>
+          </h3> */}
+          <p className="text-xs font-light opacity-65">
+            #{purchases.id.slice(0, 6)}...
+          </p>
           <div className="purchase-title-details flex gap-4">
-            <div className="flex gap-2">
-              <span className="flex items-center">
+            {/* <span className="flex items-center">
                 <span className="formkit--date"></span>
-              </span>
-              <p className="text-sm font-light">
-                {purchases.timestamp.toLocaleDateString(undefined, {
-                  day: "2-digit",
-                  month: "2-digit",
-                })}{" "}
-                ,{" "}
-                {purchases.timestamp.toLocaleTimeString(undefined, {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
+              </span> */}
+            <p className="text-xs font-light">
+              {purchases.timestamp.toLocaleDateString(undefined, {
+                day: "2-digit",
+                month: "2-digit",
+              })}{" "}
+              ,{" "}
+              {purchases.timestamp.toLocaleTimeString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
             {purchases.PurchaseItem.length > 1 && (
-              <div className="flex items-center gap-2">
-                <span className="flex items-center">
-                  <span className="fluent--box-16-regular"></span>
-                </span>
-                <p className="text-sm font-light">
-                  {purchases.PurchaseItem.length} {t("items")}
-                </p>
-              </div>
+              <p className="text-sm font-light">
+                {purchases.PurchaseItem.length} {t("items")}
+              </p>
             )}
-            <div>
-              <p className="text-sm font-light">{purchases.paymentType}</p>
-            </div>
           </div>
+          <p className="text-xs font-light">{purchases.paymentType}</p>
         </div>
         <div className="flex flex-col gap-2">
           <p>{t("totalAmount")}</p>
@@ -247,19 +238,21 @@ export const OrderListItem = ({
   return (
     <li key={order.id} className="list-orders flex justify-between">
       <div className="flex flex-col gap-5">
-        <div className="order-header flex flex-col gap-2">
-          <Link href={`/${locale}/service/purchases/orders/${order.id}`}>
-            <h3 className="order-title flex flex-col gap-2  text-xl font-medium">
-              {ot("order")}
-              <p className="text-sm font-light ">#{order.id.slice(0, 6)}...</p>
-            </h3>
-          </Link>
-          <div className="order-info flex items-center gap-4">
-            <div className="flex gap-2 items-center">
-              <span className="flex items-center">
+        <div className="flex gap-4">
+          <div className="order-header flex flex-col gap-2">
+            <Link href={`/${locale}/service/purchases/orders/${order.id}`}>
+              <h3 className="order-title flex flex-col gap-1 text-xl font-medium">
+                {ot("order")}
+                <p className="text-xs font-light opacity-65">
+                  #{order.id.slice(0, 6)}...
+                </p>
+              </h3>
+            </Link>
+            <div className="order-info flex items-center">
+              {/* <span className="flex items-center">
                 <span className="formkit--date"></span>
-              </span>
-              <p className="text-sm font-light">
+              </span> */}
+              <p className="text-xs font-light">
                 {order.timestamp.toLocaleDateString(undefined, {
                   day: "2-digit",
                   month: "2-digit",
@@ -271,6 +264,21 @@ export const OrderListItem = ({
                 })}
               </p>
             </div>
+          </div>
+          <div className="flex flex-col justify-between gap-2 text-xs font-light">
+            <div className="order-status">
+              <button
+                disabled
+                className={`${
+                  order.status === "DELIVERED" ? "text-green-400" : ""
+                }`}
+              >
+                {t(order.status.toLocaleLowerCase()).toUpperCase()}
+              </button>
+            </div>
+            <p className="">
+              {totalItemsOrdered} {t("items")}
+            </p>
           </div>
         </div>
         {order.status === "DRAFT" ||
@@ -296,60 +304,12 @@ export const OrderListItem = ({
               </div>
             </div>
           ))}
-        {/* {order.status === "DELIVERED" ||
-          (order.status === "IN_DELIVERY" && (
-            <div className="confirm-delivery flex flex-col gap-2">
-              <div className="text-xs font-extralight flex flex-col gap-2">
-                <p className="text-xs font-extralight">
-                  {order.confirmedDeliveries.length}{" "}
-                  {order.confirmedDeliveries.length === 1
-                    ? "delivery"
-                    : "deliveries"}
-                </p>
-                {order.confirmedDeliveries.length > 0 &&
-                  order.confirmedDeliveries.map((delivery) => (
-                    <p key={delivery.id}>
-                      {delivery.status} at{" "}
-                      {delivery.deliveredAt?.toLocaleTimeString()},{" "}
-                      {delivery.deliveredAt?.toLocaleDateString()}
-                    </p>
-                  ))}
-              </div>
-              <ConfirmDeliveryButton
-                deliveryId={order.confirmedDeliveries[0]?.id || ""}
-                orderId={order.id}
-                supplierOrderId={order.supplierOrders[0]?.id || ""}
-                serviceId={order.serviceId || ""}
-                status={order.confirmedDeliveries[0]?.status || ""}
-                role="SERVICE"
-              />
-            </div>
-          ))} */}
       </div>
-      <div className="order-status flex flex-col justify-between">
-        <div className="flex flex-col gap-2 items-end">
-          <button
-            disabled
-            className={`text-xs ${
-              order.status === "DELIVERED" ? "text-green-400" : ""
-            }`}
-          >
-            {t(order.status.toLocaleLowerCase()).toUpperCase()}
-          </button>
-          <div className="flex items-center gap-2 text-sm font-light">
-            <span className="flex items-center">
-              <span className="fluent--box-16-regular"></span>
-            </span>
-            {totalItemsOrdered}
-            <p className="">{t("items")}</p>
-          </div>
-        </div>
-        <div className="order-amount text-end py-2">
-          <p className="text-sm ">{ot("orderAmount")}</p>
-          <h4 className="text-lg font-semibold  text-nowrap">
-            MZN {order.total.toFixed(2)}
-          </h4>
-        </div>
+      <div className="order-amount text-end self-end">
+        <p className="text-sm ">{ot("orderAmount")}</p>
+        <h4 className="text-lg font-semibold  text-nowrap">
+          MZN {order.total.toFixed(2)}
+        </h4>
       </div>
     </li>
   );
@@ -377,9 +337,9 @@ export const SaleListItem = ({ sale }: { sale: SaleWithItems }) => {
         onClick={() => setOpen((o) => !o)}
       >
         <div className="sale-title flex flex-col items-start gap-2">
-          <h3 className="flex flex-col gap-2  text-xl font-medium">
+          <h3 className="flex flex-col gap-1  text-xl font-medium">
             {st("sale")}
-            <p className="text-sm font-light ">#{sale.id.slice(0, 6)}...</p>
+            <p className="text-xs font-light ">#{sale.id.slice(0, 6)}...</p>
           </h3>
           <div className="sale-title-details flex gap-4">
             <div className="flex gap-2 items-center">
@@ -536,34 +496,27 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
       className="list-orders flex flex-col gap-2 justify-between"
     >
       <div className="sale-header flex justify-between">
-        <div className="expense-title flex  flex-col gap-2">
+        <div className="expense-title flex  flex-col gap-1 justify-between">
           <h3 className="flex gap-2 items-center text-lg font-medium">
             {et("expense")}:
-            <p className="text-md font-light ">{expense.description}</p>
+            <p className="text-sm font-light ">{expense.description}</p>
           </h3>
           <div className="expense-title-details flex gap-4">
-            <div className="flex gap-2">
-              <span className="flex items-center">
-                <span className="formkit--date"></span>
-              </span>
-              <p className="text-sm font-light">
-                {expense.timestamp.toLocaleDateString(undefined, {
-                  day: "2-digit",
-                  month: "2-digit",
-                })}{" "}
-                ,{" "}
-                {expense.timestamp.toLocaleTimeString(undefined, {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
-            <div className="flex items-center">
-              <p className="text-sm font-light">{expense.paymentMethod}</p>
-            </div>
+            <p className="text-xs font-light">
+              {expense.timestamp.toLocaleDateString(undefined, {
+                day: "2-digit",
+                month: "2-digit",
+              })}{" "}
+              ,{" "}
+              {expense.timestamp.toLocaleTimeString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+            <p className="text-xs font-light">{expense.paymentMethod}</p>
           </div>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           <p>{t("totalAmount")}</p>
           <h4 className="text-lg font-bold  text-nowrap">
             MZN {expense.amount.toFixed(2)}
