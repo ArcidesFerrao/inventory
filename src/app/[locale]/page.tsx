@@ -24,9 +24,9 @@ export default async function Home() {
         </div>
       ) : (
         /* ── Unauthenticated: landing page ── */
-        <div className="flex flex-col w-full gap-5">
+        <div className="flex flex-col w-full gap-10">
           {/* Hero */}
-          <div className="flex flex-col items-center text-center w-full gap-4">
+          <div className="flex flex-col items-center text-center w-full gap-5 px-4">
             <span className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full border border-base-content/15 text-base-content/50 ">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
               {ht("platformTagline")}

@@ -68,31 +68,34 @@ export default function LoginPage() {
   }
   return (
     <form onSubmit={handleSubmit} className="login-form flex flex-col gap-4 ">
-      <h1 className="text-2xl text-center">{a("login")}</h1>
       <div className="flex flex-col gap-2">
-        <label htmlFor="email">Email / {a("phone")}</label>
+        <h1 className="text-2xl text-center">{a("welcomeBack")}</h1>
+        <p className="text-sm font-thin text-center">{a("loginToAccount")}</p>
+      </div>
+      <div className="flex flex-col gap-2">
+        {/* <label htmlFor="email">Email / {a("phone")}</label> */}
+        <label htmlFor="email">Email</label>
         <input
           type="text"
           name="loginValue"
           id="loginValue"
-          // placeholder={"Email or " + a("phone")}
+          placeholder="...@email.com"
           value={loginValue}
           onChange={(e) => setLoginValue(e.target.value)}
         />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 ">
         <label htmlFor="password">{a("password")}</label>
         <input
           type="password"
           name="password"
           id="password"
+          placeholder="***********"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p>
-          <Link href="/forgot-password" className="text-sm ">
-            {a("forgotPassword")}
-          </Link>
+        <p className="text-sm text-right opacity-50 ease-in transition-opacity hover:opacity-75">
+          <Link href="/forgot-password">{a("forgotPassword")}</Link>
         </p>
       </div>
       <input
@@ -109,7 +112,7 @@ export default function LoginPage() {
           )}
         </>
       )}
-      <p>
+      <p className=" opacity-50 ease-in transition-opacity hover:opacity-75">
         {a("noAccount")} <Link href="/signup">{a("signUp")}</Link>.
       </p>
       <button

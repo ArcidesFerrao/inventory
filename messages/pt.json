@@ -210,6 +210,8 @@
     "newStockLevel": "Novo Nível de Stock"
   },
   "Auth": {
+    "welcomeBack": "Bem-vindo de volta",
+    "loginToAccount": "Entra na tua conta",
     "signInTitle": "Inicie sessão na sua conta",
     "email": "Endereço de e-mail",
     "phone": "Número de telefone",

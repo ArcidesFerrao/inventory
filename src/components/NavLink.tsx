@@ -11,10 +11,9 @@ import { usePathname } from "next/navigation";
 type NavLinkBtnProps = {
   href: string;
   label: string;
-  onClick: () => void;
 };
 
-export const NavLink = ({ href, label, onClick }: NavLinkBtnProps) => {
+export const NavLink = ({ href, label }: NavLinkBtnProps) => {
   const pathname = usePathname();
   const locale = useLocale();
 
@@ -22,7 +21,6 @@ export const NavLink = ({ href, label, onClick }: NavLinkBtnProps) => {
   return (
     <Link
       href={href}
-      onClick={onClick}
       className={`py-2 px-4 flex items-center gap-2 ${
         isActivated ? "is-active" : ""
       } `}
@@ -34,14 +32,13 @@ export const NavLink = ({ href, label, onClick }: NavLinkBtnProps) => {
     </Link>
   );
 };
-export const HomeNavLink = ({ href, label, onClick }: NavLinkBtnProps) => {
+export const HomeNavLink = ({ href, label }: NavLinkBtnProps) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
     <Link
       href={href}
-      onClick={onClick}
       className={`py-2 px-4 flex items-center gap-2 ${
         isActive ? "is-active" : ""
       } `}
