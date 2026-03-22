@@ -321,7 +321,7 @@ table {
   text-decoration: underline;
 } */
 
-.dash-menu button,
+/* .dash-menu button, */
 .login-button,
 .user-page button {
   background-color: var(--input-bg);
@@ -375,8 +375,8 @@ select {
   max-width: fit-content;
 }
 .dash-menu button {
-  padding: 2rem;
-  max-width: 12rem;
+  /* padding: 2rem; */
+  /* max-width: 12rem; */
   border: 1px solid var(--dash-bg);
 }
 
@@ -1057,4 +1057,31 @@ nav {
 
 .span-dot {
   opacity: 0.35;
+}
+
+.service-dot {
+  height: calc(var(--spacing) * 1.5);
+  width: calc(var(--spacing) * 1.5);
+  border-radius: calc(infinity * 1px);
+  background-color: var(--color-green-400);
+}
+
+.status-pill {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 20px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.pill-active {
+  background: rgba(29, 158, 117, 0.12);
+  color: #1d9e75;
+}
+
+.pill-new {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-tertiary);
+  border: 0.5px solid var(--color-border-tertiary);
 }

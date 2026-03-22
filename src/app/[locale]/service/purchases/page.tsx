@@ -8,42 +8,30 @@ export default async function PurchasesPage() {
   const session = await auth();
   const purchasesT = await getTranslations("Purchases");
 
-  if (!session?.user) redirect("/login");
+  const serviceId = session?.user.serviceId;
 
-  const purchasesCount = await db.purchase.count({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-  });
-  const ordersCount = await db.order.count({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-  });
-  const purchases = await db.purchase.findMany({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-    include: {
-      PurchaseItem: {
-        include: {
-          stockItem: true,
-          item: true,
+  if (!serviceId) redirect("/login");
+
+  const [purchases, orders, purchasesCount, ordersCount] = await Promise.all([
+    db.purchase.findMany({
+      where: { serviceId },
+      include: {
+        PurchaseItem: {
+          include: { stockItem: true, item: true },
         },
       },
-    },
-    orderBy: { timestamp: "desc" },
-    take: 10,
-  });
-
-  const orders = await db.order.findMany({
-    where: { serviceId: session.user.serviceId },
-    include: {
-      orderItems: true,
-    },
-    orderBy: { timestamp: "desc" },
-    take: 10,
-  });
+      orderBy: { timestamp: "desc" },
+      take: 10,
+    }),
+    db.order.findMany({
+      where: { serviceId },
+      include: { orderItems: true },
+      orderBy: { timestamp: "desc" },
+      take: 10,
+    }),
+    db.purchase.count({ where: { serviceId } }),
+    db.order.count({ where: { serviceId } }),
+  ]);
 
   return (
     <div className="flex flex-col gap-5 w-full">

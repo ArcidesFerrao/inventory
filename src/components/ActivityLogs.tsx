@@ -46,11 +46,6 @@ export function Logs({ logs }: { logs: ActivityLogsWithService[] }) {
   const warningCount = logs.filter((l) => l.severity === "WARNING").length;
   const errorCount = logs.filter((l) => l.severity === "ERROR").length;
 
-  // const totalLogs = logs.length;
-  // const infoLogs = logs.filter((log) => log.severity === "INFO");
-  // const warningLogs = logs.filter((log) => log.severity === "WARNING");
-  // const errorLogs = logs.filter((log) => log.severity === "ERROR");
-
   const filtered = useMemo(() => {
     return logs.filter((l) => {
       const matchSev =

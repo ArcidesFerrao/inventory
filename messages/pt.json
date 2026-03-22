@@ -157,7 +157,8 @@
     "activityDetails": "Detalhes da Atividade",
     "actionType": "Tipo de Ação",
     "entityType": "Tipo de Entidade",
-    "noLogs": "Nenhum registo encontrado"
+    "noLogs": "Nenhum registo encontrado",
+    "searchPlaceholder": "Procurar por ID..."
   },
   "Settings": {
     "title": "Definições",
@@ -679,7 +680,29 @@
     "accessDenied": "Acesso Negado",
     "selectCreateCategory": "Selecionar ou criar categoria",
     "createCategory": "Criar nova Categoria",
-    "businessType": "Tipo de Negócio"
+    "businessType": "Tipo de Negócio",
+    "allTypes": "Todos os Tipos",
+        "ingredients": "Ingredientes",
+"purchase": "Compra",
+        "sale":"Venda",
+        "expense":"Despesa",
+        "reference": "Referencia",
+        "stockValue": "Valor do Stock",
+        "minimum": "Minimo",
+        "usedInRecipes": "Usado em Receitas",
+        "quantityPerUnit": "Quantidade por Unidade",
+        "estimatedMax": "Maximo estimado",
+        "recentMovements": "Movimentos Recentes",
+        "date": "Data",
+        "viewAllMovements": "Ver todos os movimentos",
+        "lowStockAlert": "Alerta de Stock baixo",
+        "unitsRemaining": "Unidades restantes",
+        "considerOrdering": "Considere fazer o pedido.",
+        "currentStock": "Stock Atual",
+        "criticalMin": "Minimo Critico",
+        "waste": "Perda",
+        "adjustment": "Ajuste",
+        "reconciliation": "Reconciliacao"
   },
   "Status": {
     "delivery_arrived": "ENTREGA_CHEGOU",

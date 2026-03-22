@@ -47,25 +47,27 @@ export default async function ExpensesPage({
         }
       : undefined;
 
-  const expenses = await db.expense.findMany({
-    where: {
-      serviceId: session.user.serviceId,
-      ...(dateFilter && { timestamp: dateFilter }),
-    },
-    include: {
-      category: true,
-    },
-    orderBy: { timestamp: "desc" },
-  });
+  const [expenses, categories] = await Promise.all([
+    db.expense.findMany({
+      where: {
+        serviceId: session.user.serviceId,
+        ...(dateFilter && { timestamp: dateFilter }),
+      },
+      include: {
+        category: true,
+      },
+      orderBy: { timestamp: "desc" },
+    }),
 
-  const categories = await db.expenseCategory.findMany({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+    db.expenseCategory.findMany({
+      where: {
+        serviceId: session.user.serviceId,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    }),
+  ]);
 
   const filteredExpenses = expenses.filter((expense) => {
     const matchesSearch =

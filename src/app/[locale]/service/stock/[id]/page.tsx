@@ -88,7 +88,9 @@ export default async function StockItemPage(props: { params: Params }) {
       <div className="flex justify-between w-full">
         <div>
           <h2 className="text-2xl font-semibold">{item?.stockItem.name}</h2>
-          <p className="text-xs font-thin opacity-50">Id: {item?.id}</p>
+          <p className="text-xs font-thin opacity-50">
+            Id: {item?.id.slice(0, 6)}...
+          </p>
         </div>
         {/* <div className="flex gap-2 items-center"> */}
         <DeleteButton itemId={id} />
@@ -242,7 +244,7 @@ export default async function StockItemPage(props: { params: Params }) {
                         {config.label}
                       </span>
                     </td>
-                    <td className="py-2 text-muted-foreground text-2xs">
+                    <td className="py-2 text-muted-foreground text-xs lowercase font-light">
                       {mov.referenceId?.slice(0, 6)}...
                     </td>
                     <td className={`py-2 text-right font-medium ${qtyColor}`}>
