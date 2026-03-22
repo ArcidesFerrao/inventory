@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 type NavLinkBtnProps = {
   href: string;
   label: string;
+  onClick?: () => void;
 };
 
 export const NavLink = ({ href, label }: NavLinkBtnProps) => {

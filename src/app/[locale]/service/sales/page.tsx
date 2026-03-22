@@ -1,4 +1,4 @@
-import { SaleListItem } from "@/components/List";
+import { SaleListItem } from "@/components/SaleListItem";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTranslations } from "next-intl/server";

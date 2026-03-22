@@ -12,30 +12,32 @@ export default async function ItemsPage() {
 
   if (!session?.user.serviceId) redirect("/login");
 
-  const items = await db.item.findMany({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-    include: {
-      category: true,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  const [items, serviceStockItems] = await Promise.all([
+    db.item.findMany({
+      where: {
+        serviceId: session.user.serviceId,
+      },
+      include: {
+        category: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    }),
 
-  const serviceStockItems = await db.serviceStockItem.findMany({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-    include: {
-      stockItem: {
-        include: {
-          unit: true,
+    db.serviceStockItem.findMany({
+      where: {
+        serviceId: session.user.serviceId,
+      },
+      include: {
+        stockItem: {
+          include: {
+            unit: true,
+          },
         },
       },
-    },
-  });
+    }),
+  ]);
 
   return (
     <div className="products-list flex flex-col gap-4 w-full">

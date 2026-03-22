@@ -512,7 +512,7 @@ li a {
 
 .listing-item {
   background-color: var(--input-bg);
-  width: 380px;
+  /* width: 380px; */
   border-radius: 0.4rem;
 }
 

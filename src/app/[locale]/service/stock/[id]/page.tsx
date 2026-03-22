@@ -16,35 +16,37 @@ export default async function StockItemPage(props: { params: Params }) {
   const { id } = await props.params;
   const t = await getTranslations("Common");
 
-  const settings = await db.serviceSettings.findUnique({
-    where: {
-      serviceId: session.user.serviceId,
-    },
-    select: {
-      lowStockThreshold: true,
-    },
-  });
+  const [settings, item] = await Promise.all([
+    db.serviceSettings.findUnique({
+      where: {
+        serviceId: session.user.serviceId,
+      },
+      select: {
+        lowStockThreshold: true,
+      },
+    }),
 
-  const item = await db.serviceStockItem.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      stockItem: {
-        include: {
-          unit: true,
-        },
+    db.serviceStockItem.findUnique({
+      where: {
+        id,
       },
-      stockMovements: {
-        orderBy: { timestamp: "desc" },
-        take: 5,
-        include: {
-          stockItem: true,
+      include: {
+        stockItem: {
+          include: {
+            unit: true,
+          },
         },
+        stockMovements: {
+          orderBy: { timestamp: "desc" },
+          take: 5,
+          include: {
+            stockItem: true,
+          },
+        },
+        RecipeItems: true,
       },
-      RecipeItems: true,
-    },
-  });
+    }),
+  ]);
 
   const stockValue = (item?.stock ?? 0) * (item?.cost ?? 0);
   const criticalMin = settings?.lowStockThreshold ?? 10;

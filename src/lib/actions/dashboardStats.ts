@@ -665,3 +665,190 @@ export async function getAdminSalesStats() {
             salesData, totalSales
         },}
 }
+
+
+
+// ─── 1. Cash Flow (header numbers + trend chart) ──────────────────────────────
+export async function getCashFlowStats(serviceId: string, userId: string, period: Period = "monthly") {
+
+  return unstable_cache(
+    async () => {
+      const { startDate, endDate } = getDateRange(period);
+      const where = { serviceId: serviceId, timestamp: { gte: startDate, lte: endDate } };
+
+      const [totalEarnings, totalPurchases, totalExpenses, totalCogs, trendSales, trendPurchases] =
+        await Promise.all([
+          db.sale.aggregate({ where, _sum: { total: true } }),
+          db.purchase.aggregate({ where, _sum: { total: true } }),
+          db.expense.aggregate({ where, _sum: { amount: true } }),
+          db.sale.aggregate({ where, _sum: { cogs: true } }),
+          db.sale.findMany({ where, select: { timestamp: true, total: true } }),
+          db.purchase.findMany({ where, select: { timestamp: true, total: true } }),
+        ]);
+
+      const earnings = totalEarnings._sum.total || 0;
+      const purchases = totalPurchases._sum.total || 0;
+      const expenses = totalExpenses._sum.amount || 0;
+      const cogs = totalCogs._sum.cogs || 0;
+      const balance = earnings - purchases - expenses;
+
+      // Trend chart buckets
+      const buckets: Record<string, { revenue: number; purchases: number }> = {};
+      const dayLabel = (date: Date) =>
+        `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+      for (const sale of trendSales) {
+        const key = dayLabel(new Date(sale.timestamp));
+        if (!buckets[key]) buckets[key] = { revenue: 0, purchases: 0 };
+        buckets[key].revenue += Number(sale.total ?? 0);
+      }
+      for (const purchase of trendPurchases) {
+        const key = dayLabel(new Date(purchase.timestamp));
+        if (!buckets[key]) buckets[key] = { revenue: 0, purchases: 0 };
+        buckets[key].purchases += Number(purchase.total ?? 0);
+      }
+
+      const trendData = Object.entries(buckets)
+        .sort(([a], [b]) => {
+          const toNum = (s: string) => {
+            const [d, m] = s.split("/");
+            return Number(m) * 100 + Number(d);
+          };
+          return toNum(a) - toNum(b);
+        })
+        .map(([label, values]) => ({ label, ...values }));
+
+      return { earnings, purchases, expenses, balance, cogs, trendData };
+    },
+    [`cash-flow-${userId}-${period}`],
+    { tags: [`dashboard-stats-${userId}`], revalidate: 60 }
+  )();
+}
+
+// ─── 2. Profitability + Sales stats (statistics panel) ────────────────────────
+export async function getProfitStats(serviceId: string, userId: string, period: Period = "monthly") {
+
+  return unstable_cache(
+    async () => {
+      const { startDate, endDate } = getDateRange(period);
+      const where = { serviceId: serviceId, timestamp: { gte: startDate, lte: endDate } };
+
+      const [totalEarnings, totalCogs, totalExpenses, salesCount] = await Promise.all([
+        db.sale.aggregate({ where, _sum: { total: true } }),
+        db.sale.aggregate({ where, _sum: { cogs: true } }),
+        db.expense.aggregate({ where, _sum: { amount: true } }),
+        db.sale.count({ where }),
+      ]);
+
+      const earnings = totalEarnings._sum.total || 0;
+      const cogs = totalCogs._sum.cogs || 0;
+      const expenses = totalExpenses._sum.amount || 0;
+
+      const profit = earnings - cogs;
+      const netProfit = profit - expenses;
+      const grossMargin = earnings > 0 ? (profit / earnings) * 100 : 0;
+      const averageSaleValue = salesCount > 0 ? earnings / salesCount : 0;
+
+      return { profit, netProfit, grossMargin, salesCount, averageSaleValue };
+    },
+    [`profit-stats-${userId}-${period}`],
+    { tags: [`dashboard-stats-${userId}`], revalidate: 60 }
+  )();
+}
+
+// ─── 3. Inventory stats ────────────────────────────────────────────────────────
+export async function getInventoryStats(serviceId: string, userId: string, period: Period = "monthly") {
+
+  return unstable_cache(
+    async () => {
+      const serviceStockItems = await db.serviceStockItem.findMany({
+        where: { serviceId: serviceId },
+        include: { stockItem: true },
+      });
+
+      const inventoryValue = serviceStockItems.reduce((sum, item) => {
+        const unitCost = (item.stockItem.cost || 0) / (item.stockItem.unitQty || 1);
+        return sum + unitCost * (item.stockQty || 0);
+      }, 0);
+
+      const inventoryCount = serviceStockItems.reduce(
+        (sum, item) => sum + (item.stock || 0),
+        0
+      );
+
+      const lowStockItems = serviceStockItems.filter(
+        (item) => (item.stock || item.stock === 0) && item.stock < 10
+      );
+
+      return { inventoryValue, inventoryCount, lowStockItems, serviceStockItems };
+    },
+    [`inventory-stats-${userId}-${period}`],
+    { tags: [`dashboard-stats-${userId}`], revalidate: 60 }
+  )();
+}
+
+// ─── 4. Top items ──────────────────────────────────────────────────────────────
+export async function getTopItems(serviceId: string, userId: string, period: Period = "monthly") {
+
+  return unstable_cache(
+    async () => {
+      const { startDate, endDate } = getDateRange(period);
+
+      const mostPaidItems = await db.saleItem.groupBy({
+        by: ["itemId"],
+        where: { sale: { serviceId: serviceId, timestamp: { gte: startDate, lte: endDate } } },
+        _sum: { quantity: true },
+        orderBy: { _sum: { quantity: "desc" } },
+        take: 3,
+      });
+
+      const topItems = await Promise.all(
+        mostPaidItems.map(async (i) => {
+          if (!i.itemId) return null;
+          const item = await db.item.findUnique({ where: { id: i.itemId } });
+          return item ? { ...item, quantity: i._sum.quantity } : null;
+        })
+      );
+
+      return { topItems: topItems.filter(Boolean) };
+    },
+    [`top-items-${userId}-${period}`],
+    { tags: [`dashboard-stats-${userId}`], revalidate: 60 }
+  )();
+}
+
+// ─── 5. Recent sales ───────────────────────────────────────────────────────────
+export async function getRecentSales(serviceId: string, userId: string, period: Period = "monthly") {
+
+  return unstable_cache(
+    async () => {
+      const { startDate, endDate } = getDateRange(period);
+
+      const recentSales = await db.sale.findMany({
+        where: { serviceId: serviceId, timestamp: { gte: startDate, lte: endDate } },
+        orderBy: { timestamp: "desc" },
+        take: 5,
+      });
+
+      return { recentSales };
+    },
+    [`recent-sales-${userId}-${period}`],
+    { tags: [`dashboard-stats-${userId}`], revalidate: 60 }
+  )();
+}
+
+// ─── 6. Service name (for the header) ─────────────────────────────────────────
+export async function getServiceName(serviceId: string, userId: string) {
+
+  return unstable_cache(
+    async () => {
+      const service = await db.service.findUnique({
+        where: { id: serviceId },
+        select: { businessName: true },
+      });
+      return { name: service?.businessName || "Service" };
+    },
+    [`service-name-${userId}`],
+    { tags: [`dashboard-stats-${userId}`], revalidate: 3600 }
+  )();
+}
