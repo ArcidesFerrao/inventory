@@ -677,8 +677,7 @@
         "businessType": "Business Type",
         "allTypes": "All types",
         "ingredients": "Ingredients",
-"purchase": "Purchase",
-
+        "purchase": "Purchase",
         "sale":"Sale",
         "expense":"Expense",
         "reference": "Reference",
