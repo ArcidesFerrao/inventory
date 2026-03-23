@@ -1085,3 +1085,19 @@ nav {
   color: var(--color-text-tertiary);
   border: 0.5px solid var(--color-border-tertiary);
 }
+
+.verified {
+  font-size: 11px;
+  color: #1d9e75;
+  background: rgba(29, 158, 117, 0.1);
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+.unverified {
+  font-size: 11px;
+  color: #ba7517;
+  background: rgba(186, 117, 23, 0.1);
+  padding: 2px 7px;
+  border-radius: 20px;
+}
