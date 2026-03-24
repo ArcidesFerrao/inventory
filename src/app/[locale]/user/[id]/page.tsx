@@ -1,9 +1,16 @@
-import { LogOutButton } from "@/components/LogOutButton";
+import {
+  AdminLink,
+  DashboardMenuLink,
+  LogOutButton,
+  ServiceLink,
+  SupplierLink,
+} from "@/components/LogOutButton";
 import { db } from "@/lib/db";
 import authCheck from "@/lib/authCheck";
 import { redirect } from "next/navigation";
 import UserProfile from "@/components/UserProfile";
 import { getTranslations } from "next-intl/server";
+
 type Params = Promise<{ id: string }>;
 
 export default async function UserPage(props: { params: Params }) {
@@ -43,7 +50,15 @@ export default async function UserPage(props: { params: Params }) {
             {t("userId")}: {id}...{" "}
           </p>
         </div>
-        <LogOutButton />
+        <div className="logout-button flex flex-col gap-2">
+          <div className="flex items-center gap-2 justify-end">
+            {user.role === "SERVICE" && <ServiceLink />}
+            {user.role === "SUPPLIER" && <SupplierLink />}
+            {user.role === "ADMIN" && <AdminLink />}
+            <LogOutButton />
+          </div>
+          <DashboardMenuLink />
+        </div>
       </div>
       <UserProfile user={user} />
     </section>

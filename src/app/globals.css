@@ -1080,6 +1080,14 @@ nav {
   color: #1d9e75;
 }
 
+.menu-active-hover:hover {
+  background: rgba(29, 158, 117, 0.5);
+  color: rgb(29, 158, 117, 0.3);
+  border-radius: 0;
+  translate: 0 -2px;
+  border: solid 1px var(--foreground);
+}
+
 .pill-new {
   background: var(--color-background-tertiary);
   color: var(--color-text-tertiary);

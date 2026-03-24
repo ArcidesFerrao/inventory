@@ -702,7 +702,20 @@
         "criticalMin": "Minimo Critico",
         "waste": "Perda",
         "adjustment": "Ajuste",
-        "reconciliation": "Reconciliacao"
+        "reconciliation": "Reconciliação",
+        "lastUpdate": "Ultima Alteração",
+        "accountSecurity": "Segurança da Conta",
+  "password": "Palavra-passe",
+  "changePassword": "Alterar Palavra-passe",
+  "verifiedEmail": "Email Verificado",
+  "verifiedPhoneNumber": "Número de Telefone Verificado",
+  "dangerousZone": "Zona Perigosa",
+  "deleteAccount": "Eliminar Conta",
+  "delete": "Eliminar",
+  "deleteAllData": "Esta ação é irreversível! Apaga todos os dados.",
+        "businessInformation": "Informação do Negócio",
+        "personalData": "Dados Pessoais"
+
   },
   "Status": {
     "delivery_arrived": "ENTREGA_CHEGOU",

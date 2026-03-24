@@ -1,14 +1,11 @@
 "use client";
 
-import { useLocale } from "@/lib/useLocale";
 import type { UserProfile } from "@/types/types";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useState } from "react";
 import UserSettings from "./UserSettings";
 
 export default function UserProfile({ user }: { user: UserProfile }) {
-  const locale = useLocale();
   const t = useTranslations("Common");
   const supt = useTranslations("Supplier");
 
@@ -49,25 +46,10 @@ export default function UserProfile({ user }: { user: UserProfile }) {
             {t("security")}
           </button>
         </div>
-        {user.role === "SERVICE" && (
-          <Link href={`/${locale}/service`}>
-            <span>{t("servicesDashboard")}</span>
-          </Link>
-        )}
-        {user.role === "SUPPLIER" && (
-          <Link href={`/${locale}/supply`}>
-            <span>{t("suppliersDashboard")}</span>
-          </Link>
-        )}
-        {user.role === "ADMIN" && (
-          <Link href={`/${locale}/admin`}>
-            <span>{t("adminDashboard")}</span>
-          </Link>
-        )}
       </div>
       {view === "personal" && (
         <div className="personal-section flex flex-col gap-2">
-          <h3>Personal Data</h3>
+          <h3>{t("personalData")}</h3>
           <div className=" flex justify-between flex-wrap gap-5">
             <div className=" flex flex-col gap-5">
               <div className="flex flex-col gap-2">
@@ -177,7 +159,7 @@ export default function UserProfile({ user }: { user: UserProfile }) {
           )}
           {user.role === "SERVICE" && user.Service && (
             <div className="details-section flex flex-col gap-2">
-              <h3>Business Information</h3>
+              <h3>{t("businessInformation")}</h3>
               <div className=" flex gap-5">
                 <div className="flex flex-col justify-between gap-2">
                   <div className="flex flex-col">

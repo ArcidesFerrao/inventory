@@ -696,7 +696,20 @@
         "criticalMin": "Critical Min.",
         "waste": "Waste",
         "adjustment": "Adjustment",
-        "reconciliation": "Reconciliation"
+        "reconciliation": "Reconciliation",
+        "lastUpdate": "Last Update",
+        "accountSecurity": "Account Security",
+        "password": "Password",
+        "changePassword": "Change Password",
+        "verifiedEmail": "Verified Email",
+        "verifiedPhoneNumber": "Verified Phone Number",
+        "dangerousZone": "Dangerous Zone",
+        "deleteAccount": "Delete Account",
+        "delete": "Delete",
+        "deleteAllData": "This action is irreversible! It daletes all the data.",
+        "businessInformation": "Business Information",
+        "personalData": "Personal Data"
+
     },
     "Status": {
         "delivery_arrived": "DELIVERY_ARRIVED",
