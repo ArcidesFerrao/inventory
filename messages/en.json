@@ -708,7 +708,12 @@
         "delete": "Delete",
         "deleteAllData": "This action is irreversible! It daletes all the data.",
         "businessInformation": "Business Information",
-        "personalData": "Personal Data"
+        "personalData": "Personal Data",
+        "deliveryCompletedNote": "Clients stock updated automatically.",
+        "completedDelivery": "Delivery Completed",
+        "orderedQty": "Ordered Qty",
+        "deliveredQty": "Delivered Qty",
+        "scheduling": "Scheduling"
 
     },
     "Status": {

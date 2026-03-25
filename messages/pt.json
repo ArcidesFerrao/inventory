@@ -714,7 +714,13 @@
   "delete": "Eliminar",
   "deleteAllData": "Esta ação é irreversível! Apaga todos os dados.",
         "businessInformation": "Informação do Negócio",
-        "personalData": "Dados Pessoais"
+        "personalData": "Dados Pessoais",
+        "deliveryCompletedNote": "O stock do cliente foi actualizado automaticamente.",
+        "completedDelivery": "Entrega concluída",
+        "orderedQty": "Pedido",
+        "deliveredQty": "Entregue",
+        "scheduling": "Agendamento"
+
 
   },
   "Status": {
