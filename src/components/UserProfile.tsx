@@ -51,22 +51,22 @@ export default function UserProfile({ user }: { user: UserProfile }) {
         <div className="personal-section flex flex-col gap-2">
           <h3>{t("personalData")}</h3>
           <div className=" flex justify-between flex-wrap gap-5">
-            <div className=" flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
+            <div className=" flex flex-col gap-2">
+              <div className="flex flex-col">
                 <p>{t("fullName")}</p>
                 <div className="flex items-center gap-2">
                   <span className="tdesign--user-filled"></span>
                   <h4>{user.name}</h4>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <p>{t("emailAddress")}</p>
                 <div className="flex items-center gap-2">
                   <span className="ic--round-mail"></span>
                   <h4>{user.email}</h4>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <p>{t("phoneNumber")}</p>
                 <div className="flex items-center gap-2">
                   <span className="solar--phone-bold"></span>
@@ -74,15 +74,15 @@ export default function UserProfile({ user }: { user: UserProfile }) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col">
-              <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <p>{t("memberSince")}</p>
                 <div className="flex items-center gap-2">
                   <span className="formkit--date"></span>
                   <h4>{user.createdAt.toLocaleDateString()}</h4>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col">
                 <p>{t("lastUpdated")}</p>
                 <div className="flex items-center gap-2">
                   <span className="formkit--date"></span>
@@ -106,53 +106,57 @@ export default function UserProfile({ user }: { user: UserProfile }) {
       {view === "detail" && (
         <>
           {user.role === "SUPPLIER" && user.Supplier && (
-            <div className="details-section flex flex-col gap-2">
-              <div className="flex flex-col gap-2">
-                <p>{supt("companyName")}</p>
-                <div className="flex items-center gap-2">
-                  <span className="mdi--company"></span>
-                  <h4>{user.Supplier.businessName}</h4>
+            <div className="details-section flex gap-5 justify-between">
+              <div className=" flex flex-col gap-2">
+                <div className="flex flex-col">
+                  <p>{supt("companyName")}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="mdi--company"></span>
+                    <h4>{user.Supplier.businessName}</h4>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <p>{supt("companyEmail")}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="ic--round-mail"></span>
+                    <h4>{user.Supplier.email}</h4>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <p>{t("address")}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="tdesign--location-filled"></span>
+                    <h4>{user.Supplier.address}</h4>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <p>{t("description")}</p>
+                  <div className="flex items-center gap-2">
+                    <h4>{user.Supplier.description}</h4>
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <p>{supt("companyEmail")}</p>
-                <div className="flex items-center gap-2">
-                  <span className="ic--round-mail"></span>
-                  <h4>{user.Supplier.email}</h4>
+                <div className="flex flex-col">
+                  <p>{supt("companyPhone")}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="solar--phone-bold"></span>
+                    <h4>{user.Supplier.phoneNumber}</h4>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p>{t("address")}</p>
-                <div className="flex items-center gap-2">
-                  <span className="tdesign--location-filled"></span>
-                  <h4>{user.Supplier.address}</h4>
+                <div className="flex flex-col">
+                  <p>Website</p>
+                  <div className="flex items-center gap-2">
+                    <span className="streamline-plump--web"></span>
+                    <h4>{user.Supplier.website}</h4>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p>{supt("companyPhone")}</p>
-                <div className="flex items-center gap-2">
-                  <span className="solar--phone-bold"></span>
-                  <h4>{user.Supplier.phoneNumber}</h4>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p>Website</p>
-                <div className="flex items-center gap-2">
-                  <span className="streamline-plump--web"></span>
-                  <h4>{user.Supplier.website}</h4>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p>{supt("establishedYear")}</p>
-                <div className="flex items-center gap-2">
-                  <span className="proicons--document"></span>
-                  <h4>{user.Supplier.establishedYear}</h4>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p>{t("description")}</p>
-                <div className="flex items-center gap-2">
-                  <h4>{user.Supplier.description}</h4>
+                <div className="flex flex-col">
+                  <p>{supt("establishedYear")}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="proicons--document"></span>
+                    <h4>{user.Supplier.establishedYear}</h4>
+                  </div>
                 </div>
               </div>
             </div>
