@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { MenuButton } from "./MenuButton";
 import { NotificationBell } from "./Bell";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const Header = () => {
   const { data: session, status } = useSession();
@@ -18,15 +18,15 @@ export const Header = () => {
 
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    async function fetchCount() {
-      const res = await fetch("/api/notifications/unread-count");
-      const data = await res.json();
-      setCount(data.unread);
-    }
-
-    fetchCount();
+  const fetchCount = useCallback(async () => {
+    const res = await fetch("/api/notifications/unread-count");
+    const data = await res.json();
+    setCount(data.unread);
   }, []);
+  useEffect(() => {
+    fetchCount();
+  }, [pathname, fetchCount]);
+
   const showMenu =
     pathname?.startsWith(`/${locale}/supply`) ||
     pathname?.startsWith(`/${locale}/service`);
