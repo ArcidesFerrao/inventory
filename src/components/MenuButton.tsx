@@ -7,6 +7,7 @@ import { HomeNavLink, NavLink } from "./NavLink";
 import { NotificationBell } from "./Bell";
 import { LogOutButton } from "./LogOutButton";
 import { useTranslations } from "next-intl";
+import { LocaleSwitcher } from "./LocaleSwitches";
 
 export const MenuButton = ({
   userId,
@@ -27,7 +28,10 @@ export const MenuButton = ({
   return (
     <div className="nav-menu-btn absolute z-10 top-8  right-4">
       {!showMenu ? (
-        <div className="flex gap-2">
+        <div className="flex gap-4 items-center">
+          <div className="flex text-md items-center">
+            <LocaleSwitcher />
+          </div>
           <NotificationBell locale={locale} count={count} />
           <button
             onClick={() => setShowMenu(true)}
