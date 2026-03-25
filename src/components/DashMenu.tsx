@@ -78,56 +78,57 @@ export default function DashMenu({
         {role === "SERVICE" && <span className=" dash-arrow">→</span>}
       </button>
       {/* )} */}
-      {(role === "USER" || role === "SUPPLIER" || role === "ADMIN") && (
-        <button
-          onClick={() => redirect("/supply")}
-          className="p-4 flex items-center gap-12 rounded-md"
-        >
-          <div className="flex items-center gap-4">
-            <span className="p-2 pill-active h-fit rounded-lg">
-              <svg
-                width="32"
-                // height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#378ADD"
-                stroke-width="1.5"
-              >
-                <rect x="1" y="3" width="15" height="13" rx="1"></rect>
-                <path d="M16 8h4l3 3v5h-7V8z"></path>
-                <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                <circle cx="18.5" cy="18.5" r="2.5"></circle>
-              </svg>
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex gap-2 items-center">
-                <p>{t("dashboardMenu2")}</p>
-                {role === "SUPPLIER" ? (
-                  <span className=" status-pill pill-active ">Activo</span>
-                ) : (
-                  <span className="status-pill pill-new">Não registado</span>
-                )}
-              </div>
-              <p className="text-sm font-light ">{businessName}</p>
-              <div className="text-xs font-thin flex text-left flex-col gap-1 feature-row">
-                <span className="flex gap-2 opacity-85 items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
-                  Recebe pedidos de clientes
-                </span>
-                <span className="flex gap-2 opacity-85 items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
-                  Gestão de catálogo e entregas
-                </span>
-                <span className="flex gap-2 opacity-85 items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
-                  Painel de receita por período
-                </span>
-              </div>
+      {/* {(role === "USER" || role === "SUPPLIER" || role === "ADMIN") && ( */}
+      <button
+        onClick={() => redirect("/supply")}
+        // className="p-4 flex items-center gap-12 rounded-md"
+        className={`p-4 flex items-center gap-12 rounded-md ${role !== "SUPPLIER" && role !== "ADMIN" && "opacity-40"}`}
+      >
+        <div className="flex items-center gap-4">
+          <span className="p-2 pill-active h-fit rounded-lg">
+            <svg
+              width="32"
+              // height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#378ADD"
+              stroke-width="1.5"
+            >
+              <rect x="1" y="3" width="15" height="13" rx="1"></rect>
+              <path d="M16 8h4l3 3v5h-7V8z"></path>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2 items-center">
+              <p>{t("dashboardMenu2")}</p>
+              {role === "SUPPLIER" ? (
+                <span className=" status-pill pill-active ">Activo</span>
+              ) : (
+                <span className="status-pill pill-new">Não registado</span>
+              )}
+            </div>
+            <p className="text-sm font-light ">{businessName}</p>
+            <div className="text-xs font-thin flex text-left flex-col gap-1 feature-row">
+              <span className="flex gap-2 opacity-85 items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                Recebe pedidos de clientes
+              </span>
+              <span className="flex gap-2 opacity-85 items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                Gestão de catálogo e entregas
+              </span>
+              <span className="flex gap-2 opacity-85 items-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                Painel de receita por período
+              </span>
             </div>
           </div>
-          <span className="dash-arrow">→</span>
-        </button>
-      )}
+        </div>
+        {role === "SUPPLIER" && <span className="dash-arrow">→</span>}
+      </button>
+      {/* // )} */}
       {isAdmin === true && (
         <button className="p-4" onClick={() => redirect("/admin")}>
           <span className="eos-icons--admin-outlined"></span>
