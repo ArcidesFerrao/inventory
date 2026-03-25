@@ -14,7 +14,7 @@ type NavLinkBtnProps = {
   onClick?: () => void;
 };
 
-export const NavLink = ({ href, label }: NavLinkBtnProps) => {
+export const NavLink = ({ href, label, onClick }: NavLinkBtnProps) => {
   const pathname = usePathname();
   const locale = useLocale();
 
@@ -22,6 +22,7 @@ export const NavLink = ({ href, label }: NavLinkBtnProps) => {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`py-2 px-4 flex items-center gap-2 ${
         isActivated ? "is-active" : ""
       } `}
@@ -33,13 +34,14 @@ export const NavLink = ({ href, label }: NavLinkBtnProps) => {
     </Link>
   );
 };
-export const HomeNavLink = ({ href, label }: NavLinkBtnProps) => {
+export const HomeNavLink = ({ href, label, onClick }: NavLinkBtnProps) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`py-2 px-4 flex items-center gap-2 ${
         isActive ? "is-active" : ""
       } `}
