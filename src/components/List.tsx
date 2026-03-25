@@ -627,6 +627,12 @@ const SEVERITY_STYLES: Record<string, string> = {
   SUCCESS: "bg-green-400/10 text-green-400",
 };
 
+const DOT_STYLES: Record<string, string> = {
+  INFO: "bg-base-content/30",
+  WARNING: "bg-amber-400",
+  ERROR: "bg-red-400",
+  SUCCESS: "bg-green-400",
+};
 // const DOT_STYLES: Record<string, string> = {
 //   INFO: "bg-base-content/30",
 //   WARNING: "bg-amber-400",
@@ -709,11 +715,58 @@ export function SupplierLogListItem({
 }) {
   const { locale } = useParams();
   const t = useTranslations("Common");
-  const st = useTranslations("Status");
+  // const st = useTranslations("Status");
 
   return (
     <li className="list-logs flex justify-between ">
-      <div className="flex flex-col gap-2">
+      {/* Card */}
+      <div className="flex-1 p-3 flex flex-col gap-1.5 min-w-0">
+        {/* Top row: tags + severity */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex gap-1.5 items-center flex-wrap">
+            <span className="text-xs font-md opacity-65 px-1.5 py-0.5 rounded bg-base-content/10 text-base-content/50 uppercase tracking-wide">
+              {actionType}
+            </span>
+            <span
+              className={`text-xs font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${
+                ENTITY_STYLES[entityType] ??
+                "bg-base-content/10 text-base-content/60"
+              }`}
+            >
+              {entityType}
+            </span>
+          </div>
+          <span
+            className={`text-xs font-semibold px-1.5 py-0.5 rounded shrink-0 ${
+              SEVERITY_STYLES[severity] ?? SEVERITY_STYLES.INFO
+            }`}
+          >
+            {severity}
+          </span>
+        </div>
+
+        {/* Description */}
+        <p className="log-desc text-sm text-base-content truncate">
+          {description}
+        </p>
+
+        {/* Bottom row: time + view link */}
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-base-content/40">
+            {new Date(timestamp).toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <Link
+            href={`/${locale}/supply/logs/${id}`}
+            className="text-xs text-blue-400 hover:underline"
+          >
+            {t("view")} →
+          </Link>
+        </div>
+      </div>
+      {/* <div className="flex flex-col gap-2">
         <div className="log-info flex gap-2 items-center">
           <span className="text-xs text-gray-400">
             {st(actionType.toLocaleLowerCase())}
@@ -749,7 +802,7 @@ export function SupplierLogListItem({
           </span>
           <Link href={`/${locale}/supply/logs/${id}`}>{t("view")}</Link>
         </div>
-      </div>
+      </div> */}
     </li>
   );
 }
