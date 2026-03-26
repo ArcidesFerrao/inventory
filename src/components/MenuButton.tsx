@@ -26,9 +26,9 @@ export const MenuButton = ({
 
   const closeMenu = () => setShowMenu(false);
   return (
-    <div className="nav-menu-btn absolute z-10 top-8  right-4">
+    <div className="nav-menu-btn absolute z-10 top-9  right-4">
       {!showMenu ? (
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-3 items-center">
           <div className="flex text-md items-center">
             <LocaleSwitcher />
           </div>

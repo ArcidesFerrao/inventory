@@ -45,21 +45,21 @@ export const Header = () => {
           <h1 className="font-bold text-2xl uppercase ">CONTELA</h1>
         </div>
       </Link>
-      <div className="header-greetings flex items-center gap-4">
-        <LocaleSwitcher />
-        {session?.user && <NotificationBell locale={locale} count={count} />}
+      <div className="header-greetings flex items-center gap-3">
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>
         ) : !session?.user ? (
           ""
         ) : (
-          <p className="header-welcome">
+          <p className="header-welcome text-sm">
             {t("greeting")},{" "}
             <Link href={`/${locale}/user/${session?.user.id}`}>
               {session?.user.name}
             </Link>
           </p>
         )}
+        {session?.user && <NotificationBell locale={locale} count={count} />}
+        <LocaleSwitcher />
       </div>
       {showMenu && (
         <MenuButton

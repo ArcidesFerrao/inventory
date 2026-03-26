@@ -13,7 +13,7 @@ export const NotificationBell = ({
       className="relative opacity-70 hover:opacity-100 "
     >
       <svg
-        className="w-6 h-6 text-gray-100"
+        className="w-5 h-5 text-gray-100"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
