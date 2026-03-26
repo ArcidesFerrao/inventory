@@ -8,6 +8,7 @@ import { MenuButton } from "./MenuButton";
 import { NotificationBell } from "./Bell";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
+import { LocaleSwitcher } from "./LocaleSwitches";
 
 export const Header = () => {
   const { data: session, status } = useSession();
@@ -45,6 +46,7 @@ export const Header = () => {
         </div>
       </Link>
       <div className="header-greetings flex items-center gap-4">
+        <LocaleSwitcher />
         {session?.user && <NotificationBell locale={locale} count={count} />}
         {status === "loading" ? (
           <span className="eos-icons--three-dots-loading"></span>

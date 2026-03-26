@@ -17,5 +17,12 @@ export function LocaleSwitcher() {
     router.push(newPath);
   };
 
-  return <button onClick={switchLocale}>{nextLocale.toUpperCase()}</button>;
+  return (
+    <button
+      className="font-thin text-xs px-2 py-1 border opacity-75 hover:opacity-95"
+      onClick={switchLocale}
+    >
+      {nextLocale.toUpperCase()}
+    </button>
+  );
 }
