@@ -38,7 +38,9 @@
         "history": "Stock Movement History",
         "loadingHistory": "Loading History...",
         "noStockMovement": "No stock movements recorded",
-        "stockHistory": "Stock Movement History"
+        "stockHistory": "Stock Movement History",
+        "noStock": "No stock movements found"
+
     },
     "Sales": {
         "subtitle": "Track and manage your sales transactions",
@@ -155,8 +157,8 @@
         "actionType": "Action Type",
         "entityType": "Entity Type",
         "noLogs": "No logs found",
-    "searchPlaceholder": "Search by ID..."
-
+        "searchPlaceholder": "Search by ID...",
+        "records": "records"
     },
     "Settings": {
         "title": "Settings",
@@ -190,6 +192,8 @@
         "newStockLevel": "New Stock Level"
     },
     "Auth": {
+        "welcomeBack": "Welcome Back",
+    "loginToAccount": "Login to your account",
         "signInTitle": "Sign in to your account",
         "email": "Email address",
         "phone": "Phone number",
@@ -713,7 +717,13 @@
         "completedDelivery": "Delivery Completed",
         "orderedQty": "Ordered Qty",
         "deliveredQty": "Delivered Qty",
-        "scheduling": "Scheduling"
+        "scheduling": "Scheduling",
+        "edit": "Edit",
+        "baseQty": "Qtd",
+        "baseQuantity": "Qty/unit",
+        "productDetails": "Details",
+        "stockManagement": "Stock Management",
+        "updateStockQty": "Update Stock Qty"
 
     },
     "Status": {

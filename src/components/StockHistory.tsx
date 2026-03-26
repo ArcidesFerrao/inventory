@@ -24,7 +24,7 @@ export default function StockHistory({ stockItemId }: { stockItemId: string }) {
   if (loading) return <p>{st("loadingHistory")}</p>;
 
   if (movements.length === 0) {
-    return <p>{st("noStock")}</p>;
+    return <p>{st("noStockMovement")}</p>;
   }
 
   return (

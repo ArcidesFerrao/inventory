@@ -158,7 +158,9 @@
     "actionType": "Tipo de Ação",
     "entityType": "Tipo de Entidade",
     "noLogs": "Nenhum registo encontrado",
-    "searchPlaceholder": "Procurar por ID..."
+    "searchPlaceholder": "Procurar por ID...",
+        "records": "registos"
+
   },
   "Settings": {
     "title": "Definições",
