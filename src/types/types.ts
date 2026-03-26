@@ -152,7 +152,7 @@ export type ConfirmedDeliveryLogs = {
 };
 export type ArrivedDeliveryLogs = {
   deliveryId: string;
-  supplierOrderId: string;
+  orderId: string;
   deliveredAt: Date;
   // deliveryItems: OrderItem & {
   //  stockItem: StockItem 

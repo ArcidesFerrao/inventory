@@ -731,9 +731,8 @@
         "notDefined": "não definido",
         "unitPrice": "Preco por Unidade",
         "totalItems": "Total de Itens",
-        "scheduledAt": "Agendamento"
-
-
+        "scheduledAt": "Agendamento",
+        "deliveredAt": "Data da Entrega"
   },
   "Status": {
     "delivery_arrived": "ENTREGA_CHEGOU",

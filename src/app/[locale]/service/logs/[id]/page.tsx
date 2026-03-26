@@ -57,7 +57,7 @@ export default async function LogPage(props: { params: Params }) {
   const { locale } = await props.params;
   const t = await getTranslations("Common");
   const at = await getTranslations("Activity");
-  const st = await getTranslations("Status ");
+  // const st = await getTranslations("Status ");
 
   const log = await db.activityLog.findUnique({
     where: { id },
@@ -109,7 +109,7 @@ export default async function LogPage(props: { params: Params }) {
               {at("entityType")}
             </p>
             <span
-              className={`text-xs font-semibold px-2 py-0.5 rounded w-fit ${entityStyle}`}
+              className={`text-xs uppercase font-semibold px-2 py-0.5 rounded w-fit ${entityStyle}`}
             >
               {t(log.entityType.toLocaleLowerCase())}
             </span>
@@ -119,7 +119,7 @@ export default async function LogPage(props: { params: Params }) {
               {t("severity")}
             </p>
             <span
-              className={`text-xs font-semibold px-2 py-0.5 rounded w-fit ${severityStyle}`}
+              className={`text-xs font-semibold border px-2 py-0.5 rounded bg-base-content/10 text-base-content/70 w-fit uppercase tracking-wide  ${severityStyle}`}
             >
               {log.severity}
             </span>

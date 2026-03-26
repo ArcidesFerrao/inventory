@@ -1,4 +1,5 @@
 import {
+  ArrivedDeliveryLogDetails,
   // ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
   CreateDeliveryLogDetails,
@@ -11,6 +12,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 import {
+  ArrivedDeliveryLogs,
   // ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
   CreateDeliveryLogs,
@@ -48,7 +50,7 @@ export default async function ActivityDetailsPage(props: { params: Params }) {
   if (!session?.user.supplierId) redirect("/register/supplier");
 
   const at = await getTranslations("Activity");
-  // const st = await getTranslations("Status");
+  const st = await getTranslations("Status");
   const t = await getTranslations("Common");
 
   const log = await db.activityLog.findUnique({
@@ -113,8 +115,8 @@ export default async function ActivityDetailsPage(props: { params: Params }) {
             <p className="label-text text-xs uppercase tracking-wide">
               {at("actionType")}
             </p>
-            <span className="text-sm font-semibold px-2 py-0.5 rounded bg-base-content/10 text-base-content/70 w-fit uppercase tracking-wide">
-              {log.actionType}
+            <span className="text-xs font-semibold border px-2 py-0.5 rounded bg-base-content/10 text-base-content/70 w-fit uppercase tracking-wide">
+              {st(log.actionType.toLocaleLowerCase())}
             </span>
           </div>
           <div className="flex flex-col gap-1.5">
@@ -122,9 +124,9 @@ export default async function ActivityDetailsPage(props: { params: Params }) {
               {at("entityType")}
             </p>
             <span
-              className={`text-sm font-semibold px-2 py-0.5 rounded w-fit ${entityStyle}`}
+              className={`text-sm uppercase font-semibold px-2 py-0.5 rounded w-fit ${entityStyle}`}
             >
-              {log.entityType}
+              {t(log.entityType.toLocaleLowerCase())}
             </span>
           </div>
           <div className="flex flex-col gap-1.5">
@@ -132,7 +134,7 @@ export default async function ActivityDetailsPage(props: { params: Params }) {
               {t("severity")}
             </p>
             <span
-              className={`text-sm font-semibold px-2 py-0.5 rounded w-fit ${severityStyle}`}
+              className={`text-xs font-semibold border px-2 py-0.5 rounded bg-base-content/10 text-base-content/70 w-fit uppercase tracking-wide ${severityStyle}`}
             >
               {log.severity}
             </span>
@@ -201,9 +203,16 @@ export default async function ActivityDetailsPage(props: { params: Params }) {
                 details={parsedDetails as CreateDeliveryLogs}
               />
             )}
-            {log.actionType === "CONFIRMED" && (
+            {(log.actionType === "CONFIRMED" ||
+              log.actionType === "DELIVERY_CONFIRMED") && (
               <ConfirmedDeliveryLogDetails
                 details={parsedDetails as ConfirmedDeliveryLogs}
+              />
+            )}
+            {(log.actionType === "ARRIVED" ||
+              log.actionType === "DELIVERY_ARRIVED") && (
+              <ArrivedDeliveryLogDetails
+                details={parsedDetails as ArrivedDeliveryLogs}
               />
             )}
             {log.actionType === "UPDATE" && log.entityType === "Order" && (

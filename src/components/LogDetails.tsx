@@ -356,15 +356,17 @@ export const ArrivedDeliveryLogDetails = ({
       <p className="text-sm text-base-content/50">{t("noExtraDetails")}</p>
     );
 
+  console.log(details);
   return (
     <DetailTable>
       <DetailRow
         label={t("deliveryId")}
         value={<MonoId value={details.deliveryId} />}
       />
+
       <DetailRow
-        label={t("supplierOrderId")}
-        value={<MonoId value={details.supplierOrderId} />}
+        label={t("orderId")}
+        value={<MonoId value={details.orderId} />}
       />
       <DetailRow
         label={t("deliveredAt")}

@@ -723,7 +723,9 @@
         "baseQuantity": "Qty/unit",
         "productDetails": "Details",
         "stockManagement": "Stock Management",
-        "updateStockQty": "Update Stock Qty"
+        "updateStockQty": "Update Stock Qty",
+        "deliveredAt": "Delivered at"
+
 
     },
     "Status": {
