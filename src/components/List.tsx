@@ -228,6 +228,7 @@ export const OrderListItem = ({
   const { locale } = useParams();
   const t = useTranslations("Common");
   const ot = useTranslations("Orders");
+  const st = useTranslations("Status");
 
   const totalItemsOrdered = order.orderItems.reduce(
     (itemAcc, item) => itemAcc + item.orderedQty,
@@ -269,7 +270,7 @@ export const OrderListItem = ({
                   order.status === "DELIVERED" ? "text-green-400" : ""
                 }`}
               >
-                {t(order.status.toLocaleLowerCase()).toUpperCase()}
+                {st(order.status.toLocaleLowerCase()).toUpperCase()}
               </button>
             </div>
             <p className="">
