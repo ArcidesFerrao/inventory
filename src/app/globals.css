@@ -496,6 +496,9 @@ fieldset div {
 .navigator a {
   border-radius: 0.2rem;
 }
+.navigator a {
+  border: 1px solid var(--border);
+}
 
 .user-header a,
 .add-product {

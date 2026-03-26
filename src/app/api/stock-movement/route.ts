@@ -86,13 +86,23 @@ export async function GET(request: Request) {
     }
 
     try {
-        const movements = await db.stockMovement.findMany({
-            where: {stockItemId},
-            orderBy: { timestamp: "desc"},
-            take: 50,
-        })
+        if (session.user.serviceId) {
+            const movements = await db.stockMovement.findMany({
+                where: {stockItemId, referenceId: session.user.serviceId},
+                orderBy: { timestamp: "desc"},
+                take: 50,
+            })
+            return NextResponse.json(movements)
+        } else if (session.user.supplierId) {
+            const movements = await db.stockMovement.findMany({
+                where: {stockItemId, referenceId: session.user.supplierId},
+                orderBy: { timestamp: "desc"},
+                take: 50,
+            })
+            
+            return NextResponse.json(movements)
+        }
 
-        return NextResponse.json(movements)
     } catch (error) {
         console.error(rt("fetchMovementError"), error )
         return NextResponse.json(

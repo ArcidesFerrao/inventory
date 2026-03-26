@@ -57,16 +57,16 @@ export function StockMovementModal({
   const nt = useTranslations("Notifications");
 
   const stockChangeConfig = {
-    PURCHASE: { label: mt("purchase"), color: "text-green-600", symbol: "+" },
-    SALE: { label: mt("sale"), color: "text-blue-600", symbol: "-" },
-    WASTE: { label: mt("waste"), color: "text-red-600", symbol: "-" },
+    PURCHASE: { label: t("purchase"), color: "text-green-600", symbol: "+" },
+    SALE: { label: t("sale"), color: "text-blue-600", symbol: "-" },
+    WASTE: { label: t("waste"), color: "text-red-600", symbol: "-" },
     ADJUSTMENT: {
-      label: mt("adjustment"),
+      label: t("adjustment"),
       color: "text-yellow-600",
       symbol: "±",
     },
     RECONCILIATION: {
-      label: mt("reconciliation"),
+      label: t("reconciliation"),
       color: "text-purple-600",
       symbol: "=",
     },

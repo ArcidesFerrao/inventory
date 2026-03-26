@@ -221,8 +221,8 @@ export default async function ProductPage(props: { params: Params }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center justify-between pt-3 border-t border-base-content/10 bottom-0 ">
-            <p className="text-sm text-base-content/60">
+          <div className="flex items-center justify-between pt-1 border-t border-base-content/10 bottom-0 ">
+            <p className="text-xs text-base-content/60">
               {t("updateStockQty")}
             </p>
             <StockManagementButton
