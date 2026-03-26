@@ -482,6 +482,8 @@ export const DashSaleListItem = ({ sale }: { sale: Sale }) => {
 };
 
 export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
+  const { locale } = useParams();
+
   const t = useTranslations("Common");
   const et = useTranslations("Expenses");
 
@@ -490,7 +492,10 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
       key={expense.id}
       className="list-orders flex flex-col gap-2 justify-between"
     >
-      <div className="sale-header flex justify-between">
+      <Link
+        href={`/${locale}/service/expenses/${expense.id}`}
+        className="sale-header flex justify-between"
+      >
         <div className="expense-title flex  flex-col gap-1 justify-between">
           <h3 className="flex gap-2 items-center text-lg font-medium">
             {et("expense")}:
@@ -517,7 +522,7 @@ export const ExpenseListItem = ({ expense }: { expense: Expense }) => {
             MZN {expense.amount.toFixed(2)}
           </h4>
         </div>
-      </div>
+      </Link>
     </li>
   );
 };
@@ -627,12 +632,6 @@ const SEVERITY_STYLES: Record<string, string> = {
   SUCCESS: "bg-green-400/10 text-green-400",
 };
 
-const DOT_STYLES: Record<string, string> = {
-  INFO: "bg-base-content/30",
-  WARNING: "bg-amber-400",
-  ERROR: "bg-red-400",
-  SUCCESS: "bg-green-400",
-};
 // const DOT_STYLES: Record<string, string> = {
 //   INFO: "bg-base-content/30",
 //   WARNING: "bg-amber-400",
