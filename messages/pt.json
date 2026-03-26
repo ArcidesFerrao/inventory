@@ -131,7 +131,12 @@
     "avgExpense": "Despesa Média",
     "expenseItem": "Item de Despesa",
     "saveExpense": "Guardar Despesa",
-    "noExpenses": "Nenhuma despesa encontrada"
+    "noExpenses": "Nenhuma despesa encontrada",
+    "unnamedExpense": "Despesa sem nome",
+"receipt": "Comprovativo",
+"viewReceipt": "Ver comprovativo",
+"noReceipt": "Sem comprovativo anexado",
+"attachReceipt": "Anexar comprovativo"
   },
   "Audit": {
     "title": "Registos de Auditoria",
@@ -447,6 +452,8 @@
   "timestamp": "Data e Hora"
   },
   "Common": {
+    "no": "Não",
+    "yes": "Sim",
     "greetings": "Bem-vindo ao Contela",
     "greeting": "Bem-vindo",
     "gotoDash": "Ir para o Painel",
@@ -732,7 +739,12 @@
         "unitPrice": "Preco por Unidade",
         "totalItems": "Total de Itens",
         "scheduledAt": "Agendamento",
-        "deliveredAt": "Data da Entrega"
+        "deliveredAt": "Data da Entrega",
+        "expenseAmount": "Valor da despesa",
+"paymentMethod":"Método de pagamento",
+"recurring":"Recorrente",
+"uncategorized": "Sem categoria",
+"descriptionAndNotes": "Descrição e notas"
   },
   "Status": {
     "delivery_arrived": "ENTREGA_CHEGOU",
