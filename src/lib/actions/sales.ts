@@ -55,7 +55,7 @@ export async function createSale(
                  },
             })
 
-            console.log(stocks)
+            // console.log(stocks)
 
             for (const saleItem of saleItems) {
                 // console.log("Processing saleItem:", saleItem.name);
@@ -97,19 +97,19 @@ export async function createSale(
                         stockUsage[serviceStockItemId].units += unitsUsed
                         stockUsage[serviceStockItemId].baseQty += baseQty
                         
-                        console.log(`Stock Usage: ` + stockUsage)
-                        console.log(` - Using ${unitsUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${cost}`);
+                        // console.log(`Stock Usage: ` + stockUsage)
+                        // console.log(` - Using ${unitsUsed} of ${stockProduct.stockItem.name} at cost ${(stockProduct.cost ?? 0)} each, total ${cost}`);
                     }
                 }
             }
 
             for (const [stockId, usage] of Object.entries(stockUsage)) {
                 const stock = stocks.find(s => s.id === stockId);
-                console.log(`Processing item: ` + stock?.stockItem.name)
+                // console.log(`Processing item: ` + stock?.stockItem.name)
 
                 if (!stock) continue;
 
-                console.log(usage.baseQty)
+                // console.log(usage.baseQty)
 
                 
 
@@ -118,7 +118,7 @@ export async function createSale(
                 if (remainingBaseUnits < 0) {
                     throw new Error(`${rt("notEnoughStock")} ${stock.stockItem?.name}`);
                 }
-                console.log(remainingBaseUnits)
+                // console.log(remainingBaseUnits)
                 
                 // const remainingBaseUnits = (stock.stockQty ?? 0)  - (qtyUsed * stock.stockItem.unitQty);
 
@@ -133,7 +133,8 @@ export async function createSale(
                     
                     // const newStock = Math.floor(remainingBaseUnits / stock.stockItem.unitQty)
 
-                    const updated = await tx.serviceStockItem.update({
+                    // const updated = 
+                    await tx.serviceStockItem.update({
                         where: { id: stockId },
                         data: {
                             stock: {
@@ -143,9 +144,10 @@ export async function createSale(
                         }
                     });
 
-                    console.log(updated)
+                    // console.log(updated)
                 } else {
-                    const updated = await tx.serviceStockItem.update({
+                    // const updated = 
+                    await tx.serviceStockItem.update({
                         where: { id: stockId },
                         data: {
                             stock: {
@@ -157,7 +159,7 @@ export async function createSale(
                         }
                     });
                     
-                    console.log(updated)
+                    // console.log(updated)
                 }
             }
             // const filteredMovements = stockUsage.filter((ci) => ci.qty > 0)

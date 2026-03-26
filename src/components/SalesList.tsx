@@ -76,11 +76,11 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
       const totalStockNeeded = (item.quantity + 1) * recipeItem.quantity;
       const totalNeeded =
         (item.quantity + 1) * recipeItem.quantity * item.unitQty;
-      console.log(totalStock);
-      console.log(totalAvailable);
-      console.log(totalStockNeeded);
-      console.log(totalNeeded);
-      console.log(recipeItem.quantity);
+      // console.log(totalStock);
+      // console.log(totalAvailable);
+      // console.log(totalStockNeeded);
+      // console.log(totalNeeded);
+      // console.log(recipeItem.quantity);
 
       if (recipeItem.usageType === "UNIT") {
         if (totalStock < totalStockNeeded) {

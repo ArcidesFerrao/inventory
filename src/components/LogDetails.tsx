@@ -356,7 +356,7 @@ export const ArrivedDeliveryLogDetails = ({
       <p className="text-sm text-base-content/50">{t("noExtraDetails")}</p>
     );
 
-  console.log(details);
+  // console.log(details);
   return (
     <DetailTable>
       <DetailRow
