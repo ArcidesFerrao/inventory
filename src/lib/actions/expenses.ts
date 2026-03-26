@@ -41,10 +41,8 @@ export async function createExpense(prevState: unknown, formData: FormData) {
                     expense.id,
                     `${rt("expenseAmount")} ${expense.amount.toFixed(2)} ${rt("expenseAmountCreated")}`,
                     {
-                        
+                        total: expense.amount,
                         timeStamp: expense.timestamp,
-                        
-                        
                     },
                     null,
                     'INFO',
@@ -106,10 +104,10 @@ export async function createCategoryExpense({name, description}:{name: string; d
                     category.serviceId,
                     null,
                     "CREATE",
-                    "Category Expense",
+                    "Category",
                     category.id,
                     `${rt("expenseCategory")} ${category.name} ${rt("created")}`,
-                    {                    },
+                    {},
                     null,
                     'INFO',
                     null

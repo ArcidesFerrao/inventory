@@ -721,7 +721,17 @@
         "completedDelivery": "Entrega concluída",
         "orderedQty": "Pedido",
         "deliveredQty": "Entregue",
-        "scheduling": "Agendamento"
+        "scheduling": "Agendamento",
+        "edit": "Editar",
+        "baseQty": "Qtd",
+        "baseQuantity": "Quantidade base",
+        "productDetails": "Detalhes",
+        "stockManagement": "Gestao de Stock",
+        "updateStockQty": "Actualizar quantidade em stock",
+        "notDefined": "não definido",
+        "unitPrice": "Preco por Unidade",
+        "totalItems": "Total de Itens",
+        "scheduledAt": "Agendamento"
 
 
   },

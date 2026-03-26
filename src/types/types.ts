@@ -159,6 +159,14 @@ export type ArrivedDeliveryLogs = {
   // }[];
   
 };
+export type CreateCategoryLogs = {
+  timestamp: Date;
+  category: string;
+}
+export type CreateExpenseLogs = {
+  timestamp: Date;
+  total: number;
+}
 export type CreateDeliveryLogs = {
   orderId: string;
   scheduledAt: Date;
@@ -191,6 +199,15 @@ export type CreateOrderLogs = {
 
 export type CreateSaleLogs = {
   totalPrice: number;
+  items: {
+    id: string,
+    name: string,
+    quantity: number,
+    price: number
+  }[]
+}
+export type CreatePurchaseLogs = {
+  total: number;
   items: {
     id: string,
     name: string,

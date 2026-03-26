@@ -663,13 +663,15 @@ export default function LogListItem({
     <li className="list-logs flex justify-between ">
       <div className="flex flex-col gap-2">
         <div className="log-info flex gap-2 items-center">
-          <span className="text-xs text-gray-400 text-wrap">{actionType}</span>
+          <span className="text-xs uppercase text-gray-400 text-wrap">
+            {t(actionType.toLocaleLowerCase())}
+          </span>
           <span
             className={`text-xs font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${
               ENTITY_STYLES[entity] ?? "bg-base-content/10 text-base-content/60"
             }`}
           >
-            {entity}
+            {t(entity.toLocaleLowerCase())}
           </span>
         </div>
         <p className="log-desc text-sm truncate ">{description}</p>
@@ -715,7 +717,7 @@ export function SupplierLogListItem({
 }) {
   const { locale } = useParams();
   const t = useTranslations("Common");
-  // const st = useTranslations("Status");
+  const st = useTranslations("Status");
 
   return (
     <li className="list-logs flex justify-between ">
@@ -724,16 +726,16 @@ export function SupplierLogListItem({
         {/* Top row: tags + severity */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex gap-1.5 items-center flex-wrap">
-            <span className="text-xs font-md opacity-65 px-1.5 py-0.5 rounded bg-base-content/10 text-base-content/50 uppercase tracking-wide">
-              {actionType}
+            <span className="text-xs font-md opacity-65  rounded bg-base-content/10 text-base-content/50 uppercase tracking-wide">
+              {st(actionType.toLocaleLowerCase())}
             </span>
             <span
               className={`text-xs font-semibold px-1.5 py-0.5 rounded uppercase tracking-wide ${
-                ENTITY_STYLES[entityType] ??
+                ENTITY_STYLES[entityType.toLocaleUpperCase()] ??
                 "bg-base-content/10 text-base-content/60"
               }`}
             >
-              {entityType}
+              {t(entityType.toLocaleLowerCase())}
             </span>
           </div>
           <span

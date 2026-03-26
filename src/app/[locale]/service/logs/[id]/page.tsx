@@ -1,7 +1,9 @@
 import {
   ArrivedDeliveryLogDetails,
   ConfirmedDeliveryLogDetails,
+  CreateCategoryLogDetails,
   CreateDeliveryLogDetails,
+  CreateExpenseLogDetails,
   CreateOrderLogDetails,
   CreatePurchaseLogDetails,
   CreateSaleLogDetails,
@@ -11,8 +13,11 @@ import {
 import {
   ArrivedDeliveryLogs,
   ConfirmedDeliveryLogs,
+  CreateCategoryLogs,
   CreateDeliveryLogs,
+  CreateExpenseLogs,
   CreateOrderLogs,
+  CreatePurchaseLogs,
   CreateSaleLogs,
   ErrorDeliveryLogs,
   UpdateOrderLogs,
@@ -52,6 +57,7 @@ export default async function LogPage(props: { params: Params }) {
   const { locale } = await props.params;
   const t = await getTranslations("Common");
   const at = await getTranslations("Activity");
+  const st = await getTranslations("Status ");
 
   const log = await db.activityLog.findUnique({
     where: { id },
@@ -95,7 +101,7 @@ export default async function LogPage(props: { params: Params }) {
               {at("actionType")}
             </p>
             <span className="text-xs font-semibold border px-2 py-0.5 rounded bg-base-content/10 text-base-content/70 w-fit uppercase tracking-wide">
-              {log.actionType}
+              {t(log.actionType.toLocaleLowerCase())}
             </span>
           </div>
           <div className="flex flex-col gap-2">
@@ -105,7 +111,7 @@ export default async function LogPage(props: { params: Params }) {
             <span
               className={`text-xs font-semibold px-2 py-0.5 rounded w-fit ${entityStyle}`}
             >
-              {log.entityType}
+              {t(log.entityType.toLocaleLowerCase())}
             </span>
           </div>
           <div className="flex flex-col gap-2">
@@ -187,7 +193,7 @@ export default async function LogPage(props: { params: Params }) {
             {t("details")}
           </p>
           <div className="stats p-4">
-            {log.actionType === "DELIVERY_CONFIRMED" && (
+            {log.actionType === "CONFIRMED" && (
               <ConfirmedDeliveryLogDetails
                 details={parsedDetails as ConfirmedDeliveryLogs}
               />
@@ -212,12 +218,22 @@ export default async function LogPage(props: { params: Params }) {
             )}
             {log.actionType === "CREATE" && log.entityType === "Purchase" && (
               <CreatePurchaseLogDetails
-                details={parsedDetails as CreateSaleLogs}
+                details={parsedDetails as CreatePurchaseLogs}
               />
             )}
             {log.actionType === "CREATE" && log.entityType === "Delivery" && (
               <CreateDeliveryLogDetails
                 details={parsedDetails as CreateDeliveryLogs}
+              />
+            )}
+            {log.actionType === "CREATE" && log.entityType === "Expense" && (
+              <CreateExpenseLogDetails
+                details={parsedDetails as CreateExpenseLogs}
+              />
+            )}
+            {log.actionType === "CREATE" && log.entityType === "Category" && (
+              <CreateCategoryLogDetails
+                details={parsedDetails as CreateCategoryLogs}
               />
             )}
             {(log.actionType === "ERROR" ||

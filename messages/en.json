@@ -719,7 +719,7 @@
         "deliveredQty": "Delivered Qty",
         "scheduling": "Scheduling",
         "edit": "Edit",
-        "baseQty": "Qtd",
+        "baseQty": "Qty",
         "baseQuantity": "Qty/unit",
         "productDetails": "Details",
         "stockManagement": "Stock Management",

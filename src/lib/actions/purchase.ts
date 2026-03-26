@@ -63,7 +63,7 @@ export async function createPurchase(purchaseItems: ServiceStockProduct[], servi
             `${rt("createdPurchaseTotaling")} ${total.toFixed(2)}`,
             {
                 total,
-                stockItems: purchaseItems.map(i => ({
+                items: purchaseItems.map(i => ({
                     id: i.id, 
                     name: i.stockItem.name, 
                     quantity: i.quantity, 
