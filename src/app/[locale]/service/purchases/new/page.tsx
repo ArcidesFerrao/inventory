@@ -33,9 +33,9 @@ export default async function NewPurchase({
         <h2 className="text-2xl font-medium">{pt("newPurchase")}</h2>
         <Link
           href={`/${locale}/service/purchases`}
-          className="add-product flex gap-1"
+          className="cancel-btn flex gap-1"
         >
-          <span className="text-md px-2">{t("cancel")}</span>
+          <span className="text-md px-2 ">{t("cancel")}</span>
         </Link>
       </div>
       <div className="sales-content flex justify-between gap-4">

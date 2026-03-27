@@ -98,7 +98,6 @@ model Item {
   unitQty        Int
   stock          Int?
   price          Float?
-  critical       Int?            @default(0)
   status         ItemStatus      @default(ACTIVE)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -129,6 +128,7 @@ model StockItem {
   price             Float?
   cost              Float?
   supplierId        String
+  critical          Int?               @default(0)
   unitId            String?
   categoryId        String?
   createdAt         DateTime           @default(now())
@@ -242,6 +242,7 @@ model ServiceStockItem {
   stock          Int?
   stockQty       Int?
   cost           Float?
+  critical       Int?            @default(0)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   deletedAt      DateTime?

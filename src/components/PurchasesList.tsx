@@ -3,6 +3,7 @@
 import { createPurchase } from "@/lib/actions/purchase";
 import { PurchasesProps } from "@/types/types";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -79,8 +80,13 @@ export const PurchasesList = ({
     <>
       <div className="products-selection flex flex-col gap-4 w-full">
         <div className="items">
-          <h2 className="text-xl font-medium  p-4">{t("items")}</h2>
-          <ul>
+          <div className="flex justify-between  p-4">
+            <h2 className="text-xl font-medium  ">{t("items")}</h2>
+            <Link href="/service/stock/new" className="add-product">
+              {t("addItem")}
+            </Link>
+          </div>
+          <ul className="px-2">
             {items.map((item) => (
               <li key={item.id} className=" flex justify-between px-4 py-2">
                 <div className="flex flex-col justify-between gap-2">

@@ -153,4 +153,5 @@ export const serviceStockItemSchema = z.object({
     unitId: z.string().optional(),
     supplierId: z.string(),
     serviceId: z.string(), 
+    critical: z.coerce.number().optional()
 })

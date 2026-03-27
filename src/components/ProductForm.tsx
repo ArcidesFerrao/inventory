@@ -734,6 +734,7 @@ export const ServiceStockItemForm = ({
   const [unitId, setUnitId] = useState(stockItem?.unitId || "");
   const [unitName, setUnitName] = useState("");
   const [unitQty, setUnitQty] = useState<number>(1);
+  const [critical, setCritical] = useState<number | null>();
 
   const [price, setPrice] = useState(stockItem?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
