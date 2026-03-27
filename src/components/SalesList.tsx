@@ -174,37 +174,39 @@ export const SalesList = ({ initialItems, serviceId }: SaleProductsProps) => {
               return (
                 <li
                   key={item.id}
-                  className={`${item.quantity === 0 ? "" : "product-selected"} flex justify-between items-center`}
+                  className={`${item.quantity === 0 ? "" : "product-selected"} grid grid-cols-[1fr_auto_auto] items-center gap-4 py-2`}
                 >
                   <div className="flex flex-col">
-                    <h3>{item.name}</h3>
-                    <p>{(item.price ?? 0).toFixed(2)} MZN</p>
+                    <h3 className="text-sm truncate">{item.name}</h3>
+                    <p className="text-xs">
+                      {(item.price ?? 0).toFixed(2)} MZN
+                    </p>
                   </div>
 
-                  <div className="sales-amount flex gap-2 items-center max-w-6/12">
-                    <div className="amount-btn flex items-center min-w-fit">
-                      <button
-                        className="px-3 py-1"
-                        onClick={() => handleDecrement(item.id)}
-                      >
-                        -
-                      </button>
-                      <span className="w-12 text-center">{item.quantity}</span>
-                      <button
-                        className="px-3 py-1"
-                        onClick={() => handleIncrement(item.id)}
-                      >
-                        +
-                      </button>
-                    </div>
-                    <span className="min-w-20 text-right">
-                      <p>
-                        {item.quantity === 0
-                          ? "—"
-                          : `${((item.price ?? 0) * item.quantity).toFixed(2)} MZN`}
-                      </p>
-                    </span>
+                  {/* <div className="sales-amount flex gap-2 items-center max-w-6/12"> */}
+                  <div className="amount-btn flex items-center min-w-fit">
+                    <button
+                      className="px-3 py-1"
+                      onClick={() => handleDecrement(item.id)}
+                    >
+                      -
+                    </button>
+                    <span className="w-12 text-center">{item.quantity}</span>
+                    <button
+                      className="px-3 py-1"
+                      onClick={() => handleIncrement(item.id)}
+                    >
+                      +
+                    </button>
                   </div>
+                  {/* </div> */}
+                  <span className="w-28 text-right text-xs ">
+                    <p>
+                      {item.quantity === 0
+                        ? "—"
+                        : `${((item.price ?? 0) * item.quantity).toFixed(2)} MZN`}
+                    </p>
+                  </span>
                 </li>
               );
             })}

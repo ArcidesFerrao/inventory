@@ -77,9 +77,9 @@ export async function createSale(
                         
                         stockUsage[serviceStockItemId] ??= { baseQty: 0, units: 0} ;
                         stockUsage[serviceStockItemId].baseQty += qtyUsed
-                        console.log(`Stock Usage: ` + stockUsage)
+                        // console.log(`Stock Usage: ` + stockUsage)
 
-                        console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${( cost ?? 0)} MZN`);
+                        // console.log(` - Using ${qtyUsed} of ${stockProduct.stockItem.name} at cost ${( cost ?? 0)} MZN`);
                     } else {
                         const unitsUsed = saleItem.quantity * recipeItem.quantity;
                         // console.log(unitsUsed)
