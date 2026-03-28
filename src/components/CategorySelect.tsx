@@ -48,7 +48,12 @@ export function CategorySelect({
   };
   return (
     <div className="self-start flex flex-col gap-1">
-      <label htmlFor="categoryId">{t("category")}</label>
+      <label htmlFor="categoryId " className="text-xs">
+        {t("category")}{" "}
+        <span className="font-thin text-base-content/40">
+          ({t("optional")})
+        </span>
+      </label>
       <div className="flex gap-2">
         <select
           name="categoryId"

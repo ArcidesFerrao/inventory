@@ -40,7 +40,20 @@
     "history": "Histórico de Movimentos de Stock",
     "loadingHistory": "A carregar histórico...",
     "noStockMovement": "Nenhum movimento de stock registado",
-    "stockHistory": "Histórico de Movimentos de Stock"
+    "stockHistory": "Histórico de Movimentos de Stock",
+    "identification": "Identificação",
+    "unitOfMeasure": "Unidade de medida",
+    "costAndCategory": "Custo e categoria",
+    "baseQuantity": "Quantidade base",
+    "totalBatchCost": "Custo total da embalagem/lote",
+    "initialStock": "Stock inicial",
+    "currentAvailableQty": "Quantidade disponível agora",
+    "stockManagement": "Gestão de stock",
+    "criticalLevel": "Nível crítico",
+    "alert": "alerta",
+    "noAlertSet": "Sem alerta configurado",
+    "alertWhenBelow": "Alerta quando stock < {count} unidades",
+    "criticalStockNote": "Receberás um alerta quando o stock descer abaixo de {count} unidades"
   },
   "Sales": {
     "subtitle": "Acompanhar e gerir as transações de vendas",
@@ -454,6 +467,7 @@
   "Common": {
     "no": "Não",
     "yes": "Sim",
+    "optional":"Opcional",
     "greetings": "Bem-vindo ao Contela",
     "greeting": "Bem-vindo",
     "gotoDash": "Ir para o Painel",

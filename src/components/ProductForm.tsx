@@ -23,7 +23,6 @@ import {
   Category,
   Item,
   ServiceStockItem,
-  // ServiceStockItem,
 } from "@/generated/prisma/client";
 import {
   itemSchema,
@@ -50,20 +49,6 @@ type StockItemWithUnit = StockItem & {
   type: "SUPPLY" | "STOCK" | "SERVICE";
   quantity: number;
 };
-// type ServiceStockItemWithUnit = ServiceStockItem & {
-//   stockItem: StockItem & {
-//     Unit: {
-//       name: string;
-//       id: string;
-//       description: string | null;
-//     } | null;
-//     Category: {
-//       id: string;
-//       name: string;
-//     } | null;
-//   };
-//   quantity: number;
-// };
 
 type ItemWithUnit = Item & {
   Unit: {
@@ -74,7 +59,6 @@ type ItemWithUnit = Item & {
   Category: {
     name: string;
     id: string;
-    // type: $Enums.CategoryType;
   } | null;
 };
 
@@ -100,7 +84,6 @@ export const ProductForm = ({
 
   const t = useTranslations("Common");
   const rt = useTranslations("Responses");
-  const it = useTranslations("Items");
 
   const [type, setType] = useState(item ? item.type : "SERVICE");
 
@@ -728,19 +711,30 @@ export const ServiceStockItemForm = ({
   const t = useTranslations("Common");
   const rt = useTranslations("Responses");
   const it = useTranslations("Item");
+  const st = useTranslations("Stock");
 
   const supplierId = "directPurchase";
   const [units, setUnits] = useState<{ id: string; name: string }[]>([]);
   const [unitId, setUnitId] = useState(stockItem?.unitId || "");
   const [unitName, setUnitName] = useState("");
   const [unitQty, setUnitQty] = useState<number>(1);
-  const [critical, setCritical] = useState<number | null>();
+  const [critical, setCritical] = useState<number | null>(
+    stockItem?.critical ?? null,
+  );
 
-  const [price, setPrice] = useState(stockItem?.price || 0);
+  // const [price, setPrice] = useState(stockItem?.price || 0);
   const [categories, setCategories] = useState<Category[]>();
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [name, setName] = useState(stockItem?.name || "");
+
+  // Unit conversion hint
+  const unitHint =
+    unitName === "ml" && unitQty >= 1000
+      ? `= ${(unitQty / 1000).toFixed(2).replace(/\.?0+$/, "")} L`
+      : unitName === "g" && unitQty >= 1000
+        ? `= ${(unitQty / 1000).toFixed(2).replace(/\.?0+$/, "")} kg`
+        : null;
 
   useEffect(() => {
     if (!name || name.trim() === "") {
@@ -784,171 +778,166 @@ export const ServiceStockItemForm = ({
 
     fetchUnits();
     fetchCategories();
-  }, [state, stockItem, router, supplierId]);
+  }, [state, stockItem, router]);
 
   return (
     <form
       id={form.id}
       action={action}
       onSubmit={form.onSubmit}
-      className="flex flex-col gap-4 min-w-md"
+      className="flex flex-col gap-3 w-full"
     >
-      <h2 className="font-extralight">
+      <h2 className="textsm font-medium mb-1">
         {t("fillFormTo")} {stockItem ? t("editThe") : t("createNew")}{" "}
         {it("stockItem")}
       </h2>
-      <section className="flex flex-col gap-4">
-        {stockItem && (
-          <input type="hidden" name="id" id="id" value={stockItem.id} />
-        )}
-        <input
-          type="hidden"
-          name="supplierId"
-          id="supplierId"
-          value={supplierId}
-        />
-        <input
-          type="hidden"
-          name="serviceId"
-          id="serviceId"
-          value={serviceId}
-        />
-        <section className="form-name-unit flex gap-2 items-start ">
-          <div className="flex w-full flex-col gap-1 relative">
-            <label htmlFor="name">{t("name")}</label>
 
+      {/* Hidden fields */}
+      {stockItem && <input type="hidden" name="id" value={stockItem.id} />}
+      <input type="hidden" name="supplierId" value={supplierId} />
+      <input type="hidden" name="serviceId" value={serviceId} />
+      {/* price is required by schema but not relevant for stock items — send 0 */}
+      <input type="hidden" name="price" value={0} />
+
+      {/* ── Identificação ── */}
+      <section className="stats flex flex-col gap-3 p-4">
+        <p className="label-text text-xs uppercase tracking-wide">
+          {st("identification")}
+        </p>
+        <div className="flex flex-col gap-1 relative">
+          <label
+            className="text-xs font-medium text-base-content/60"
+            htmlFor="name"
+          >
+            {t("name")}
+          </label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder={t("name")}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            autoComplete="off"
+          />
+          {fields.name.errors && (
+            <p className="text-xs font-light text-error">
+              {fields.name.errors}
+            </p>
+          )}
+          {suggestions.length > 0 && (
+            <ul className="absolute top-full mt-0.5 suggestions-list w-full z-10">
+              {suggestions.map((s, i) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    setName(s);
+                    setSuggestions([]);
+                  }}
+                  className="px-3 py-2 cursor-pointer"
+                >
+                  {s}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      {/* ── Unidade de medida ── */}
+      <section className="stats flex flex-col gap-3 p-4">
+        <p className="label-text text-xs uppercase tracking-wide">
+          {st("unitOfMeasure")}
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1">
+            <label
+              className="text-xs font-medium text-base-content/60"
+              htmlFor="unitQty"
+            >
+              {t("baseQuantity")}
+            </label>
             <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder={t("name")}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="number"
+              name="unitQty"
+              id="unitQty"
+              min={1}
+              value={unitQty}
+              onChange={(e) => setUnitQty(Number(e.target.value))}
             />
-            {fields.name.errors && (
-              <p className="text-xs font-light">{fields.name.errors}</p>
-            )}
-
-            {suggestions.length > 0 && (
-              <ul className="absolute top-full my-0.5 suggestions-list w-full ">
-                {suggestions.map((s, i) => (
-                  <li
-                    key={i}
-                    onClick={() => {
-                      setName(s);
-                      setSuggestions([]);
-                    }}
-                    className="px-3 py-2 cursor-pointer"
-                  >
-                    {s}
-                  </li>
-                ))}
-              </ul>
+            {unitHint && <p className="text-xs text-green-400">{unitHint}</p>}
+            {fields.unitQty.errors && (
+              <p className="text-xs font-light text-error">
+                {fields.unitQty.errors}
+              </p>
             )}
           </div>
-          <div className="flex gap-2">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="unitQty">Unit Qty.</label>
-              <input
-                type="number"
-                name="unitQty"
-                id="unitQty"
-                className="max-w-32"
-                value={unitQty}
-                onChange={(e) => setUnitQty(Number(e.target.value))}
-              />
-              {unitName === "ml" && unitQty >= 1000 && (
-                <p className="text-sm font-extralight">
-                  {unitName === "ml" && unitQty / 1000} L
-                </p>
-              )}
-              {unitName === "g" && unitQty >= 1000 && (
-                <p className="text-sm font-extralight">
-                  {unitName === "g" && unitQty / 1000} Kg
-                </p>
-              )}
-              {fields.unitQty.errors && (
-                <p className="text-xs font-light">{fields.unitQty.errors}</p>
-              )}
-            </div>
-            <div className="flex flex-col w-1/2 gap-1">
-              <label htmlFor="unit">{t("unit")}</label>
-              <select
-                name="unitId"
-                id="unitId"
-                value={unitId}
-                onChange={(e) => setUnitId(e.target.value)}
-              >
-                <option value="" disabled>
-                  {t("selectUnit")}
+          <div className="flex flex-col gap-1">
+            <label
+              className="text-xs font-medium text-base-content/60"
+              htmlFor="unitId"
+            >
+              {t("unit")}
+            </label>
+            <select
+              name="unitId"
+              id="unitId"
+              value={unitId}
+              onChange={(e) => {
+                setUnitId(e.target.value);
+                const selected = units.find((u) => u.id === e.target.value);
+                if (selected) setUnitName(selected.name);
+              }}
+            >
+              <option value="" disabled>
+                {t("selectUnit")}
+              </option>
+              {units.map((unit) => (
+                <option key={unit.id} value={unit.id}>
+                  {unit.name}
                 </option>
-                {units.map((unit) => (
-                  <option
-                    key={unit.id}
-                    value={unit.id}
-                    onClick={() => setUnitName(unit.name)}
-                  >
-                    {unit.name}
-                  </option>
-                ))}
-              </select>
-              {fields.unitId.errors && (
-                <p className="text-xs font-light">{fields.unitId.errors}</p>
-              )}
-            </div>
+              ))}
+            </select>
+            {fields.unitId.errors && (
+              <p className="text-xs font-light text-error">
+                {fields.unitId.errors}
+              </p>
+            )}
           </div>
-        </section>
-        <div className="form-second-row flex flex-col gap-2 w-full ">
-          <div className="flex gap-2">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="price">{t("price")}</label>
-              <input
-                type="number"
-                name="price"
-                id="price"
-                min={0}
-                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-                value={price}
-                required
-              />
-              {price > 0 && (
-                <p className="text-sm font-extralight">
-                  MZN {price.toFixed(2)}
-                </p>
-              )}
-              {fields.price.errors && (
-                <p className="text-xs font-light">{fields.price.errors}</p>
-              )}
-            </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="stock">Stock</label>
-              <input
-                type="number"
-                name="stock"
-                id="stock"
-                min={0}
-                defaultValue={stockItem?.stock || 0}
-                disabled={stockItem?.stock ? true : false}
-              />
-              {fields.stock.errors && (
-                <p className="text-xs font-light">{fields.stock.errors}</p>
-              )}
-            </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="cost">{t("cost")}</label>
-              <input
-                type="number"
-                name="cost"
-                id="cost"
-                min={0}
-                defaultValue={stockItem?.cost || 0}
-              />
+        </div>
+      </section>
 
-              {fields.cost.errors && (
-                <p className="text-xs font-light">{fields.cost.errors}</p>
-              )}
-            </div>
+      {/* ── Custo + Categoria ── */}
+      <section className="stats flex flex-col gap-3 p-4">
+        <p className="label-text text-xs uppercase tracking-wide">
+          {st("costAndCategory")}
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1">
+            <label
+              className="text-xs font-medium text-base-content/60"
+              htmlFor="cost"
+            >
+              {t("cost")} (MZN)
+            </label>
+            <input
+              type="number"
+              name="cost"
+              id="cost"
+              min={0}
+              step={0.01}
+              defaultValue={stockItem?.cost || 0}
+            />
+            <p className="text-xs text-base-content/40">
+              {st("totalBatchCost")}
+            </p>
+            {fields.cost.errors && (
+              <p className="text-xs font-light text-error">
+                {fields.cost.errors}
+              </p>
+            )}
           </div>
+          {/* // <div className="flex flex-col gap-1"> */}
           {categories && (
             <CategorySelect
               categoryId={stockItem?.Category?.id}
@@ -957,27 +946,107 @@ export const ServiceStockItemForm = ({
               state={fields.categoryId.errors}
             />
           )}
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="description">{t("description")}</label>
-
-          <textarea
-            name="description"
-            id="description"
-            placeholder={t("description")}
-            defaultValue={stockItem?.description || ""}
-            className="min-w-80 min-h-40"
-          />
-          {fields.description.errors && (
-            <p className="text-xs font-light">{fields.description.errors}</p>
-          )}
+          {/* </div> */}
         </div>
       </section>
-      <section className="errors">
-        {state?.status === "error" && (
-          <p className="text-xs font-light">{state.error?.general?.[0]}</p>
+
+      {/* ── Gestão de stock ── */}
+      <section className="stats flex flex-col gap-3 p-4">
+        <p className="label-text text-xs uppercase tracking-wide">
+          {st("stockManagement")}
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1">
+            <label
+              className="text-xs font-medium text-base-content/60"
+              htmlFor="stock"
+            >
+              {st("initialStock")}
+            </label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              min={0}
+              defaultValue={stockItem?.stock || 0}
+              disabled={!!stockItem?.stock}
+            />
+            <p className="text-xs text-base-content/40">
+              {st("currentAvailableQty")}
+            </p>
+            {fields.stock.errors && (
+              <p className="text-xs font-light text-error">
+                {fields.stock.errors}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <label
+              className="text-xs font-medium text-base-content/60"
+              htmlFor="criticalStock"
+            >
+              {st("criticalLevel")}{" "}
+              <span className="font-normal text-base-content/40">
+                {st("alert")}
+              </span>
+            </label>
+            <input
+              type="number"
+              name="criticalStock"
+              id="criticalStock"
+              min={0}
+              value={critical ?? ""}
+              onChange={(e) =>
+                setCritical(e.target.value ? Number(e.target.value) : null)
+              }
+              placeholder="ex: 10"
+            />
+            {critical && critical > 0 ? (
+              <p className="text-xs text-amber-400">
+                {st("alertWhenBelow", { count: critical })}
+              </p>
+            ) : (
+              <p className="text-xs text-base-content/40">{st("noAlertSet")}</p>
+            )}
+          </div>
+        </div>
+
+        {critical && critical > 0 && (
+          <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-amber-400/20 bg-amber-400/8 text-amber-400 text-xs">
+            <span className="shrink-0">⚠</span>
+            <span>{st("criticalStockNote", { count: critical })}</span>
+          </div>
         )}
       </section>
+
+      {/* ── Descrição ── */}
+      <section className="stats flex flex-col gap-3 p-4">
+        <p className="label-text text-xs uppercase tracking-wide">
+          {t("description")}{" "}
+          <span className="normal-case font-thin text-base-content/40">
+            ({t("optional")})
+          </span>
+        </p>
+        <textarea
+          name="description"
+          id="description"
+          placeholder={t("description")}
+          defaultValue={stockItem?.description || ""}
+          className="min-h-20 w-full"
+        />
+        {fields.description.errors && (
+          <p className="text-xs font-light text-error">
+            {fields.description.errors}
+          </p>
+        )}
+      </section>
+
+      {/* Errors */}
+      {state?.status === "error" && (
+        <p className="text-xs font-light text-error">
+          {state.error?.general?.[0]}
+        </p>
+      )}
 
       <input
         type="submit"

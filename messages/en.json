@@ -39,8 +39,20 @@
         "loadingHistory": "Loading History...",
         "noStockMovement": "No stock movements recorded",
         "stockHistory": "Stock Movement History",
-        "noStock": "No stock movements found"
-
+        "noStock": "No stock movements found",
+        "identification": "Identification",
+        "unitOfMeasure": "Unit of measure",
+        "costAndCategory": "Cost and category",
+        "baseQuantity": "Base quantity",
+        "totalBatchCost": "Total batch/package cost",
+        "initialStock": "Initial stock",
+        "currentAvailableQty": "Currently available quantity",
+        "stockManagement": "Stock management",
+        "criticalLevel": "Critical level",
+        "alert": "alert",
+        "noAlertSet": "No alert configured",
+        "alertWhenBelow": "Alert when stock < {count} units",
+        "criticalStockNote": "You will receive an alert when stock drops below {count} units"
     },
     "Sales": {
         "subtitle": "Track and manage your sales transactions",
@@ -444,6 +456,9 @@
          "timestamp": "Timestamp"
     },
     "Common": {
+        "yes":"Sim",
+        "no":"Nao",
+        "optional":"Optional",
         "greetings": "Welcome to Contela",
         "greeting": "Welcome",
         "gotoDash": "Go To Dashboard",

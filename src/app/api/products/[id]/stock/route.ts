@@ -36,3 +36,17 @@ export async function PATCH(req: NextRequest, props:{ params: Params}) {
     return NextResponse.json({ error: rt("updateStockFailed") }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest,  props:{ params: Params}) {
+      const rt = await getTranslations("Responses")
+
+  try {
+    verifyToken(req);
+    const { id } = await props.params;
+
+    await db.serviceStockItem.delete({ where: { id } });
+    return NextResponse.json({ message: rt("deleteItemSuccess") });
+  } catch {
+    return NextResponse.json({ error: rt("deleteFailed")  }, { status: 500 });
+  }
+}

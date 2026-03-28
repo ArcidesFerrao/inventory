@@ -82,11 +82,13 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
 
         const serviceStockItem = await db.serviceStockItem.create({
             data: {
-                cost: values.price,
+                cost: values.cost,
                 stock: values.stock,
+                stockQty: values.unitQty * (values.stock || 0),
                 stockItemId: stockItem.id,
                 status: "ACTIVE",
-                serviceId: values.serviceId
+                serviceId: values.serviceId,
+                critical: values.critical
             },
             include: {
                 service: true

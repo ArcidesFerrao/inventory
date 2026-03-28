@@ -49,7 +49,7 @@ export default async function StockItemPage(props: { params: Params }) {
   ]);
 
   const stockValue = (item?.stock ?? 0) * (item?.cost ?? 0);
-  const criticalMin = settings?.lowStockThreshold ?? 10;
+  const criticalMin = item?.critical ?? settings?.lowStockThreshold ?? 10;
   const currentStock = item?.stock ?? 0;
   const isLowStock = currentStock <= criticalMin;
   const stockPct = Math.min(
@@ -98,12 +98,12 @@ export default async function StockItemPage(props: { params: Params }) {
       </div>
 
       {isLowStock && (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-amber-400/30 bg-amber-400/10 text-amber-400 text-sm">
-          <span className="text-base">⚠</span>
+        <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border border-amber-400/30 bg-amber-400/10 text-amber-400 text-sm">
           <span>
             {t("lowStockAlert")} — {currentStock} {t("unitsRemaining")}.{" "}
             {t("considerOrdering")}
           </span>
+          <span className="">⚠</span>
         </div>
       )}
 

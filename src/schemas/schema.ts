@@ -148,7 +148,7 @@ export const serviceStockItemSchema = z.object({
     unitQty: z.coerce.number().min(0),
     stock: z.coerce.number().int().optional(),
     categoryId: z.string().optional(),
-    price: z.coerce.number().min(0),
+    price: z.coerce.number().min(0).optional(),
     cost: z.coerce.number().min(0).optional(),
     unitId: z.string().optional(),
     supplierId: z.string(),

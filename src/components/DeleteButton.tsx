@@ -62,7 +62,7 @@ export const DeleteButton = ({ itemId }: { itemId: string }) => {
 
   const handleDelete = () => {
     startTransition(async () => {
-      const res = await fetch(`/api/products/${itemId}`, {
+      const res = await fetch(`/api/products/${itemId}/stock`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
