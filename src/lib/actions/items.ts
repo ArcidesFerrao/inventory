@@ -64,16 +64,44 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
     
     try {
         const values = submission.value;
-
-        const stockItem = await db.stockItem.create({
-            data: {
+        const existStockItem = await db.stockItem.findFirst({
+            where: {
                 name: values.name,
-                description: values.description,
-                price: values.price,
-                unitQty: values.unitQty,
+                supplierId: "directPurchase",
                 unitId: values.unitId,
-                categoryId: values.categoryId,
+                unitQty: values.unitQty
+            },
+            select: {
+                id: true
+            }
+        })
+
+        if (existStockItem) {
+            const serviceStockItem = await db.serviceStockItem.create({
+            data: {
                 cost: values.cost,
+                stock: values.stock,
+                stockQty: values.unitQty * (values.stock || 0),
+                stockItemId: existStockItem.id,
+                status: "ACTIVE",
+                serviceId: values.serviceId,
+                critical: values.critical
+            },
+            include: {
+                service: true
+            }
+        })
+        } else {
+
+            const stockItem = await db.stockItem.create({
+                data: {
+                    name: values.name,
+                    description: values.description,
+                    price: values.price,
+                    unitQty: values.unitQty,
+                    unitId: values.unitId,
+                    categoryId: values.categoryId,
+                    cost: values.cost,
                 stock: values.stock,
                 status: "ACTIVE",
                 supplierId: "directPurchase",
@@ -94,7 +122,6 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
                 service: true
             }
         })
-
         if (values) {
         
             await db.auditLog.create({
@@ -109,6 +136,8 @@ export async function createServiceStockItem(prevState: unknown, formData: FormD
                 }
             }) 
         }
+    }
+
         return {status: "success"} satisfies SubmissionResult<string[]>
     } catch (error) {
         console.error("Failed to create Stock Item", error);
