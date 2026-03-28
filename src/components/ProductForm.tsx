@@ -800,7 +800,7 @@ export const ServiceStockItemForm = ({
       <input type="hidden" name="price" value={0} />
 
       {/* ── Identificação ── */}
-      <section className="stats flex flex-col gap-3 p-4">
+      <section className="items-list flex flex-col gap-3 p-4">
         <p className="label-text text-xs uppercase tracking-wide">
           {st("identification")}
         </p>
@@ -845,7 +845,7 @@ export const ServiceStockItemForm = ({
       </section>
 
       {/* ── Unidade de medida ── */}
-      <section className="stats flex flex-col gap-3 p-4">
+      <section className="items-list flex flex-col gap-3 p-4">
         <p className="label-text text-xs uppercase tracking-wide">
           {st("unitOfMeasure")}
         </p>
@@ -908,11 +908,11 @@ export const ServiceStockItemForm = ({
       </section>
 
       {/* ── Custo + Categoria ── */}
-      <section className="stats flex flex-col gap-3 p-4">
+      <section className="items-list flex flex-col gap-3 p-4">
         <p className="label-text text-xs uppercase tracking-wide">
           {st("costAndCategory")}
         </p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1">
             <label
               className="text-xs font-medium text-base-content/60"
@@ -951,7 +951,7 @@ export const ServiceStockItemForm = ({
       </section>
 
       {/* ── Gestão de stock ── */}
-      <section className="stats flex flex-col gap-3 p-4">
+      <section className="items-list flex flex-col gap-3 p-4">
         <p className="label-text text-xs uppercase tracking-wide">
           {st("stockManagement")}
         </p>
@@ -1020,7 +1020,7 @@ export const ServiceStockItemForm = ({
       </section>
 
       {/* ── Descrição ── */}
-      <section className="stats flex flex-col gap-3 p-4">
+      <section className="items-list flex flex-col gap-3 p-4">
         <p className="label-text text-xs uppercase tracking-wide">
           {t("description")}{" "}
           <span className="normal-case font-thin text-base-content/40">
